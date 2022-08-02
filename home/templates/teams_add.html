@@ -1,0 +1,10 @@
+{% extends 'teams.html' %}
+{% load static %}
+
+{% block adds_team %}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ content.forms.add.as_p }}
+    <input type="submit" value="Add" class="btn btn-primary">
+</form>
+{% endblock %}

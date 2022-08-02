@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html 
+    PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en-US">
+    <head profile="http://www.w3.org/2005/10/profile">
+    <link rel="icon"  type="image/png"  href="{% static 'images/' %}{{ settings.siteLogo }}">
+    <link rel="stylesheet" href="{% static 'css/' %}{{ settings.siteCSS }}">
+    {% if settings.navigationCSS %}
+    <link rel="stylesheet" href="{% static 'css/' %}{{ settings.navigationCSS }}">
+    {% endif %}
+    {% if settings.pageCSS %}
+    <link rel="stylesheet" href="{% static 'css/' %}{{ settings.pageCSS }}">
+    {% endif %}
+    </head>
+    <body>
+        <div class="header">
+            <img src="{% static 'images/' %}{{ settings.header.icon }}" alt="Home" onclick="location.href='{{ settings.header.url }}';">
+            {% if settings.header.name %}
+            <h1>{{ settings.header.name }}</h1>
+            {% else %}
+            <h1>DBRegatta</h1>
+            {% endif %}
+        </div>
+        <div class="main">
+            {% include 'menu.html' %}
+            {% block menu %}{% endblock %}
+            {% block content %}{% endblock %}
+        </div>
+        <div class="footer">
+            <div class="footer_sponsor_logo">
+                <img src="{% static 'images/' %}{{ settings.sponsor.logo }}" alt="{{ settings.sponsor.name }}">
+            </div>
+            <div class="footer_owner_logo">
+                <img src="{% static 'images/' %}{{ settings.owner.logo }}" alt="{{ settings.owner.name }}">
+            </div>
+        </div>
+    </body>
+</html>

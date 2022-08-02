@@ -1,0 +1,154 @@
+body {
+    display: flex;
+	flex-direction: column;
+    margin: 0;
+    min-width: 540px;
+    height: 100vh;
+    background-color: #1b1a19;
+}
+
+.header {
+    position: sticky;
+    right: 0;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    height: 50px;
+    max-height: 50px;
+    min-height: 50px;
+    padding: 10px;
+    border-bottom: 1px solid #323130;
+    overflow: hidden;
+    background-color: #252423;
+    z-index: 2;
+}
+
+.header img { 
+    height: auto;
+    opacity: 0.8; 
+    cursor: pointer;
+} 
+
+.header img:hover { 
+    opacity: 1.0;
+}
+
+.header h1 {
+    margin: auto;
+    margin-left: 0;
+    padding-left: 10px;
+    color: #ebebeb;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 1.8em;
+}
+
+.footer {
+    position: sticky;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100px;
+    max-height: 100px;
+    min-height: 100px;
+    background-color: #252423;
+    padding: 10px 20px;
+    border-top: 1px solid #323130;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.footer_sponsor_logo {
+    height: auto;
+    float: left;
+    padding: 10px 0px;
+}
+
+.footer_sponsor_logo img {
+    height: 100%;
+}
+
+.footer_owner_logo {
+    height: auto;
+    float: right;
+    margin-left: auto; 
+    margin-right: 0;
+}
+
+.footer_owner_logo img {
+    height: 100%;
+}
+
+.menu {
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    margin: 10px 10px auto;
+    justify-content: center;
+}
+
+.menu_entry {
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;    
+    min-width: 500px;
+    max-width: 500px;
+    min-height: 200px;
+    max-height: 200px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #292827;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    color: #ebebeb;
+    background-color: #252423;
+    cursor: pointer;
+}
+
+.menu_entry:hover {
+    border: 1px solid #167ee0;
+    background-color: #275377;
+}
+
+.menu_entry h2 {
+    font-size: 1.8em;
+}
+
+.menu_entry_thumb {
+    height: auto;
+    float: left;
+    padding: 10px;
+    width: 170px;
+}
+
+.menu_entry_thumb img {
+    height: 100%;
+}
+
+.menu_entry_title {
+    margin: 0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.main {
+    display: flex;
+    flex: 1;
+}
+
+.content {
+    float: left;
+    display: flex;
+    flex-flow: column;
+    flex-wrap: nowrap;
+    width: 100%;
+    padding: 10px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+}
