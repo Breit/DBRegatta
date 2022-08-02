@@ -1,0 +1,110 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="content">
+        <div class="add_team">
+            {% if content.forms.mod %}
+                <div class="mod_team">
+                    <div class="team_header">
+                        <h2>{{ settings.modTeamHeader }}</h2>
+                    </div>            
+                    <div class="team_form">
+                        <form method="POST" action="" id="mod_form">
+                            {% csrf_token %}
+                            {{ content.forms.form.as_p }}
+                        </form>
+                    </div>
+                    <div class="submit_team">
+                        <button type="submit" name="mod_team" value="Submit" class="btn btn_team_submit" form="mod_form">
+                            <img src="{% static 'images/' %}{{ settings.submitTeamIcon }}" alt="submit_team">
+                        </button>
+                        <button type="submit" name="cancel_team" value="Cancel" class="btn btn_team_cancel" form="mod_form" formnovalidate>
+                            <img src="{% static 'images/' %}{{ settings.cancelTeamIcon }}" alt="cancel_team">
+                        </button>
+                    </div>
+                </div>
+            {% else %}
+                <div class="team_header">
+                    <h2>{{ settings.addTeamHeader }}</h2>
+                </div>
+                {% if content.forms.add %}
+                    <div class="team_form">
+                        <form method="POST" action="" id="add_form">
+                            {% csrf_token %}
+                            {{ content.forms.form.as_p }}
+                        </form>
+                    </div>
+                    <div class="submit_team">
+                        <button type="submit" name="add_team" value="Submit" class="btn btn_team_submit" form="add_form">
+                            <img src="{% static 'images/' %}{{ settings.submitTeamIcon }}" alt="submit_team">
+                        </button>
+                        <button type="submit" name="cancel_team" value="Cancel" class="btn btn_team_cancel" form="add_form" formnovalidate>
+                            <img src="{% static 'images/' %}{{ settings.cancelTeamIcon }}" alt="cancel_team">
+                        </button>
+                    </div>
+                {% else %}
+                    <div class="add_team_button">
+                        <form method="POST" action="" id="none_form">
+                            {% csrf_token %}
+                            <button type="submit" name="show_add_form" value="Add" class="btn btn_add_team_show">
+                                <img src="{% static 'images/' %}{{ settings.addTeamIcon }}" alt="add_team">
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="team_list">
+            <div class="team_header">
+                <h2>{{ settings.listHeader }}</h2>
+            </div>
+            <div class="team_list_content">
+                {% for t in content.teams %}
+                    <div class="team">
+                        <div class="team_cell {% if t.active %}active{% else %}inactive{% endif %}">
+                            {{ t.id }}
+                        </div>
+                        <div class="team_cell_name {% if t.active %}active{% else %}inactive{% endif %}">
+                            {{ t.name }}
+                        </div>
+                        <div class="team_cell {% if t.active %}active{% else %}inactive{% endif %}">
+                            {{ t.company }}
+                        </div>
+                        <div class="team_cell {% if t.active %}active{% else %}inactive{% endif %}">
+                            {{ t.contact }}
+                        </div>
+                        <div class="team_cell {% if t.active %}active{% else %}inactive{% endif %}">
+                            {{ t.email }}
+                        </div>
+                        <div class="team_cell {% if t.active %}active{% else %}inactive{% endif %}">
+                            {{ t.address }}
+                        </div>
+                        <form method="POST" action="" id="none_form" class="team_icon">
+                            {% csrf_token %}
+                            <button type="submit" name="edit_team" value="{{ t.id }}" class="btn_team_icon">
+                                <img src="{% static 'images/' %}{{ settings.editTeamIcon }}" alt="edit_team">
+                            </button>
+                        </form>
+                        <form method="POST" action="" id="none_form" class="team_icon">
+                            {% csrf_token %}
+                            <button type="submit" name="activate_team" value="{{ t.name }}" class="btn_team_icon">
+                                {% if t.active %}
+                                <img src="{% static 'images/' %}{{ settings.activeTeamIcon }}" alt="active_team">
+                                {% else %}
+                                <img src="{% static 'images/' %}{{ settings.inactiveTeamIcon }}" alt="inactive_team">
+                                {% endif %}
+                            </button>
+                        </form>
+                        <form method="POST" action="" id="none_form" class="team_icon">
+                            {% csrf_token %}
+                            <button type="submit" name="delete_team" value="{{ t.name }}" class="btn_team_icon" onclick="return confirm('Are you sure?');">
+                                <img src="{% static 'images/' %}{{ settings.removeTeamIcon }}" alt="remove_team">
+                            </button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
