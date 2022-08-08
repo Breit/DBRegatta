@@ -5,3 +5,164 @@
 #timetable:hover {
     background-color: #275377;
 }
+
+.btn p {
+    width: 200px;
+}
+
+.content {
+    color: #cacaca;
+}
+
+.timetable_settigs {
+    padding: 0 0 10px;
+    border-bottom: 1px solid #292827;
+    margin-bottom: 20px;
+}
+
+.timetable_header h2 {
+    font-size: 1.5em;
+}
+
+.timetable {
+    display: table;
+    border-spacing: 0 10px;
+    margin-bottom: 10px;
+}
+
+.tt_race_block {
+    display: table-row;
+    background-color: #252423;
+}
+
+.tt_race_block:hover {
+    background-color: #323130;
+}
+
+.tt_event_block {
+    display: table-row;
+    background-color: #252423;
+}
+
+.tt_event_block div {
+    padding: 0 5px;
+}
+
+.tt_race_block div {
+    padding: 0 5px;
+}
+
+.tt_race_block .tt_content .desc {
+    min-width: 40px;
+}
+
+.tt_event_block:hover {
+    background-color: #323130;
+}
+
+.tt_content {
+    display: table-cell;
+}
+
+.time {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    width: 60px;
+}
+
+.desc {
+    display: table-cell;
+    padding: 5px;
+    vertical-align: middle;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.tt_event_block
+{
+    background-color: #275377;
+}
+
+.tt_event_block:hover
+{
+    background-color: #3b92e4;
+}
+
+.lanes {
+    display: table-cell;
+    width: 100%;
+}
+
+.lane {
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+}
+
+.lane div {
+    padding: 5px;
+}
+
+.lane:first-child div {
+    padding-top: 0;
+}
+
+.lane:last-child div {
+    padding-bottom: 0;
+}
+
+.lane:hover {
+    background-color: #464544;
+}
+
+.lane:not(:last-child) {
+    border-bottom: 2px solid #1b1a19;
+}
+
+.number {
+    text-align: center;
+    padding: 5px;
+    font-weight: bold;
+    min-width: 60px;
+    width: 5%;
+}
+
+.team {
+    
+    padding: 5px;
+    color: #ffb900;
+    width: 30%;
+}
+
+.company {    
+    padding: 5px;
+    width: 65%;
+}
+
+.tt_race_header div {
+    vertical-align: bottom;
+    padding-bottom: 0;
+    font-weight: normal;
+    border-spacing: 0;
+    font-size: 12px;
+    color: #9b9b9b;
+    background-color: #1b1a19;
+}
+
+.tt_race_header .lane {
+    padding: 0;
+}
+
+.tt_race_header {
+    height: 25px;
+}
+
+.refresh_timetable {
+    display: flex;
+}
+
+.refresh_timetable button {
+    float: left;
+}

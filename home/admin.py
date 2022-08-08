@@ -1,5 +1,7 @@
 from django.contrib import admin
 
-from .models import Team
+from .models import Team, Race, RaceAssign
 
 admin.site.register(Team)
+admin.site.register(Race)
+admin.site.register(RaceAssign)

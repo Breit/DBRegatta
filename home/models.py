@@ -1,5 +1,6 @@
 from django.db import models
 
+# for list of teams
 class Team(models.Model):
     active = models.BooleanField(default=False)
     name = models.CharField(max_length=200, unique=True, blank=False)
@@ -10,3 +11,18 @@ class Team(models.Model):
     
     def __str__(self):
         return self.company
+
+# for list of races (heats and finals)
+class Race(models.Model):
+    name = models.CharField(max_length=20, unique=True, blank=False)
+    time = models.TimeField()
+    
+    def __str__(self):
+        return self.name
+
+# for teams attending a race
+class RaceAssign(models.Model):
+    race_id = models.BigIntegerField(blank=False)
+    team_id = models.BigIntegerField(blank=True)
+    lane = models.CharField(max_length=20, blank=False)
+    time = models.TimeField(null=True, blank=True)

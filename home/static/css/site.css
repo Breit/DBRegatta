@@ -152,3 +152,45 @@ body {
     padding: 10px;
     font-family: Verdana, Arial, Helvetica, sans-serif;
 }
+
+.btn {
+    display: flex;
+    background-color: #275377;
+    border: 1px solid #2f638f;
+    margin: 0 10px 10px 0;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color: #3b92e4;
+    border: 1px solid #41a3ff;
+}
+
+.btn p {
+    color: #cacaca;
+    width: 150px;
+    padding: 0;
+    margin: 5px;
+    font-size: 1.5em;
+    line-height: 50px;
+    border-left: 1px solid #2f638f;
+}
+
+.btn img {
+    float: left;
+    padding: 5px;
+    width: 50px;
+    opacity: 0.8;
+    background-color: transparent;
+}
+
+.btn:hover img {
+    padding: 0;
+    width: 60px;
+    opacity: 1.0;
+}
+
+.btn:hover p {
+    border-left: 1px solid #41a3ff;
+    color: white;
+}

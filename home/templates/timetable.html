@@ -3,6 +3,70 @@
 
 {% block content %}
 <div class="content">
-    
+    {% if content.settings %}
+        <div class="timetable_settigs">
+            <div class="timetable_header">
+                <h2>{{ settings.timetableSettingsHeader }}</h2>
+            </div>
+            <div class="refresh_timetable">
+                <form method="POST" action="" id="none_form">
+                    {% csrf_token %}
+                    <button type="submit" name="refresh_times" value="Refresh" class="btn btn_refresh_times">
+                        <img src="{% static 'images/' %}{{ settings.refreshTimetableIcon }}" alt="refresh_times">
+                        <p>{{ settings.refreshTimetableText }}</p>
+                    </button>
+                    <button type="submit" name="create_timetable" value="Create" class="btn btn_create_timetable" onclick="return confirm('{{ settings.warningCreateTimetable }}');">
+                        <img src="{% static 'images/' %}{{ settings.createTimetableIcon }}" alt="create_timetable">
+                        <p>{{ settings.createTimetableText }}</p>
+                    </button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+    <div class="timetable_header">
+        <h2>{{ settings.timetableHeader }}</h2>
+    </div>    
+    {% for entry in content.timetable %}
+        <div class="timetable">
+            <div class="tt_event_block {% if not entry.races %}tt_event_block_main{% endif %}">
+                <div class="time">{{ entry.time|time:'H:i'}}</div>
+                <div class="tt_content">
+                    <div class="desc">{{ entry.desc }}</div>
+                </div>
+            </div>
+            {% if entry.races %}
+                <div class="tt_race_block tt_race_header">
+                    <div class="time">{{ content.settings.timetableHeader.time }}</div>
+                    <div class="tt_content tt_hdr_content">
+                        <div class="desc">{{ content.settings.timetableHeader.name }}</div>
+                        <div class="lanes">
+                            <div class="lane">
+                                <div class="number">{{ content.settings.timetableHeader.lane }}</div>
+                                <div class="team">{{ content.settings.timetableHeader.team }}</div>
+                                <div class="company">{{ content.settings.timetableHeader.company }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% for race in entry.races %}
+                    <div class="tt_race_block">
+                        <div class="time">{{ race.time|time:'H:i' }}</div>
+                        <div class="tt_content">
+                            <div class="desc">{{ race.desc }}</div>
+                            <div class="lanes">
+                                {% for lane in race.lanes %}
+                                <div class="lane">
+                                    <div class="number">{{ lane.lane }}</div>
+                                    <div class="team">{{ lane.team }}</div>
+                                    <div class="company">{{ lane.company }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endfor %}
 </div>
 {% endblock %}

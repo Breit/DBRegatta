@@ -45,21 +45,22 @@
     height: auto;
     float: left;
     padding: 5px 10px;
-    width: 70px;
+    width: 50px;
 }
 
-.menu_entry_thumb img {
+.menu_entry img {
     width: 50px;
 }
 
 .menu_entry_title {
-    margin: 0; 
+    margin: 5px; 
     display: flex;
     flex-direction: column;
     flex: 1;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 5px;
+    border-left: 1px solid #292827;
 }
 
 #settings {
