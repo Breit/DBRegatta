@@ -3,31 +3,28 @@
 
 {% block content %}
     <div class="content">
-        <div class="add_team">
+        <div class="edit_team">
+            <div class="team_header">
+                <h2>{{ settings.editTeamHeader }}</h2>
+            </div>
             {% if content.forms.mod %}
-                <div class="mod_team">
-                    <div class="team_header">
-                        <h2>{{ settings.modTeamHeader }}</h2>
-                    </div>            
-                    <div class="team_form">
-                        <form method="POST" action="" id="mod_form">
-                            {% csrf_token %}
-                            {{ content.forms.form.as_p }}
-                        </form>
-                    </div>
-                    <div class="submit_team">
-                        <button type="submit" name="mod_team" value="Submit" class="btn btn_team_submit" form="mod_form">
-                            <img src="{% static 'images/' %}{{ settings.submitTeamIcon }}" alt="submit_team">
-                        </button>
-                        <button type="submit" name="cancel_team" value="Cancel" class="btn btn_team_cancel" form="mod_form" formnovalidate>
-                            <img src="{% static 'images/' %}{{ settings.cancelTeamIcon }}" alt="cancel_team">
-                        </button>
-                    </div>
+                <div class="team_form">
+                    <form method="POST" action="" id="mod_form">
+                        {% csrf_token %}
+                        {{ content.forms.form.as_p }}
+                    </form>
+                </div>
+                <div class="submit_team">
+                    <button type="submit" name="mod_team" value="Submit" class="btn btn_team_submit" form="mod_form">
+                        <img src="{% static 'images/' %}{{ settings.submitTeamIcon }}" alt="submit_team">
+                        <p>{{ settings.submitEditTeam }}</p>
+                    </button>
+                    <button type="submit" name="cancel_team" value="Cancel" class="btn btn_team_cancel" form="mod_form" formnovalidate>
+                        <img src="{% static 'images/' %}{{ settings.cancelTeamIcon }}" alt="cancel_team">
+                        <p>{{ settings.submitAbort }}</p>
+                    </button>
                 </div>
             {% else %}
-                <div class="team_header">
-                    <h2>{{ settings.addTeamHeader }}</h2>
-                </div>
                 {% if content.forms.add %}
                     <div class="team_form">
                         <form method="POST" action="" id="add_form">
@@ -38,17 +35,20 @@
                     <div class="submit_team">
                         <button type="submit" name="add_team" value="Submit" class="btn btn_team_submit" form="add_form">
                             <img src="{% static 'images/' %}{{ settings.submitTeamIcon }}" alt="submit_team">
+                            <p>{{ settings.submitAddTeam }}</p>
                         </button>
                         <button type="submit" name="cancel_team" value="Cancel" class="btn btn_team_cancel" form="add_form" formnovalidate>
                             <img src="{% static 'images/' %}{{ settings.cancelTeamIcon }}" alt="cancel_team">
+                            <p>{{ settings.submitAbort }}</p>
                         </button>
                     </div>
                 {% else %}
-                    <div class="add_team_button">
+                    <div class="submit_team">
                         <form method="POST" action="" id="none_form">
                             {% csrf_token %}
                             <button type="submit" name="show_add_form" value="Add" class="btn btn_add_team_show">
                                 <img src="{% static 'images/' %}{{ settings.addTeamIcon }}" alt="add_team">
+                                <p>{{ settings.addTeam }}</p>
                             </button>
                         </form>
                     </div>
@@ -57,7 +57,8 @@
         </div>
         <div class="team_list">
             <div class="team_header">
-                <h2>{{ settings.listHeader }}</h2>
+                <h2>{{ settings.teamListHeader }}</h2>
+                <p>{{ settings.activeTeams }}: {{ content.activeTeams }} von {{ content.totalTeams }}</p>
             </div>
             <div class="team_list_content">
                 {% for t in content.teams %}
@@ -98,7 +99,7 @@
                         </form>
                         <form method="POST" action="" id="none_form" class="team_icon">
                             {% csrf_token %}
-                            <button type="submit" name="delete_team" value="{{ t.name }}" class="btn_team_icon" onclick="return confirm('Are you sure?');">
+                            <button type="submit" name="delete_team" value="{{ t.name }}" class="btn_team_icon" onclick="return confirm('{{ settings.warningDeleteTeam }}');">
                                 <img src="{% static 'images/' %}{{ settings.removeTeamIcon }}" alt="remove_team">
                             </button>
                         </form>

@@ -6,9 +6,10 @@
     background-color: #275377;
 }
 
-.add_team  {
+.edit_team  {
     padding: 0 0 10px;
     border-bottom: 1px solid #292827;
+    margin-bottom: 20px;
 }
 
 .errorlist {
@@ -26,18 +27,6 @@
 
 .submit_team button {
     float: left;
-}
-
-.add_team_button img {
-    padding: 5px;
-    width: 50px;
-    opacity: 0.8;
-}
-
-.add_team_button img:hover {
-    padding: 0;
-    width: 60px;
-    opacity: 1.0;
 }
 
 .team_icon {
@@ -121,32 +110,8 @@
     max-width: 1000px;
 }
 
-.add_team form {
+.edit_team form {
     color: #cacaca;
-}
-
-.mod_team form {
-    color: #cacaca;
-}
-
-.btn {
-    display: flex;
-    background-color: transparent;
-    border: 0;
-}
-
-.btn img {
-    float: left;
-    padding: 5px;
-    width: 50px;
-    opacity: 0.8;
-    background-color: transparent;
-}
-
-.btn img:hover {
-    padding: 0;
-    width: 60px;
-    opacity: 1.0;
 }
 
 .team_form {
