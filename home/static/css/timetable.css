@@ -10,6 +10,24 @@
     width: 200px;
 }
 
+.btn_create_timetable {
+    background-color: #772727;
+    border: 1px solid #8f2f2f;
+}
+
+.btn_create_timetable:hover {
+    background-color: #c2361e;
+    border: 1px solid #dd3b3b;
+}
+
+.btn_create_timetable p {
+    border-left: 1px solid #8f2f2f;
+}
+
+.btn_create_timetable:hover p {
+    border-left: 1px solid #dd3b3b;
+}
+
 .content {
     color: #cacaca;
 }
@@ -41,27 +59,28 @@
 
 .tt_event_block {
     display: table-row;
-    background-color: #252423;
+    background-color: #275377;
 }
 
 .tt_event_block div {
-    padding: 0 5px;
+    padding: 3px 5px 3px;
 }
 
 .tt_race_block div {
-    padding: 0 5px;
+    padding: 0 0 0 5px;
 }
 
 .tt_race_block .tt_content .desc {
-    min-width: 40px;
+    min-width: 70px;
 }
 
 .tt_event_block:hover {
-    background-color: #323130;
+    background-color: #3b92e4;
 }
 
 .tt_content {
     display: table-cell;
+    border-collapse: collapse;
 }
 
 .time {
@@ -80,16 +99,6 @@
     text-align: center;
 }
 
-.tt_event_block
-{
-    background-color: #275377;
-}
-
-.tt_event_block:hover
-{
-    background-color: #3b92e4;
-}
-
 .lanes {
     display: table-cell;
     width: 100%;
@@ -101,16 +110,8 @@
     flex-wrap: nowrap;
 }
 
-.lane div {
-    padding: 5px;
-}
-
-.lane:first-child div {
-    padding-top: 0;
-}
-
-.lane:last-child div {
-    padding-bottom: 0;
+.lanes div {
+    padding: 3px 0;
 }
 
 .lane:hover {
@@ -130,13 +131,13 @@
 }
 
 .team {
-    
+
     padding: 5px;
     color: #ffb900;
     width: 30%;
 }
 
-.company {    
+.company {
     padding: 5px;
     width: 65%;
 }
@@ -153,10 +154,6 @@
 
 .tt_race_header .lane {
     padding: 0;
-}
-
-.tt_race_header {
-    height: 25px;
 }
 
 .refresh_timetable {

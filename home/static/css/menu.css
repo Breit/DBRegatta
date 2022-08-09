@@ -1,4 +1,7 @@
 .menu {
+    position: sticky;
+    top: 71px;
+    height: calc(100vh - 71px - 121px - 20px);
     float: left;
     display: flex;
     flex-flow: column;
@@ -53,7 +56,7 @@
 }
 
 .menu_entry_title {
-    margin: 5px; 
+    margin: 5px;
     display: flex;
     flex-direction: column;
     flex: 1;

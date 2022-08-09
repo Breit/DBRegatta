@@ -46,36 +46,36 @@ def getTeamContent():
 def teams(request):
     # if user not in authenticated_users:
     #    return redirect('/')
-    
+
     siteData = {}
     siteData['settings'] = getSiteData()
     siteData['settings']['navigationCSS'] = 'menu.css'
     siteData['settings']['pageCSS'] = 'teams.css'
     siteData['settings'].update(getTeamSettings())
     siteData['content'] = getTeamContent()
-    
+
     if request.method == "POST":
         # activate the add-new-team form
         if 'show_add_form' in request.POST:
             siteData['content']['forms']['add'] = True
-        
+
         # submit a new team
         elif 'add_team' in request.POST:
             newTeamForm = TeamForm(request.POST)
             if Team.objects.filter(name=request.POST['name']).exists():
                 siteData['content']['forms']['add'] = True
                 siteData['content']['forms']['form'] = newTeamForm
-            if newTeamForm.is_valid():                
+            if newTeamForm.is_valid():
                 newTeamForm.save()
                 siteData['content'] = getTeamContent()              # refresh from DB
                 return redirect('/teams')
-        
+
         # abort submitting teams changes
         elif 'cancel_team' in request.POST:
             siteData['content']['forms']['add'] = False
             siteData['content']['forms']['mod'] = False
             return redirect('/teams')
-        
+
         # toggle team activation
         elif 'activate_team' in request.POST:
             if Team.objects.filter(name=request.POST['activate_team']).exists():
@@ -84,7 +84,7 @@ def teams(request):
                 modTeam.save()
                 siteData['content'] = getTeamContent()              # refresh from DB
             return redirect('/teams')
-        
+
         # delete team from database
         elif 'delete_team' in request.POST:
             if Team.objects.filter(name = request.POST['delete_team']).exists():
@@ -92,12 +92,12 @@ def teams(request):
                 modTeam.delete()
                 siteData['content'] = getTeamContent()              # refresh from DB
             return redirect('/teams')
-        
+
         # show edit team form
         elif 'edit_team' in request.POST:
             if Team.objects.filter(id = request.POST['edit_team']).exists():
                 return redirect('/teams?edit_id={}'.format(request.POST['edit_team']))
-        
+
         # submit_mod_team
         elif 'mod_team' in request.POST:
             if 'edit_id' in request.GET:
@@ -121,5 +121,5 @@ def teams(request):
                 siteData['content']['forms']['form'] = TeamForm(
                     instance = Team.objects.get(id = request.GET['edit_id'])
                 )
-    
+
     return render(request, 'teams.html', siteData)

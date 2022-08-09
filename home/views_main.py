@@ -1,10 +1,12 @@
+from datetime import date
 from django.shortcuts import render
 
 # define default site data
 def getSiteData():
     siteData = {
         'header': {
-            'name': '14. GODYO Drachenboot-Sprint 2022',
+            'name': '14. GODYO Drachenboot-Sprint',
+            'date': date(2022, 9, 10),
             'icon': 'dragon.svg',
             'url': '/'
         },

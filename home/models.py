@@ -8,7 +8,7 @@ class Team(models.Model):
     contact = models.CharField(max_length=200, blank=True)
     email = models.EmailField(blank=True)
     address = models.CharField(max_length=200, blank=True)
-    
+
     def __str__(self):
         return self.company
 
@@ -16,7 +16,7 @@ class Team(models.Model):
 class Race(models.Model):
     name = models.CharField(max_length=20, unique=True, blank=False)
     time = models.TimeField()
-    
+
     def __str__(self):
         return self.name
 
@@ -26,3 +26,9 @@ class RaceAssign(models.Model):
     team_id = models.BigIntegerField(blank=True)
     lane = models.CharField(max_length=20, blank=False)
     time = models.TimeField(null=True, blank=True)
+
+# placeholder description for finale draw
+class RaceDrawMode(models.Model):
+    race_id = models.BigIntegerField(blank=False)
+    desc = models.CharField(max_length=200, blank=True)
+    lane = models.CharField(max_length=20, blank=False)

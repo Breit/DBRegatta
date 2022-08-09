@@ -17,7 +17,7 @@
         <div class="header">
             <img src="{% static 'images/' %}{{ settings.header.icon }}" alt="Home" onclick="location.href='{{ settings.header.url }}';">
             {% if settings.header.name %}
-            <h1>{{ settings.header.name }}</h1>
+            <h1>{{ settings.header.name }} {{ settings.header.date|date:'d.m.Y' }}</h1>
             {% else %}
             <h1>DBRegatta</h1>
             {% endif %}
