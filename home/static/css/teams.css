@@ -72,6 +72,7 @@
     padding: 10px;
     font-weight: bold;
     color: #ffb900;
+    width: 25%;
 }
 
 .team_cell {
@@ -129,6 +130,7 @@
     padding: 0 10px;
     font-size: 1.0em;
 }
+
 .form_control:focus-visible {
     outline: 1px solid #0078D4;
 }

@@ -32,3 +32,4 @@ class RaceDrawMode(models.Model):
     race_id = models.BigIntegerField(blank=False)
     desc = models.CharField(max_length=200, blank=True)
     lane = models.CharField(max_length=20, blank=False)
+

@@ -1,32 +1,48 @@
 {% extends 'main.html' %}
 {% load static %}
 
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{% static 'css/' %}{{ config.timetableNavigationCSS }}">
+    <link rel="stylesheet" href="{% static 'css/' %}{{ config.timetablePageCSS }}">
+{% endblock %}
+
 {% block content %}
 <div class="content">
-    {% if content.settings %}
-        <div class="timetable_settigs">
-            <div class="timetable_header">
-                <h2>{{ settings.timetableSettingsHeader }}</h2>
-            </div>
-            <div class="refresh_timetable">
-                <form method="POST" action="" id="none_form">
-                    {% csrf_token %}
-                    <button type="submit" name="refresh_times" value="Refresh" class="btn btn_refresh_times">
-                        <img src="{% static 'images/' %}{{ settings.refreshTimetableIcon }}" alt="refresh_times">
-                        <p>{{ settings.refreshTimetableText }}</p>
-                    </button>
-                    <button type="submit" name="create_timetable" value="Create" class="btn btn_create_timetable" onclick="return confirm('{{ settings.warningCreateTimetable }}');">
-                        <img src="{% static 'images/' %}{{ settings.createTimetableIcon }}" alt="create_timetable">
-                        <p>{{ settings.createTimetableText }}</p>
-                    </button>
-                </form>
-            </div>
+    <div class="timetable_settigs">
+        <div class="timetable_header">
+            <h2>{{ config.timetableSettingsHeader }}</h2>
         </div>
-    {% endif %}
+        {% for col in controls %}
+            <div class="timetable_settings_controls">
+                {% for c in col %}
+                    <div class="control">
+                        <form method="POST" action="" id="settings_form">
+                            {% csrf_token %}
+                            <label for="{{ c.id }}">{{ c.name }}</label>
+                            <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" value="{% if c.type == 'time' %}{{ c.value|time:'H:i' }}{% else %}{{ c.value }}{% endif %}" {% if c.min %}min="{{ c.min }}"{% endif %} {% if c.max %}max="{{ c.max }}"{% endif %} onchange="this.form.submit()">
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <div class="refresh_timetable">
+            <form method="POST" action="" id="none_form">
+                {% csrf_token %}
+                <button type="submit" name="refresh_times" value="Refresh" class="btn btn_refresh_times">
+                    <img src="{% static 'images/' %}{{ config.refreshTimetableIcon }}" alt="refresh_times">
+                    <p>{{ config.refreshTimetableText }}</p>
+                </button>
+                <button type="submit" name="create_timetable" value="Create" class="btn btn_create_timetable" onclick="return confirm('{{ config.warningCreateTimetable }}');">
+                    <img src="{% static 'images/' %}{{ config.createTimetableIcon }}" alt="create_timetable">
+                    <p>{{ config.createTimetableText }}</p>
+                </button>
+            </form>
+        </div>
+    </div>
     <div class="timetable_header">
-        <h2>{{ settings.timetableHeader }}</h2>
-    </div>    
-    {% for entry in content.timetable %}
+        <h2>{{ config.timetableHeader }}</h2>
+    </div>
+    {% for entry in timetable %}
         <div class="timetable">
             <div class="tt_event_block">
                 <div class="time">{{ entry.time|time:'H:i'}}</div>
@@ -36,14 +52,14 @@
             </div>
             {% if entry.races %}
                 <div class="tt_race_block tt_race_header">
-                    <div class="time">{{ content.settings.timetableHeader.time }}</div>
+                    <div class="time">{{ config.timetableHeaderTime }}</div>
                     <div class="tt_content tt_hdr_content">
-                        <div class="desc">{{ content.settings.timetableHeader.name }}</div>
+                        <div class="desc">{{ config.timetableHeaderName }}</div>
                         <div class="lanes">
                             <div class="lane">
-                                <div class="number">{{ content.settings.timetableHeader.lane }}</div>
-                                <div class="team">{{ content.settings.timetableHeader.team }}</div>
-                                <div class="company">{{ content.settings.timetableHeader.company }}</div>
+                                <div class="number">{{ config.timetableHeaderLane }}</div>
+                                <div class="team">{{ config.timetableHeaderTeam }}</div>
+                                <div class="company">{{ config.timetableHeaderCompany }}</div>
                             </div>
                         </div>
                     </div>
