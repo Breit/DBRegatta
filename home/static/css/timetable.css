@@ -38,6 +38,66 @@
     margin-bottom: 20px;
 }
 
+.timetable_settings_controls {
+    float: left;
+    margin-bottom: 20px;
+    margin-left: 20px;
+}
+
+input[type=number] {
+    position: relative;
+    padding: 5px;
+    padding-right: 25px;
+}
+
+input[type=time] {
+    position: relative;
+    padding: 5px;
+    padding-right: 25px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: inner-spin-button !important;
+    width: 25px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+}
+
+.control {
+    height: 30px;
+}
+
+.control label {
+    float: left;
+    width: 250px;
+    height: 30px;
+}
+
+.control input {
+    float: right;
+    width: 80px;
+    height: 100%;
+    text-align: right;
+    background-color: #343332;
+    color: #cacaca;
+    border-radius: 5px;
+    border: 0;
+    font-size: 1.0em;
+}
+
+.control input:focus-visible {
+    outline: 1px solid #0078D4;
+}
+
 .timetable_header h2 {
     font-size: 1.5em;
 }
@@ -158,6 +218,7 @@
 
 .refresh_timetable {
     display: flex;
+    width: 100%;
 }
 
 .refresh_timetable button {

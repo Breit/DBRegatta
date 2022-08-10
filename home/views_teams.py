@@ -6,29 +6,6 @@ from .views_main import getSiteData
 from .models import Team
 from .forms import TeamForm
 
-# settings for the teams page
-def getTeamSettings():
-    settings = {
-        'editTeamHeader': 'Bearbeitung Teams',
-        'teamListHeader': 'Teamliste',
-        'activeTeams': 'Aktive Teams',
-        'addTeam': 'Neues Team',
-        'submitAddTeam': 'Hinzufügen',
-        'submitEditTeam': 'Speichern',
-        'submitAbort': 'Abbrechen',
-        'warningDeleteTeam': 'Team endgültig löschen?',
-        'addTeamIcon': 'add.svg',
-        'removeTeamIcon': 'trash.svg',
-        'activeTeamIcon': 'active.svg',
-        'inactiveTeamIcon': 'inactive.svg',
-        'editTeamIcon': 'edit.svg',
-        'submitTeamIcon': 'ok.svg',
-        'cancelTeamIcon': 'cancel.svg',
-        'checkedTeamIcon': 'checked.svg',
-        'uncheckedTeamIcon': 'unchecked.svg'
-    }
-    return settings
-
 # get teams list from database
 def getTeamContent():
     content = { 'teams': [] }
@@ -47,11 +24,7 @@ def teams(request):
     # if user not in authenticated_users:
     #    return redirect('/')
 
-    siteData = {}
-    siteData['settings'] = getSiteData()
-    siteData['settings']['navigationCSS'] = 'menu.css'
-    siteData['settings']['pageCSS'] = 'teams.css'
-    siteData['settings'].update(getTeamSettings())
+    siteData = getSiteData()
     siteData['content'] = getTeamContent()
 
     if request.method == "POST":

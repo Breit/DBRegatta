@@ -1,6 +1,7 @@
 import math
 import random
 
+from constance import config
 from datetime import datetime, date, time, timedelta
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
@@ -11,21 +12,70 @@ from .models import Race, RaceAssign, Team, RaceDrawMode
 def combineTimeOffset(t: time, offset: timedelta):
     return (datetime.combine(date.today(), t) + offset).time()
 
-# settings for the timetable page
 def getTimeTableSettings():
-    settings = {
-        'timetableSettingsHeader': 'Zeitplan Einstellungen',
-        'timetableHeader': 'Rennplan',
-        'refreshTimetableIcon': 'expired.svg',
-        'refreshTimetableText': 'Zeiten aktualisieren',
-        'createTimetableIcon': 'timetable.svg',
-        'createTimetableText': 'Zeitplan verlosen',
-        'warningCreateTimetable': 'Zeitplan komplett neu verlosen?'
-    }
+    settings = [
+        [
+            {
+                'id': 'timeBegin',
+                'name': config.timeBeginDesc,
+                'type': 'time',
+                'value': config.timeBegin
+            },
+            {
+                'id': 'offsetHeat',
+                'name': config.offsetHeatDesc,
+                'type': 'number',
+                'value': config.offsetHeat.seconds // 60
+            },
+            {
+                'id': 'offsetFinale',
+                'name': config.offsetFinaleDesc,
+                'type': 'number',
+                'value': config.offsetFinale.seconds // 60
+            },
+            {
+                'id': 'offsetCeremony',
+                'name': config.offsetCeremonyDesc,
+                'type': 'number',
+                'value': config.offsetCeremony.seconds // 60
+            }
+        ],
+        [
+            {
+                'id': 'heatCount',
+                'name': config.heatCountDesc,
+                'type': 'number',
+                'value': config.heatCount,
+                'min': config.heatCountMin,
+                'max': config.heatCountMax
+            },
+            {
+                'id': 'lanesPerRace',
+                'name': config.lanesPerRaceDesc,
+                'type': 'number',
+                'value': config.lanesPerRace,
+                'min': config.lanesPerRaceMin,
+                'max': config.lanesPerRaceMax
+            },
+            {
+                'id': 'intervalHeat',
+                'name': config.intervalHeatDesc,
+                'type': 'number',
+                'value': config.intervalHeat.seconds // 60
+            },
+            {
+                'id': 'intervalFinal',
+                'name': config.intervalFinalDesc,
+                'type': 'number',
+                'value': config.intervalFinal.seconds // 60
+            }
+        ]
+    ]
+
     return settings
 
 def getTimeTableContent():
-    def getRaces(raceType: str, lanesPerRace: int):
+    def getRaces(raceType: str):
         races = []
         for race in Race.objects.filter(name__startswith = raceType):
             entry = {
@@ -34,6 +84,8 @@ def getTimeTableContent():
                 'lanes': []
             }
 
+            # deduce lane count from database
+            lanesPerRace = len(set([ra.lane for ra in RaceAssign.objects.all()]))
             for lnum in range(lanesPerRace):
                 try:
                     attendee = RaceAssign.objects.get(race_id=race.id, lane=(lnum + 1))
@@ -64,104 +116,78 @@ def getTimeTableContent():
             races.append(entry)
         return races
 
-    content = {}
-
-    # TODO: from DB
-    content['settings'] = {
-        'lanesPerRace': 3,
-        'heatCount': 2,
-        'intervalHeat': timedelta(minutes=15),
-        'intervalFinal': timedelta(minutes=15),
-        'timeBegin': time(hour=10, minute=00),
-        'offsetHeat': timedelta(minutes=60),
-        'offsetFinal': timedelta(minutes=45),
-        'offsetCeremony': timedelta(minutes=30),
-        'heatPrefix': 'V',
-        'finalPrefix': 'E',
-        'timetableHeader': {
-            'time': 'Startzeit',
-            'name': 'Lauf',
-            'team': 'Team',
-            'company': 'Firma',
-            'lane': 'Bahn'
-        }
-    }
-
-    content['timetable'] = []
-    content['timetable'].append(
+    timetable = []
+    timetable.append(
         {
-            'time': content['settings']['timeBegin'],
-            'desc': 'Team Captains Meeting am Strandschleicher'
+            'time': config.timeBegin,
+            'desc': config.teamCaptainsMeetingTitle
         }
     )
+
     # get heats
-    for i in range(content['settings']['heatCount']):
-        races = getRaces(
-            '{}{}-'.format(content['settings']['heatPrefix'], i + 1),
-            content['settings']['lanesPerRace']
-        )
-        content['timetable'].append(
-            {
-                'time': races[0]['time'] if len(races) > 0 else combineTimeOffset(
-                    content['settings']['timeBegin'],
-                    content['settings']['offsetHeat']
-                ),
-                'desc': 'Vorrunde {}'.format(i + 1),
-                'races': races
-            }
-        )
-    # get finals
-    content['timetable'].append(
-        {
-            'time': combineTimeOffset(
-                content['timetable'][-1]['races'][-1]['time']
-                    if len(content['timetable'][-1]['races']) > 0
-                    else content['timetable'][-1]['time'],
-                content['settings']['offsetFinal']
-            ),
-            'desc': 'Finale',
-            'races': getRaces(
-                content['settings']['finalPrefix'],
-                content['settings']['lanesPerRace']
+    for i in range(config.heatCount):
+        races = getRaces('{}{}-'.format(config.heatPrefix, i + 1))
+        if len(races) > 0:
+            timetable.append(
+                {
+                    'time': races[0]['time'] if len(races) > 0 else combineTimeOffset(
+                        config.timeBegin,
+                        config.offsetHeat
+                    ),
+                    'desc': '{} {}'.format(config.heatsTitle, i + 1),
+                    'races': races
+                }
             )
-        }
-    )
-    content['timetable'].append(
+
+    # get finals
+    timetable.append(
         {
             'time': combineTimeOffset(
-                content['timetable'][-1]['races'][-1]['time']
-                    if len(content['timetable'][-1]['races']) > 0
-                    else content['timetable'][-1]['time'],
-                content['settings']['offsetCeremony']
+                timetable[-1]['races'][-1]['time']
+                    if len(timetable[-1]['races']) > 0
+                    else timetable[-1]['time'],
+                config.offsetFinale
             ),
-            'desc': 'Siegerehrung am Strandschleicher'
+            'desc': config.finaleTitle,
+            'races': getRaces(config.finalPrefix)
         }
     )
 
-    return content
+    timetable.append(
+        {
+            'time': combineTimeOffset(
+                timetable[-1]['races'][-1]['time']
+                    if len(timetable[-1]['races']) > 0
+                    else timetable[-1]['time'],
+                config.offsetCeremony
+            ),
+            'desc': config.victoryCeremonyTitle
+        }
+    )
 
-def createTimeTable(settings: dict):
+    return timetable
+
+def createTimeTable():
     # drop existing races
     RaceAssign.objects.all().delete()
     Race.objects.all().delete()
     RaceDrawMode.objects.all().delete()
 
     # create race tables for heats
-    lanesPerRace = settings['lanesPerRace']
-    start = combineTimeOffset(settings['timeBegin'], settings['offsetHeat'])
+    start = combineTimeOffset(config.timeBegin, config.offsetHeat)
     teams = Team.objects.filter(active=True)
     teams_idx = list(range(teams.count()))
     lastHeat = []
-    for hnum in range(settings['heatCount']):
+    for hnum in range(config.heatCount):
         lane = 0
         rnum = 0
         random.shuffle(teams_idx)
 
         # assure that attendees of last race from previous heat are not in the first race from this heat
-        if len(lastHeat) > 0 and len(teams_idx) > lanesPerRace:
+        if len(lastHeat) > 0 and len(teams_idx) > config.lanesPerRace:
             while True:
                 redraw = False
-                for i in teams_idx[:lanesPerRace]:
+                for i in teams_idx[:config.lanesPerRace]:
                     if i in lastHeat:
                         random.shuffle(teams_idx)
                         redraw = True
@@ -171,20 +197,20 @@ def createTimeTable(settings: dict):
 
         # create races
         for i, t in enumerate(teams_idx):
-            if teams.count() % lanesPerRace == 1 and i == teams.count() - 2:
+            if teams.count() % config.lanesPerRace == 1 and i == teams.count() - 2:
                 # in case the last race has only 1 lane occupied
                 lane = 1
             else:
-                lane = (lane % lanesPerRace) + 1
+                lane = (lane % config.lanesPerRace) + 1
             # update races
             if lane == 1:
                 lastHeat = []
                 rnum += 1
                 race = Race()
                 race.time = start
-                race.name = '{}{}-{}'.format(settings['heatPrefix'], hnum + 1, rnum)
+                race.name = '{}{}-{}'.format(config.heatPrefix, hnum + 1, rnum)
                 race.save()
-                start = combineTimeOffset(start, settings['intervalHeat'])
+                start = combineTimeOffset(start, config.intervalHeat)
             # update race assignments
             ra = RaceAssign()
             ra.race_id = Race.objects.get(name=race.name).id
@@ -194,42 +220,64 @@ def createTimeTable(settings: dict):
             lastHeat.append(t)
 
     # create race tables for finals
-    start = combineTimeOffset(start, settings['offsetFinal'])
+    start = combineTimeOffset(start, config.offsetFinale)
     pnum = teams.count()
     rname = ''
-    for rnum in range(math.ceil(teams.count() / max(1, (lanesPerRace - 1)))):
+    if teams.count() == 0:
+        races = 0
+    elif teams.count() == 1:
+        races = 1
+    else:
+        races = math.ceil((teams.count() - 1) / max(1, (config.lanesPerRace - 1)))
+    for rnum in range(races):
         race = Race()
         race.time = start
-        race.name = '{}{}'.format(settings['finalPrefix'], rnum + 1)
+        race.name = '{}{}'.format(config.finalPrefix, rnum + 1)
         race.save()
 
         # create finale draw assignments
-        for lnum in range(lanesPerRace) if rnum > 0 else range(max(1, (lanesPerRace - 1))):
+        if rnum == 0:
+            lanes = teams.count() - (races - 1) * (config.lanesPerRace - 1)
+        else:
+            lanes = config.lanesPerRace
+        for lnum in range(lanes):
             rdm = RaceDrawMode()
             rdm.race_id = race.id
             rdm.lane = lnum + 1
             if rnum == 0 or lnum != 0:
-                rdm.desc = 'Platz {} aus VR'.format(pnum)
+                rdm.desc = config.finaleTemplate1.format(pnum)
                 pnum -= 1
             else:
-                rdm.desc = 'Erster aus {}'.format(rname)
+                rdm.desc = config.finaleTemplate2.format(rname)
             rdm.save()
 
         rname = race.name
-        start = combineTimeOffset(start, settings['intervalFinal'])
+        start = combineTimeOffset(start, config.intervalFinal)
 
 def timetable(request):
-    siteData = {}
-    siteData['settings'] = getSiteData()
-    siteData['settings']['navigationCSS'] = 'menu.css'
-    siteData['settings']['pageCSS'] = 'timetable.css'
-    siteData['settings'].update(getTimeTableSettings())
-    siteData['content'] = getTimeTableContent()
+    siteData = getSiteData()
+    siteData['timetable'] = getTimeTableContent()
+    siteData['controls'] = getTimeTableSettings()
 
     if request.method == "POST":
-        if 'create_timetable' in request.POST:
-            createTimeTable(siteData['content']['settings'])
-
+        if 'timeBegin' in request.POST:
+            config.timeBegin = time.fromisoformat(request.POST['timeBegin'])
+        elif 'offsetHeat' in request.POST:
+            config.offsetHeat = timedelta(minutes=int(request.POST['offsetHeat']))
+        elif 'offsetFinale' in request.POST:
+            config.offsetFinale = timedelta(minutes=int(request.POST['offsetFinale']))
+        elif 'offsetCeremony' in request.POST:
+            config.offsetCeremony = timedelta(minutes=int(request.POST['offsetCeremony']))
+        elif 'heatCount' in request.POST:
+            config.heatCount = int(request.POST['heatCount'])
+        elif 'lanesPerRace' in request.POST:
+            config.lanesPerRace = int(request.POST['lanesPerRace'])
+        elif 'intervalHeat' in request.POST:
+            config.intervalHeat = timedelta(minutes=int(request.POST['intervalHeat']))
+        elif 'intervalFinal' in request.POST:
+            config.intervalFinal = timedelta(minutes=int(request.POST['intervalFinal']))
+        elif 'create_timetable' in request.POST:
+            createTimeTable()
         elif 'refresh_times' in request.POST:
             # TODO
             pass

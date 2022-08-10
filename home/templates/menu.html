@@ -2,7 +2,7 @@
 
 {% block menu %}
 <div class="menu">
-    {% for m in settings.menu %}
+    {% for m in menu %}
     <div class="menu_entry" id="{{ m.id }}" onclick="location.href='{{ m.url }}';">
         <div class="menu_entry_thumb">
             <img src="{% static 'images/' %}{{ m.thumb }}" alt="{{ m.title }}_icon">

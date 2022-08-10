@@ -1,69 +1,49 @@
-from datetime import date
 from django.shortcuts import render
+from constance import config
 
 # define default site data
 def getSiteData():
     siteData = {
-        'header': {
-            'name': '14. GODYO Drachenboot-Sprint',
-            'date': date(2022, 9, 10),
-            'icon': 'dragon.svg',
-            'url': '/'
-        },
         'menu': [
             {
                 'id': 'teams',
-                'title': 'Teamverwaltung',
+                'title': config.teamsTitle,
                 'url': 'teams',
-                'thumb': 'team.svg'
+                'thumb': config.teamsIcon
             },
             {
                 'id': 'timetable',
-                'title': 'Zeitplan',
+                'title': config.timetableTitle,
                 'url': 'timetable',
-                'thumb': 'timetable.svg'
+                'thumb': config.timetableIcon
             },
             {
                 'id': 'times',
-                'title': 'Zeiteingabe',
+                'title': config.timeTitle,
                 'url': 'times',
-                'thumb': 'time.svg'
+                'thumb': config.timeIcon
             },
             {
                 'id': 'results',
-                'title': 'Ergebnisse',
+                'title': config.resultsTitle,
                 'url': 'results',
-                'thumb': 'results.svg'
+                'thumb': config.resultsIcon
             },
             {
                 'id': 'settings',
-                'title': 'Einstellungen',
+                'title': config.settingsTitle,
                 'url': 'settings',
-                'thumb': 'settings.svg'
+                'thumb': config.settingsIcon
             },
             {
                 'id': 'admin',
-                'title': 'Admin Panel',
+                'title': config.adminTitle,
                 'url': 'admin',
-                'thumb': 'django_logo.svg'
+                'thumb': config.adminIcon
             }
-        ],
-        'siteLogo': 'usv_logo.png',
-        'siteCSS': 'site.css',
-        'sponsor': {
-            'name': 'GODYO AG',
-            'logo': 'godyo_logo.png',
-            'url': ''
-        },
-        'owner': {
-            'name': 'USV Jena e.V. - Abteilung Kanu',
-            'logo': 'usv_kanu_footer.png',
-            'url': ''
-        }
+        ]
     }
     return siteData
 
 def main(request):
-    siteData = {}
-    siteData['settings'] = getSiteData()
-    return render(request, 'main.html', siteData)
+    return render(request, 'main.html', getSiteData())
