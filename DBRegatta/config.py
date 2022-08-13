@@ -19,7 +19,6 @@ CONSTANCE_CONFIG = {
     'ownerUrl':                 ('',                                            'Site Owner URL'),
 
     # Teams Settings
-    'teamsNavigationCSS':       ('menu.css',                                    'CSS File for the Navigation Menu'),
     'teamsPageCSS':             ('teams.css',                                   'CSS File for Site-specific Styling'),
     'teamsTitle':               ('Teamverwaltung',                              'Menu Title for Teams Page'),
     'teamsIcon':                ('team.svg',                                    'Menu Icon for Teams Page'),
@@ -40,7 +39,6 @@ CONSTANCE_CONFIG = {
     'cancelTeamIcon':           ('cancel.svg',                                  'Icon for Cancel Button'),
 
     # Timetable Settings
-    'timetableNavigationCSS':   ('menu.css',                                    'CSS File for the Navigation Menu'),
     'timetablePageCSS':         ('timetable.css',                               'CSS File for Site-specific Styling'),
     'timetableTitle':           ('Zeitplan',                                    'Menu Title for Timetable Page'),
     'timetableIcon':            ('timetable.svg',                               'Menu Icon for Timetable Page'),

@@ -144,7 +144,7 @@ def getTimeTableContent():
         {
             'time': combineTimeOffset(
                 timetable[-1]['races'][-1]['time']
-                    if len(timetable[-1]['races']) > 0
+                    if 'races' in timetable[-1] and len(timetable[-1]['races']) > 0
                     else timetable[-1]['time'],
                 config.offsetFinale
             ),
@@ -157,7 +157,7 @@ def getTimeTableContent():
         {
             'time': combineTimeOffset(
                 timetable[-1]['races'][-1]['time']
-                    if len(timetable[-1]['races']) > 0
+                    if 'races' in timetable[-1] and len(timetable[-1]['races']) > 0
                     else timetable[-1]['time'],
                 config.offsetCeremony
             ),
@@ -255,7 +255,7 @@ def createTimeTable():
         start = combineTimeOffset(start, config.intervalFinal)
 
 def timetable(request):
-    siteData = getSiteData()
+    siteData = getSiteData('timetable')
     siteData['timetable'] = getTimeTableContent()
     siteData['controls'] = getTimeTableSettings()
 

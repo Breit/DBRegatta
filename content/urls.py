@@ -9,5 +9,6 @@ urlpatterns = [
     path('times', views.times),
     path('results', views.results),
     path('timetable', views.timetable),
-    path('settings', views.settings)
+    path('settings', views.settings),
+    path('djadmin', views.djadmin)
 ]

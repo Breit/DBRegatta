@@ -7,27 +7,44 @@ class TeamForm(ModelForm):
     class Meta:
         model = Team
         fields = (
-            # 'active',
+            'active',
+            'wait',
+            'date',
             'name',
             'company',
             'contact',
             'email',
-            'address'
+            'phone'
         )
         labels = {
-            # 'active': '',
+            'active': '',
+            'wait': '',
+            'date': '',
             'name': '',
             'company': '',
             'contact': '',
             'email': '',
-            'address': ''
+            'phone': ''
         }
         widgets = {
-            # 'active': forms.CheckboxInput(
-            #     attrs = {
-            #         'class': 'form_control_check'
-            #     }
-            # ),
+            'active': forms.CheckboxInput(
+                attrs = {
+                    'class': 'form_control_check',
+                    'placeholder': 'Team aktiv'
+                }
+            ),
+            'wait': forms.CheckboxInput(
+                attrs = {
+                    'class': 'form_control_check',
+                    'placeholder': 'Warteliste'
+                }
+            ),
+            'date': forms.DateInput(
+                attrs = {
+                    'class': 'form_control_check',
+                    'placeholder': 'Anmeldung'
+                }
+            ),
             'name': forms.TextInput(
                 attrs = {
                     'class': 'form_control',
@@ -52,10 +69,10 @@ class TeamForm(ModelForm):
                     'placeholder': 'Email Adresse'
                 }
             ),
-            'address': forms.TextInput(
+            'phone': forms.TextInput(
                 attrs={
                     'class': 'form_control',
-                    'placeholder': 'Anschrift'
+                    'placeholder': 'Telefonnummer'
                 }
             )
         }
