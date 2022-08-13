@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+X_FRAME_OPTIONS = 'ALLOW-FROM http://127.0.0.1:1080/'
+
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 
 
@@ -41,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'constance',
     'constance.backends.database',
-    'home.apps.HomeConfig'
+    'content.apps.ContentConfig'
 ]
 
 MIDDLEWARE = [

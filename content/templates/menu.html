@@ -1,0 +1,16 @@
+{% load static %}
+
+{% block menu %}
+<ul class="nav nav-pills flex-column h-100">
+    {% for m in menu %}
+    <li class="nav-item flex-row{% if m.id == 'settings' %} mt-auto{% endif %}" id="{{ m.id }}">
+        <a class="nav-link p-1 d-inline-flex w-100{% if m.active %} active{% endif %}" href="{{ m.url }}">
+            <div class="p-1">
+                <img src="{% static 'images/' %}{{ m.thumb }}" alt="{{ m.title }}_icon">
+            </div>
+            <p class="px-2 my-auto lead text-light">{{ m.title }}</p>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

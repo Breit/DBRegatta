@@ -24,7 +24,7 @@ def teams(request):
     # if user not in authenticated_users:
     #    return redirect('/')
 
-    siteData = getSiteData()
+    siteData = getSiteData('teams')
     siteData['content'] = getTeamContent()
 
     if request.method == "POST":

@@ -2,44 +2,50 @@ from django.shortcuts import render
 from constance import config
 
 # define default site data
-def getSiteData():
+def getSiteData(id: str = None):
     siteData = {
         'menu': [
             {
                 'id': 'teams',
                 'title': config.teamsTitle,
                 'url': 'teams',
-                'thumb': config.teamsIcon
+                'thumb': config.teamsIcon,
+                'active': True if id == 'teams' else False
             },
             {
                 'id': 'timetable',
                 'title': config.timetableTitle,
                 'url': 'timetable',
-                'thumb': config.timetableIcon
+                'thumb': config.timetableIcon,
+                'active': True if id == 'timetable' else False
             },
             {
                 'id': 'times',
                 'title': config.timeTitle,
                 'url': 'times',
-                'thumb': config.timeIcon
+                'thumb': config.timeIcon,
+                'active': True if id == 'times' else False
             },
             {
                 'id': 'results',
                 'title': config.resultsTitle,
                 'url': 'results',
-                'thumb': config.resultsIcon
+                'thumb': config.resultsIcon,
+                'active': True if id == 'results' else False
             },
             {
                 'id': 'settings',
                 'title': config.settingsTitle,
                 'url': 'settings',
-                'thumb': config.settingsIcon
+                'thumb': config.settingsIcon,
+                'active': True if id == 'settings' else False
             },
             {
-                'id': 'admin',
+                'id': 'djadmin',
                 'title': config.adminTitle,
-                'url': 'admin',
-                'thumb': config.adminIcon
+                'url': 'djadmin',
+                'thumb': config.adminIcon,
+                'active': True if id == 'djadmin' else False
             }
         ]
     }

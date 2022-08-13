@@ -1,3 +1,8 @@
+.team_button img {
+    height: 20px;
+}
+
+/*
 #teams {
     color: #3b92e4;
 }
@@ -82,18 +87,15 @@
 }
 
 .team_cell:first-child {
-    /*font-weight: bold;*/
     color: #9dd41d
 }
 
 .team_cell_name.inactive {
     color: #ffb90064;
-    /*text-decoration: line-through*/
 }
 
 .team_cell.inactive:not(:first-child) {
     color: #cacaca64;
-    /*text-decoration: line-through*/
 }
 
 .team_list_content {
@@ -157,3 +159,4 @@
     background-image: url('/static/images/active.svg');
     background-size: 40px;
 }
+*/
