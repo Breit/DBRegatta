@@ -7,125 +7,226 @@
 
 {% block content %}
     <div class="edit_team container-fluid">
-        <h2>{{ config.editTeamHeader }}</h2>
+        <h2 class="mb-3">{{ config.editTeamHeader }}</h2>
         {% if content.forms.mod %}
-            <div class="team_form">
+            <div class="d-flex align-items-start team_form">
                 <form method="POST" action="" id="mod_form">
                     {% csrf_token %}
-                    {{ content.forms.form.as_p }}
+                    <div class="row">
+                        {% for f in content.forms.form %}
+                            {% if f.field.widget.input_type == 'checkbox' %}
+                            <div class="col-6 mb-3">
+                                <div class="input-group">
+                                    <div class="input-group-text form-switch">
+                                        {{ f }}
+                                    </div>
+                                    <input type="text" class="form-control bg-light" value="{{ f.field.widget.attrs.placeholder }}" disabled>
+                                </div>
+                            </div>
+                            {% elif f.field.widget.input_type == 'date' %}
+                                <div class="col-12 mb-3">
+                                    <div class="input-group">
+                                        <div class="input-group-text form-date px-2 py-1">
+                                            {{ f }}
+                                        </div>
+                                        <input type="text" class="form-control bg-light" value="{{ f.field.widget.attrs.placeholder }}" disabled>
+                                    </div>
+                                </div>
+                            {% elif f.html_name in 'email, phone' %}
+                                <div class="col-6 mb-3">
+                                    {{ f }}
+                                </div>
+                            {% else %}
+                                <div class="col-12 mb-3">
+                                    {{ f }}
+                                </div>
+                            {% endif %}
+                            {% if f.errors %}
+                                <span class="error text-danger small">{{ f.errors }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </form>
             </div>
-            <div class="submit_team">
-                <button type="submit" name="mod_team" value="Submit" class="btn btn_team_submit" form="mod_form">
-                    <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="submit_team">
-                    <p>{{ config.submitEditTeam }}</p>
+            <div class="d-flex align-items-start">
+                <button type="submit" name="mod_team" value="Submit" class="btn btn-primary btn_team me-2" form="mod_form">
+                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                        <div class="pe-2">
+                            <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="add_team">
+                        </div>
+                        <p class="m-0 ps-2 lead">{{ config.submitEditTeam }}</p>
+                    </div>
                 </button>
-                <button type="submit" name="cancel_team" value="Cancel" class="btn btn_team_cancel" form="mod_form" formnovalidate>
-                    <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_team">
-                    <p>{{ config.submitAbort }}</p>
+                <button type="submit" name="cancel_team" value="Cancel" class="btn btn-primary btn_team" form="mod_form" formnovalidate>
+                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                        <div class="pe-2">
+                            <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="add_team">
+                        </div>
+                        <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                    </div>
                 </button>
             </div>
         {% else %}
             {% if content.forms.add %}
-                <div class="team_form">
+                <div class="d-flex align-items-start team_form">
                     <form method="POST" action="" id="add_form">
                         {% csrf_token %}
-                        {{ content.forms.form.as_p }}
+                        <div class="row">
+                            {% for f in content.forms.form %}
+                                {% if f.field.widget.input_type == 'checkbox' %}
+                                <div class="col-6 mb-3">
+                                    <div class="input-group">
+                                        <div class="input-group-text form-switch">
+                                            {{ f }}
+                                        </div>
+                                        <input type="text" class="form-control bg-light" value="{{ f.field.widget.attrs.placeholder }}" disabled>
+                                    </div>
+                                </div>
+                                {% elif f.field.widget.input_type == 'date' %}
+                                    <div class="col-12 mb-3">
+                                        <div class="input-group">
+                                            <div class="input-group-text form-date px-2 py-1">
+                                                {{ f }}
+                                            </div>
+                                            <input type="text" class="form-control bg-light" value="{{ f.field.widget.attrs.placeholder }}" disabled>
+                                        </div>
+                                    </div>
+                                {% elif f.html_name in 'email, phone' %}
+                                    <div class="col-6 mb-3">
+                                        {{ f }}
+                                    </div>
+                                {% else %}
+                                    <div class="col-12 mb-3">
+                                        {{ f }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     </form>
                 </div>
-                <div class="submit_team">
-                    <button type="submit" name="add_team" value="Submit" class="btn btn_team_submit" form="add_form">
-                        <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="submit_team">
-                        <p>{{ config.submitAddTeam }}</p>
+                <div class="d-flex align-items-start">
+                    <button type="submit" name="add_team" value="Submit" class="btn btn-primary btn_team me-2" form="add_form">
+                        <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                            <div class="pe-2">
+                                <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="add_team">
+                            </div>
+                            <p class="m-0 ps-2 lead">{{ config.submitAddTeam }}</p>
+                        </div>
                     </button>
-                    <button type="submit" name="cancel_team" value="Cancel" class="btn btn_team_cancel" form="add_form" formnovalidate>
-                        <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_team">
-                        <p>{{ config.submitAbort }}</p>
+                    <button type="submit" name="cancel_team" value="Cancel" class="btn btn-primary btn_team" form="add_form" formnovalidate>
+                        <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                            <div class="pe-2">
+                                <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="add_team">
+                            </div>
+                            <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                        </div>
                     </button>
                 </div>
             {% else %}
-                <div class="submit_team">
+                <div class="d-flex align-items-start">
                     <form method="POST" action="" id="none_form">
                         {% csrf_token %}
-                        <button type="submit" name="show_add_form" value="Add" class="btn btn_add_team_show">
-                            <img src="{% static 'images/' %}{{ config.addTeamIcon }}" alt="add_team">
-                            <p>{{ config.addTeam }}</p>
+                        <button type="submit" name="show_add_form" value="Add" class="btn btn-primary btn_team">
+                            <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div class="pe-2">
+                                    <img src="{% static 'images/' %}{{ config.addTeamIcon }}" alt="add_team">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.addTeam }}</p>
+                            </div>
                         </button>
                     </form>
                 </div>
             {% endif %}
         {% endif %}
+        <div class="container-fluid border-bottom pt-3 mb-4"></div>
     </div>
     <div class="team_list container-fluid">
         <div class="team_header">
-            <h2>{{ config.teamListHeader }}</h2>
-            <p>{{ config.activeTeams }}: {{ content.activeTeams }} von {{ content.totalTeams }}</p>
+            <h2 class="mb-3">{{ config.teamListHeader }}</h2>
+            <div class="progress mb-4 border">
+                {% if content.activeTeams %}
+                    <div class="progress-bar team_active bg-success fw-bold text-dark" role="progressbar" aria-label="{{ content.activeTeams }}" style="width: calc(100% * {{ content.activeTeams }} / {{ content.totalTeams }})" aria-valuenow="{{ content.activeTeams }}" aria-valuemin="0" aria-valuemax="{{ content.totalTeams }}">
+                        {{ content.activeTeams }} {{ config.activeTeams }}
+                    </div>
+                {% endif %}
+                {% if content.waitlistTeams %}
+                    <div class="progress-bar team_wait bg-warning fw-bold text-dark" role="progressbar" aria-label="{{ content.waitlistTeams }}" style="width: calc(100% * {{ content.waitlistTeams }} / {{ content.totalTeams }})" aria-valuenow="{{ content.waitlistTeams }}" aria-valuemin="0" aria-valuemax="{{ content.totalTeams }}">
+                        {{ content.waitlistTeams }} {{ config.waitlistTeams }}
+                    </div>
+                {% endif %}
+                {% if content.inactiveTeams %}
+                    <div class="progress-bar team_inactive bg-secondary fw-bold text-dark" role="progressbar" aria-label="{{ content.inactiveTeams }}" style="width: calc(100% * {{ content.inactiveTeams }} / {{ content.totalTeams }})" aria-valuenow="{{ content.inactiveTeams }}" aria-valuemin="0" aria-valuemax="{{ content.totalTeams }}">
+                        {{ content.inactiveTeams }} {{ config.inactiveTeams }}
+                    </div>
+                {% endif %}
+            </div>
         </div>
-        <div class="team_list_content container-fluid">
-            {% for t in content.teams %}
-                <div class="row">
-                    <div class="col-auto {% if t.active %}active{% else %}inactive{% endif %}">
-                        {{ t.id }}
-                    </div>
-                    <div class="col-3 {% if t.active %}active{% else %}inactive{% endif %}">
-                        {{ t.name }}
-                    </div>
-                    <div class="col-2 {% if t.active %}active{% else %}inactive{% endif %}">
-                        {{ t.company }}
-                    </div>
-                    <div class="col-2 {% if t.active %}active{% else %}inactive{% endif %}">
-                        {{ t.contact }}
-                    </div>
-                    <div class="col-2 {% if t.active %}active{% else %}inactive{% endif %}">
-                        {{ t.email }}
-                    </div>
-                    <div class="col-2 {% if t.active %}active{% else %}inactive{% endif %}">
-                        {{ t.address }}
-                    </div>
-                    <div class="col-2 {% if t.active %}active{% else %}inactive{% endif %}">
-                        {{ t.phone }}
-                    </div>
-                    <div class="col-2 {% if t.active %}active{% else %}inactive{% endif %}">
-                        {{ t.date|date:'d.m.Y' }}
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <form method="POST" action="" id="none_form" class="col-auto m-0 p-0 team_button">
-                                {% csrf_token %}
-                                <button type="submit" name="edit_team" value="{{ t.id }}" class="btn_team_icon">
-                                    <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_team">
-                                </button>
-                            </form>
-                            <form method="POST" action="" id="none_form" class="col-auto m-0 p-0 team_button">
-                                {% csrf_token %}
-                                <button type="submit" name="activate_team" value="{{ t.name }}" class="btn_team_icon">
-                                    {% if t.active %}
-                                    <img src="{% static 'images/' %}{{ config.activeTeamIcon }}" alt="active_team">
-                                    {% else %}
-                                    <img src="{% static 'images/' %}{{ config.inactiveTeamIcon }}" alt="inactive_team">
-                                    {% endif %}
-                                </button>
-                            </form>
-                            <form method="POST" action="" id="none_form" class="col-auto m-0 p-0 team_button">
-                                {% csrf_token %}
-                                <button type="submit" name="waitlist_team" value="{{ t.name }}" class="btn_team_icon">
-                                    {% if t.wait %}
-                                    <img src="{% static 'images/' %}{{ config.activeTeamIcon }}" alt="wait_team">
-                                    {% else %}
-                                    <img src="{% static 'images/' %}{{ config.inactiveTeamIcon }}" alt="nowait_team">
-                                    {% endif %}
-                                </button>
-                            </form>
-                            <form method="POST" action="" id="none_form" class="col-auto m-0 p-0 team_button">
-                                {% csrf_token %}
-                                <button type="submit" name="delete_team" value="{{ t.name }}" class="btn_team_icon" onclick="return confirm('{{ config.warningDeleteTeam }}');">
-                                    <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_team">
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
+        <div class="team_list_content container-fluid g-0">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr class="bg-secondary text-light">
+                        <th scope="col">{{ config.teamTableHeaderID }}</th>
+                        <th scope="col">{{ config.teamTableHeaderTeam }}</th>
+                        <th scope="col">{{ config.teamTableHeaderCompany }}</th>
+                        <th scope="col">{{ config.teamTableHeaderCaptain }}</th>
+                        <th scope="col">{{ config.teamTableHeaderEmail }}</th>
+                        <th scope="col">{{ config.teamTableHeaderPhone }}</th>
+                        <th scope="col">{{ config.teamTableHeaderDate }}</th>
+                        <th scope="col">{{ config.teamTableHeaderOptions }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in content.teams %}
+                        <tr class="{% if content.forms.id and t.id == content.forms.id %}table-primary{% elif t.active and not t.wait %}table-success{% elif t.active and t.wait %}table-warning{% else %}table-secondary fst-italic{% endif %}">
+                            <td>{{ t.id }}</td>
+                            <td class="fw-bold">{{ t.name }}</td>
+                            <td>{{ t.company }}</td>
+                            <td>{{ t.contact }}</td>
+                            <td>
+                                <a href= "mailto:{{ t.email }}">{{ t.email }}</a>
+                            </td>
+                            <td>{{ t.phone }}</td>
+                            <td>{{ t.date|date:'d.m.Y' }}</td>
+                            <td class="team_table_buttons">
+                                <div class="row">
+                                    <form method="POST" action="" id="none_form" class="col-auto m-0 p-0 team_table_button">
+                                        {% csrf_token %}
+                                        <button type="submit" name="edit_team" value="{{ t.id }}" class="btn btn_team_table_icon p-0 ps-1">
+                                            <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_team">
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="" id="none_form" class="col-auto m-0 p-0 team_table_button">
+                                        {% csrf_token %}
+                                        <button type="submit" name="activate_team" value="{{ t.name }}" class="btn btn_team_table_icon p-0 ps-1">
+                                            {% if t.active %}
+                                                <img src="{% static 'images/' %}{{ config.activeTeamIcon }}" alt="active_team">
+                                            {% else %}
+                                                <img src="{% static 'images/' %}{{ config.inactiveTeamIcon }}" alt="inactive_team">
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="" id="none_form" class="col-auto m-0 p-0 team_table_button">
+                                        {% csrf_token %}
+                                        <button type="submit" name="waitlist_team" value="{{ t.name }}" class="btn btn_team_table_icon p-0 ps-1">
+                                            {% if t.wait %}
+                                                <img src="{% static 'images/' %}{{ config.waitTeamIcon }}" alt="wait_team">
+                                            {% else %}
+                                                <img src="{% static 'images/' %}{{ config.nowaitTeamIcon }}" alt="nowait_team">
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="" id="none_form" class="col-auto m-0 p-0 team_table_button">
+                                        {% csrf_token %}
+                                        <button type="submit" name="delete_team" value="{{ t.name }}" class="btn btn_team_table_icon p-0 ps-1" onclick="return confirm('{{ config.warningDeleteTeam }}');">
+                                            <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_team">
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}

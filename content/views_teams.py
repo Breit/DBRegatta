@@ -11,12 +11,15 @@ def getTeamContent():
     content = { 'teams': [] }
     for team in Team.objects.all():
         content['teams'].append(model_to_dict(team))
-    content['activeTeams'] = Team.objects.filter(active=True).count()
+    content['activeTeams'] = Team.objects.filter(active=True, wait=False).count()
+    content['inactiveTeams'] = Team.objects.filter(active=False).count()
+    content['waitlistTeams'] = Team.objects.filter(active=True, wait=True).count()
     content['totalTeams'] = Team.objects.all().count()
     content['forms'] = {
         'form': TeamForm(),
         'add': False,
-        'mod': False
+        'mod': False,
+        'id': None
     }
     return content
 
@@ -38,6 +41,9 @@ def teams(request):
             if Team.objects.filter(name=request.POST['name']).exists():
                 siteData['content']['forms']['add'] = True
                 siteData['content']['forms']['form'] = newTeamForm
+            #if not newTeamForm['date'].data:
+            #    newTeamForm.add_error('date', 'Date missing')
+            #elif
             if newTeamForm.is_valid():
                 newTeamForm.save()
                 siteData['content'] = getTeamContent()              # refresh from DB
@@ -45,8 +51,6 @@ def teams(request):
 
         # abort submitting teams changes
         elif 'cancel_team' in request.POST:
-            siteData['content']['forms']['add'] = False
-            siteData['content']['forms']['mod'] = False
             return redirect('/teams')
 
         # toggle team activation
@@ -54,6 +58,17 @@ def teams(request):
             if Team.objects.filter(name=request.POST['activate_team']).exists():
                 modTeam = Team.objects.get(name=request.POST['activate_team'])
                 modTeam.active = not modTeam.active
+                modTeam.save()
+                siteData['content'] = getTeamContent()              # refresh from DB
+            return redirect('/teams')
+
+        # toggle team waitlist
+        elif 'waitlist_team' in request.POST:
+            if Team.objects.filter(name=request.POST['waitlist_team']).exists():
+                modTeam = Team.objects.get(name=request.POST['waitlist_team'])
+                modTeam.wait = not modTeam.wait
+                if modTeam.wait:
+                    modTeam.active = True
                 modTeam.save()
                 siteData['content'] = getTeamContent()              # refresh from DB
             return redirect('/teams')
@@ -90,6 +105,7 @@ def teams(request):
         # prepare form for modifying a team
         if 'edit_id' in request.GET:
             if Team.objects.filter(id = request.GET['edit_id']).exists():
+                siteData['content']['forms']['id'] = int(request.GET['edit_id'])
                 siteData['content']['forms']['mod'] = True
                 siteData['content']['forms']['form'] = TeamForm(
                     instance = Team.objects.get(id = request.GET['edit_id'])
