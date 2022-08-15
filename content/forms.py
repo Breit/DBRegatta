@@ -9,70 +9,71 @@ class TeamForm(ModelForm):
         fields = (
             'active',
             'wait',
-            'date',
             'name',
             'company',
             'contact',
             'email',
-            'phone'
+            'phone',
+            'date'
         )
         labels = {
             'active': '',
             'wait': '',
-            'date': '',
             'name': '',
             'company': '',
             'contact': '',
             'email': '',
-            'phone': ''
+            'phone': '',
+            'date': ''
         }
         widgets = {
             'active': forms.CheckboxInput(
                 attrs = {
-                    'class': 'form_control_check',
+                    'class': 'form-check-input',
                     'placeholder': 'Team aktiv'
                 }
             ),
             'wait': forms.CheckboxInput(
                 attrs = {
-                    'class': 'form_control_check',
+                    'class': 'form-check-input',
                     'placeholder': 'Warteliste'
-                }
-            ),
-            'date': forms.DateInput(
-                attrs = {
-                    'class': 'form_control_check',
-                    'placeholder': 'Anmeldung'
                 }
             ),
             'name': forms.TextInput(
                 attrs = {
-                    'class': 'form_control',
+                    'class': 'form-control',
                     'placeholder': 'Teamname'
                 }
             ),
             'company': forms.TextInput(
                 attrs = {
-                    'class': 'form_control',
+                    'class': 'form-control',
                     'placeholder': 'Firma'
                 }
             ),
             'contact': forms.TextInput(
                 attrs = {
-                    'class': 'form_control',
+                    'class': 'form-control',
                     'placeholder': 'Kontakt / Team Captain'
                 }
             ),
             'email': forms.EmailInput(
                 attrs = {
-                    'class': 'form_control',
+                    'class': 'form-control',
                     'placeholder': 'Email Adresse'
                 }
             ),
             'phone': forms.TextInput(
                 attrs={
-                    'class': 'form_control',
+                    'class': 'form-control',
                     'placeholder': 'Telefonnummer'
+                }
+            ),
+            'date': forms.DateInput(
+                attrs = {
+                    'class': 'form-control',
+                    'placeholder': 'Anmeldedatum',
+                    'type': 'date'
                 }
             )
         }

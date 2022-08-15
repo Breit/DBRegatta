@@ -1,5 +1,74 @@
-.team_button img {
-    height: 20px;
+.team_form {
+    width: 50%;
+    min-width: 500px;
+}
+
+.btn_team {
+    width: 200px;
+}
+
+.btn_team_icon img {
+    height: 50px;
+}
+
+.btn_team_icon:hover img {
+    transform: scale(1.2);
+}
+
+.btn_team_table_icon img {
+    height: 30px;
+}
+
+.btn_team_table_icon:hover img {
+    transform: scale(1.5);
+}
+
+.btn_team_table_icon {
+    border: 0;
+}
+
+.team_table_buttons {
+    width: 130px !important;
+}
+
+.form-switch input[type=checkbox] {
+    margin-left: 0;
+}
+
+.form-date input[type=date] {
+    text-align: center!important;
+    padding: 0 0.25rem!important;
+}
+
+.progress {
+    height: 30px;
+    border-radius: 0;
+}
+
+.team_active {
+    background-color: var(--bs-green) !important;
+    filter: brightness(1.2) saturate(0.7) hue-rotate(-30deg);
+}
+
+.team_inactive {
+    background-color: var(--bs-gray-400) !important;
+}
+
+.team_wait {
+    background-color: var(--bs-warning) !important;
+    filter: brightness(1.0) saturate(1.0);
+}
+
+.error {
+    margin-top: -1rem !important;
+}
+
+.errorlist {
+    padding: 0 0.75rem;
+}
+
+.error li {
+    list-style-type: none;
 }
 
 /*

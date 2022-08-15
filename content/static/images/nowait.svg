@@ -17,13 +17,13 @@
    viewBox="0 0 48 48"
    enable-background="new 0 0 48 48"
    xml:space="preserve"
-   id="svg1542"
-   sodipodi:docname="active.svg"
+   id="svg867"
+   sodipodi:docname="nowait.svg"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"><metadata
-   id="metadata1548"><rdf:RDF><cc:Work
+   id="metadata873"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><defs
-   id="defs1546" /><sodipodi:namedview
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+   id="defs871" /><sodipodi:namedview
    pagecolor="#ffffff"
    bordercolor="#666666"
    borderopacity="1"
@@ -32,29 +32,30 @@
    guidetolerance="10"
    inkscape:pageopacity="0"
    inkscape:pageshadow="2"
-   inkscape:window-width="1778"
-   inkscape:window-height="1165"
-   id="namedview1544"
+   inkscape:window-width="1959"
+   inkscape:window-height="1459"
+   id="namedview869"
    showgrid="false"
-   inkscape:zoom="13.906433"
-   inkscape:cx="15.72987"
-   inkscape:cy="31.736731"
-   inkscape:window-x="2902"
-   inkscape:window-y="105"
+   inkscape:zoom="19.931572"
+   inkscape:cx="20.803851"
+   inkscape:cy="26.769996"
+   inkscape:window-x="2858"
+   inkscape:window-y="61"
    inkscape:window-maximized="0"
-   inkscape:current-layer="svg1542" />
-<circle
-   cx="24"
-   cy="24"
-   r="11.485281"
-   id="circle1538"
-   style="fill:#ce93d8;stroke-width:3.82842708" />
-<circle
-   fill="none"
-   stroke="#9C27B0"
-   stroke-width="4"
-   cx="24"
-   cy="24"
-   r="17"
-   id="circle1540" />
-</svg>
+   inkscape:current-layer="svg867" />
+
+
+
+
+
+<g
+   transform="matrix(3.7795276,0,0,3.7795276,-281.71435,-535.66263)"
+   id="layer1"
+   inkscape:label="Layer 1"><circle
+     id="circle1425"
+     r="4.4979167"
+     cy="148.07738"
+     cx="80.886894"
+     style="fill:none;stroke:#00acc1;stroke-width:1.05833328;stroke-dasharray:2.17336685, 1.35834436;stroke-opacity:1" /><g
+     transform="matrix(0.26458333,0,0,0.26458333,79.109432,131.25714)"
+     id="g1481" /></g></svg>
