@@ -28,16 +28,17 @@
 }
 
 .team_table_buttons {
-    width: 130px !important;
+    width: 140px !important;
 }
 
 .form-switch input[type=checkbox] {
     margin-left: 0;
+    margin-top: 0;
 }
 
-.form-date input[type=date] {
-    text-align: center!important;
-    padding: 0 0.25rem!important;
+.input-group.input-error {
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(255, 0, 0, .25);
 }
 
 .progress {

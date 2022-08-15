@@ -1,3 +1,4 @@
+# import datetime
 from django.shortcuts import render, redirect
 from django.forms.models import model_to_dict
 
@@ -41,13 +42,19 @@ def teams(request):
             if Team.objects.filter(name=request.POST['name']).exists():
                 siteData['content']['forms']['add'] = True
                 siteData['content']['forms']['form'] = newTeamForm
-            #if not newTeamForm['date'].data:
-            #    newTeamForm.add_error('date', 'Date missing')
-            #elif
-            if newTeamForm.is_valid():
+            if newTeamForm['date'].data == '':
+                siteData['content']['forms']['add'] = True
+                siteData['content']['forms']['form'] = newTeamForm
+                newTeamForm.add_error('date', 'Date missing')
+            elif newTeamForm.is_valid():
                 newTeamForm.save()
                 siteData['content'] = getTeamContent()              # refresh from DB
                 return redirect('/teams')
+
+            # try:
+            #     datetime.datetime.strptime(newTeamForm['date'].data, "%Y-%m-%d")
+            # except ValueError:
+            #     newTeamForm.add_error('date', 'Date missing')
 
         # abort submitting teams changes
         elif 'cancel_team' in request.POST:
@@ -101,6 +108,7 @@ def teams(request):
                     else:
                         siteData['content']['forms']['mod'] = True
                         siteData['content']['forms']['form'] = modTeamForm
+                        siteData['content']['forms']['id'] = int(request.GET['edit_id'])
     else:  # handle request.GET
         # prepare form for modifying a team
         if 'edit_id' in request.GET:
