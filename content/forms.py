@@ -9,22 +9,22 @@ class TeamForm(ModelForm):
         fields = (
             'active',
             'wait',
+            'date',
             'name',
             'company',
             'contact',
             'email',
-            'phone',
-            'date'
+            'phone'
         )
         labels = {
             'active': '',
             'wait': '',
+            'date': '',
             'name': '',
             'company': '',
             'contact': '',
             'email': '',
-            'phone': '',
-            'date': ''
+            'phone': ''
         }
         widgets = {
             'active': forms.CheckboxInput(
@@ -37,6 +37,13 @@ class TeamForm(ModelForm):
                 attrs = {
                     'class': 'form-check-input',
                     'placeholder': 'Warteliste'
+                }
+            ),
+            'date': forms.DateInput(
+                attrs = {
+                    'class': 'form-control',
+                    'placeholder': 'Anmeldedatum',
+                    'type': 'date'
                 }
             ),
             'name': forms.TextInput(
@@ -67,13 +74,6 @@ class TeamForm(ModelForm):
                 attrs={
                     'class': 'form-control',
                     'placeholder': 'Telefonnummer'
-                }
-            ),
-            'date': forms.DateInput(
-                attrs = {
-                    'class': 'form-control',
-                    'placeholder': 'Anmeldedatum',
-                    'type': 'date'
                 }
             )
         }

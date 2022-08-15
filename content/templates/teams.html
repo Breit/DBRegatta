@@ -11,44 +11,10 @@
         {% if content.forms.mod %}
             <div class="d-flex align-items-start team_form">
                 <form method="POST" action="" id="mod_form">
-                    {% csrf_token %}
-                    <div class="row">
-                        {% for f in content.forms.form %}
-                            {% if f.field.widget.input_type == 'checkbox' %}
-                            <div class="col-6 mb-3">
-                                <div class="input-group">
-                                    <div class="input-group-text form-switch">
-                                        {{ f }}
-                                    </div>
-                                    <input type="text" class="form-control bg-light" value="{{ f.field.widget.attrs.placeholder }}" disabled>
-                                </div>
-                            </div>
-                            {% elif f.field.widget.input_type == 'date' %}
-                                <div class="col-12 mb-3">
-                                    <div class="input-group">
-                                        <div class="input-group-text form-date px-2 py-1">
-                                            {{ f }}
-                                        </div>
-                                        <input type="text" class="form-control bg-light" value="{{ f.field.widget.attrs.placeholder }}" disabled>
-                                    </div>
-                                </div>
-                            {% elif f.html_name in 'email, phone' %}
-                                <div class="col-6 mb-3">
-                                    {{ f }}
-                                </div>
-                            {% else %}
-                                <div class="col-12 mb-3">
-                                    {{ f }}
-                                </div>
-                            {% endif %}
-                            {% if f.errors %}
-                                <span class="error text-danger small">{{ f.errors }}</span>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
+                    {% include 'team_form.html' %}
                 </form>
             </div>
-            <div class="d-flex align-items-start">
+            <div class="d-flex align-items-start mt-3">
                 <button type="submit" name="mod_team" value="Submit" class="btn btn-primary btn_team me-2" form="mod_form">
                     <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                         <div class="pe-2">
@@ -70,41 +36,10 @@
             {% if content.forms.add %}
                 <div class="d-flex align-items-start team_form">
                     <form method="POST" action="" id="add_form">
-                        {% csrf_token %}
-                        <div class="row">
-                            {% for f in content.forms.form %}
-                                {% if f.field.widget.input_type == 'checkbox' %}
-                                <div class="col-6 mb-3">
-                                    <div class="input-group">
-                                        <div class="input-group-text form-switch">
-                                            {{ f }}
-                                        </div>
-                                        <input type="text" class="form-control bg-light" value="{{ f.field.widget.attrs.placeholder }}" disabled>
-                                    </div>
-                                </div>
-                                {% elif f.field.widget.input_type == 'date' %}
-                                    <div class="col-12 mb-3">
-                                        <div class="input-group">
-                                            <div class="input-group-text form-date px-2 py-1">
-                                                {{ f }}
-                                            </div>
-                                            <input type="text" class="form-control bg-light" value="{{ f.field.widget.attrs.placeholder }}" disabled>
-                                        </div>
-                                    </div>
-                                {% elif f.html_name in 'email, phone' %}
-                                    <div class="col-6 mb-3">
-                                        {{ f }}
-                                    </div>
-                                {% else %}
-                                    <div class="col-12 mb-3">
-                                        {{ f }}
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
+                        {% include 'team_form.html' %}
                     </form>
                 </div>
-                <div class="d-flex align-items-start">
+                <div class="d-flex align-items-start mt-3">
                     <button type="submit" name="add_team" value="Submit" class="btn btn-primary btn_team me-2" form="add_form">
                         <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div class="pe-2">
@@ -123,7 +58,7 @@
                     </button>
                 </div>
             {% else %}
-                <div class="d-flex align-items-start">
+                <div class="d-flex align-items-start mt-3">
                     <form method="POST" action="" id="none_form">
                         {% csrf_token %}
                         <button type="submit" name="show_add_form" value="Add" class="btn btn-primary btn_team">
