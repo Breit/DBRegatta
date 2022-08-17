@@ -6,82 +6,99 @@
 {% endblock %}
 
 {% block content %}
-<div class="content">
-    <div class="timetable_settigs">
-        <div class="timetable_header">
-            <h2>{{ config.timetableSettingsHeader }}</h2>
+    <div class="container-fluid">
+        <h2 class="my-2">{{ config.timetableSettingsHeader }}</h2>
+        <div class="d-flex align-items-start timetable_form">
+            <div class="row">
+                {% for c in controls %}
+                    {% if c.type == 'time' %}
+                        <div class="col-3 mb-3">
+                            <form method="POST" action="" id="{{ c.id }}">
+                                {% csrf_token %}
+                                <label for="{{ c.id }}" class="form-label small ">{{ c.name }}</label>
+                                <div class="input-group rounded ">
+                                    <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                    <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end" value="{{ c.value|time:'H:i' }}" onchange="this.form.submit()">
+                                </div>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div class="col-3 mb-3">
+                            <form method="POST" action="" id="{{ c.id }}">
+                                {% csrf_token %}
+                                <label for="{{ c.id }}" class="form-label small ">{{ c.name }}</label>
+                                <div class="input-group rounded ">
+                                    <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                    <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end pe-4" value="{{ c.value }}" {% if c.min %}min="{{ c.min }}"{% endif %} {% if c.max %}max="{{ c.max }}"{% endif %} onchange="this.form.submit()">
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
-        {% for col in controls %}
-            <div class="timetable_settings_controls">
-                {% for c in col %}
-                    <div class="control">
-                        <form method="POST" action="" id="settings_form">
-                            {% csrf_token %}
-                            <label for="{{ c.id }}">{{ c.name }}</label>
-                            <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" value="{% if c.type == 'time' %}{{ c.value|time:'H:i' }}{% else %}{{ c.value }}{% endif %}" {% if c.min %}min="{{ c.min }}"{% endif %} {% if c.max %}max="{{ c.max }}"{% endif %} onchange="this.form.submit()">
-                        </form>
+        <div class="d-flex align-items-start mt-3">
+            <form method="POST" action="" id="none_form">
+                {% csrf_token %}
+                <button type="submit" name="refresh_times" value="Refresh" class="btn btn-primary btn_icon me-3">
+                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                        <div class="pe-2">
+                            <img src="{% static 'images/' %}{{ config.refreshTimetableIcon }}" alt="refresh_times">
+                        </div>
+                        <p class="m-0 ps-2 lead">{{ config.refreshTimetableText }}</p>
+                    </div>
+                </button>
+                <button type="submit" name="create_timetable" value="Create" class="btn btn-danger btn_icon" onclick="return confirm('{{ config.warningCreateTimetable }}');">
+                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                        <div class="pe-2">
+                            <img src="{% static 'images/' %}{{ config.createTimetableIcon }}" alt="create_timetable">
+                        </div>
+                        <p class="m-0 ps-2 lead">{{ config.createTimetableText }}</p>
+                    </div>
+                </button>
+            </form>
+        </div>
+        <div class="container-fluid border-bottom pt-3 mb-4"></div>
+    </div>
+    <div class="container-fluid">
+        <h2 class="my-2">{{ config.timetableHeader }}</h2>
+        {% for entry in timetable %}
+            <div class="container-fluid">
+                <div class="row bg-primary my-3 fs-4 text-light border">
+                    <div class="col-1">{{ entry.time|time:'H:i'}}</div>
+                    <div class="col">{{ entry.desc }}</div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                {% if entry.races %}
+                    <div class="row border-bottom small text-muted">
+                        <div class="col-1 text-center">{{ config.timetableHeaderTime }}</div>
+                        <div class="col-1 text-center">{{ config.timetableHeaderName }}</div>
+                        <div class="col-10">
+                            <div class="row">
+                                <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
+                                <div class="col-4">{{ config.timetableHeaderTeam }}</div>
+                                <div class="col-7">{{ config.timetableHeaderCompany }}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% for race in entry.races %}
+                    <div class="row border-bottom timetable_race">
+                        <div class="col-1 text-center align-self-center fw-bold">{{ race.time|time:'H:i' }}</div>
+                        <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
+                        <div class="col-10">
+                            {% for lane in race.lanes %}
+                                <div class="row timetable_lane">
+                                    <div class="col-1 text-center">{{ lane.lane }}</div>
+                                    <div class="col-4 fw-bold">{{ lane.team }}</div>
+                                    <div class="col-7">{{ lane.company }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 {% endfor %}
             </div>
         {% endfor %}
-        <div class="refresh_timetable">
-            <form method="POST" action="" id="none_form">
-                {% csrf_token %}
-                <button type="submit" name="refresh_times" value="Refresh" class="btn btn_refresh_times">
-                    <img src="{% static 'images/' %}{{ config.refreshTimetableIcon }}" alt="refresh_times">
-                    <p>{{ config.refreshTimetableText }}</p>
-                </button>
-                <button type="submit" name="create_timetable" value="Create" class="btn btn_create_timetable" onclick="return confirm('{{ config.warningCreateTimetable }}');">
-                    <img src="{% static 'images/' %}{{ config.createTimetableIcon }}" alt="create_timetable">
-                    <p>{{ config.createTimetableText }}</p>
-                </button>
-            </form>
-        </div>
     </div>
-    <div class="timetable_header">
-        <h2>{{ config.timetableHeader }}</h2>
-    </div>
-    {% for entry in timetable %}
-        <div class="timetable">
-            <div class="tt_event_block">
-                <div class="time">{{ entry.time|time:'H:i'}}</div>
-                <div class="tt_content">
-                    <div class="desc">{{ entry.desc }}</div>
-                </div>
-            </div>
-            {% if entry.races %}
-                <div class="tt_race_block tt_race_header">
-                    <div class="time">{{ config.timetableHeaderTime }}</div>
-                    <div class="tt_content tt_hdr_content">
-                        <div class="desc">{{ config.timetableHeaderName }}</div>
-                        <div class="lanes">
-                            <div class="lane">
-                                <div class="number">{{ config.timetableHeaderLane }}</div>
-                                <div class="team">{{ config.timetableHeaderTeam }}</div>
-                                <div class="company">{{ config.timetableHeaderCompany }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% for race in entry.races %}
-                    <div class="tt_race_block">
-                        <div class="time">{{ race.time|time:'H:i' }}</div>
-                        <div class="tt_content">
-                            <div class="desc">{{ race.desc }}</div>
-                            <div class="lanes">
-                                {% for lane in race.lanes %}
-                                <div class="lane">
-                                    <div class="number">{{ lane.lane }}</div>
-                                    <div class="team">{{ lane.team }}</div>
-                                    <div class="company">{{ lane.company }}</div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        </div>
-    {% endfor %}
-</div>
 {% endblock %}

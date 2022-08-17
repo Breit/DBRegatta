@@ -1,3 +1,48 @@
+.timetable_form {
+    min-width: 45rem;
+    max-width: 45rem;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: inner-spin-button !important;
+    width: 25px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+}
+.btn_icon.btn-danger {
+    filter: saturate(0.8);
+}
+
+.timetable_race {
+    z-index: 1;
+}
+
+.timetable_race:nth-child(even) {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.timetable_race:hover {
+    background-color: var(--bs-gray-300) !important;
+}
+
+.timetable_lane {
+    z-index: 2;
+}
+
+.timetable_lane:hover {
+    background-color: var(--bs-gray-400) !important;
+}
+
+/*
 #timetable {
     color: #3b92e4;
 }
@@ -225,3 +270,4 @@ input[type=number]::-webkit-inner-spin-button {
 .refresh_timetable button {
     float: left;
 }
+*/

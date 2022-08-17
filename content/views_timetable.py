@@ -14,113 +14,138 @@ def combineTimeOffset(t: time, offset: timedelta):
 
 def getTimeTableSettings():
     settings = [
-        [
-            {
-                'id': 'timeBegin',
-                'name': config.timeBeginDesc,
-                'type': 'time',
-                'value': config.timeBegin
-            },
-            {
-                'id': 'offsetHeat',
-                'name': config.offsetHeatDesc,
-                'type': 'number',
-                'value': config.offsetHeat.seconds // 60
-            },
-            {
-                'id': 'offsetFinale',
-                'name': config.offsetFinaleDesc,
-                'type': 'number',
-                'value': config.offsetFinale.seconds // 60
-            },
-            {
-                'id': 'offsetCeremony',
-                'name': config.offsetCeremonyDesc,
-                'type': 'number',
-                'value': config.offsetCeremony.seconds // 60
-            }
-        ],
-        [
-            {
-                'id': 'heatCount',
-                'name': config.heatCountDesc,
-                'type': 'number',
-                'value': config.heatCount,
-                'min': config.heatCountMin,
-                'max': config.heatCountMax
-            },
-            {
-                'id': 'lanesPerRace',
-                'name': config.lanesPerRaceDesc,
-                'type': 'number',
-                'value': config.lanesPerRace,
-                'min': config.lanesPerRaceMin,
-                'max': config.lanesPerRaceMax
-            },
-            {
-                'id': 'intervalHeat',
-                'name': config.intervalHeatDesc,
-                'type': 'number',
-                'value': config.intervalHeat.seconds // 60
-            },
-            {
-                'id': 'intervalFinal',
-                'name': config.intervalFinalDesc,
-                'type': 'number',
-                'value': config.intervalFinal.seconds // 60
-            }
-        ]
+        {
+            'id': 'timeBegin',
+            'name': config.timeBeginDesc,
+            'type': 'time',
+            'value': config.timeBegin,
+            'icon': 'clock'
+        },
+        {
+            'id': 'offsetHeat',
+            'name': config.offsetHeatDesc,
+            'type': 'number',
+            'value': config.offsetHeat.seconds // 60,
+            'icon': 'clock-history'
+        },
+        {
+            'id': 'offsetFinale',
+            'name': config.offsetFinaleDesc,
+            'type': 'number',
+            'value': config.offsetFinale.seconds // 60,
+            'icon': 'clock-history'
+        },
+        {
+            'id': 'offsetCeremony',
+            'name': config.offsetCeremonyDesc,
+            'type': 'number',
+            'value': config.offsetCeremony.seconds // 60,
+            'icon': 'clock-history'
+        },
+        {
+            'id': 'lanesPerRace',
+            'name': config.lanesPerRaceDesc,
+            'type': 'number',
+            'value': config.lanesPerRace,
+            'min': config.lanesPerRaceMin,
+            'max': config.lanesPerRaceMax,
+            'icon': 'layout-three-columns'
+        },
+        {
+            'id': 'heatCount',
+            'name': config.heatCountDesc,
+            'type': 'number',
+            'value': config.heatCount,
+            'min': config.heatCountMin,
+            'max': config.heatCountMax,
+            'icon': 'repeat'
+        },
+        {
+            'id': 'intervalHeat',
+            'name': config.intervalHeatDesc,
+            'type': 'number',
+            'value': config.intervalHeat.seconds // 60,
+            'icon': 'distribute-horizontal'
+        },
+        {
+            'id': 'intervalFinal',
+            'name': config.intervalFinalDesc,
+            'type': 'number',
+            'value': config.intervalFinal.seconds // 60,
+            'icon': 'distribute-horizontal'
+        }
     ]
 
     return settings
 
+def getFirstRaceTime(raceType: str):
+        race = Race.objects.filter(name__startswith = raceType).order_by('time').first()
+        return race.time if race else config.timeBegin
+
+def getLastRaceTime(raceType: str):
+        race = Race.objects.filter(name__startswith = raceType).order_by('time').last()
+        return race.time if race else config.timeBegin
+
+def getRaces(raceType: str):
+    races = []
+    for race in Race.objects.filter(name__startswith = raceType):
+        entry = {
+            'time': race.time,
+            'desc': race.name,
+            'lanes': []
+        }
+
+        # deduce lane count from database
+        lanesPerRace = len(set([ra.lane for ra in RaceAssign.objects.all()]))
+        for lnum in range(lanesPerRace):
+            try:
+                attendee = RaceAssign.objects.get(race_id=race.id, lane=(lnum + 1))
+                team = Team.objects.get(id=attendee.team_id)
+            except ObjectDoesNotExist:
+                attendee = None
+                team = None
+            try:
+                draw = RaceDrawMode.objects.get(race_id=race.id, lane=(lnum + 1))
+            except ObjectDoesNotExist:
+                draw = None
+            if team:
+                entry['lanes'].append(
+                    {
+                        'lane': attendee.lane,
+                        'team': team.name,
+                        'company': team.company
+                    }
+                )
+            elif draw:
+                entry['lanes'].append(
+                    {
+                        'lane': draw.lane,
+                        'team': '-',
+                        'company': draw.desc
+                    }
+                )
+        races.append(entry)
+    return races
+
+def updateRaces(raceType: str, startTime: time, interval: timedelta):
+    races = Race.objects.filter(name__startswith = raceType)
+    for race in races:
+        race.time = startTime
+        race.save()
+        startTime = combineTimeOffset(startTime, interval)
+    if len(races) == 0:
+        return startTime
+    else:
+        return combineTimeOffset(startTime, -interval)
+
 def getTimeTableContent():
-    def getRaces(raceType: str):
-        races = []
-        for race in Race.objects.filter(name__startswith = raceType):
-            entry = {
-                'time': race.time,
-                'desc': race.name,
-                'lanes': []
-            }
-
-            # deduce lane count from database
-            lanesPerRace = len(set([ra.lane for ra in RaceAssign.objects.all()]))
-            for lnum in range(lanesPerRace):
-                try:
-                    attendee = RaceAssign.objects.get(race_id=race.id, lane=(lnum + 1))
-                    team = Team.objects.get(id=attendee.team_id)
-                except ObjectDoesNotExist:
-                    attendee = None
-                    team = None
-                try:
-                    draw = RaceDrawMode.objects.get(race_id=race.id, lane=(lnum + 1))
-                except ObjectDoesNotExist:
-                    draw = None
-                if team:
-                    entry['lanes'].append(
-                        {
-                            'lane': attendee.lane,
-                            'team': team.name,
-                            'company': team.company
-                        }
-                    )
-                elif draw:
-                    entry['lanes'].append(
-                        {
-                            'lane': draw.lane,
-                            'team': '-',
-                            'company': draw.desc
-                        }
-                    )
-            races.append(entry)
-        return races
-
     timetable = []
     timetable.append(
         {
-            'time': config.timeBegin,
-            'desc': config.teamCaptainsMeetingTitle
+            # deduce starting time from first race (minus the appropriate offset)
+            'time': combineTimeOffset(getFirstRaceTime('{}{}-'.format(config.heatPrefix, 1)), -config.offsetHeat),
+            'desc': config.teamCaptainsMeetingTitle,
+            'type': 'meeting'
         }
     )
 
@@ -135,7 +160,8 @@ def getTimeTableContent():
                         config.offsetHeat
                     ),
                     'desc': '{} {}'.format(config.heatsTitle, i + 1),
-                    'races': races
+                    'races': races,
+                    'type': 'heat'
                 }
             )
 
@@ -149,7 +175,8 @@ def getTimeTableContent():
                 config.offsetFinale
             ),
             'desc': config.finaleTitle,
-            'races': getRaces(config.finalPrefix)
+            'races': getRaces(config.finalPrefix),
+            'type': 'finale'
         }
     )
 
@@ -161,7 +188,8 @@ def getTimeTableContent():
                     else timetable[-1]['time'],
                 config.offsetCeremony
             ),
-            'desc': config.victoryCeremonyTitle
+            'desc': config.victoryCeremonyTitle,
+            'type': 'ceremony'
         }
     )
 
@@ -175,7 +203,7 @@ def createTimeTable():
 
     # create race tables for heats
     start = combineTimeOffset(config.timeBegin, config.offsetHeat)
-    teams = Team.objects.filter(active=True)
+    teams = Team.objects.filter(active=True, wait=False)
     teams_idx = list(range(teams.count()))
     lastHeat = []
     for hnum in range(config.heatCount):
@@ -220,7 +248,7 @@ def createTimeTable():
             lastHeat.append(t)
 
     # create race tables for finals
-    start = combineTimeOffset(start, config.offsetFinale)
+    start = combineTimeOffset(race.time, config.offsetFinale)
     pnum = teams.count()
     rname = ''
     if teams.count() == 0:
@@ -254,6 +282,15 @@ def createTimeTable():
         rname = race.name
         start = combineTimeOffset(start, config.intervalFinal)
 
+def updateTimeTable():
+    # update all heats at once
+    start = combineTimeOffset(config.timeBegin, config.offsetHeat)
+    start = updateRaces(config.heatPrefix, start, config.intervalHeat)
+
+    # update finals
+    start = combineTimeOffset(start, config.offsetFinale)
+    start = updateRaces(config.finalPrefix, start, config.intervalFinal)
+
 def timetable(request):
     siteData = getSiteData('timetable')
     siteData['timetable'] = getTimeTableContent()
@@ -279,8 +316,7 @@ def timetable(request):
         elif 'create_timetable' in request.POST:
             createTimeTable()
         elif 'refresh_times' in request.POST:
-            # TODO
-            pass
+            updateTimeTable()
         return redirect('/timetable')
 
     # update data from data base

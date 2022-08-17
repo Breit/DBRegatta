@@ -1,7 +1,7 @@
 {% load static %}
 
 {% block menu %}
-<ul class="nav nav-pills flex-column h-100">
+<ul class="nav nav-pills flex-column h-100 gap-2">
     {% for m in menu %}
     <li class="nav-item flex-row{% if m.id == 'settings' %} mt-auto{% endif %}" id="{{ m.id }}">
         <a class="nav-link p-1 d-inline-flex w-100{% if m.active %} active{% endif %}" href="{{ m.url }}">

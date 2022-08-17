@@ -28,7 +28,7 @@ CONSTANCE_CONFIG = {
     'waitlistTeams':            ('Warteliste',                                  'Text for Waitlist Teams Statistics'),
     'inactiveTeams':            ('Inaktiv',                                     'Text for Inactive Teams Statistics'),
     'totalTeams':               ('Teams gesamt',                                'Text for All Teams Statistics'),
-    'addTeam':                  ('Neues Team',                                  'Text for New Team Button'),
+    'addTeam':                  ('Neues Team anlegen',                          'Text for New Team Button'),
     'submitAddTeam':            ('Hinzufügen',                                  'Text for Save New Team Button'),
     'submitEditTeam':           ('Speichern',                                   'Text for Save Team Changes Button'),
     'submitAbort':              ('Abbrechen',                                   'Text for Cancel Button'),
@@ -61,7 +61,6 @@ CONSTANCE_CONFIG = {
     'createTimetableIcon':      ('timetable.svg',                               'Icon for Timetable Draw Button'),
     'refreshTimetableText':     ('Zeiten aktualisieren',                        'Text for Refresh Times Button'),
     'createTimetableText':      ('Zeitplan verlosen',                           'Text for Timetable Draw Button'),
-    'warningCreateTimetable':   ('Zeitplan komplett neu verlosen?',             'Warning Message for Timetable Draw'),
     'lanesPerRace':             (3,                                             'Lanes per Race'),
     'lanesPerRaceMin':          (1,                                             'Minimum Lanes per Race'),
     'lanesPerRaceMax':          (10,                                            'Maximum Lanes per Race'),
@@ -95,6 +94,7 @@ CONSTANCE_CONFIG = {
     'finaleTitle':              ('Finale',                                      'Name for Finale'),
     'finaleTemplate1':          ('Platz {} aus VR',                             'Template Placeholder 1 for Finale'),
     'finaleTemplate2':          ('Erster aus {}',                               'Template Placeholder 2 for Finale'),
+    'warningCreateTimetable':   ('Zeitplan komplett neu verlosen? Alle Ergebnisse und eingegebenen Zeiten werden damit verworfen!', 'Warning Message for Timetable Draw'),
 
     # Time Settings
     'timeTitle':                ('Zeiteingabe',                                 'Menu Title for Time Page'),
