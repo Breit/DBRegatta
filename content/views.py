@@ -6,12 +6,8 @@ from django.shortcuts import render
 
 from .views_main import *
 from .views_teams import *
-from .views_timetable import *
-
-def times(request):
-    siteData = getSiteData('times')
-    siteData['content'] = {}
-    return render(request, 'times.html', siteData)
+from .views_timetable import timetable
+from .views_times import *
 
 def results(request):
     siteData = getSiteData('results')

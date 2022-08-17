@@ -319,7 +319,4 @@ def timetable(request):
             updateTimeTable()
         return redirect('/timetable')
 
-    # update data from data base
-    siteData['content'] = getTimeTableContent()
-
     return render(request, 'timetable.html', siteData)
