@@ -19,7 +19,7 @@
 
 .menu {
     width: 16rem;
-    height: calc(100vh - 4.3rem - 9rem - 0.125px);
+    height: calc(100vh - 4.27rem - 7rem - 0.125rem);
     border-color: var(--bs-gray-800) !important;
     background-color: var(--bs-gray-950) !important;
 }
@@ -40,7 +40,7 @@
 
 .content_panel {
     position: relative;
-    height: calc(100vh - 4.3rem - 9rem - 2px);
+    height: calc(100vh - 4.27rem - 7rem - 0.125rem);
     overflow: auto;
 }
 
@@ -50,7 +50,7 @@
 }
 
 .footer img {
-    height: 6rem;
+    height: 5rem;
 }
 
 .btn_icon {
