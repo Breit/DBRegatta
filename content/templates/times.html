@@ -1,40 +1,52 @@
 {% extends 'main.html' %}
 {% load static %}
 
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{% static 'css/' %}{{ config.timesPageCSS }}">
+{% endblock %}
+
 {% block content %}
     <div class="container-fluid">
         <h2 class="my-2">{{ config.timesHeader }}</h2>
+        <div class="container-fluid border-bottom pt-3 mb-4"></div>
+    </div>
+    <div class="container-fluid">
+        <h2 class="my-2">{{ config.timesTableHeader }}</h2>
         {% for entry in times %}
-            <div class="container-fluid">
-                <div class="row bg-primary my-3 fs-4 text-light border">
-                    <div class="col-1">{{ entry.time|time:'H:i'}}</div>
+            <div class="container-fluid border border-primary pt-0 mb-3">
+                <div class="row bg-primary fs-4 text-light">
+                    <div class="col-1 text-center">{{ entry.time|time:'H:i'}}</div>
                     <div class="col">{{ entry.desc }}</div>
                 </div>
-            </div>
-            <div class="container-fluid">
                 {% if entry.races %}
-                    <div class="row border-bottom small text-muted">
+                    <div class="row border-bottom small text-muted mt-2">
                         <div class="col-1 text-center">{{ config.timetableHeaderTime }}</div>
                         <div class="col-1 text-center">{{ config.timetableHeaderName }}</div>
                         <div class="col-10">
                             <div class="row">
                                 <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
-                                <div class="col-4">{{ config.timetableHeaderTeam }}</div>
-                                <div class="col-7">{{ config.timetableHeaderCompany }}</div>
+                                <div class="col-8">{{ config.timetableHeaderTeam }}</div>
+                                <div class="col-1 text-center">{{ config.timesHeaderPlace }}</div>
+                                <div class="col-2 text-center">{{ config.timesHeaderTime }}</div>
                             </div>
                         </div>
                     </div>
                 {% endif %}
                 {% for race in entry.races %}
-                    <div class="row border-bottom timetable_race">
+                    <div class="row border-bottom timetable_race px-1{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}">
                         <div class="col-1 text-center align-self-center fw-bold">{{ race.time|time:'H:i' }}</div>
                         <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
                         <div class="col-10">
                             {% for lane in race.lanes %}
                                 <div class="row timetable_lane">
                                     <div class="col-1 text-center">{{ lane.lane }}</div>
-                                    <div class="col-4 fw-bold">{{ lane.team }}</div>
-                                    <div class="col-7">{{ lane.company }}</div>
+                                    <div class="col-8 fw-bold">{{ lane.team }}</div>
+                                    <div class="col-1 text-center align-self-center">{{ lane.place }}</div>
+                                    {% if lane.time %}
+                                        <div class="col-2 text-center align-self-center fw-bold text-success">{{ lane.time }}</div>
+                                    {% else %}
+                                        <div class="col-2 text-center align-self-center text-muted">00:00.00</div>
+                                    {% endif %}
                                 </div>
                             {% endfor %}
                         </div>

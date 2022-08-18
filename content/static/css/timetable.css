@@ -24,6 +24,7 @@ input[type=number]::-webkit-inner-spin-button {
 
 .timetable_race {
     z-index: 1;
+    background-color: var(--bs-gray-100) !important;
 }
 
 .timetable_race:nth-child(even) {
@@ -31,13 +32,18 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .timetable_race:hover {
-    background-color: var(--bs-gray-300) !important;
+    filter: brightness(0.97);
 }
 
 .timetable_lane {
     z-index: 2;
+    background-color: var(--bs-gray-100) !important;
+}
+
+.timetable_race:nth-child(even) .timetable_lane {
+    background-color: var(--bs-gray-200) !important;
 }
 
 .timetable_lane:hover {
-    background-color: var(--bs-gray-400) !important;
+    filter: brightness(0.97);
 }
