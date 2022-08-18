@@ -28,7 +28,7 @@ class RaceAssign(models.Model):
     race_id = models.BigIntegerField(blank=False)
     team_id = models.BigIntegerField(blank=True)
     lane = models.CharField(max_length=20, blank=False)
-    time = models.TimeField(null=True, blank=True)
+    time = models.FloatField(null=True, blank=True)
 
 # placeholder description for finale draw
 class RaceDrawMode(models.Model):

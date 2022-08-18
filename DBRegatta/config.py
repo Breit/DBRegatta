@@ -55,7 +55,7 @@ CONSTANCE_CONFIG = {
     'timetablePageCSS':         ('timetable.css',                               'CSS File for Site-specific Styling'),
     'timetableTitle':           ('Zeitplan',                                    'Menu Title for Timetable Page'),
     'timetableIcon':            ('timetable.svg',                               'Menu Icon for Timetable Page'),
-    'timetableSettingsHeader':  ('Zeitplan Einstellungen',                      'Header label for Settings Section on the Timetable Page'),
+    'timetableSettingsHeader':  ('Zeitplan Einstellungen',                      'Header Label for Settings Section on the Timetable Page'),
     'timetableHeader':          ('Rennplan',                                    'Header Label for Timetable Page'),
     'refreshTimetableIcon':     ('expired.svg',                                 'Icon for Refresh Times Button'),
     'createTimetableIcon':      ('timetable.svg',                               'Icon for Timetable Draw Button'),
@@ -97,8 +97,13 @@ CONSTANCE_CONFIG = {
     'warningCreateTimetable':   ('Zeitplan komplett neu verlosen? Alle Ergebnisse und eingegebenen Zeiten werden damit verworfen!', 'Warning Message for Timetable Draw'),
 
     # Time Settings
+    'timesPageCSS':             ('times.css',                                   'CSS File for Site-specific Styling'),
     'timeTitle':                ('Zeiteingabe',                                 'Menu Title for Time Page'),
+    'timesHeader':              ('Zeiteingabe',                                 'Header Label for Time Entry on Time Page'),
+    'timesTableHeader':         ('Ergebnisliste',                               'Header Label for Race Results on Time Page'),
     'timeIcon':                 ('time.svg',                                    'Menu Icon for Time Page'),
+    'timesHeaderTime':          ('Zeit',                                        'Header Text for Time Column'),
+    'timesHeaderPlace':         ('Platz',                                       'Header Text for Place Column'),
 
     # Results Settings
     'resultsTitle':             ('Ergebnisse',                                  'Menu Title for Results Page'),
@@ -217,8 +222,13 @@ CONSTANCE_CONFIG_FIELDSETS = {
     },
     'Time Settings': {
         'fields': (
+            'timesPageCSS',
             'timeTitle',
+            'timesHeader',
+            'timesTableHeader',
+            'timesHeaderPlace',
             'timeIcon',
+            'timesHeaderTime',
         ),
         'collapse': True
     },

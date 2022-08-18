@@ -1,0 +1,73 @@
+.timetable_race {
+    z-index: 1;
+    background-color: var(--bs-gray-100) !important;
+}
+
+.timetable_race:nth-child(even) {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.timetable_race:hover {
+    filter: brightness(0.97);
+}
+
+.timetable_lane {
+    z-index: 2;
+    background-color: var(--bs-gray-100) !important;
+}
+
+.timetable_race:nth-child(even) .timetable_lane {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.timetable_lane:hover {
+    filter: brightness(0.97);
+}
+
+.race_finished:nth-child(odd) .timetable_lane {
+    background-color: #d1e7dd !important;
+}
+
+.race_finished:nth-child(even) .timetable_lane {
+    background-color: #c1d6cc !important;
+}
+
+.race_finished .timetable_lane:hover {
+    filter: brightness(0.97);
+}
+
+.race_finished:nth-child(odd) {
+    background-color: #d1e7dd !important;
+}
+
+.race_finished:nth-child(even) {
+    background-color: #c1d6cc !important;
+}
+
+.race_finished:hover {
+    filter: brightness(0.97);
+}
+
+.race_started:nth-child(odd) .timetable_lane {
+    background-color: #fff3cd !important;
+}
+
+.race_started:nth-child(even) .timetable_lane {
+    background-color: #ece1be !important;
+}
+
+.race_started .timetable_lane:hover {
+    filter: brightness(0.97);
+}
+
+.race_started:nth-child(odd) {
+    background-color: #fff3cd !important;
+}
+
+.race_started:nth-child(even) {
+    background-color: #ece1be !important;
+}
+
+.race_started:hover {
+    filter: brightness(0.97);
+}

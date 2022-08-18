@@ -120,10 +120,11 @@ def getRaces(raceType: str):
                 entry['lanes'].append(
                     {
                         'lane': draw.lane,
-                        'team': '-',
-                        'company': draw.desc
+                        'team': draw.desc,
+                        'company': '-'
                     }
                 )
+
         races.append(entry)
     return races
 
