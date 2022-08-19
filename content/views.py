@@ -1,23 +1,16 @@
 from django.shortcuts import render
 
-#from xml.dom import ValidationErr
-#from django.forms import ValidationError
-#from django.http import HttpResponseRedirect
+from .views_main import getSiteData
 
-from .views_main import *
-from .views_teams import *
-from .views_timetable import timetable
-from .views_times import *
+def trainings(request):
+    siteData = getSiteData('trainings')
+    siteData['content'] = {}
+    return render(request, 'trainings.html', siteData)
 
 def results(request):
     siteData = getSiteData('results')
     siteData['content'] = {}
     return render(request, 'results.html', siteData)
-
-def settings(request):
-    siteData = getSiteData('settings')
-    siteData['content'] = {}
-    return render(request, 'settings.html', siteData)
 
 def djadmin(request):
     siteData = getSiteData('djadmin')

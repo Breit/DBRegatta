@@ -6,22 +6,30 @@ from datetime import date, time, timedelta
 CONSTANCE_CONFIG = {
     # Global Settings
     'siteName':                 ('DBRegatta',                                   'Page Title'),
+    'siteNameDesc':             ('Regatta Name',                                'Page Title Dewscription'),
     'eventDate':                (date(2022, 1, 1),                              'Date for the DBRegatta Event'),
+    'eventDateDesc':            ('Regatta Datum',                               'Date for the DBRegatta Event Description'),
     'homeUrl':                  ('/',                                           'Redirect URL to Mainsite'),
     'homeIcon':                 ('dragon.svg',                                  'Icon for Redirect to Mainsite'),
     'siteLogo':                 ('usv_logo.png',                                'Main Site Logo'),
     'siteCSS':                  ('site.css',                                    'Main Site CSS'),
     'sponsorName':              ('',                                            'Sponsor Name'),
+    'sponsorNameDesc':          ('Name Sponsor',                                'Sponsor Name Description'),
     'sponsorLogo':              ('',                                            'Sponsor Logo'),
+    'sponsorLogoDesc':          ('Logo Sponsor',                                'Sponsor Logo Description'),
     'sponsorUrl':               ('',                                            'Sponsor URL'),
+    'sponsorUrlDesc':           ('URL Sponsor',                                 'Sponsor URL Description'),
     'ownerName':                ('USV Jena e.V. - Abteilung Kanu',              'Site Owner Name'),
+    'ownerNameDesc':            ('Name Veranstalter',                           'Site Owner Name Description'),
     'ownerLogo':                ('usv_kanu_footer.png',                         'Site Owner Logo'),
-    'ownerUrl':                 ('',                                            'Site Owner URL'),
+    'ownerLogoDesc':            ('Logo Veranstalter',                           'Site Owner Logo Description'),
+    'ownerUrl':                 ('https://www.usvjena.de/kanu.html',            'Site Owner URL'),
+    'ownerUrlDesc':             ('URL Veranstalter',                            'Site Owner URL Description'),
 
     # Teams Settings
     'teamsPageCSS':             ('teams.css',                                   'CSS File for Site-specific Styling'),
     'teamsTitle':               ('Teamverwaltung',                              'Menu Title for Teams Page'),
-    'teamsIcon':                ('rafting.svg',                                 'Menu Icon for Teams Page'),
+    'teamsIcon':                ('team.svg',                                    'Menu Icon for Teams Page'),
     'editTeamHeader':           ('Bearbeitung Teams',                           'Header Text for Add Team'),
     'teamListHeader':           ('Teamliste',                                   'Header Text for Teams List'),
     'activeTeams':              ('Aktiv',                                       'Text for Active Teams Statistics'),
@@ -105,11 +113,18 @@ CONSTANCE_CONFIG = {
     'timesHeaderTime':          ('Zeit',                                        'Header Text for Time Column'),
     'timesHeaderPlace':         ('Platz',                                       'Header Text for Place Column'),
 
+    # Trainings Settings
+    'trainingsPageCSS':         ('trainings.css',                               'CSS File for Site-specific Styling'),
+    'trainingsTitle':           ('Trainings',                                   'Menu Title for Trainings Page'),
+    'trainingsIcon':            ('rafting.svg',                                 'Menu Icon for Trainings Page'),
+
     # Results Settings
+    'resultsPageCSS':           ('results.css',                                 'CSS File for Site-specific Styling'),
     'resultsTitle':             ('Ergebnisse',                                  'Menu Title for Results Page'),
     'resultsIcon':              ('results.svg',                                 'Menu Icon for Results Page'),
 
     # Settings for Settings Page
+    'settingsPageCSS':          ('settings.css',                                'CSS File for Site-specific Styling'),
     'settingsTitle':            ('Einstellungen',                               'Menu Title for Settings Page'),
     'settingsIcon':             ('settings.svg',                                'Menu Icon for Settings Page'),
 
@@ -122,17 +137,25 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'Global Settings': {
         'fields': (
             'siteName',
+            'siteNameDesc',
             'eventDate',
+            'eventDateDesc',
             'homeUrl',
             'homeIcon',
             'siteLogo',
             'siteCSS',
             'sponsorName',
+            'sponsorNameDesc',
             'sponsorLogo',
+            'sponsorLogoDesc',
             'sponsorUrl',
+            'sponsorUrlDesc',
             'ownerName',
+            'ownerNameDesc',
             'ownerLogo',
+            'ownerLogoDesc',
             'ownerUrl',
+            'ownerUrlDesc',
         ),
         'collapse': True
     },
@@ -232,8 +255,17 @@ CONSTANCE_CONFIG_FIELDSETS = {
         ),
         'collapse': True
     },
+    'Trainings Settings': {
+        'fields': (
+            'trainingsPageCSS',
+            'trainingsTitle',
+            'trainingsIcon',
+        ),
+        'collapse': True
+    },
     'Results Settings': {
         'fields': (
+            'resultsPageCSS',
             'resultsTitle',
             'resultsIcon',
         ),
@@ -241,6 +273,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
     },
     'Settings Page Settings': {
         'fields': (
+            'settingsPageCSS',
             'settingsTitle',
             'settingsIcon',
         ),

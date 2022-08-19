@@ -51,11 +51,6 @@ def teams(request):
                 siteData['content'] = getTeamContent()              # refresh from DB
                 return redirect('/teams')
 
-            # try:
-            #     datetime.datetime.strptime(newTeamForm['date'].data, "%Y-%m-%d")
-            # except ValueError:
-            #     newTeamForm.add_error('date', 'Date missing')
-
         # abort submitting teams changes
         elif 'cancel_team' in request.POST:
             return redirect('/teams')

@@ -13,6 +13,13 @@ def getSiteData(id: str = None):
                 'active': True if id == 'teams' else False
             },
             {
+                'id': 'trainings',
+                'title': config.trainingsTitle,
+                'url': 'trainings',
+                'thumb': config.trainingsIcon,
+                'active': True if id == 'trainings' else False
+            },
+            {
                 'id': 'timetable',
                 'title': config.timetableTitle,
                 'url': 'timetable',
