@@ -1,6 +1,58 @@
 {% extends 'main.html' %}
 {% load static %}
 
-{% block content %}
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{% static 'css/' %}{{ config.settingsPageCSS }}">
+{% endblock %}
 
+{% block content %}
+    <div class="container-fluid">
+        <h2 class="my-2">{{ config.settingsTitle }}</h2>
+        <div class="d-flex align-items-start timetable_form">
+            <div class="row">
+                {% for c in controls %}
+                    {% if c.type == 'date' %}
+                        <div class="col-3 mb-3">
+                            <form method="POST" action="" id="{{ c.id }}">
+                                {% csrf_token %}
+                                <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
+                                <div class="input-group rounded ">
+                                    <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                    <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end" value="{{ c.value|date:'Y-m-d' }}" onchange="this.form.submit()">
+                                </div>
+                            </form>
+                        </div>
+                    {% elif c.type == 'image' %}
+                        <div class="col-3 mb-3">
+                            <form method="POST" action="" id="{{ c.id }}">
+                                {% csrf_token %}
+                                <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
+                                <div class="input-group rounded">
+                                    <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                    <input type="text" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-start" value="{{ c.value }}" onchange="this.form.submit()">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-3 mb-3 mt-auto">
+                            <div class="logo border bg-dark p-2 border-secondary text-center">
+                                <img src="{% static 'images/' %}{{ c.value }}" alt="{{ c.id }}">
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-6 mb-3">
+                            <form method="POST" action="" id="{{ c.id }}">
+                                {% csrf_token %}
+                                <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
+                                <div class="input-group rounded ">
+                                    <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                    <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-start" value="{{ c.value }}" onchange="this.form.submit()">
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="container-fluid border-bottom pt-3 mb-4"></div>
+    </div>
 {% endblock %}

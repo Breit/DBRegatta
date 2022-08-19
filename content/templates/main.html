@@ -34,12 +34,24 @@
             <footer class="footer py-3 px-4 navbar fixed-bottom navbar-dark text-bg-dark border-top">
                 <div class="d-flex align-items-start">
                     {% if config.sponsorLogo %}
+                        {% if config.sponsorUrl %}
+                            <a href="{{ config.sponsorUrl }}">
+                        {% endif %}
                         <img src="{% static 'images/' %}{{ config.sponsorLogo }}" alt="{{ config.sponsorName }}">
+                        {% if config.sponsorUrl %}
+                            </a>
+                        {% endif %}
                     {% endif %}
                 </div>
                 <div class="d-flex align-items-end">
                     {% if config.ownerLogo %}
+                        {% if config.ownerUrl %}
+                            <a href="{{ config.ownerUrl }}">
+                        {% endif %}
                         <img src="{% static 'images/' %}{{ config.ownerLogo }}" alt="{{ config.ownerName }}">
+                        {% if config.ownerUrl %}
+                            </a>
+                        {% endif %}
                     {% endif %}
                 </div>
             </footer>

@@ -1,10 +1,10 @@
 import math
 from constance import config
-from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render
 
-from .views_main import getSiteData
 from .views_timetable import combineTimeOffset
+from .views_main import getSiteData
 from .models import Race, RaceAssign, Team, RaceDrawMode
 
 def getRaceTimes(raceType: str):
