@@ -8,6 +8,52 @@
 {% block content %}
     <div class="container-fluid">
         <h2 class="my-2">{{ config.timesHeader }}</h2>
+        <div class="row">
+            <div class="col-3 my-3">
+                <form method="POST" action="" id="race_select">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <label class="input-group-text" for="race_select">{{ config.timeRaceDesc }}</label>
+                        <select id="race_select" name="{{ config.timeRaceDesc }}" class="form-select form-select-lg text-center" onchange="this.form.submit()">
+                            {% for r in controls.races %}
+                                <option value="{{ r }}"{% if r == controls.selected_race.name %} selected{% endif %}>{{ r }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="col-2 my-3">
+                <div class="input-group">
+                    <label class="input-group-text" for="time_info">{{ config.timetableHeaderTime }}</label>
+                    <input id="time_info" name="time_info" class="form-control form-control-lg text-center" value="{{ controls.selected_race.time|time:'H:i' }}" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row border-bottom small text-muted mt-2">
+                <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
+                <div class="col-7">{{ config.timetableHeaderTeam }}</div>
+                <div class="col-1 text-center">{{ config.timesHeaderPlace }}</div>
+                <div class="col-3 text-center">{{ config.timesHeaderTime }}</div>
+            </div>
+            <div class="row">
+                {% for l in controls.selected_race.lanes %}
+                    <div class="col-1 py-1 text-center">{{ l.lane }}</div>
+                    <div class="col-7 py-1 fw-bold">{{ l.team }}</div>
+                    <div class="col-1 py-1 text-center">{{ l.place }}</div>
+                    <div class="col-3 py-1">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-{{controls.time_icon}}"></i></span>
+                            <input type="number" id="lane_info_min" name="lane_info_min" class="form-control text-center" value="{{ l.time_min }}" min="0" max="60">
+                            <label class="input-group-text px-1 fw-bold" for="lane_info_sec">:</label>
+                            <input type="number" id="lane_info_sec" name="lane_info_sec" class="form-control text-center" value="{{ l.time_sec }}" min="0" max="60">
+                            <label class="input-group-text px-1 fw-bold" for="lane_info_msec">.</label>
+                            <input type="number" id="lane_info_msec" name="lane_info_msec" class="form-control text-center" value="{{ l.time_msec }}" min="0" max="999">
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
         <div class="container-fluid border-bottom pt-3 mb-4"></div>
     </div>
     <div class="container-fluid">
