@@ -94,8 +94,49 @@ def getRaceResultsTableContent():
 
     return timetable
 
+def getTimesControls(selected_race = None):
+    controls = {
+        'races': [],
+        'time_icon': 'clock-history',
+        'selected_race': {}
+    }
+
+    for race in Race.objects.all():
+        controls['races'].append(race.name)
+
+        if selected_race is None:
+            race_assigns = RaceAssign.objects.filter(race_id=race.id)
+            if sum([1 if ra.time else 0 for ra in race_assigns]) < len(race_assigns):
+                selected_race = {
+                    'name': race.name,
+                    'id': race.id,
+                    'time': race.time,
+                    'lanes': []
+                }
+                for ra in race_assigns:
+                    lane = {
+                        'lane': ra.lane,
+                        'team': Team.objects.get(id=ra.team_id).name,
+                        'place': '-',
+                        'time_min': None,
+                        'time_sec': None,
+                        'time_msec': None
+                    }
+                    if ra.time:
+                        time_min, time_sec = divmod(ra.time.seconds),
+                        time_msec = ra.time.microseconds / 1e3
+                        lane['time_min'] = '{:02.0f}'.format(time_min)
+                        lane['time_sec'] = '{:02.0f}'.format(time_sec)
+                        lane['time_msec'] = '{:03.0f}'.format(time_msec)
+                    selected_race['lanes'].append(lane)
+
+    controls['selected_race'] = selected_race
+
+    return controls
+
 def times(request):
     siteData = getSiteData('times')
+    siteData['controls'] = getTimesControls()
     siteData['times'] = getRaceResultsTableContent()
 
     if request.method == "POST":

@@ -107,6 +107,7 @@ CONSTANCE_CONFIG = {
     # Time Settings
     'timesPageCSS':             ('times.css',                                   'CSS File for Site-specific Styling'),
     'timeTitle':                ('Zeiteingabe',                                 'Menu Title for Time Page'),
+    'timeRaceDesc':             ('Rennen',                                      'Text for Race Select Drop-Down'),
     'timesHeader':              ('Zeiteingabe',                                 'Header Label for Time Entry on Time Page'),
     'timesTableHeader':         ('Ergebnisliste',                               'Header Label for Race Results on Time Page'),
     'timeIcon':                 ('time.svg',                                    'Menu Icon for Time Page'),
@@ -247,6 +248,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
         'fields': (
             'timesPageCSS',
             'timeTitle',
+            'timeRaceDesc',
             'timesHeader',
             'timesTableHeader',
             'timesHeaderPlace',
