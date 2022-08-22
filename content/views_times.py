@@ -97,6 +97,7 @@ def getRaceResultsTableContent():
 def getTimesControls(selected_race = None):
     controls = {
         'races': [],
+        'start_time_icon': 'clock',
         'time_icon': 'clock-history',
         'selected_race': {}
     }
