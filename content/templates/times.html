@@ -8,23 +8,25 @@
 {% block content %}
     <div class="container-fluid">
     <h2 class="my-2">{{ config.timesHeader }}</h2>
-        <div class="row m-0 px-2 border-bottom">
-            <div class="col-2 mx-0 px-0 small text-muted text-centered mt-2">{{ config.timeRaceDesc }}</div>
+        <div class="row m-0 border-bottom">
+            <div class="col-2 mx-0 px-2 small text-muted text-centered mt-2 col_select_race">{{ config.timeRaceDesc }}</div>
             <div class="col-1 small text-muted mt-2">{{ config.timetableHeaderTime }}</div>
-            <div class="row col-9 small text-muted mt-2 mx-0 px-0">
-                <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
-                <div class="col-6">{{ config.timetableHeaderTeam }}</div>
-                <div class="col-1 text-center">{{ config.timesHeaderPlace }}</div>
-                <div class="col-4 px-0 text-center">{{ config.timesHeaderTime }}</div>
+            <div class="col mt-2 mx-0 px-0">
+                <div class="row mx-0 small text-muted">
+                    <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
+                    <div class="col">{{ config.timetableHeaderTeam }}</div>
+                    <div class="col-1 text-center">{{ config.timesHeaderPlace }}</div>
+                    <div class="col-4 pe-2 text-center col_times">{{ config.timesHeaderTime }}</div>
+                </div>
             </div>
         </div>
         <div class="row m-0 timetable_race">
-            <div class="col-2 my-1 mx-0 px-2 align-self-center">
+            <div class="col-2 my-1 mx-0 px-2 align-self-center col_select_race">
                 <form method="POST" action="" id="race_select">
                     {% csrf_token %}
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-{{controls.start_time_icon}}"></i></span>
-                        <select id="race_select" name="{{ config.timeRaceDesc }}" class="form-select form-select-lg text-center" onchange="this.form.submit()">
+                        <select id="race_select" name="race_select" class="form-select form-select-lg text-center" onchange="this.form.submit()">
                             {% for r in controls.races %}
                                 <option value="{{ r }}"{% if r == controls.selected_race.name %} selected{% endif %}>{{ r }}</option>
                             {% endfor %}
@@ -33,38 +35,38 @@
                 </form>
             </div>
             <div class="col-1 my-1 text-center align-self-center fw-bold">{{ controls.selected_race.time|time:'H:i' }}</div>
-            <div class="col-9 my-1 px-1">
-                {% for l in controls.selected_race.lanes %}
-                    <div class="row mx-0 py-1 timetable_lane">
-                        <div class="col-1 text-center align-self-center">{{ l.lane }}</div>
-                        <div class="col-6 fw-bold align-self-center">{{ l.team }}</div>
-                        <div class="col-1 text-center align-self-center">{{ l.place }}</div>
-                        <div class="col-4 pe-1 align-self-center">
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-{{controls.time_icon}}"></i></span>
-                                <input type="number" id="lane_info_min" name="lane_info_min" class="form-control text-center" value="{{ l.time_min }}" min="0" max="60">
-                                <label class="input-group-text px-1 fw-bold" for="lane_info_sec">:</label>
-                                <input type="number" id="lane_info_sec" name="lane_info_sec" class="form-control text-center" value="{{ l.time_sec }}" min="0" max="60">
-                                <label class="input-group-text px-1 fw-bold" for="lane_info_msec">.</label>
-                                <input type="number" id="lane_info_msec" name="lane_info_msec" class="form-control text-center" value="{{ l.time_msec }}" min="0" max="999">
+            <div class="col mx-0 px-0">
+                <form method="POST" action="" id="submit_times_form">
+                    {% csrf_token %}
+                    {% for l in controls.selected_race.lanes %}
+                        <div class="row mx-0 py-1 timetable_lane">
+                            <div class="col-1 text-center align-self-center">{{ l.lane }}</div>
+                            <div class="col fw-bold align-self-center">{{ l.team }}</div>
+                            <div class="col-1 text-center align-self-center">{{ l.place }}</div>
+                            <div class="col-4 pe-2 align-self-center col_times">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-{{controls.time_icon}}"></i></span>
+                                    <input type="number" id="lane_time_min_{{ l.lane }}" name="lane_time_min_{{ l.lane }}" class="form-control text-center p-2" value="{{ l.time_min|stringformat:'02d' }}" min="0" max="60">
+                                    <label class="input-group-text px-1 fw-bold" for="lane_info_sec">:</label>
+                                    <input type="number" id="lane_time_sec_{{ l.lane }}" name="lane_time_sec_{{ l.lane }}" class="form-control text-center p-2" value="{{ l.time_sec|stringformat:'02d' }}" min="0" max="60">
+                                    <label class="input-group-text px-1 fw-bold" for="lane_info_msec">.</label>
+                                    <input type="number" id="lane_time_msec_{{ l.lane }}" name="lane_time_hnd_{{ l.lane }}" class="form-control text-center p-2" value="{{ l.time_hnd|stringformat:'02d' }}" min="0" max="99">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </form>
             </div>
         </div>
         <div class="d-flex align-items-start mt-3">
-            <form method="POST" action="" id="none_form">
-                {% csrf_token %}
-                <button type="submit" name="refresh_times" value="Refresh" class="btn btn-primary btn_icon me-3">
-                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                        <div class="pe-2">
-                            <img src="{% static 'images/' %}{{ config.timeIcon }}" alt="refresh_times">
-                        </div>
-                        <p class="m-0 ps-2 lead">{{ config.refreshTimesText }}</p>
+            <button type="submit" name="refresh_times" value="Refresh" class="btn btn-primary btn_icon me-3" form="submit_times_form">
+                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                    <div class="pe-2">
+                        <img src="{% static 'images/' %}{{ config.timeIcon }}" alt="refresh_times">
                     </div>
-                </button>
-            </form>
+                    <p class="m-0 ps-2 lead">{{ config.refreshTimesText }}</p>
+                </div>
+            </button>
         </div>
         <div class="container-fluid border-bottom pt-3 mb-4"></div>
     </div>
@@ -100,8 +102,8 @@
                                     <div class="col-1 text-center">{{ lane.lane }}</div>
                                     <div class="col-8 fw-bold">{{ lane.team }}</div>
                                     <div class="col-1 text-center align-self-center">{{ lane.place }}</div>
-                                    {% if lane.time %}
-                                        <div class="col-2 text-center align-self-center fw-bold text-success">{{ lane.time }}</div>
+                                    {% if lane.finished %}
+                                        <div class="col-2 text-center align-self-center fw-bold text-success">{{ lane.time_min|stringformat:'02d' }}:{{ lane.time_sec|stringformat:'02d' }}.{{ lane.time_hnd|stringformat:'02d' }}</div>
                                     {% else %}
                                         <div class="col-2 text-center align-self-center text-muted">00:00.00</div>
                                     {% endif %}
