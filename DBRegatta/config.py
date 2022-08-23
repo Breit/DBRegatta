@@ -113,6 +113,7 @@ CONSTANCE_CONFIG = {
     'timeIcon':                 ('time.svg',                                    'Menu Icon for Time Page'),
     'timesHeaderTime':          ('Zeit',                                        'Header Text for Time Column'),
     'timesHeaderPlace':         ('Platz',                                       'Header Text for Place Column'),
+    'refreshTimesText':         ('Zeiten eintragen',                            'Text for Refresh Times Button'),
 
     # Trainings Settings
     'trainingsPageCSS':         ('trainings.css',                               'CSS File for Site-specific Styling'),
@@ -254,6 +255,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'timesHeaderPlace',
             'timeIcon',
             'timesHeaderTime',
+            'refreshTimesText',
         ),
         'collapse': True
     },
