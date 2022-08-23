@@ -1,11 +1,18 @@
 import math
 from constance import config
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from .views_timetable import combineTimeOffset
 from .views_main import getSiteData
 from .models import Race, RaceAssign, Team, RaceDrawMode
+
+def splitTime(race_time: float):
+    minutes = math.floor(race_time / 60)
+    seconds = math.floor(race_time - minutes)
+    hndsecs = math.floor(100 * (race_time - math.floor(race_time)))
+
+    return minutes, seconds, hndsecs
 
 def getRaceTimes(raceType: str):
     races = []
@@ -17,7 +24,7 @@ def getRaceTimes(raceType: str):
         }
 
         # deduce lane count from database
-        lanesPerRace = len(set([ra.lane for ra in RaceAssign.objects.all()]))
+        lanesPerRace = len(set([attendee.lane for attendee in RaceAssign.objects.all()]))
         for lnum in range(lanesPerRace):
             try:
                 attendee = RaceAssign.objects.get(race_id=race.id, lane=(lnum + 1))
@@ -30,13 +37,17 @@ def getRaceTimes(raceType: str):
             except ObjectDoesNotExist:
                 draw = None
             if team:
+                minutes, seconds, hndsecs = splitTime(attendee.time)
                 entry['lanes'].append(
                     {
                         'lane': attendee.lane,
                         'team': team.name,
                         'company': team.company,
-                        'time': '{:02.0f}:{:02.2f}'.format(math.floor(attendee.time / 60), attendee.time) if attendee.time else None,
-                        'place': '-'
+                        'time_min': minutes,
+                        'time_sec': seconds,
+                        'time_hnd': hndsecs,
+                        'place': '?' if attendee.time != 0.0 else '-',
+                        'finished': attendee.time != 0.0
                     }
                 )
             elif draw:
@@ -45,13 +56,16 @@ def getRaceTimes(raceType: str):
                         'lane': draw.lane,
                         'team': draw.desc,
                         'company': '-',
-                        'time': None,
-                        'place': '-'
+                        'time_min': None,
+                        'time_sec': None,
+                        'time_hnd': None,
+                        'place': '-',
+                        'finished': False
                     }
                 )
-        if all(item['time'] is not None for item in entry['lanes']):
+        if all(item['finished'] for item in entry['lanes']):
             entry['status'] = 'finished'
-        elif any(item['time'] is not None for item in entry['lanes']):
+        elif any(item['finished'] for item in entry['lanes']):
             entry['status'] = 'started'
         else:
             entry['status'] = 'not_started'
@@ -94,7 +108,31 @@ def getRaceResultsTableContent():
 
     return timetable
 
-def getTimesControls(selected_race = None):
+def getTimesControls(race_id = None):
+    def getSelectedRace(race_id):
+        race = Race.objects.get(id=race_id)
+        attendees = RaceAssign.objects.filter(race_id=race_id)
+        selected_race = {
+            'name': race.name,
+            'id': race.id,
+            'time': race.time,
+            'lanes': []
+        }
+        for attendee in attendees:
+            minutes, seconds, hndsecs = splitTime(attendee.time)
+            lane = {
+                'id': attendee.id,
+                'lane': attendee.lane,
+                'team': Team.objects.get(id=attendee.team_id).name,
+                'place': '?' if attendee.time != 0.0 else '-',
+                'time_min': minutes,
+                'time_sec': seconds,
+                'time_hnd': hndsecs,
+                'finished': attendee.time != 0.0
+            }
+            selected_race['lanes'].append(lane)
+        return selected_race
+
     controls = {
         'races': [],
         'start_time_icon': 'clock',
@@ -102,46 +140,72 @@ def getTimesControls(selected_race = None):
         'selected_race': {}
     }
 
+    if race_id:
+        selected_race = getSelectedRace(race_id)
+    else:
+        selected_race = None
+
     for race in Race.objects.all():
         controls['races'].append(race.name)
 
         if selected_race is None:
-            race_assigns = RaceAssign.objects.filter(race_id=race.id)
-            if sum([1 if ra.time else 0 for ra in race_assigns]) < len(race_assigns):
-                selected_race = {
-                    'name': race.name,
-                    'id': race.id,
-                    'time': race.time,
-                    'lanes': []
-                }
-                for ra in race_assigns:
-                    lane = {
-                        'lane': ra.lane,
-                        'team': Team.objects.get(id=ra.team_id).name,
-                        'place': '-',
-                        'time_min': None,
-                        'time_sec': None,
-                        'time_msec': None
-                    }
-                    if ra.time:
-                        time_min, time_sec = divmod(ra.time.seconds),
-                        time_msec = ra.time.microseconds / 1e3
-                        lane['time_min'] = '{:02.0f}'.format(time_min)
-                        lane['time_sec'] = '{:02.0f}'.format(time_sec)
-                        lane['time_msec'] = '{:03.0f}'.format(time_msec)
-                    selected_race['lanes'].append(lane)
+            attendees = RaceAssign.objects.filter(race_id=race.id)
+            if sum([1 if attendee.time else 0 for attendee in attendees]) < len(attendees):
+                selected_race = getSelectedRace(race.id)
 
     controls['selected_race'] = selected_race
 
     return controls
 
 def times(request):
+    # shortcut to URL with specific race_id
+    if request.method == "POST" and 'race_select' in request.POST:
+        race = Race.objects.get(name = request.POST['race_select'])
+        if race:
+            return redirect('/times?race_id={}'.format(race.id))
+
+    # construct site data
     siteData = getSiteData('times')
-    siteData['controls'] = getTimesControls()
+    if 'race_id' in request.GET:
+        siteData['controls'] = getTimesControls(request.GET['race_id'])
+    else:
+        siteData['controls'] = getTimesControls()
     siteData['times'] = getRaceResultsTableContent()
 
+    # handle POST requests
     if request.method == "POST":
-        # TODO
-        pass
+        if 'refresh_times' in request.POST:
+            selected_race = siteData['controls']['selected_race']
+            for lane in selected_race['lanes']:
+                time = float(request.POST['lane_time_min_' + lane['lane']]) * 60.0
+                time += float(request.POST['lane_time_sec_' + lane['lane']])
+                time += float(request.POST['lane_time_hnd_' + lane['lane']]) / 100.0
+                if time == 0.0:
+                    continue
+                attendee = RaceAssign.objects.get(
+                    id = lane['id'],
+                    lane = lane['lane'],
+                    race_id = selected_race['id']
+                )
+                # sanity check for the right team
+                team = Team.objects.get(
+                    id=attendee.team_id,
+                    name=lane['team']
+                )
+                if team and attendee:
+                    attendee.time = time
+                    attendee.save()
+
+            # decide which race to edit next
+            if 'race_id' in request.GET:
+                attendees = RaceAssign.objects.filter(race_id = request.GET['race_id'])
+                if any(attendee.time == 0.0 for attendee in attendees):
+                    return redirect('/times?race_id={}'.format(request.GET['race_id']))
+            return redirect('/times')
+
+        elif 'race_select' in request.POST:
+            race = Race.objects.get(name = request.POST['race_select'])
+            if race:
+                return redirect('/times?race_id={}'.format(race.id))
 
     return render(request, 'times.html', siteData)

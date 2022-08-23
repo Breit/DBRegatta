@@ -81,3 +81,13 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.col_select_race {
+    min-width: 10rem !important;
+    max-width: 15rem !important;
+}
+
+.col_times {
+    min-width: 13rem !important;
+    max-width: 13rem !important;
+}
