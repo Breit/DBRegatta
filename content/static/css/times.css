@@ -3,7 +3,7 @@
     background-color: var(--bs-gray-100) !important;
 }
 
-.timetable_race:nth-child(even) {
+.timetable_race:nth-child(odd) {
     background-color: var(--bs-gray-200) !important;
 }
 
@@ -16,7 +16,7 @@
     background-color: var(--bs-gray-100) !important;
 }
 
-.timetable_race:nth-child(even) .timetable_lane {
+.timetable_race:nth-child(odd) .timetable_lane {
     background-color: var(--bs-gray-200) !important;
 }
 
