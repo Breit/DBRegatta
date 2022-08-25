@@ -4,7 +4,7 @@
 }
 
 .btn_team_table_icon img {
-    height: 30px;
+    height: 1.5rem;
 }
 
 .btn_team_table_icon:hover img {
@@ -16,7 +16,7 @@
 }
 
 .team_table_buttons {
-    width: 140px !important;
+    width: 7rem !important;
 }
 
 .form-switch input[type=checkbox] {
@@ -30,7 +30,7 @@
 }
 
 .progress {
-    height: 30px;
+    height: 2rem;
     border-radius: 0;
 }
 

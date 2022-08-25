@@ -1,4 +1,3 @@
-import math
 from constance import config
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
@@ -7,14 +6,10 @@ from .views_timetable import combineTimeOffset
 from .views_main import getSiteData
 from .models import Race, RaceAssign, Team, RaceDrawMode
 
-def splitTime(race_time: float):
-    minutes = math.floor(race_time / 60)
-    seconds = math.floor(race_time - minutes)
-    hndsecs = math.floor(100 * (race_time - math.floor(race_time)))
-
-    return minutes, seconds, hndsecs
-
 def getRaceTimes(raceType: str):
+    # deduce lane count from database
+    lanesPerRace = len(set([attendee.lane for attendee in RaceAssign.objects.all()]))
+
     races = []
     for race in Race.objects.filter(name__startswith = raceType):
         entry = {
@@ -23,8 +18,16 @@ def getRaceTimes(raceType: str):
             'lanes': []
         }
 
-        # deduce lane count from database
-        lanesPerRace = len(set([attendee.lane for attendee in RaceAssign.objects.all()]))
+        # get rankings
+        attendees = RaceAssign.objects.filter(race_id=race.id).order_by('time')
+        rankings = {}
+        i = 1
+        for attendee in attendees:
+            if attendee.time != 0.0:
+                rankings[attendee.lane] = i
+                i += 1
+
+        # get times table data
         for lnum in range(lanesPerRace):
             try:
                 attendee = RaceAssign.objects.get(race_id=race.id, lane=(lnum + 1))
@@ -37,16 +40,13 @@ def getRaceTimes(raceType: str):
             except ObjectDoesNotExist:
                 draw = None
             if team:
-                minutes, seconds, hndsecs = splitTime(attendee.time)
                 entry['lanes'].append(
                     {
                         'lane': attendee.lane,
                         'team': team.name,
                         'company': team.company,
-                        'time_min': minutes,
-                        'time_sec': seconds,
-                        'time_hnd': hndsecs,
-                        'place': '?' if attendee.time != 0.0 else '-',
+                        'time': attendee.time,
+                        'place': rankings[attendee.lane] if attendee.lane in rankings else '-',
                         'finished': attendee.time != 0.0
                     }
                 )
@@ -56,9 +56,7 @@ def getRaceTimes(raceType: str):
                         'lane': draw.lane,
                         'team': draw.desc,
                         'company': '-',
-                        'time_min': None,
-                        'time_sec': None,
-                        'time_hnd': None,
+                        'time': None,
                         'place': '-',
                         'finished': False
                     }
@@ -111,6 +109,18 @@ def getRaceResultsTableContent():
 def getTimesControls(race_id = None):
     def getSelectedRace(race_id):
         race = Race.objects.get(id=race_id)
+        rankings = {}
+        if race:
+            # get rankings
+            attendees = RaceAssign.objects.filter(race_id=race.id).order_by('time')
+            i = 1
+            for attendee in attendees:
+                if attendee.time != 0.0:
+                    rankings[attendee.lane] = i
+                    i += 1
+        else:
+            return {}
+
         attendees = RaceAssign.objects.filter(race_id=race_id)
         selected_race = {
             'name': race.name,
@@ -119,15 +129,12 @@ def getTimesControls(race_id = None):
             'lanes': []
         }
         for attendee in attendees:
-            minutes, seconds, hndsecs = splitTime(attendee.time)
             lane = {
                 'id': attendee.id,
                 'lane': attendee.lane,
                 'team': Team.objects.get(id=attendee.team_id).name,
-                'place': '?' if attendee.time != 0.0 else '-',
-                'time_min': minutes,
-                'time_sec': seconds,
-                'time_hnd': hndsecs,
+                'place': rankings[attendee.lane] if attendee.lane in rankings else '-',
+                'time': attendee.time,
                 'finished': attendee.time != 0.0
             }
             selected_race['lanes'].append(lane)
@@ -135,7 +142,7 @@ def getTimesControls(race_id = None):
 
     controls = {
         'races': [],
-        'start_time_icon': 'clock',
+        'start_time_icon': 'view-list',
         'time_icon': 'clock-history',
         'selected_race': {}
     }

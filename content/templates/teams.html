@@ -122,15 +122,15 @@
                             </td>
                             <td>{{ t.phone }}</td>
                             <td class="text-center">{{ t.date|date:'d.m.Y' }}</td>
-                            <td class="team_table_buttons text-center">
-                                <div class="row">
-                                    <form method="POST" action="" id="none_form" class="col-auto m-0 p-0 team_table_button">
+                            <td class="team_table_buttons text-center px-0">
+                                <div class="row m-0 flex-nowrap">
+                                    <form method="POST" action="" id="none_form" class="col-3 m-0 p-0 team_table_button">
                                         {% csrf_token %}
                                         <button type="submit" name="edit_team" value="{{ t.id }}" class="btn btn_team_table_icon p-0 ps-1">
                                             <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_team">
                                         </button>
                                     </form>
-                                    <form method="POST" action="" id="none_form" class="col-auto m-0 p-0 team_table_button">
+                                    <form method="POST" action="" id="none_form" class="col-3 m-0 p-0 team_table_button">
                                         {% csrf_token %}
                                         <button type="submit" name="activate_team" value="{{ t.name }}" class="btn btn_team_table_icon p-0 ps-1">
                                             {% if t.active %}
@@ -140,7 +140,7 @@
                                             {% endif %}
                                         </button>
                                     </form>
-                                    <form method="POST" action="" id="none_form" class="col-auto m-0 p-0 team_table_button">
+                                    <form method="POST" action="" id="none_form" class="col-3 m-0 p-0 team_table_button">
                                         {% csrf_token %}
                                         <button type="submit" name="waitlist_team" value="{{ t.name }}" class="btn btn_team_table_icon p-0 ps-1">
                                             {% if t.wait %}
@@ -150,7 +150,7 @@
                                             {% endif %}
                                         </button>
                                     </form>
-                                    <form method="POST" action="" id="none_form" class="col-auto m-0 p-0 team_table_button">
+                                    <form method="POST" action="" id="none_form" class="col-3 m-0 p-0 team_table_button">
                                         {% csrf_token %}
                                         <button type="submit" name="delete_team" value="{{ t.name }}" class="btn btn_team_table_icon p-0 ps-1" onclick="return confirm('{{ config.warningDeleteTeam }}');">
                                             <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_team">

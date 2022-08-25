@@ -10,14 +10,34 @@ def getSiteData(id: str = None):
                 'title': config.teamsTitle,
                 'url': 'teams',
                 'thumb': config.teamsIcon,
-                'active': True if id == 'teams' else False
+                'active': True if id == 'teams' else False,
+                'notifications': [
+                    {
+                        'level': 'success',
+                        'count': 24
+                    },
+                    {
+                        'level': 'warning',
+                        'count': 6
+                    },
+                    {
+                        'level': 'secondary',
+                        'count': 2
+                    }
+                ]
             },
             {
                 'id': 'trainings',
                 'title': config.trainingsTitle,
                 'url': 'trainings',
                 'thumb': config.trainingsIcon,
-                'active': True if id == 'trainings' else False
+                'active': True if id == 'trainings' else False,
+                'notifications': [
+                    {
+                        'level': 'danger',
+                        'count': 'TODO'
+                    }
+                ]
             },
             {
                 'id': 'timetable',
@@ -38,7 +58,13 @@ def getSiteData(id: str = None):
                 'title': config.resultsTitle,
                 'url': 'results',
                 'thumb': config.resultsIcon,
-                'active': True if id == 'results' else False
+                'active': True if id == 'results' else False,
+                'notifications': [
+                    {
+                        'level': 'danger',
+                        'count': 'TODO'
+                    }
+                ]
             },
             {
                 'id': 'settings',

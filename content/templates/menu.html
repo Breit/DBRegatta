@@ -8,7 +8,14 @@
             <div class="p-1">
                 <img src="{% static 'images/' %}{{ m.thumb }}" alt="{{ m.title }}_icon">
             </div>
-            <p class="px-2 my-auto lead text-light">{{ m.title }}</p>
+            <span class="px-2 my-auto lead text-light w-100">{{ m.title }}</span>
+            {% if m.notifications %}
+            <div class="d-flex flex-column">
+                {% for n in m.notifications %}
+                    <span class="badge text-light text-bg-{{ n.level }}">{{ n.count }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
         </a>
     </li>
     {% endfor %}
