@@ -7,3 +7,8 @@
     max-height: 100%;
     max-width: 100%;
 }
+
+input[type=date] {
+    min-width: 8rem;
+    max-width: 8rem;
+  }
