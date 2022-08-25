@@ -7,11 +7,6 @@ def trainings(request):
     siteData['content'] = {}
     return render(request, 'trainings.html', siteData)
 
-def results(request):
-    siteData = getSiteData('results')
-    siteData['content'] = {}
-    return render(request, 'results.html', siteData)
-
 def djadmin(request):
     siteData = getSiteData('djadmin')
     siteData['url'] = "/admin"

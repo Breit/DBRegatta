@@ -53,7 +53,7 @@ CONSTANCE_CONFIG = {
     'teamTableHeaderID':        ('#',                                           'Team Table Header ID'),
     'teamTableHeaderTeam':      ('Team',                                        'Team Table Header Team'),
     'teamTableHeaderCompany':   ('Firma',                                       'Team Table Header Company'),
-    'teamTableHeaderCaptain':   ('TeamCaptain',                                 'Team Table Header Team Captain'),
+    'teamTableHeaderCaptain':   ('Team Captain',                                'Team Table Header Team Captain'),
     'teamTableHeaderEmail':     ('Email',                                       'Team Table Header Email'),
     'teamTableHeaderPhone':     ('Telefon',                                     'Team Table Header Phone'),
     'teamTableHeaderDate':      ('Anmeldung',                                   'Team Table Header Date'),
@@ -92,7 +92,7 @@ CONSTANCE_CONFIG = {
     'heatPrefix':               ('V',                                           'Prefix for Heat Race Names'),
     'finalPrefix':              ('E',                                           'Prefix for Finale Race Names'),
     'timetableHeaderTime':      ('Startzeit',                                   'Timetable Table Header for Time'),
-    'timetableHeaderName':      ('Lauf',                                        'Timetable Table Header for Race'),
+    'timetableHeaderName':      ('Rennen',                                      'Timetable Table Header for Race'),
     'timetableHeaderTeam':      ('Team',                                        'Timetable Table Header for Team Name'),
     'timetableHeaderCompany':   ('Firma',                                       'Timetable Table Header for Company Name'),
     'timetableHeaderLane':      ('Bahn',                                        'Timetable Table Header for Lane'),
@@ -124,6 +124,7 @@ CONSTANCE_CONFIG = {
     'resultsPageCSS':           ('results.css',                                 'CSS File for Site-specific Styling'),
     'resultsTitle':             ('Ergebnisse',                                  'Menu Title for Results Page'),
     'resultsIcon':              ('results.svg',                                 'Menu Icon for Results Page'),
+    'resultsTableHeader':       ('Ergebnisliste',                               'Header Label for Race Results on Results Page'),
 
     # Settings for Settings Page
     'settingsPageCSS':          ('settings.css',                                'CSS File for Site-specific Styling'),
@@ -272,6 +273,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'resultsPageCSS',
             'resultsTitle',
             'resultsIcon',
+            'resultsTableHeader',
         ),
         'collapse': True
     },
