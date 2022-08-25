@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from constance import config
 
+from .models import Team
+
 # define default site data
 def getSiteData(id: str = None):
     siteData = {
@@ -14,15 +16,15 @@ def getSiteData(id: str = None):
                 'notifications': [
                     {
                         'level': 'success',
-                        'count': 24
+                        'count': Team.objects.filter(active=True, wait=False).count()
                     },
                     {
                         'level': 'warning',
-                        'count': 6
+                        'count': Team.objects.filter(active=True, wait=True).count()
                     },
                     {
                         'level': 'secondary',
-                        'count': 2
+                        'count': Team.objects.filter(active=False).count()
                     }
                 ]
             },
