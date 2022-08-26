@@ -25,7 +25,7 @@
 }
 
 .carousel-indicators {
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.3rem;
 }
 
 .carousel-indicators [data-bs-target] {
@@ -34,5 +34,5 @@
 }
 
 .carousel-inner {
-    overflow: auto;
+    overflow-y: auto;
 }

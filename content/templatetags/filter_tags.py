@@ -55,3 +55,15 @@ def asTime(value):
         pass
 
     return ''
+
+'''
+Simple multiply filter
+'''
+@register.filter
+def multiply(value, arg):
+    try:
+        return value * arg
+    except:
+        pass
+
+    return ''
