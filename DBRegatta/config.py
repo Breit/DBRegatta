@@ -126,6 +126,12 @@ CONSTANCE_CONFIG = {
     'resultsIcon':              ('results.svg',                                 'Menu Icon for Results Page'),
     'resultsTableHeader':       ('Ergebnisliste',                               'Header Label for Race Results on Results Page'),
 
+    # Display Page Settings
+    'displayPageCSS':           ('display.css',                                 'CSS File for Site-specific Styling'),
+    'displayTitle':             ('Race Monitor',                                'Menu Title for Display Page'),
+    'displayIcon':              ('billboard.svg',                               'Menu Icon for Display Page'),
+    'displayInterval':          (10000,                                          'Time in Milliseconds for Slides on Display Page'),
+
     # Settings for Settings Page
     'settingsPageCSS':          ('settings.css',                                'CSS File for Site-specific Styling'),
     'settingsTitle':            ('Einstellungen',                               'Menu Title for Settings Page'),
@@ -274,6 +280,15 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'resultsTitle',
             'resultsIcon',
             'resultsTableHeader',
+        ),
+        'collapse': True
+    },
+    'Display Settings': {
+        'fields': (
+            'displayPageCSS',
+            'displayTitle',
+            'displayIcon',
+            'displayInterval',
         ),
         'collapse': True
     },

@@ -9,51 +9,15 @@
 {% block content %}
     <div class="container-fluid">
         <h2 class="my-2">{{ config.resultsTableHeader }}</h2>
-
-        <div id="resultsCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#resultsCarousel" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#resultsCarousel" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#resultsCarousel" data-bs-slide-to="2"></button>
-            </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="container-fluid border border-primary pt-0 mb-3">
-                        <div class="row bg-primary fs-4 text-light">Seite 1</div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="container-fluid border border-primary pt-0 mb-3">
-                        <div class="row bg-primary fs-4 text-light">Seite 2</div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="container-fluid border border-primary pt-0 mb-3">
-                        <div class="row bg-primary fs-4 text-light">Seite 3</div>
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#resultsCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#resultsCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-
         {% for entry in results %}
             <div class="container-fluid border border-primary pt-0 mb-3">
                 <div class="row bg-primary fs-4 text-light">
-                    <div class="col-1 text-center">{{ entry.time|time:'H:i'}}</div>
                     <div class="col">{{ entry.desc }}</div>
                 </div>
                 {% if entry.races %}
                     <div class="row border-bottom small text-muted mt-2">
-                        <div class="col-1 text-center">{{ config.timetableHeaderTime }}</div>
                         <div class="col-1 text-center">{{ config.timetableHeaderName }}</div>
-                        <div class="col-10">
+                        <div class="col-11">
                             <div class="row">
                                 <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
                                 <div class="col-3">{{ config.timetableHeaderTeam }}</div>
@@ -63,24 +27,23 @@
                             </div>
                         </div>
                     </div>
-                {% endif %}
-                {% for race in entry.races %}
-                    <div class="row border-bottom timetable_race px-1{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}">
-                        <div class="col-1 text-center align-self-center fw-bold">{{ race.time|time:'H:i' }}</div>
-                        <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
-                        <div class="col-10">
-                            {% for lane in race.lanes %}
-                                <div class="row timetable_lane">
-                                    <div class="col-1 text-center">{{ lane.lane }}</div>
-                                    <div class="col-3 fw-bold">{{ lane.team }}</div>
-                                    <div class="col-6">{{ lane.company }}</div>
-                                    <div class="col-1 text-center align-self-center">{{ lane.place }}</div>
-                                    <div class="col-1 text-center align-self-center{% if lane.finished %} fw-bold text-success{% else %} text-muted{% endif %}">{{ lane.time|asTime }}</div>
-                                </div>
-                            {% endfor %}
+                    {% for race in entry.races %}
+                        <div class="row border-bottom timetable_race px-1{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}">
+                            <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
+                            <div class="col-11">
+                                {% for lane in race.lanes %}
+                                    <div class="row timetable_lane">
+                                        <div class="col-1 text-center">{{ lane.lane }}</div>
+                                        <div class="col-3 fw-bold">{{ lane.team }}</div>
+                                        <div class="col-6">{{ lane.company }}</div>
+                                        <div class="col-1 text-center align-self-center">{{ lane.place }}</div>
+                                        <div class="col-1 text-center align-self-center{% if lane.finished %} fw-bold text-success{% else %} text-muted{% endif %}">{{ lane.time|asTime }}</div>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                {% endif %}
             </div>
         {% endfor %}
     </div>

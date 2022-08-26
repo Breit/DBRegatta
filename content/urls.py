@@ -7,6 +7,7 @@ from . import views_times
 from . import views_timetable
 from . import views_settings
 from . import views_results
+from . import views_display
 
 #URLConf
 urlpatterns = [
@@ -16,6 +17,7 @@ urlpatterns = [
     path('timetable', views_timetable.timetable),
     path('settings',  views_settings.settings),
     path('results',   views_results.results),
+    path('display',   views_display.display),
 
     path('trainings', views.trainings),
     path('djadmin',   views.djadmin)
