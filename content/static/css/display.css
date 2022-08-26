@@ -1,0 +1,38 @@
+.timetable_race {
+    z-index: 1;
+    background-color: var(--bs-gray-100) !important;
+}
+
+.timetable_race:nth-child(odd) {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.timetable_race:hover {
+    filter: brightness(0.97);
+}
+
+.timetable_lane {
+    z-index: 2;
+    background-color: var(--bs-gray-100) !important;
+}
+
+.timetable_race:nth-child(odd) .timetable_lane {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.timetable_lane:hover {
+    filter: brightness(0.97);
+}
+
+.carousel-indicators {
+    margin-bottom: 0.25rem;
+}
+
+.carousel-indicators [data-bs-target] {
+    background-color: var(--bs-primary) !important;
+    border: 0 !important;
+}
+
+.carousel-inner {
+    overflow: auto;
+}

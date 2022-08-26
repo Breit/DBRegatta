@@ -69,6 +69,19 @@ def getSiteData(id: str = None):
                 ]
             },
             {
+                'id': 'display',
+                'title': config.displayTitle,
+                'url': 'display',
+                'thumb': config.displayIcon,
+                'active': True if id == 'display' else False,
+                'notifications': [
+                    {
+                        'level': 'danger',
+                        'count': 'TODO'
+                    }
+                ]
+            },
+            {
                 'id': 'settings',
                 'title': config.settingsTitle,
                 'url': 'settings',
