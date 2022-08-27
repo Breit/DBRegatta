@@ -67,3 +67,15 @@ def multiply(value, arg):
         pass
 
     return ''
+
+'''
+Simple summation filter
+'''
+@register.filter
+def sumUp(value):
+    try:
+        return sum(value)
+    except:
+        pass
+
+    return ''

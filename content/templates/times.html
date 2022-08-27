@@ -8,7 +8,7 @@
 
 {% block content %}
     <div class="container-fluid">
-        <h2 class="my-2">{{ config.timesHeader }}</h2>
+        <h2 class="mt-2 mb-3">{{ config.timesHeader }}</h2>
         <div class="row m-0 border-bottom">
             <div class="col-2 mx-0 px-2 small text-muted text-center mt-2 col_select_race">{{ config.timeRaceDesc }}</div>
             <div class="col-1 small text-muted text-center mt-2">{{ config.timetableHeaderTime }}</div>
@@ -72,7 +72,7 @@
         <div class="container-fluid border-bottom pt-3 mb-4"></div>
     </div>
     <div class="container-fluid">
-        <h2 class="my-2">{{ config.timesTableHeader }}</h2>
+        <h2 class="mt-2 mb-3">{{ config.timesTableHeader }}</h2>
         {% for entry in times %}
             <div class="container-fluid border border-primary pt-0 mb-3">
                 <div class="row bg-primary fs-4 text-light">

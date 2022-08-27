@@ -130,7 +130,10 @@ CONSTANCE_CONFIG = {
     'displayPageCSS':           ('display.css',                                 'CSS File for Site-specific Styling'),
     'displayTitle':             ('Race Monitor',                                'Menu Title for Display Page'),
     'displayIcon':              ('billboard.svg',                               'Menu Icon for Display Page'),
-    'displayInterval':          (10000,                                          'Time in Milliseconds for Slides on Display Page'),
+    'displayInterval':          (10000,                                         'Time in Milliseconds for Slides on Display Page'),
+    'displayRankings':          ('Rangliste Vorrunde',                          'Rankings Header on Display Page'),
+    'displayRank':              ('Rang',                                        'Rank Header on Display Page'),
+    'displaySumTime':           ('Zeitsumme',                                   'Total Time Header on Display Page'),
 
     # Settings for Settings Page
     'settingsPageCSS':          ('settings.css',                                'CSS File for Site-specific Styling'),
@@ -289,6 +292,9 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'displayTitle',
             'displayIcon',
             'displayInterval',
+            'displayRankings',
+            'displayRank',
+            'displaySumTime',
         ),
         'collapse': True
     },
