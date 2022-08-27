@@ -7,21 +7,22 @@
 {% endblock %}
 
 {% block content %}
-        <div id="resultsCarousel" class="carousel slide carousel-fade h-100 w-100" data-bs-ride="carousel">
-            <div class="carousel-indicators float-bottom">
-                {% for entry in display %}
-                    <button type="button" data-bs-target="#resultsCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.counter == 1 %}active{% endif %}"></button>
-                {% endfor %}
-            </div>
-            <div class="carousel-inner h-100 p-3">
-                {% for entry in display %}
-                    <div class="carousel-item{% if forloop.counter == 1 %} active{% endif %}" data-bs-interval="{{ config.displayInterval }}">
-                        <div class="container-fluid border border-primary">
+    <div id="resultsCarousel" class="carousel slide carousel-fade h-100 w-100" data-bs-ride="carousel">
+        <div class="carousel-indicators float-bottom">
+            {% for entry in display %}
+                <button type="button" data-bs-target="#resultsCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.counter == 1 %}active{% endif %}"></button>
+            {% endfor %}
+        </div>
+        <div class="carousel-inner h-100 p-3">
+            {% for entry in display %}
+                <div class="carousel-item{% if forloop.counter == 1 %} active{% endif %}" data-bs-interval="{{ config.displayInterval }}">
+                    <div class="container-fluid border border-primary">
+                        {% if entry == 'timetable' %}
                             <div class="row bg-primary fs-4 text-light">
-                                <div class="col-1 text-center">{{ entry.time|time:'H:i'}}</div>
-                                <div class="col">{{ entry.desc }}</div>
+                                <div class="col-1 text-center">{{ display.timetable.time|time:'H:i'}}</div>
+                                <div class="col">{{ display.timetable.desc }}</div>
                             </div>
-                            {% if entry.races %}
+                            {% if display.timetable.races %}
                                 <div class="row border-bottom small text-muted mt-2">
                                     <div class="col-1 text-center">{{ config.timetableHeaderTime }}</div>
                                     <div class="col-1 text-center">{{ config.timetableHeaderName }}</div>
@@ -35,7 +36,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {% for race in entry.races %}
+                                {% for race in display.timetable.races %}
                                     <div class="row border-bottom timetable_race px-1{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}">
                                         <div class="col-1 text-center align-self-center fw-bold">{{ race.time|time:'H:i' }}</div>
                                         <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
@@ -53,9 +54,10 @@
                                     </div>
                                 {% endfor %}
                             {% endif %}
-                        </div>
+                        {% endif %}
                     </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
