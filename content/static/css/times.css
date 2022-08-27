@@ -24,11 +24,11 @@
     filter: brightness(0.97);
 }
 
-.race_finished:nth-child(odd) .timetable_lane {
+.race_finished:nth-child(even) .timetable_lane {
     background-color: #d1e7dd !important;
 }
 
-.race_finished:nth-child(even) .timetable_lane {
+.race_finished:nth-child(odd) .timetable_lane {
     background-color: #c1d6cc !important;
 }
 
@@ -36,11 +36,11 @@
     filter: brightness(0.97);
 }
 
-.race_finished:nth-child(odd) {
+.race_finished:nth-child(even) {
     background-color: #d1e7dd !important;
 }
 
-.race_finished:nth-child(even) {
+.race_finished:nth-child(odd) {
     background-color: #c1d6cc !important;
 }
 
@@ -48,11 +48,11 @@
     filter: brightness(0.97);
 }
 
-.race_started:nth-child(odd) .timetable_lane {
+.race_started:nth-child(even) .timetable_lane {
     background-color: #fff3cd !important;
 }
 
-.race_started:nth-child(even) .timetable_lane {
+.race_started:nth-child(odd) .timetable_lane {
     background-color: #ece1be !important;
 }
 
@@ -60,11 +60,11 @@
     filter: brightness(0.97);
 }
 
-.race_started:nth-child(odd) {
+.race_started:nth-child(even) {
     background-color: #fff3cd !important;
 }
 
-.race_started:nth-child(even) {
+.race_started:nth-child(odd) {
     background-color: #ece1be !important;
 }
 

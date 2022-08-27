@@ -13,47 +13,84 @@
                 <button type="button" data-bs-target="#resultsCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.counter == 1 %}active{% endif %}"></button>
             {% endfor %}
         </div>
-        <div class="carousel-inner h-100 p-3">
+        <div class="carousel-inner h-100">
             {% for entry in display %}
                 <div class="carousel-item{% if forloop.counter == 1 %} active{% endif %}" data-bs-interval="{{ config.displayInterval }}">
-                    <div class="container-fluid border border-primary">
+                    <div class="container-fluid">
                         {% if entry == 'timetable' %}
-                            <div class="row bg-primary fs-4 text-light">
-                                <div class="col-1 text-center">{{ display.timetable.time|time:'H:i'}}</div>
-                                <div class="col">{{ display.timetable.desc }}</div>
+                            <h2 class="mt-2 mb-3">{{ display.timetable.desc }}</h2>
+                            <div class="container-fluid">
+                                {% if display.timetable.races %}
+                                    <div class="row border-bottom small text-muted mt-2">
+                                        <div class="col-1 text-center">{{ config.timetableHeaderTime }}</div>
+                                        <div class="col-1 text-center">{{ config.timetableHeaderName }}</div>
+                                        <div class="col-10">
+                                            <div class="row">
+                                                <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
+                                                <div class="col-3">{{ config.timetableHeaderTeam }}</div>
+                                                <div class="col-6">{{ config.timetableHeaderCompany }}</div>
+                                                <div class="col-1 text-center">{{ config.timesHeaderPlace }}</div>
+                                                <div class="col-1 text-center">{{ config.timesHeaderTime }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% for race in display.timetable.races %}
+                                        <div class="row border-bottom timetable_race{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}">
+                                            <div class="col-1 text-center align-self-center fw-bold">{{ race.time|time:'H:i' }}</div>
+                                            <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
+                                            <div class="col-10">
+                                                {% for lane in race.lanes %}
+                                                    <div class="row timetable_lane">
+                                                        <div class="col-1 text-center">{{ lane.lane }}</div>
+                                                        <div class="col-3 fw-bold">{{ lane.team }}</div>
+                                                        <div class="col-6">{{ lane.company }}</div>
+                                                        <div class="col-1 text-center align-self-center">{{ lane.place }}</div>
+                                                        <div class="col-1 text-center align-self-center{% if lane.finished %} fw-bold text-success{% else %} text-muted{% endif %}">{{ lane.time|asTime }}</div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
-                            {% if display.timetable.races %}
+                        {% elif entry == 'rankings' %}
+                            <h2 class="mt-2 mb-3">{{ display.rankings.desc }}</h2>
+                            <div class="container-fluid">
                                 <div class="row border-bottom small text-muted mt-2">
-                                    <div class="col-1 text-center">{{ config.timetableHeaderTime }}</div>
-                                    <div class="col-1 text-center">{{ config.timetableHeaderName }}</div>
-                                    <div class="col-10">
+                                    <div class="col-1 text-center">{{ config.displayRank }}</div>
+                                    <div class="col-3">{{ config.timetableHeaderTeam }}</div>
+                                    <div class="col-5">{{ config.timetableHeaderCompany }}</div>
+                                    <div class="col-3">
                                         <div class="row">
-                                            <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
-                                            <div class="col-3">{{ config.timetableHeaderTeam }}</div>
-                                            <div class="col-6">{{ config.timetableHeaderCompany }}</div>
-                                            <div class="col-1 text-center">{{ config.timesHeaderPlace }}</div>
-                                            <div class="col-1 text-center">{{ config.timesHeaderTime }}</div>
+                                            {% for h in display.rankings.heats %}
+                                                <div class="col-3 text-center">{{ h }}</div>
+                                            {% endfor %}
+                                            <div class="col-6 text-center">{{ config.displaySumTime }}</div>
                                         </div>
                                     </div>
                                 </div>
-                                {% for race in display.timetable.races %}
-                                    <div class="row border-bottom timetable_race px-1{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}">
-                                        <div class="col-1 text-center align-self-center fw-bold">{{ race.time|time:'H:i' }}</div>
-                                        <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
-                                        <div class="col-10">
-                                            {% for lane in race.lanes %}
-                                                <div class="row timetable_lane">
-                                                    <div class="col-1 text-center">{{ lane.lane }}</div>
-                                                    <div class="col-3 fw-bold">{{ lane.team }}</div>
-                                                    <div class="col-6">{{ lane.company }}</div>
-                                                    <div class="col-1 text-center align-self-center">{{ lane.place }}</div>
-                                                    <div class="col-1 text-center align-self-center{% if lane.finished %} fw-bold text-success{% else %} text-muted{% endif %}">{{ lane.time|asTime }}</div>
+                            </div>
+                            {% for b in display.rankings.brackets %}
+                                <div class="container-fluid border-bottom mb-5">
+                                    {% for r in display.rankings.ranks %}
+                                        {% if r.races == b %}
+                                            <div class="row rankings_table">
+                                                <div class="col-1 text-center text-primary fw-bold">{% if r.races > 0 %}{{ r.rank }}{% endif %}</div>
+                                                <div class="col-3 fw-bold">{{ r.name }}</div>
+                                                <div class="col-5">{{ r.company }}</div>
+                                                <div class="col-3">
+                                                    <div class="row">
+                                                        {% for t in r.times %}
+                                                            <div class="col-3 text-center small">{% if t > 0 %}{{ t|asTime }}{% else %}-{% endif %}</div>
+                                                        {% endfor %}
+                                                        <div class="col-6 text-center{% if r.races > 0 %} fw-bold text-success{% endif %}">{% if r.races > 0 %}{{ r.times|sumUp|asTime }}{% else %}-{% endif %}</div>
+                                                    </div>
                                                 </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
                         {% endif %}
                     </div>
                 </div>

@@ -3,7 +3,7 @@
     background-color: var(--bs-gray-100) !important;
 }
 
-.timetable_race:nth-child(odd) {
+.timetable_race:nth-child(even) {
     background-color: var(--bs-gray-200) !important;
 }
 
@@ -16,11 +16,24 @@
     background-color: var(--bs-gray-100) !important;
 }
 
-.timetable_race:nth-child(odd) .timetable_lane {
+.timetable_race:nth-child(even) .timetable_lane {
     background-color: var(--bs-gray-200) !important;
 }
 
 .timetable_lane:hover {
+    filter: brightness(0.97);
+}
+
+.rankings_table {
+    z-index: 1;
+    background-color: var(--bs-gray-100) !important;
+}
+
+.rankings_table:nth-child(odd) {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.rankings_table:hover {
     filter: brightness(0.97);
 }
 
