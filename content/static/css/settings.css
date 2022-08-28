@@ -8,7 +8,25 @@
     max-width: 100%;
 }
 
-input[type=date] {
-    min-width: 8rem;
-    max-width: 8rem;
-  }
+/* input[type=date],
+input[type=number]  */
+.fixed_col {
+    min-width: 12rem;
+    max-width: 12rem;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: inner-spin-button !important;
+    width: 25px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+}

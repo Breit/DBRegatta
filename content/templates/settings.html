@@ -12,7 +12,7 @@
             <div class="row">
                 {% for c in controls %}
                     {% if c.type == 'date' %}
-                        <div class="col-3 mb-3">
+                        <div class="col-2 mb-3 fixed_col">
                             <form method="POST" action="" id="{{ c.id }}">
                                 {% csrf_token %}
                                 <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
@@ -37,6 +37,17 @@
                             <div class="logo border bg-dark p-2 border-secondary text-center">
                                 <img src="{% static 'images/' %}{{ c.value }}" alt="{{ c.id }}">
                             </div>
+                        </div>
+                    {% elif c.type == 'number' %}
+                        <div class="col-2 mb-3 fixed_col">
+                            <form method="POST" action="" id="{{ c.id }}">
+                                {% csrf_token %}
+                                <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
+                                <div class="input-group rounded ">
+                                    <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                    <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end pe-4" value="{{ c.value }}" onchange="this.form.submit()">
+                                </div>
+                            </form>
                         </div>
                     {% else %}
                         <div class="col-6 mb-3">
