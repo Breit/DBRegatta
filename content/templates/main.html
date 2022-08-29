@@ -29,7 +29,52 @@
                 {% block menu %}{% endblock %}
             </div>
             <div class="content_panel flex-row">
-                {% block content %}{% endblock %}
+                {% block content %}
+                <div class="container login_form d-flex flex-column justify-content-center align-self-center h-100">
+                    {% if user_name %}
+                        <form method="POST" action="" id="login_form">
+                            {% csrf_token %}
+                            <div class="container">
+                                {{ config.loginGreeting1 }}{% if user_fname %}{{user_fname}}{% if user_lname %} {{user_lname}}{% endif %}{% else %}{{user_name}}{% endif %}{{ config.loginGreeting2 }}
+                            </div>
+                            <button type="submit" name="logout" value="Logout" class="btn btn-primary btn_icon mt-3">
+                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                    <div class="pe-2">
+                                        <img src="{% static 'images/' %}{{ config.logoutIcon }}" alt="logout">
+                                    </div>
+                                    <p class="m-0 ps-2 lead">{{ config.logoutButtonText }}</p>
+                                </div>
+                            </button>
+                        </form>
+                    {% else %}
+                        <form method="POST" action="" id="login_form">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-12 mb-3 p-0">
+                                    <div class="input-group rounded">
+                                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                        <input type="text" name="user" class="form-control" placeholder="{{ config.loginUserName }}" maxlength="200" id="user_field">
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3 p-0">
+                                    <div class="input-group rounded">
+                                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                        <input type="password" name="password" class="form-control" placeholder="{{ config.loginPassword }}" maxlength="200" id="pass_field">
+                                    </div>
+                                </div>
+                                <button type="submit" name="login" value="Login" class="btn btn-primary btn_icon mt-3">
+                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                        <div class="pe-2">
+                                            <img src="{% static 'images/' %}{{ config.loginIcon }}" alt="login">
+                                        </div>
+                                        <p class="m-0 ps-2 lead">{{ config.loginButtonText }}</p>
+                                    </div>
+                                </button>
+                            </div>
+                        </form>
+                    {% endif %}
+                </div>
+                {% endblock %}
             </div>
             <footer class="footer py-3 px-4 navbar fixed-bottom navbar-dark text-bg-dark border-top">
                 <div class="d-flex align-items-start">

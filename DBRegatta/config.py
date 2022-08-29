@@ -144,6 +144,16 @@ CONSTANCE_CONFIG = {
     # Settings for Admin Panel
     'adminTitle':               ('Admin Panel',                                 'Menu Title for Admin Panel Page'),
     'adminIcon':                ('django_logo.svg',                             'Menu Icon for Admin Panel Page'),
+
+    # Login Settings
+    'loginButtonText':          ('Anmelden',                                    'Button Text for Login Button'),
+    'logoutButtonText':         ('Abmelden',                                    'Button Text for Logout Button'),
+    'loginIcon':                ('login.svg',                                   'Button Image for Login Button'),
+    'logoutIcon':               ('logout.svg',                                  'Button Image for Logout Button'),
+    'loginUserName':            ('Benutzername',                                'Login Form Placeholder for User Name'),
+    'loginPassword':            ('Passwort',                                    'Login Form Placeholder for Password'),
+    'loginGreeting1':           ('Hallo ',                                      'Login Greeting Part #1'),
+    'loginGreeting2':           (', du bist erfolgreich angemeldet!',           'Login Greeting Part #2'),
 }
 
 CONSTANCE_CONFIG_FIELDSETS = {
@@ -312,6 +322,19 @@ CONSTANCE_CONFIG_FIELDSETS = {
         'fields': (
             'adminTitle',
             'adminIcon',
+        ),
+        'collapse': True
+    },
+    'Login Settings': {
+        'fields': (
+            'loginButtonText',
+            'logoutButtonText',
+            'loginIcon',
+            'logoutIcon',
+            'loginUserName',
+            'loginPassword',
+            'loginGreeting1',
+            'loginGreeting2',
         ),
         'collapse': True
     }

@@ -6,60 +6,62 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
-        <h2 class="mt-2 mb-3">{{ config.timetableSettingsHeader }}</h2>
-        <div class="d-flex align-items-start timetable_form">
-            <div class="row">
-                {% for c in controls %}
-                    {% if c.type == 'time' %}
-                        <div class="col-3 mb-3">
-                            <form method="POST" action="" id="{{ c.id }}">
-                                {% csrf_token %}
-                                <label for="{{ c.id }}" class="form-label small ">{{ c.name }}</label>
-                                <div class="input-group rounded ">
-                                    <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
-                                    <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end" value="{{ c.value|time:'H:i' }}" onchange="this.form.submit()">
-                                </div>
-                            </form>
-                        </div>
-                    {% else %}
-                        <div class="col-3 mb-3">
-                            <form method="POST" action="" id="{{ c.id }}">
-                                {% csrf_token %}
-                                <label for="{{ c.id }}" class="form-label small ">{{ c.name }}</label>
-                                <div class="input-group rounded ">
-                                    <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
-                                    <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end pe-4" value="{{ c.value }}" {% if c.min %}min="{{ c.min }}"{% endif %} {% if c.max %}max="{{ c.max }}"{% endif %} onchange="this.form.submit()">
-                                </div>
-                            </form>
-                        </div>
-                    {% endif %}
-                {% endfor %}
+    {% if controls %}
+        <div class="container-fluid">
+            <h2 class="mt-2 mb-3">{{ config.timetableSettingsHeader }}</h2>
+            <div class="d-flex align-items-start timetable_form">
+                <div class="row">
+                    {% for c in controls %}
+                        {% if c.type == 'time' %}
+                            <div class="col-3 mb-3">
+                                <form method="POST" action="" id="{{ c.id }}">
+                                    {% csrf_token %}
+                                    <label for="{{ c.id }}" class="form-label small ">{{ c.name }}</label>
+                                    <div class="input-group rounded ">
+                                        <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                        <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end" value="{{ c.value|time:'H:i' }}" onchange="this.form.submit()">
+                                    </div>
+                                </form>
+                            </div>
+                        {% else %}
+                            <div class="col-3 mb-3">
+                                <form method="POST" action="" id="{{ c.id }}">
+                                    {% csrf_token %}
+                                    <label for="{{ c.id }}" class="form-label small ">{{ c.name }}</label>
+                                    <div class="input-group rounded ">
+                                        <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                        <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end pe-4" value="{{ c.value }}" {% if c.min %}min="{{ c.min }}"{% endif %} {% if c.max %}max="{{ c.max }}"{% endif %} onchange="this.form.submit()">
+                                    </div>
+                                </form>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-        <div class="d-flex align-items-start mt-3">
-            <form method="POST" action="" id="none_form">
-                {% csrf_token %}
-                <button type="submit" name="refresh_times" value="Refresh" class="btn btn-primary btn_icon me-3">
-                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                        <div class="pe-2">
-                            <img src="{% static 'images/' %}{{ config.refreshTimetableIcon }}" alt="refresh_times">
+            <div class="d-flex align-items-start mt-3">
+                <form method="POST" action="" id="none_form">
+                    {% csrf_token %}
+                    <button type="submit" name="refresh_times" value="Refresh" class="btn btn-primary btn_icon me-3">
+                        <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                            <div class="pe-2">
+                                <img src="{% static 'images/' %}{{ config.refreshTimetableIcon }}" alt="refresh_times">
+                            </div>
+                            <p class="m-0 ps-2 lead">{{ config.refreshTimetableText }}</p>
                         </div>
-                        <p class="m-0 ps-2 lead">{{ config.refreshTimetableText }}</p>
-                    </div>
-                </button>
-                <button type="submit" name="create_timetable" value="Create" class="btn btn-danger btn_icon" onclick="return confirm('{{ config.warningCreateTimetable }}');">
-                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                        <div class="pe-2">
-                            <img src="{% static 'images/' %}{{ config.createTimetableIcon }}" alt="create_timetable">
+                    </button>
+                    <button type="submit" name="create_timetable" value="Create" class="btn btn-danger btn_icon" onclick="return confirm('{{ config.warningCreateTimetable }}');">
+                        <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                            <div class="pe-2">
+                                <img src="{% static 'images/' %}{{ config.createTimetableIcon }}" alt="create_timetable">
+                            </div>
+                            <p class="m-0 ps-2 lead">{{ config.createTimetableText }}</p>
                         </div>
-                        <p class="m-0 ps-2 lead">{{ config.createTimetableText }}</p>
-                    </div>
-                </button>
-            </form>
+                    </button>
+                </form>
+            </div>
+            <div class="container-fluid border-bottom pt-3 mb-4"></div>
         </div>
-        <div class="container-fluid border-bottom pt-3 mb-4"></div>
-    </div>
+    {% endif %}
     <div class="container-fluid">
         <h2 class="mt-2 mb-3">{{ config.timetableHeader }}</h2>
         {% for entry in timetable %}
