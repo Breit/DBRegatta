@@ -431,7 +431,7 @@ def getCurrentRaceBlock():
     return current_race_block
 
 # define default site data
-def getSiteData(id: str = None):
+def getSiteData(id: str = None, user = None):
     menu_teams = {
         'id': 'teams',
         'title': config.teamsTitle,
@@ -524,18 +524,31 @@ def getSiteData(id: str = None):
         'active': True if id == 'djadmin' else False
     }
 
-    siteData = {
-        'menu': [
-            menu_teams,
-            menu_trainings,
-            menu_timetable,
-            menu_times,
-            menu_results,
-            menu_display,
-            menu_setings,
-            menu_admin
-        ]
-    }
+    siteData = {'menu': []}
+
+    if user and user.is_authenticated:
+        siteData['menu'].append(menu_teams)
+        siteData['menu'].append(menu_trainings)
+
+    siteData['menu'].append(menu_timetable)
+
+    if user and user.is_authenticated:
+        siteData['menu'].append(menu_times)
+
+    siteData['menu'].append(menu_results)
+
+    if user and user.is_authenticated:
+        siteData['menu'].append(menu_display)
+        siteData['menu'].append(menu_setings)
+
+    if user and user.is_authenticated and user.is_superuser:
+        siteData['menu'].append(menu_admin)
+
+    if user and user.is_authenticated:
+        siteData['user_name'] = user.username
+        siteData['user_fname'] = user.first_name
+        siteData['user_lname'] = user.last_name
+
     return siteData
 
 def getRaceTimes(raceType: str):

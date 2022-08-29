@@ -64,3 +64,7 @@
 .btn_icon:hover img {
     transform: scale(1.2);
 }
+
+.login_form {
+    width: 17rem;
+}

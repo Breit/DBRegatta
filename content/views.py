@@ -1,15 +1,28 @@
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 
 from .views_helper import *
 
 def main(request):
-    return render(request, 'main.html', getSiteData())
+    if request.method == "POST":
+        if 'login' in request.POST:
+            user = authenticate(request, username=request.POST['user'], password=request.POST['password'])
+            if user is not None:
+                login(request, user)
+                return redirect('/')
+
+        if 'logout' in request.POST:
+            logout(request)
+            return redirect('/')
+
+    siteData = getSiteData(user = request.user)
+    return render(request, 'main.html', siteData)
 
 def teams(request):
-    # if user not in authenticated_users:
-    #    return redirect('/')
+    if not request.user.is_authenticated:
+        return redirect('/')
 
-    siteData = getSiteData('teams')
+    siteData = getSiteData('teams', request.user)
     siteData['content'] = getTeamContent()
 
     if request.method == "POST":
@@ -98,41 +111,49 @@ def teams(request):
     return render(request, 'teams.html', siteData)
 
 def trainings(request):
-    siteData = getSiteData('trainings')
+    if not request.user.is_authenticated:
+        return redirect('/')
+
+    siteData = getSiteData('trainings', request.user)
     siteData['content'] = {}
     return render(request, 'trainings.html', siteData)
 
 def timetable(request):
-    siteData = getSiteData('timetable')
+    siteData = getSiteData('timetable', request.user)
     siteData['timetable'] = getTimeTableContent()
-    siteData['controls'] = getTimeTableSettings()
 
-    if request.method == "POST":
-        if 'timeBegin' in request.POST:
-            config.timeBegin = time.fromisoformat(request.POST['timeBegin'])
-        elif 'offsetHeat' in request.POST:
-            config.offsetHeat = timedelta(minutes=int(request.POST['offsetHeat']))
-        elif 'offsetFinale' in request.POST:
-            config.offsetFinale = timedelta(minutes=int(request.POST['offsetFinale']))
-        elif 'offsetCeremony' in request.POST:
-            config.offsetCeremony = timedelta(minutes=int(request.POST['offsetCeremony']))
-        elif 'heatCount' in request.POST:
-            config.heatCount = int(request.POST['heatCount'])
-        elif 'lanesPerRace' in request.POST:
-            config.lanesPerRace = int(request.POST['lanesPerRace'])
-        elif 'intervalHeat' in request.POST:
-            config.intervalHeat = timedelta(minutes=int(request.POST['intervalHeat']))
-        elif 'intervalFinal' in request.POST:
-            config.intervalFinal = timedelta(minutes=int(request.POST['intervalFinal']))
-        elif 'create_timetable' in request.POST:
-            createTimeTable()
-        elif 'refresh_times' in request.POST:
-            updateTimeTable()
-        return redirect('/timetable')
+    if request.user.is_authenticated:
+        siteData['controls'] = getTimeTableSettings()
+
+        if request.method == "POST":
+            if 'timeBegin' in request.POST:
+                config.timeBegin = time.fromisoformat(request.POST['timeBegin'])
+            elif 'offsetHeat' in request.POST:
+                config.offsetHeat = timedelta(minutes=int(request.POST['offsetHeat']))
+            elif 'offsetFinale' in request.POST:
+                config.offsetFinale = timedelta(minutes=int(request.POST['offsetFinale']))
+            elif 'offsetCeremony' in request.POST:
+                config.offsetCeremony = timedelta(minutes=int(request.POST['offsetCeremony']))
+            elif 'heatCount' in request.POST:
+                config.heatCount = int(request.POST['heatCount'])
+            elif 'lanesPerRace' in request.POST:
+                config.lanesPerRace = int(request.POST['lanesPerRace'])
+            elif 'intervalHeat' in request.POST:
+                config.intervalHeat = timedelta(minutes=int(request.POST['intervalHeat']))
+            elif 'intervalFinal' in request.POST:
+                config.intervalFinal = timedelta(minutes=int(request.POST['intervalFinal']))
+            elif 'create_timetable' in request.POST:
+                createTimeTable()
+            elif 'refresh_times' in request.POST:
+                updateTimeTable()
+            return redirect('/timetable')
 
     return render(request, 'timetable.html', siteData)
 
 def times(request):
+    if not request.user.is_authenticated:
+        return redirect('/')
+
     # shortcut to URL with specific race_id
     if request.method == "POST" and 'race_select' in request.POST:
         race = Race.objects.get(name = request.POST['race_select'])
@@ -140,7 +161,7 @@ def times(request):
             return redirect('/times?race_id={}'.format(race.id))
 
     # construct site data
-    siteData = getSiteData('times')
+    siteData = getSiteData('times', request.user)
     if 'race_id' in request.GET:
         siteData['controls'] = getTimesControls(request.GET['race_id'])
     else:
@@ -194,12 +215,12 @@ def times(request):
     return render(request, 'times.html', siteData)
 
 def results(request):
-    siteData = getSiteData('results')
+    siteData = getSiteData('results', request.user)
     siteData['results'] = getRaceResultsTableContent()
     return render(request, 'results.html', siteData)
 
 def display(request):
-    siteData = getSiteData('display')
+    siteData = getSiteData('display', request.user)
     siteData['display'] = {
         'timetable': getCurrentTimeTable(),
         'rankings': getRankingTable()
@@ -208,7 +229,10 @@ def display(request):
     return render(request, 'display.html', siteData)
 
 def settings(request):
-    siteData = getSiteData('settings')
+    if not request.user.is_authenticated:
+        return redirect('/')
+
+    siteData = getSiteData('settings', request.user)
     siteData['controls'] = getMainSettings()
 
     if request.method == "POST":
@@ -235,7 +259,10 @@ def settings(request):
     return render(request, 'settings.html', siteData)
 
 def djadmin(request):
-    siteData = getSiteData('djadmin')
+    if not request.user.is_authenticated and not request.user.is_superuser:
+        return redirect('/')
+
+    siteData = getSiteData('djadmin', request.user)
     siteData['url'] = "/admin"
     response = render(request, 'djadmin.html', siteData)
     response['Content-Security-Policy'] = "frame-ancestors 'self' http://127.0.0.1:1080"
