@@ -125,6 +125,10 @@ CONSTANCE_CONFIG = {
     'resultsTitle':             ('Ergebnisse',                                  'Menu Title for Results Page'),
     'resultsIcon':              ('results.svg',                                 'Menu Icon for Results Page'),
     'resultsTableHeader':       ('Ergebnisliste',                               'Header Label for Race Results on Results Page'),
+    'activateResults':          (False,                                         'Toggle Display Results Page for Unauthenticated Users'),
+    'activateResultsDesc':      ('Ergebnisse annonym',                          'Description for Toggle Display Results Page for Unauthenticated Users'),
+    'activeResultsDesc':        ('anzeigen',                                    'Description for active Toggle Display Results Page for Unauthenticated Users'),
+    'inactiveResultsDesc':      ('verbergen',                                   'Description for inactive Toggle Display Results Page for Unauthenticated Users'),
 
     # Display Page Settings
     'displayPageCSS':           ('display.css',                                 'CSS File for Site-specific Styling'),
@@ -152,7 +156,7 @@ CONSTANCE_CONFIG = {
     'logoutIcon':               ('logout.svg',                                  'Button Image for Logout Button'),
     'loginUserName':            ('Benutzername',                                'Login Form Placeholder for User Name'),
     'loginPassword':            ('Passwort',                                    'Login Form Placeholder for Password'),
-    'loginGreeting1':           ('Hallo ',                                      'Login Greeting Part #1'),
+    'loginGreeting1':           ('Hallo',                                       'Login Greeting Part #1'),
     'loginGreeting2':           (', du bist erfolgreich angemeldet!',           'Login Greeting Part #2'),
 }
 
@@ -294,6 +298,10 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'resultsTitle',
             'resultsIcon',
             'resultsTableHeader',
+            'activateResults',
+            'activateResultsDesc',
+            'activeResultsDesc',
+            'inactiveResultsDesc',
         ),
         'collapse': True
     },

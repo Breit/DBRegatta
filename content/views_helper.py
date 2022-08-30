@@ -535,7 +535,8 @@ def getSiteData(id: str = None, user = None):
     if user and user.is_authenticated:
         siteData['menu'].append(menu_times)
 
-    siteData['menu'].append(menu_results)
+    if config.activateResults or user.is_authenticated:
+        siteData['menu'].append(menu_results)
 
     if user and user.is_authenticated:
         siteData['menu'].append(menu_display)
@@ -730,6 +731,13 @@ def getMainSettings():
             'name': config.displayIntervalDesc,
             'type': 'number',
             'value': config.displayInterval / 1e3,
+            'icon': 'clock-history'
+        },
+        {
+            'id': 'activateResults',
+            'name': config.activateResultsDesc,
+            'type': 'checkbox',
+            'value': config.activateResults,
             'icon': 'clock-history'
         },
         {

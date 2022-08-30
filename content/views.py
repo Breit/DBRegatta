@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from .views_helper import *
 
 def main(request):
+    # handle login/logout
     if request.method == "POST":
         if 'login' in request.POST:
             user = authenticate(request, username=request.POST['user'], password=request.POST['password'])
@@ -15,12 +16,26 @@ def main(request):
             logout(request)
             return redirect('/')
 
-    siteData = getSiteData(user = request.user)
-    return render(request, 'main.html', siteData)
+    if not request.user.is_authenticated:
+        return redirect('/timetable')
+    else:
+        return redirect('/times')
 
 def teams(request):
     if not request.user.is_authenticated:
         return redirect('/')
+
+    # handle login/logout
+    if request.method == "POST":
+        if 'login' in request.POST:
+            user = authenticate(request, username=request.POST['user'], password=request.POST['password'])
+            if user is not None:
+                login(request, user)
+                return redirect('/teams')
+
+        if 'logout' in request.POST:
+            logout(request)
+            return redirect('/teams')
 
     siteData = getSiteData('teams', request.user)
     siteData['content'] = getTeamContent()
@@ -114,11 +129,35 @@ def trainings(request):
     if not request.user.is_authenticated:
         return redirect('/')
 
+    # handle login/logout
+    if request.method == "POST":
+        if 'login' in request.POST:
+            user = authenticate(request, username=request.POST['user'], password=request.POST['password'])
+            if user is not None:
+                login(request, user)
+                return redirect('/trainings')
+
+        if 'logout' in request.POST:
+            logout(request)
+            return redirect('/trainings')
+
     siteData = getSiteData('trainings', request.user)
     siteData['content'] = {}
     return render(request, 'trainings.html', siteData)
 
 def timetable(request):
+    # handle login/logout
+    if request.method == "POST":
+        if 'login' in request.POST:
+            user = authenticate(request, username=request.POST['user'], password=request.POST['password'])
+            if user is not None:
+                login(request, user)
+                return redirect('/timetable')
+
+        if 'logout' in request.POST:
+            logout(request)
+            return redirect('/timetable')
+
     siteData = getSiteData('timetable', request.user)
     siteData['timetable'] = getTimeTableContent()
 
@@ -153,6 +192,18 @@ def timetable(request):
 def times(request):
     if not request.user.is_authenticated:
         return redirect('/')
+
+    # handle login/logout
+    if request.method == "POST":
+        if 'login' in request.POST:
+            user = authenticate(request, username=request.POST['user'], password=request.POST['password'])
+            if user is not None:
+                login(request, user)
+                return redirect('/times')
+
+        if 'logout' in request.POST:
+            logout(request)
+            return redirect('/times')
 
     # shortcut to URL with specific race_id
     if request.method == "POST" and 'race_select' in request.POST:
@@ -215,11 +266,41 @@ def times(request):
     return render(request, 'times.html', siteData)
 
 def results(request):
+    # handle login/logout
+    if request.method == "POST":
+        if 'login' in request.POST:
+            user = authenticate(request, username=request.POST['user'], password=request.POST['password'])
+            if user is not None:
+                login(request, user)
+                return redirect('/results')
+
+        if 'logout' in request.POST:
+            logout(request)
+            return redirect('/results')
+
+    if not config.activateResults and not request.user.is_authenticated:
+        return redirect('/')
+
     siteData = getSiteData('results', request.user)
     siteData['results'] = getRaceResultsTableContent()
     return render(request, 'results.html', siteData)
 
 def display(request):
+    if not request.user.is_authenticated:
+        return redirect('/')
+
+    # handle login/logout
+    if request.method == "POST":
+        if 'login' in request.POST:
+            user = authenticate(request, username=request.POST['user'], password=request.POST['password'])
+            if user is not None:
+                login(request, user)
+                return redirect('/display')
+
+        if 'logout' in request.POST:
+            logout(request)
+            return redirect('/display')
+
     siteData = getSiteData('display', request.user)
     siteData['display'] = {
         'timetable': getCurrentTimeTable(),
@@ -232,6 +313,18 @@ def settings(request):
     if not request.user.is_authenticated:
         return redirect('/')
 
+    # handle login/logout
+    if request.method == "POST":
+        if 'login' in request.POST:
+            user = authenticate(request, username=request.POST['user'], password=request.POST['password'])
+            if user is not None:
+                login(request, user)
+                return redirect('/settings')
+
+        if 'logout' in request.POST:
+            logout(request)
+            return redirect('/settings')
+
     siteData = getSiteData('settings', request.user)
     siteData['controls'] = getMainSettings()
 
@@ -242,6 +335,8 @@ def settings(request):
             config.eventDate = date.fromisoformat(request.POST['eventDate'])
         elif 'durationMonitorSlide' in request.POST:
             config.displayInterval = float(request.POST['durationMonitorSlide']) * 1e3
+        elif 'activateResults' in request.POST:
+            config.activateResults = request.POST['activateResults'] == 'on'
         elif 'ownerName' in request.POST:
             config.ownerName = request.POST['ownerName']
         elif 'sponsorName' in request.POST:
@@ -261,6 +356,18 @@ def settings(request):
 def djadmin(request):
     if not request.user.is_authenticated and not request.user.is_superuser:
         return redirect('/')
+
+    # handle login/logout
+    if request.method == "POST":
+        if 'login' in request.POST:
+            user = authenticate(request, username=request.POST['user'], password=request.POST['password'])
+            if user is not None:
+                login(request, user)
+                return redirect('/djadmin')
+
+        if 'logout' in request.POST:
+            logout(request)
+            return redirect('/djadmin')
 
     siteData = getSiteData('djadmin', request.user)
     siteData['url'] = "/admin"

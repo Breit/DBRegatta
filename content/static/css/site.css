@@ -68,3 +68,15 @@
 .login_form {
     width: 17rem;
 }
+
+.home_icon {
+    width: 8rem;
+}
+
+#login_button i:hover {
+    color: var(--bs-primary) !important;
+}
+
+.modal-backdrop {
+    z-index: 0;
+}
