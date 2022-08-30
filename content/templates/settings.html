@@ -38,6 +38,20 @@
                                 <img src="{% static 'images/' %}{{ c.value }}" alt="{{ c.id }}">
                             </div>
                         </div>
+                    {% elif c.type == 'checkbox' %}
+                        <div class="col-2 mb-3 fixed_col">
+                            <form method="POST" action="" id="{{ c.id }}">
+                                {% csrf_token %}
+                                <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
+                                <div class="input-group rounded ">
+                                    <div class="input-group-text form-switch px-1 {% if f.errors %}input-error{% endif %}">
+                                        <input type="hidden" name="{{ c.id }}" value="off">
+                                        <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-check-input text-end pe-4" onchange="this.form.submit()" {% if c.value %}checked{% endif %}>
+                                    </div>
+                                    <input type="text" class="form-control bg-light" value="{% if c.value %}{{ config.activeResultsDesc }}{% else %}{{ config.inactiveResultsDesc }}{% endif %}" disabled>
+                                </div>
+                            </form>
+                        </div>
                     {% elif c.type == 'number' %}
                         <div class="col-2 mb-3 fixed_col">
                             <form method="POST" action="" id="{{ c.id }}">

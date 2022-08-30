@@ -15,12 +15,77 @@
     <body>
         <main class="bg-light">
             <header class="header p-2 navbar sticky-top navbar-dark text-bg-dark border-bottom">
-                <div class="content">
+                <div class="container-fluid">
                     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                         <a href="{{ config.homeUrl }}" class="d-flex align-items-center mb-3 mb-md-0 text-decoration-none">
                             <img class="bi me-2" src="{% static 'images/' %}{{ config.homeIcon }}" alt="Home">
                         </a>
                         <h1 class="mb-3 mb-md-0 me-md-auto text-decoration-none fw-lighter">{{ config.siteName }} {{ config.eventDate|date:'d.m.Y' }}</h1>
+                    </div>
+                    <div class="d-flex flex-nowrap align-items-center justify-content-center justify-content-lg-end">
+                        <button type="button" id="login_button" class="btn-link bg-dark border border-0 m-0 p-0" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-person-circle {% if user_name %}text-light{% else %}text-muted{% endif %} fs-2"></i>
+                        </button>
+                        <div class="modal fade" id="loginModal" tabindex="-1">
+                            <div class="modal-dialog text-dark">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        {% if user_name %}
+                                            <h5 class="modal-title" id="loginModalLabel">{{ config.logoutButtonText }}</h5>
+                                        {% else %}
+                                            <h5 class="modal-title" id="loginModalLabel">{{ config.loginButtonText }}</h5>
+                                        {% endif %}
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body d-flex flex-wrap justify-content-center align-items-center">
+                                        <form method="POST" action="" id="login_form">
+                                            {% csrf_token %}
+                                            {% if user_name %}
+                                                <div class="container">
+                                                    {{ config.loginGreeting1 }}{% if user_fname %}<span class="text-primary"> {{ user_fname }}</span>{% else %}<span class="text-primary"> {{user_name}}</span>{% endif %}{{ config.loginGreeting2 }}
+                                                </div>
+                                            {% else %}
+                                                <div class="row mx-5">
+                                                    <div class="col-12 mb-3 p-0">
+                                                        <div class="input-group rounded">
+                                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                                            <input type="text" name="user" class="form-control" placeholder="{{ config.loginUserName }}" maxlength="200" id="user_field">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 p-0">
+                                                        <div class="input-group rounded">
+                                                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                                            <input type="password" name="password" class="form-control" placeholder="{{ config.loginPassword }}" maxlength="200" id="pass_field">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        {% if user_name %}
+                                            <button type="submit" name="logout" value="Logout" class="btn btn-primary btn_icon" form="login_form">
+                                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                    <div class="pe-2">
+                                                        <img src="{% static 'images/' %}{{ config.logoutIcon }}" alt="logout" class="p-0">
+                                                    </div>
+                                                    <p class="m-0 ps-2 lead">{{ config.logoutButtonText }}</p>
+                                                </div>
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" name="login" value="Login" class="btn btn-primary btn_icon" form="login_form">
+                                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                    <div class="pe-2">
+                                                        <img src="{% static 'images/' %}{{ config.loginIcon }}" alt="login" class="p-0">
+                                                    </div>
+                                                    <p class="m-0 ps-2 lead">{{ config.loginButtonText }}</p>
+                                                </div>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -29,52 +94,7 @@
                 {% block menu %}{% endblock %}
             </div>
             <div class="content_panel flex-row">
-                {% block content %}
-                <div class="container login_form d-flex flex-column justify-content-center align-self-center h-100">
-                    {% if user_name %}
-                        <form method="POST" action="" id="login_form">
-                            {% csrf_token %}
-                            <div class="container">
-                                {{ config.loginGreeting1 }}{% if user_fname %}{{user_fname}}{% if user_lname %} {{user_lname}}{% endif %}{% else %}{{user_name}}{% endif %}{{ config.loginGreeting2 }}
-                            </div>
-                            <button type="submit" name="logout" value="Logout" class="btn btn-primary btn_icon mt-3">
-                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                    <div class="pe-2">
-                                        <img src="{% static 'images/' %}{{ config.logoutIcon }}" alt="logout">
-                                    </div>
-                                    <p class="m-0 ps-2 lead">{{ config.logoutButtonText }}</p>
-                                </div>
-                            </button>
-                        </form>
-                    {% else %}
-                        <form method="POST" action="" id="login_form">
-                            {% csrf_token %}
-                            <div class="row">
-                                <div class="col-12 mb-3 p-0">
-                                    <div class="input-group rounded">
-                                        <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                        <input type="text" name="user" class="form-control" placeholder="{{ config.loginUserName }}" maxlength="200" id="user_field">
-                                    </div>
-                                </div>
-                                <div class="col-12 mb-3 p-0">
-                                    <div class="input-group rounded">
-                                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                        <input type="password" name="password" class="form-control" placeholder="{{ config.loginPassword }}" maxlength="200" id="pass_field">
-                                    </div>
-                                </div>
-                                <button type="submit" name="login" value="Login" class="btn btn-primary btn_icon mt-3">
-                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                        <div class="pe-2">
-                                            <img src="{% static 'images/' %}{{ config.loginIcon }}" alt="login">
-                                        </div>
-                                        <p class="m-0 ps-2 lead">{{ config.loginButtonText }}</p>
-                                    </div>
-                                </button>
-                            </div>
-                        </form>
-                    {% endif %}
-                </div>
-                {% endblock %}
+                {% block content %}{% endblock %}
             </div>
             <footer class="footer py-3 px-4 navbar fixed-bottom navbar-dark text-bg-dark border-top">
                 <div class="d-flex align-items-start">
