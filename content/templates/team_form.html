@@ -55,6 +55,13 @@
                         {{ f }}
                     </div>
                 </div>
+            {% elif f.html_name == 'address' %}
+                <div class="col-12 mb-3">
+                    <div class="input-group rounded {% if f.errors %}input-error{% endif %}">
+                        <span class="input-group-text"><i class="bi bi-house"></i></span>
+                        {{ f }}
+                    </div>
+                </div>
             {% else %}
                 <div class="col-12 mb-3">
                     {{ f }}

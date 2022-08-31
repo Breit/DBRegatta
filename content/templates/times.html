@@ -47,9 +47,9 @@
                             <div class="col-4 pe-2 align-self-center col_times">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-{{controls.time_icon}}"></i></span>
-                                    <input type="number" id="lane_time_min_{{ l.lane }}" name="lane_time_min_{{ l.lane }}" class="form-control text-center p-2" value="{{ l.time|splitTime:'min' }}" min="0" max="60">
+                                    <input type="number" id="lane_time_min_{{ l.lane }}" name="lane_time_min_{{ l.lane }}" class="form-control text-center p-2" value="{{ l.time|splitTime:'min' }}" min="0" max="59">
                                     <label class="input-group-text px-1 fw-bold" for="lane_info_sec">:</label>
-                                    <input type="number" id="lane_time_sec_{{ l.lane }}" name="lane_time_sec_{{ l.lane }}" class="form-control text-center p-2" value="{{ l.time|splitTime:'sec' }}" min="0" max="60">
+                                    <input type="number" id="lane_time_sec_{{ l.lane }}" name="lane_time_sec_{{ l.lane }}" class="form-control text-center p-2" value="{{ l.time|splitTime:'sec' }}" min="0" max="59">
                                     <label class="input-group-text px-1 fw-bold" for="lane_info_msec">.</label>
                                     <input type="number" id="lane_time_msec_{{ l.lane }}" name="lane_time_hnd_{{ l.lane }}" class="form-control text-center p-2" value="{{ l.time|splitTime:'hnd' }}" min="0" max="99">
                                 </div>
