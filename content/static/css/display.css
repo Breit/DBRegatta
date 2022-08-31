@@ -1,3 +1,7 @@
+.menu {
+    display: none !important;
+}
+
 .timetable_race {
     z-index: 1;
     background-color: var(--bs-gray-100) !important;
