@@ -80,3 +80,29 @@
 .modal-backdrop {
     z-index: 0;
 }
+
+.bg-gray-200 {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.login img {
+    height: 6rem !important;
+    cursor: auto;
+}
+
+.login img:hover {
+    transform: scale(1.0);
+}
+
+.modal-body img {
+    height: 4rem;
+    cursor: auto;
+}
+
+.modal-footer .btn-primary {
+    width: 16rem;
+}
+
+.modal-footer .btn-secondary {
+    width: 12rem;
+}

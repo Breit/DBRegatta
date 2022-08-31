@@ -4,10 +4,24 @@ from datetime import datetime, date, time, timedelta
 
 from constance import config
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect
 from django.forms.models import model_to_dict
 
 from .models import Race, RaceAssign, Team, RaceDrawMode
 from .forms import TeamForm
+
+def loginUser(request, site: str = ''):
+    if request.method == "POST":
+        if 'login' in request.POST:
+            user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+            if user is not None:
+                login(request, user)
+                return redirect('/{}'.format(site))
+
+        if 'logout' in request.POST:
+            logout(request)
+            return redirect('/{}'.format(site))
 
 # get teams list from database
 def getTeamContent():
@@ -615,6 +629,19 @@ def getRaceTimes(raceType: str):
             entry['status'] = 'not_started'
         races.append(entry)
     return races
+
+# Check if selected race block is started
+def raceBlockStarted(raceType: str):
+    started = False
+    for race in Race.objects.filter(name__startswith = raceType):
+        attendees = RaceAssign.objects.filter(race_id=race.id).order_by('time')
+        for attendee in attendees:
+            if attendee.time != 0.0:
+                started = True
+                break
+        if started:
+            break
+    return started
 
 def getRaceResultsTableContent():
     timetable = []

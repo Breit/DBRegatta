@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import date
+from django.core.validators import MaxLengthValidator
 
 # for list of teams
 class Team(models.Model):
@@ -11,6 +11,7 @@ class Team(models.Model):
     contact = models.CharField(max_length=200, blank=True)
     email = models.EmailField(blank=True)
     phone = models.CharField(max_length=25, blank=True)
+    address = models.TextField(max_length=500, blank=True, validators=[MaxLengthValidator(500)])
 
     def __str__(self):
         return self.company
