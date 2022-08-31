@@ -126,6 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
 STATIC_ROOT = '/usr/local/www/apache24/apps/dbsprint/src/content/static/'
 
 # Default primary key field type
