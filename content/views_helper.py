@@ -5,7 +5,6 @@ from datetime import datetime, date, time, timedelta
 from constance import config
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import redirect
 from django.forms.models import model_to_dict
 
 from .models import Race, RaceAssign, Team, RaceDrawMode
@@ -17,11 +16,9 @@ def loginUser(request, site: str = ''):
             user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
             if user is not None:
                 login(request, user)
-                return redirect('/{}'.format(site))
 
         if 'logout' in request.POST:
             logout(request)
-            return redirect('/{}'.format(site))
 
 # get teams list from database
 def getTeamContent():
