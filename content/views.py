@@ -12,11 +12,11 @@ def main(request):
         return redirect('/times')
 
 def teams(request):
+    # handle login/logout
+    loginUser(request)
+
     if not request.user.is_authenticated:
         return redirect('/')
-
-    # handle login/logout
-    loginUser(request, 'teams')
 
     siteData = getSiteData('teams', request.user)
     siteData['content'] = getTeamContent()
@@ -107,11 +107,11 @@ def teams(request):
     return render(request, 'teams.html', siteData)
 
 def trainings(request):
+    # handle login/logout
+    loginUser(request)
+
     if not request.user.is_authenticated:
         return redirect('/')
-
-    # handle login/logout
-    loginUser(request, 'trainings')
 
     siteData = getSiteData('trainings', request.user)
     siteData['content'] = {}
@@ -119,7 +119,7 @@ def trainings(request):
 
 def timetable(request):
     # handle login/logout
-    loginUser(request, 'timetable')
+    loginUser(request)
 
     siteData = getSiteData('timetable', request.user)
     siteData['timetable'] = getTimeTableContent()
@@ -153,11 +153,11 @@ def timetable(request):
     return render(request, 'timetable.html', siteData)
 
 def times(request):
+    # handle login/logout
+    loginUser(request)
+
     if not request.user.is_authenticated:
         return redirect('/')
-
-    # handle login/logout
-    loginUser(request, 'times')
 
     # shortcut to URL with specific race_id
     if request.method == "POST" and 'race_select' in request.POST:
@@ -222,7 +222,7 @@ def times(request):
 
 def results(request):
     # handle login/logout
-    loginUser(request, 'results')
+    loginUser(request)
 
     if not config.activateResults and not request.user.is_authenticated:
         return redirect('/')
@@ -232,11 +232,11 @@ def results(request):
     return render(request, 'results.html', siteData)
 
 def display(request):
+    # handle login/logout
+    loginUser(request)
+
     if not request.user.is_authenticated:
         return redirect('/')
-
-    # handle login/logout
-    loginUser(request, 'display')
 
     siteData = getSiteData('display', request.user)
     siteData['display'] = {
@@ -249,11 +249,11 @@ def display(request):
     return render(request, 'display.html', siteData)
 
 def settings(request):
+    # handle login/logout
+    loginUser(request)
+
     if not request.user.is_authenticated:
         return redirect('/')
-
-    # handle login/logout
-    loginUser(request, 'settings')
 
     siteData = getSiteData('settings', request.user)
     siteData['controls'] = getMainSettings()
@@ -284,11 +284,11 @@ def settings(request):
     return render(request, 'settings.html', siteData)
 
 def djadmin(request):
+    # handle login/logout
+    loginUser(request)
+
     if not request.user.is_authenticated and not request.user.is_superuser:
         return redirect('/')
-
-    # handle login/logout
-    loginUser(request, 'djadmin')
 
     siteData = getSiteData('djadmin', request.user)
     siteData['url'] = "/admin"
