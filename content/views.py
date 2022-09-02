@@ -161,7 +161,14 @@ def times(request):
 
     # shortcut to URL with specific race_id
     if request.method == "POST" and 'race_select' in request.POST:
-        race = Race.objects.get(name = request.POST['race_select'])
+        race = None
+        if request.POST['race_select']:
+            try:
+                race = Race.objects.get(name = request.POST['race_select'])
+            except:
+                pass
+        else:
+            return redirect('/times')
         if race:
             return redirect('/times?race_id={}'.format(race.id))
 
@@ -172,6 +179,33 @@ def times(request):
     else:
         siteData['controls'] = getTimesControls()
     siteData['times'] = getRaceResultsTableContent()
+
+    # notifications
+    ## TODO ##
+    # move this to getSiteData()
+    last = None
+    started = None
+    for times in siteData['times']:
+        for r in times['races']:
+            if not started and r['status'] == 'started':
+                started = r['desc']
+            elif r['status'] == 'finished':
+                last = r['desc']
+    menu = [item for item in siteData['menu'] if item['id'] == 'times'][0]
+    if started is not None:
+        menu['notifications'].append(
+            {
+                'level': 'warning',
+                'count': started
+            }
+        )
+    elif last is not None:
+        menu['notifications'].append(
+            {
+                'level': 'success',
+                'count': last
+            }
+        )
 
     # handle POST requests
     if request.method == "POST":
@@ -206,6 +240,9 @@ def times(request):
                     attendee.time = race_time
                     attendee.save()
 
+                    # create finals or ascend winner from the last race
+                    populateFinals(attendee)
+
             # decide which race to edit next
             if 'race_id' in request.GET:
                 attendees = RaceAssign.objects.filter(race_id = request.GET['race_id'])
@@ -213,7 +250,7 @@ def times(request):
                     return redirect('/times?race_id={}'.format(request.GET['race_id']))
             return redirect('/times')
 
-        elif 'race_select' in request.POST:
+        elif 'race_select' in request.POST and request.POST['race_select']:
             race = Race.objects.get(name = request.POST['race_select'])
             if race:
                 return redirect('/times?race_id={}'.format(race.id))
