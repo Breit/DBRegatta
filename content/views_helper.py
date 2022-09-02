@@ -1,9 +1,10 @@
+import re
 import math
 import random
 from datetime import datetime, date, time, timedelta
 
 from constance import config
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.contrib.auth import authenticate, login, logout
 from django.forms.models import model_to_dict
 
@@ -484,7 +485,8 @@ def getSiteData(id: str = None, user = None):
         'title': config.timetableTitle,
         'url': 'timetable',
         'thumb': config.timetableIcon,
-        'active': True if id == 'timetable' else False
+        'active': True if id == 'timetable' else False,
+        'notifications': []
     }
 
     menu_times = {
@@ -492,7 +494,8 @@ def getSiteData(id: str = None, user = None):
         'title': config.timeTitle,
         'url': 'times',
         'thumb': config.timeIcon,
-        'active': True if id == 'times' else False
+        'active': True if id == 'times' else False,
+        'notifications': []
     }
 
     menu_results = {
@@ -500,7 +503,8 @@ def getSiteData(id: str = None, user = None):
         'title': config.resultsTitle,
         'url': 'results',
         'thumb': config.resultsIcon,
-        'active': True if id == 'results' else False
+        'active': True if id == 'results' else False,
+        'notifications': []
     }
 
     menu_display = {
@@ -508,7 +512,8 @@ def getSiteData(id: str = None, user = None):
         'title': config.displayTitle,
         'url': 'display',
         'thumb': config.displayIcon,
-        'active': True if id == 'display' else False
+        'active': True if id == 'display' else False,
+        'notifications': []
     }
     current_race_block = getCurrentRaceBlock()
     if current_race_block:
@@ -524,7 +529,8 @@ def getSiteData(id: str = None, user = None):
         'title': config.settingsTitle,
         'url': 'settings',
         'thumb': config.settingsIcon,
-        'active': True if id == 'settings' else False
+        'active': True if id == 'settings' else False,
+        'notifications': []
     }
 
     menu_admin = {
@@ -532,7 +538,8 @@ def getSiteData(id: str = None, user = None):
         'title': config.adminTitle,
         'url': 'djadmin',
         'thumb': config.adminIcon,
-        'active': True if id == 'djadmin' else False
+        'active': True if id == 'djadmin' else False,
+        'notifications': []
     }
 
     siteData = {'menu': []}
@@ -589,6 +596,8 @@ def getRaceTimes(raceType: str):
             try:
                 attendee = RaceAssign.objects.get(race_id=race.id, lane=(lnum + 1))
                 team = Team.objects.get(id=attendee.team_id)
+            except MultipleObjectsReturned:
+                attendee = RaceAssign.objects.filter(race_id=race.id, lane=(lnum + 1))[0]
             except ObjectDoesNotExist:
                 attendee = None
                 team = None
@@ -604,7 +613,8 @@ def getRaceTimes(raceType: str):
                         'company': team.company,
                         'time': attendee.time,
                         'place': rankings[attendee.lane] if attendee.lane in rankings else '-',
-                        'finished': attendee.time != 0.0
+                        'finished': attendee.time != 0.0,
+                        'draw': False
                     }
                 )
             elif draw:
@@ -615,7 +625,8 @@ def getRaceTimes(raceType: str):
                         'company': '-',
                         'time': None,
                         'place': '-',
-                        'finished': False
+                        'finished': False,
+                        'draw': True
                     }
                 )
         if all(item['finished'] for item in entry['lanes']):
@@ -631,12 +642,9 @@ def getRaceTimes(raceType: str):
 def raceBlockStarted(raceType: str):
     started = False
     for race in Race.objects.filter(name__startswith = raceType):
-        attendees = RaceAssign.objects.filter(race_id=race.id).order_by('time')
-        for attendee in attendees:
-            if attendee.time != 0.0:
-                started = True
-                break
-        if started:
+        attendees = RaceAssign.objects.filter(race_id=race.id)
+        if any([attendee.time > 0.0 for attendee in attendees]):
+            started = True
             break
     return started
 
@@ -711,7 +719,7 @@ def getTimesControls(race_id = None):
         return selected_race
 
     controls = {
-        'races': [],
+        'races': [''],
         'start_time_icon': 'view-list',
         'time_icon': 'clock-history',
         'selected_race': {}
@@ -809,3 +817,71 @@ def getMainSettings():
     ]
 
     return settings
+
+# check if all heats are finished and if so, create rankings and fill finals
+def populateFinals(race_assignment: RaceAssign):
+    if getCurrentRaceBlock() == config.finalPrefix:
+        # get all final races and sort after race names in reverse order, but obey number ordering
+        races = Race.objects.filter(name__startswith = config.finalPrefix)
+        races_sorted = [(race.id, race.name) for race in races]
+        races_sorted.sort(key=lambda x:[int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x[1])], reverse=True)
+        race_ids = [race[0] for race in races_sorted]
+
+        # for already running finals, decide if a winner from a particular final race can ascend one race
+        if race_assignment:
+            assignee_race = Race.objects.get(id = race_assignment.race_id)
+            if assignee_race.name.startswith(config.finalPrefix):
+                attendees = RaceAssign.objects.filter(race_id=assignee_race.id).order_by('time')
+                if all([attendee.time > 0.0 for attendee in attendees]):
+                    # find next race
+                    if assignee_race.id in race_ids:
+                        race_idx = race_ids.index(assignee_race.id)
+                        if race_idx > 0:
+                            # attendees[0] holds the winner, ascend him to the next race
+                            ra = None
+                            try:
+                                # check if there is already an assignment (due to race time changes)
+                                ra = RaceAssign.objects.get(race_id=race_ids[race_idx - 1], lane=1)
+                            except:
+                                pass
+                            if ra is None:
+                                # create a new assignment
+                                ra = RaceAssign()
+                            ra.race_id = race_ids[race_idx - 1]
+                            ra.lane = 1         # winner starts on lane #1
+                            ra.team_id = attendees[0].team_id
+                            ra.save()
+
+        ## TODO ##
+        # Remove Team from next race if its race time is reset
+
+        # create all race assignments for the finals if necessary
+        # fill rankings to finals
+        attendees = RaceAssign.objects.filter(race_id__in=race_ids)
+        if len(attendees) == 0:
+            rankings = getRankings()
+            if len(rankings) > 0:
+                rank_id = 0
+                for race_id in race_ids:
+                    for lane in reversed(range(config.lanesPerRace)):
+                        if rank_id >= len(rankings):
+                            break
+                        if race_id != race_ids[-1] and lane == 0 or lane + 1 > len(rankings) - rank_id:
+                            # leave lane free for winner from previous race
+                            continue
+                        ra = RaceAssign()
+                        ra.race_id = race_id
+                        ra.lane = lane + 1
+                        ra.team_id = rankings[rank_id]['team_id']
+                        ra.save()
+                        rank_id += 1
+
+# CAUTION !!!
+# remove all finals including racing times from the DB
+def clearFinals():
+        races = Race.objects.filter(name__startswith = config.finalPrefix)
+        race_ids = [race.id for race in races]
+        attendees = RaceAssign.objects.filter(race_id__in=race_ids)
+        if len(attendees) > 0:
+            for attendee in attendees:
+                attendee.delete()

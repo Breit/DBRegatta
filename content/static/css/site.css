@@ -106,3 +106,8 @@
 .modal-footer .btn-secondary {
     width: 12rem;
 }
+
+.nav-link .badge {
+    font-size: 0.6rem;
+}
+

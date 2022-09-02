@@ -101,7 +101,7 @@
                             {% for lane in race.lanes %}
                                 <div class="row timetable_lane">
                                     <div class="col-1 text-center">{{ lane.lane }}</div>
-                                    <div class="col-8 fw-bold">{{ lane.team }}</div>
+                                    <div class="col-8 {% if lane.draw %}text-muted{% else %}fw-bold{% endif %}">{{ lane.team }}</div>
                                     <div class="col-1 text-center align-self-center">{{ lane.place }}</div>
                                     <div class="col-2 text-center align-self-center{% if lane.finished %} fw-bold text-success{% else %} text-muted{% endif %}">{{ lane.time|asTime }}</div>
                                 </div>
