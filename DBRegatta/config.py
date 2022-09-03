@@ -101,6 +101,7 @@ CONSTANCE_CONFIG = {
     'offsetFinaleDesc':         ('Pause vor Finale',                            'Description for Timeoffset between last Race from Heats to the Start of the Finale'),
     'offsetCeremony':           (timedelta(minutes=30),                         'Timeoffset between last Race and Victory Ceremony'),
     'offsetCeremonyDesc':       ('Pause vor Siegerehrung',                      'Description for Timeoffset between last Race and Victory Ceremony'),
+    'timetablePostDesc':        ('Mitteilungen zum Rennplan',                   'Description for Post on Timetable Control'),
     'heatPrefix':               ('V',                                           'Prefix for Heat Race Names'),
     'finalPrefix':              ('E',                                           'Prefix for Finale Race Names'),
     'timetableHeaderTime':      ('Startzeit',                                   'Timetable Table Header for Time'),
@@ -156,6 +157,7 @@ CONSTANCE_CONFIG = {
     'settingsPageCSS':          ('settings.css',                                'CSS File for Site-specific Styling'),
     'settingsTitle':            ('Einstellungen',                               'Menu Title for Settings Page'),
     'settingsIcon':             ('settings.svg',                                'Menu Icon for Settings Page'),
+    'placeholderPostContent':   ('Mitteilung',                                  'Placeholder Text for Post Content Control'),
 
     # Settings for Admin Panel
     'adminTitle':               ('Admin Panel',                                 'Menu Title for Admin Panel Page'),
@@ -278,6 +280,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'offsetFinaleDesc',
             'offsetCeremony',
             'offsetCeremonyDesc',
+            'timetablePostDesc',
             'heatPrefix',
             'finalPrefix',
             'timetableHeaderTime',
@@ -347,6 +350,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'settingsPageCSS',
             'settingsTitle',
             'settingsIcon',
+            'placeholderPostContent',
         ),
         'collapse': True
     },

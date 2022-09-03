@@ -1,0 +1,3 @@
+django
+django-constance
+django-markdownify

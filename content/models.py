@@ -37,3 +37,10 @@ class RaceDrawMode(models.Model):
     desc = models.CharField(max_length=200, blank=True)
     lane = models.CharField(max_length=20, blank=False)
 
+class Post(models.Model):
+    enable = models.BooleanField(default=False)
+    site = models.CharField(unique=True, max_length=20, blank=False)
+    content = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.site

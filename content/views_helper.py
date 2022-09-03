@@ -8,8 +8,8 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.contrib.auth import authenticate, login, logout
 from django.forms.models import model_to_dict
 
-from .models import Race, RaceAssign, Team, RaceDrawMode
-from .forms import TeamForm
+from .models import Race, RaceAssign, Team, RaceDrawMode, Post
+from .forms import TeamForm, PostForm
 
 def loginUser(request, site: str = ''):
     if request.method == "POST":
@@ -42,6 +42,14 @@ def combineTimeOffset(t: time, offset: timedelta):
     return (datetime.combine(date.today(), t) + offset).time()
 
 def getTimeTableSettings():
+    try:
+        post = Post.objects.get(site='timetable')
+    except Post.DoesNotExist:
+        post = Post()
+        post.site = 'timetable'
+        post.save()
+    post_form = PostForm(instance = post)
+
     settings = [
         {
             'id': 'timeBegin',
@@ -102,6 +110,13 @@ def getTimeTableSettings():
             'type': 'number',
             'value': config.intervalFinal.seconds // 60,
             'icon': 'distribute-horizontal'
+        },
+        {
+            'id': 'timetablePost',
+            'name': config.placeholderPostContent,
+            'type': 'textarea',
+            'value': post_form,
+            'icon': 'file-richtext'
         }
     ]
 
