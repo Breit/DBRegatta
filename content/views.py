@@ -128,7 +128,16 @@ def timetable(request):
         siteData['controls'] = getTimeTableSettings()
 
         if request.method == "POST":
-            if 'timeBegin' in request.POST:
+            if 'content' in request.POST and 'enable' in request.POST:
+                try:
+                    post = Post.objects.get(site='timetable')
+                except Post.DoesNotExist:
+                    post = Post()
+                    post.site = 'timetable'
+                post.enable = request.POST['enable'] == 'on'
+                post.content = request.POST['content']
+                post.save()
+            elif 'timeBegin' in request.POST:
                 config.timeBegin = time.fromisoformat(request.POST['timeBegin'])
             elif 'offsetHeat' in request.POST:
                 config.offsetHeat = timedelta(minutes=int(request.POST['offsetHeat']))
@@ -149,6 +158,13 @@ def timetable(request):
             elif 'refreshTimes' in request.POST:
                 updateTimeTable()
             return redirect('/timetable')
+    else:
+        try:
+            post = Post.objects.get(site='timetable')
+            if post.enable:
+                siteData['post'] = post.content
+        except:
+            pass
 
     return render(request, 'timetable.html', siteData)
 

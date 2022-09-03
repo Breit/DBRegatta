@@ -2,7 +2,7 @@ from constance import config
 from django import forms
 from django.forms import ModelForm
 
-from .models import Team
+from .models import Team, Post
 
 class TeamForm(ModelForm):
     class Meta:
@@ -84,6 +84,43 @@ class TeamForm(ModelForm):
                 attrs={
                     'class': 'form-control',
                     'placeholder': config.placeholderTeamAddress
+                }
+            )
+        }
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+
+        fields = (
+            'enable',
+            'site',
+            'content'
+        )
+
+        labels = {
+            'enable': '',
+            'site': '',
+            'content': ''
+        }
+
+        widgets = {
+            'enable': forms.CheckboxInput(
+                attrs = {
+                    'class': 'form-check-input m-0'
+                }
+            ),
+            'site': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'readonly': True
+                }
+            ),
+            'content': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 4,
+                    'placeholder': config.placeholderPostContent
                 }
             )
         }

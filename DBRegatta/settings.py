@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -45,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'constance',
     'constance.backends.database',
-    'content.apps.ContentConfig'
+    'content.apps.ContentConfig',
+    'markdownify.apps.MarkdownifyConfig'
 ]
 
 MIDDLEWARE = [
@@ -127,12 +129,60 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATIC_ROOT = '/usr/local/www/apache24/apps/dbsprint/src/content/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'content', STATIC_URL)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# include Constance config
+
+# Markdownify settings
+
+MARKDOWNIFY = {
+    'default': {
+        'WHITELIST_TAGS': [
+            'a',
+            'abbr',
+            'acronym',
+            'b',
+            'blockquote',
+            'code',
+            'em',
+            'strong',
+            'i',
+            'li', 'ol', 'ul',
+            'p',
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        ],
+        'WHITELIST_ATTRS': [
+            'href',
+            'src',
+            'alt',
+        ],
+        'WHITELIST_STYLES': [
+            'color',
+            'font-weight',
+        ],
+        'LINKIFY_TEXT': {
+            'PARSE_URLS': True,
+            'PARSE_EMAIL': True,
+            'CALLBACKS': [],
+            'SKIP_TAGS': [],
+        },
+        'MARKDOWN_EXTENSIONS': [
+            'markdown.extensions.fenced_code',
+            'markdown.extensions.extra',
+            'markdown.extensions.codehilite',
+            'markdown.extensions.toc',
+            'markdown.extensions.sane_lists',
+            'markdown.extensions.nl2br',
+            'markdown.extensions.wikilinks',
+        ]
+    }
+}
+
+
+# Constance config
+
 from .config import *
