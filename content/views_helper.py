@@ -858,17 +858,28 @@ def populateFinals(race_assignment: RaceAssign):
                                 # check if there is already an assignment (due to race time changes)
                                 ra = RaceAssign.objects.get(race_id=race_ids[race_idx - 1], lane=1)
                             except:
-                                pass
-                            if ra is None:
-                                # create a new assignment
-                                ra = RaceAssign()
-                            ra.race_id = race_ids[race_idx - 1]
-                            ra.lane = 1         # winner starts on lane #1
-                            ra.team_id = attendees[0].team_id
-                            ra.save()
+                                ra = RaceAssign()   # create a new assignment
+                                ra.lane = 1         # winner starts on lane #1
 
-        ## TODO ##
-        # Remove Team from next race if its race time is reset
+                            ra.race_id = race_ids[race_idx - 1]
+                            if ra.team_id != attendees[0].team_id:
+                                ra.time = 0.0
+                                ra.team_id = attendees[0].team_id
+                                ra.save()
+
+                                # Draw is changed: Remove winning team from next race
+                                # and correct timetable recursively
+                                for idx in reversed(range(race_idx)):
+                                    try:
+                                        ras = RaceAssign.objects.filter(race_id=race_ids[idx])
+                                        for ra in ras:
+                                            if idx < (race_idx - 1) and ra.lane == 1:
+                                                ra.delete()         # remove winner from previous race, because previous race is undecided now
+                                            else:
+                                                ra.time = 0.0       # remove race times from other contenders
+                                                ra.save()
+                                    except:
+                                        pass
 
         # create all race assignments for the finals if necessary
         # fill rankings to finals
