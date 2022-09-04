@@ -1,12 +1,17 @@
+import os
 import re
 import math
+import shutil
 import random
+
+from glob import glob
 from datetime import datetime, date, time, timedelta
 
 from constance import config
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.contrib.auth import authenticate, login, logout
 from django.forms.models import model_to_dict
+from django.conf import settings as dj_settings
 
 from .models import Race, RaceAssign, Team, RaceDrawMode, Post
 from .forms import TeamForm, PostForm
@@ -904,7 +909,7 @@ def populateFinals(race_assignment: RaceAssign = None):
                         ra.save()
                         rank_id += 1
 
-# CAUTION !!!
+# CAUTION: Developer Tools !!!
 # remove all finals including racing times from the DB
 def clearFinals():
     races = Race.objects.filter(name__startswith = config.finalPrefix)
@@ -934,3 +939,31 @@ def clearHeatTimes():
         for attendee in attendees:
             attendee.time = 0.0
             attendee.save()
+
+def backupDataBase():
+    try:
+        db_fname = '{}_{}'.format(
+            datetime.now().strftime('%Y%m%d-%H%M%S'),
+            os.path.basename(dj_settings.DATABASES['default']['NAME'])
+        )
+
+        shutil.copyfile(
+            dj_settings.DATABASES['default']['NAME'],
+            os.path.join(dj_settings.DATABASE_BACKUP_DIR, db_fname)
+        )
+        success = True
+    except:
+        success = False
+    return success
+
+def getLastDataBaseBackup():
+    base_name = os.path.basename(dj_settings.DATABASES['default']['NAME'])
+    backups = glob(os.path.join(dj_settings.DATABASE_BACKUP_DIR, '*_' + base_name))
+    backups.sort(key=lambda x:[int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x)])
+    if len(backups) > 0:
+        date_str = os.path.basename(backups[-1]).replace(base_name, '')
+        try:
+            return datetime.strptime(date_str, '%Y%m%d-%H%M%S_').strftime('%Y.%m.%d %H:%M:%S')
+        except:
+            pass
+    return None

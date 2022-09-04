@@ -81,7 +81,7 @@
         <div class="container-fluid border-bottom pt-3 mb-4"></div>
         <h2 class="my-2">{{ config.settingsAdvancedHeader }}</h2>
         <h3 class="mt-4 mb-2">{{ config.devOptionsTimetable }}</h3>
-        <div class="container-fluid my-4 ps-0">
+        <div class="container-fluid mb-4 ps-0">
             <form method="POST" action="" id="dev_options_times_form">
                 {% csrf_token %}
                 <button type="button" name="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon btn_lg me-3" data-bs-toggle="modal" data-bs-target="#resetFinalsModal">
@@ -165,6 +165,25 @@
                     </div>
                 </div>
             </form>
+        </div>
+        <h3 class="mt-4 mb-2">{{ config.devOptionsDatabase }}</h3>
+        <div class="container-fluid mb-4 ps-0">
+            <div class="d-inline-flex">
+                <form method="POST" action="" id="dev_options_db_form">
+                    {% csrf_token %}
+                    <button type="submit" name="backupDatabase" value="BackupDatabase" class="btn btn-primary btn_icon btn_lg me-3" form="dev_options_db_form">
+                        <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                            <div class="pe-2">
+                                <img src="{% static 'images/' %}{{ config.backupDatabaseIcon }}" alt="backup_database">
+                            </div>
+                            <p class="m-0 ps-2 lead">{{ config.backupDatabase }}</p>
+                        </div>
+                    </button>
+                </form>
+            </div>
+            <div class="d-inline-flex">
+                <p class="float-left m-0 ps-2 lead">Letztes Backup: <strong class="{% if not lastBackup %}text-danger{% else %}text-success{% endif %}">{% if lastBackup %}{{ lastBackup }}{% else %}{{ config.noBackup }}{% endif %}</strong></p>
+            </div>
         </div>
         <div class="container-fluid border-bottom pt-3 mb-4"></div>
     </div>
