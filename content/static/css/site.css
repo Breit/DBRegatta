@@ -57,6 +57,10 @@
     width: 17rem;
 }
 
+.btn_lg {
+    width: 19rem !important;
+}
+
 .btn_icon img {
     height: 3rem;
 }
