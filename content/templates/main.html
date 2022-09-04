@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="{% static 'css/' %}{{ config.siteCSS }}">
         {% block additionalCSS %}{% endblock %}
         <script src="{% static 'bootstrap/js/' %}bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+        {% block additionalJS %}{% endblock %}
     </head>
     <body>
         <main class="bg-light">
@@ -117,6 +118,11 @@
                         {% endif %}
                     {% endif %}
                 </div>
+                {% if impressum %}
+                    <div class="d-flex align-items-center mt-auto impressum">
+                        <a href="{{ impressum }}" class="{% if display %}text-dark{% else %}text-muted{% endif %} lead text-decoration-none">Impressum</a>
+                    </div>
+                {% endif %}
                 <div class="d-flex align-items-end">
                     {% if config.ownerLogo %}
                         {% if config.ownerUrl %}

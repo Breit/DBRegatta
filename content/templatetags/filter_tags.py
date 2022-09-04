@@ -79,3 +79,16 @@ def sumUp(value):
         pass
 
     return ''
+
+'''
+String startswith() filter
+'''
+@register.filter
+def startswith(value, arg):
+    try:
+        if value.startswith(arg):
+            return value.replace(arg, '')
+    except:
+        pass
+
+    return ''

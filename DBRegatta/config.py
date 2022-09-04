@@ -184,6 +184,10 @@ CONSTANCE_CONFIG = {
     'loginPassword':            ('Passwort',                                    'Login Form Placeholder for Password'),
     'loginGreeting1':           ('Hallo',                                       'Login Greeting Part #1'),
     'loginGreeting2':           (', du bist erfolgreich angemeldet!',           'Login Greeting Part #2'),
+
+    # Impressum Setings
+    'impressumPageCSS':         ('impressum.css',                               'CSS File for Site-specific Styling'),
+    'impressumPageJS':          ('impressum.js',                                'JS File for Site-specific Rendering'),
 }
 
 CONSTANCE_CONFIG_FIELDSETS = {
@@ -395,6 +399,13 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'loginPassword',
             'loginGreeting1',
             'loginGreeting2',
+        ),
+        'collapse': True
+    },
+    'Impressum Settings': {
+        'fields': (
+            'impressumPageCSS',
+            'impressumPageJS',
         ),
         'collapse': True
     }

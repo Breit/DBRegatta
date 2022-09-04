@@ -1,6 +1,7 @@
 import os
 import re
 import math
+import json
 import shutil
 import random
 
@@ -564,7 +565,10 @@ def getSiteData(id: str = None, user = None):
         'notifications': []
     }
 
-    siteData = {'menu': []}
+    siteData = {
+        'menu': [],
+        'impressum': '/impressum'
+    }
 
     if user and user.is_authenticated:
         siteData['menu'].append(menu_teams)
@@ -967,3 +971,12 @@ def getLastDataBaseBackup():
         except:
             pass
     return None
+
+def getImpressumData():
+    impressum = None
+    try:
+        with open(os.path.join(dj_settings.STATIC_ROOT, 'data', 'impressum.json'), encoding='utf-8') as impressum_json:
+            impressum = json.load(impressum_json)
+    except:
+        pass
+    return impressum

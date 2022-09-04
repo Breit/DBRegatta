@@ -115,3 +115,6 @@
     font-size: 0.6rem;
 }
 
+.impressum a:hover {
+    color: var(--bs-primary) !important;
+}

@@ -12,5 +12,6 @@ urlpatterns = [
     path('results',   views.results),
     path('display',   views.display),
     path('trainings', views.trainings),
-    path('djadmin',   views.djadmin)
+    path('djadmin',   views.djadmin),
+    path('impressum', views.impressum)
 ]
