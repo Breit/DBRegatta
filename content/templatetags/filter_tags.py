@@ -19,16 +19,16 @@ def splitTime(value, arg):
         return ''
     try:
         value = float(value)
-        minutes = math.floor(value / 60)
+        minutes = math.floor(value / 60.0)
 
         if arg == 'min':
-            return '{:02d}'.format(minutes)
+            return '{:02d}'.format(math.floor(minutes))
         elif arg == 'sec':
-            return '{:02d}'.format(math.floor(value - minutes * 60))
+            return '{:02d}'.format(math.floor(value - minutes * 60.0))
         elif arg == 'hnd':
-            return '{:02d}'.format(math.floor(1e2 * (value - math.floor(value))))
+            return '{:02d}'.format(math.floor(round(1e2 * (value - math.floor(value)))))
         elif arg == 'msec':
-            return '{:02d}'.format(math.floor(1e3 * (value - math.floor(value))))
+            return '{:02d}'.format(math.floor(round(1e3 * (value - math.floor(value)))))
     except:
         pass
 
@@ -46,9 +46,9 @@ def asTime(value):
             return '00:00.00'
 
         value = float(value)
-        minutes = math.floor(value / 60)
-        seconds = math.floor(value - minutes * 60)
-        hundedth = math.floor(1e2 * (value - math.floor(value)))
+        minutes = math.floor(value / 60.0)
+        seconds = math.floor(value - minutes * 60.0)
+        hundedth = math.floor(round(1e2 * (value - math.floor(value))))
 
         return '{:02d}:{:02d}.{:02d}'.format(minutes, seconds, hundedth)
     except:
