@@ -92,6 +92,7 @@ DATABASES = {
     }
 }
 
+DATABASE_BACKUP_DIR = os.path.join(BASE_DIR, 'Backup')
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

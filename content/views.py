@@ -310,6 +310,7 @@ def settings(request):
 
     siteData = getSiteData('settings', request.user)
     siteData['controls'] = getMainSettings()
+    siteData['lastBackup'] = getLastDataBaseBackup()
 
     if request.method == "POST":
         if 'eventTitle' in request.POST:
@@ -337,6 +338,8 @@ def settings(request):
             populateFinals()
         elif 'resetHeats' in request.POST:
             clearHeatTimes()
+        elif 'backupDatabase' in request.POST:
+            backupDataBase()
         return redirect('/settings')
 
     return render(request, 'settings.html', siteData)
