@@ -332,6 +332,11 @@ def settings(request):
             config.ownerLogo = request.POST['ownerLogo']
         elif 'sponsorLogo' in request.POST:
             config.sponsorLogo = request.POST['sponsorLogo']
+        elif 'resetFinals' in request.POST:
+            clearFinals()
+            populateFinals()
+        elif 'resetHeats' in request.POST:
+            clearHeatTimes()
         return redirect('/settings')
 
     return render(request, 'settings.html', siteData)

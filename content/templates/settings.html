@@ -79,5 +79,93 @@
             </div>
         </div>
         <div class="container-fluid border-bottom pt-3 mb-4"></div>
+        <h2 class="my-2">{{ config.settingsAdvancedHeader }}</h2>
+        <h3 class="mt-4 mb-2">{{ config.devOptionsTimetable }}</h3>
+        <div class="container-fluid my-4 ps-0">
+            <form method="POST" action="" id="dev_options_times_form">
+                {% csrf_token %}
+                <button type="button" name="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon btn_lg me-3" data-bs-toggle="modal" data-bs-target="#resetFinalsModal">
+                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                        <div class="pe-2">
+                            <img src="{% static 'images/' %}{{ config.resetFinalsIcon }}" alt="reset_finals">
+                        </div>
+                        <p class="m-0 ps-2 lead">{{ config.resetFinals }}</p>
+                    </div>
+                </button>
+                <div class="modal fade" id="resetFinalsModal" tabindex="-1">
+                    <div class="modal-dialog text-dark">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger text-light">
+                                <h5 class="modal-title" id="resetFinalsLabel">{{ config.resetFinals }}</h5>
+                                <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                                <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                                <div class="container">{{ config.warningResetFinals|linebreaks }}</div>
+                            </div>
+                            <div class="modal-footer justify-content-center bg-gray-200">
+                                <button type="submit" name="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon btn_lg" form="dev_options_times_form">
+                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                        <div class="pe-2">
+                                            <img src="{% static 'images/' %}{{ config.resetFinalsIcon }}" alt="reset_finals">
+                                        </div>
+                                        <p class="m-0 ps-2 lead">{{ config.resetFinals }}</p>
+                                    </div>
+                                </button>
+                                <button type="button" name="cancelResetFinals" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
+                                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                        <div>
+                                            <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelResetFinals" class="p-0">
+                                        </div>
+                                        <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" id="resetHeats" class="btn btn-danger btn_icon btn_lg" data-bs-toggle="modal" data-bs-target="#resetHeatsModal">
+                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                        <div class="pe-2">
+                            <img src="{% static 'images/' %}{{ config.resetHeatsIcon }}" alt="reset_heats">
+                        </div>
+                        <p class="m-0 ps-2 lead">{{ config.resetHeats }}</p>
+                    </div>
+                </button>
+                <div class="modal fade" id="resetHeatsModal" tabindex="-1">
+                    <div class="modal-dialog text-dark">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger text-light">
+                                <h5 class="modal-title" id="resetHeatsLabel">{{ config.resetHeats }}</h5>
+                                <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                                <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                                <div class="container">{{ config.warningResetHeats|linebreaks }}</div>
+                            </div>
+                            <div class="modal-footer justify-content-center bg-gray-200">
+                                <button type="submit" name="resetHeats" value="ResetHeats" class="btn btn-danger btn_icon btn_lg" form="dev_options_times_form">
+                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                        <div class="pe-2">
+                                            <img src="{% static 'images/' %}{{ config.resetHeatsIcon }}" alt="reset_heats">
+                                        </div>
+                                        <p class="m-0 ps-2 lead">{{ config.resetHeats }}</p>
+                                    </div>
+                                </button>
+                                <button type="button" name="cancelResetHeats" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
+                                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                        <div>
+                                            <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelResetHeats" class="p-0">
+                                        </div>
+                                        <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="container-fluid border-bottom pt-3 mb-4"></div>
     </div>
 {% endblock %}
