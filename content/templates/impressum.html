@@ -1,0 +1,39 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load markdownify %}
+{% load filter_tags %}
+
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{% static 'css/' %}{{ config.impressumPageCSS }}">
+{% endblock %}
+{% block additionalJS %}
+    <script language="JavaScript" src="{% static 'js/' %}{{config.impressumPageJS}}" type="text/javascript"></script>
+{% endblock %}
+
+{% block content %}
+    {% if impressum %}
+        <div class="container-fluid">
+            {% if impressum.heading %}
+                <h2 class="mt-2">{{ impressum.heading }}</h2>
+            {% endif %}
+            {% if impressum.paragraphs %}
+                {% for p in impressum.paragraphs %}
+                    {% if p.heading %}
+                        <h4 class="mt-4 mb-2">{{ p.heading }}</h4>
+                    {% endif %}
+                    {% if p.content %}
+                        <div class="container-fluid my-0 px-0 mt-2">
+                            {% for c in p.content %}
+                                {% if c|startswith:"$RAW$" %}
+                                    {{ c|startswith:"$RAW$"|safe }}
+                                {% else %}
+                                    {{ c|markdownify }}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

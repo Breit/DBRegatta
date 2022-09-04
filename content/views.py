@@ -288,8 +288,9 @@ def display(request):
     # handle login/logout
     loginUser(request)
 
-    if not request.user.is_authenticated:
-        return redirect('/')
+    # allow display for unauthenticated users
+    # if not request.user.is_authenticated:
+    #     return redirect('/')
 
     siteData = getSiteData('display', request.user)
     siteData['display'] = {
@@ -356,3 +357,12 @@ def djadmin(request):
     response = render(request, 'djadmin.html', siteData)
     response['Content-Security-Policy'] = "frame-ancestors 'self' http://127.0.0.1:1080"
     return response
+
+def impressum(request):
+    # handle login/logout
+    loginUser(request)
+
+    siteData = getSiteData('impressum', request.user)
+    siteData['impressum'] = getImpressumData()
+
+    return render(request, 'impressum.html', siteData)
