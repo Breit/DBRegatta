@@ -136,6 +136,11 @@ def getLastRaceTime(raceType: str):
         race = Race.objects.filter(name__startswith = raceType).order_by('time').last()
         return race.time if race else config.timeBegin
 
+def getActiveTeams():
+    races = Race.objects.filter(name__startswith = config.heatPrefix)
+    teams = set([ra.team_id for ra in RaceAssign.objects.filter(race_id__in=races)])
+    return len(teams)
+
 def getRaces(raceType: str):
     races = []
     for race in Race.objects.filter(name__startswith = raceType):
@@ -345,7 +350,7 @@ def updateTimeTable():
     start = updateRaces(config.finalPrefix, start, config.intervalFinal)
 
 def getCurrentTimeTable():
-    timetable = None
+    timetable = []
 
     # get current heats
     for i in range(config.heatCount):
@@ -355,7 +360,8 @@ def getCurrentTimeTable():
                 # current heat already complete
                 continue
 
-            timetable = {
+            timetable.append(
+                {
                     'time': races[0]['time'] if len(races) > 0 else combineTimeOffset(
                         config.timeBegin,
                         config.offsetHeat
@@ -364,20 +370,31 @@ def getCurrentTimeTable():
                     'races': races,
                     'type': 'heat'
                 }
+            )
             break
 
     # get final if heats are finished
-    if timetable is None:
+    if len(timetable) == 0:
         races = getRaceTimes(config.finalPrefix)
-        timetable = {
-                'time': races[0]['time'] if len(races) > 0 else combineTimeOffset(
-                    config.timeBegin,
-                    config.offsetFinale
-                ),
-                'desc': config.finaleTitle,
-                'races': races,
-                'type': 'finale'
-            }
+
+        # distribute too many races over multiple pages
+        racesPerPage = len(races)
+        pages = 1
+        while (racesPerPage > config.maxRacesPerPage):
+            racesPerPage = int(math.ceil(float(racesPerPage / 2.0)))
+            pages += 1
+        for i in range(pages):
+            timetable.append(
+                {
+                    'time': races[0]['time'] if len(races) > 0 else combineTimeOffset(
+                        config.timeBegin,
+                        config.offsetFinale
+                    ),
+                    'desc': '{}{}'.format(config.finaleTitle, ' - {} {}'.format(config.racesPerPageDesc, i + 1) if pages > 1 else ''),
+                    'races': races[(i * racesPerPage):min((i + 1) * racesPerPage, len(races))],
+                    'type': 'finale'
+                }
+            )
 
     return timetable
 
@@ -503,6 +520,20 @@ def getSiteData(id: str = None, user = None):
         ]
     }
 
+    menu_skippers = {
+        'id': 'skippers',
+        'title': config.skippersTitle,
+        'url': 'skippers',
+        'thumb': config.skippersIcon,
+        'active': True if id == 'skippers' else False,
+        'notifications': [
+            {
+                'level': 'danger',
+                'count': 'TODO'
+            }
+        ]
+    }
+
     menu_timetable = {
         'id': 'timetable',
         'title': config.timetableTitle,
@@ -572,6 +603,7 @@ def getSiteData(id: str = None, user = None):
 
     if user and user.is_authenticated:
         siteData['menu'].append(menu_teams)
+        siteData['menu'].append(menu_skippers)
         siteData['menu'].append(menu_trainings)
 
     siteData['menu'].append(menu_timetable)
@@ -607,7 +639,8 @@ def getRaceTimes(raceType: str):
 
     races = []
     if raceType == config.finalPrefix:
-        rank_finale = Team.objects.filter(active=True, wait=False).count()
+        rank_finale = getActiveTeams()
+
     for race in races_sorted:
         entry = {
             'time': race.time,
@@ -666,13 +699,12 @@ def getRaceTimes(raceType: str):
         # fill in ranks for finale
         if raceType == config.finalPrefix:
             if len([lane for lane in entry['lanes'] if lane['finished']]) == lanesPerRace:
-                for l in reversed(range(lanesPerRace)):
-                    for lane in entry['lanes']:
-                        if race.name != races_sorted[-1].name and l == lanesPerRace - 1:
-                            continue
-                        if lane['lane'] == l + 1:
-                            lane['rank'] = rank_finale
-                            rank_finale -= 1
+                last_race = race.name == races_sorted[-1].name
+                for lane in entry['lanes']:
+                    if not last_race and lane['place'] == 1:
+                        continue
+                    lane['rank'] = rank_finale - (lanesPerRace - lane['place'])
+                rank_finale -= lanesPerRace if last_race else lanesPerRace - 1
 
         if all(item['finished'] for item in entry['lanes']):
             entry['status'] = 'finished'
@@ -816,14 +848,35 @@ def getMainSettings():
             'id': 'durationMonitorSlide',
             'name': config.displayIntervalDesc,
             'type': 'number',
-            'value': config.displayInterval / 1e3,
+            'value': int(config.displayInterval / 1e3),
             'icon': 'clock-history'
+        },
+        {
+            'id': 'displayDataRefresh',
+            'name': config.displayDataRefreshDesc,
+            'type': 'number',
+            'value': int(config.displayDataRefresh / 1e3),
+            'icon': 'clock-history'
+        },
+        {
+            'id': 'maxRacesPerPage',
+            'name': config.maxRacesPerPageDesc,
+            'type': 'number',
+            'value': config.maxRacesPerPage,
+            'icon': 'file-ruled'
         },
         {
             'id': 'activateResults',
             'name': config.activateResultsDesc,
             'type': 'checkbox',
             'value': config.activateResults,
+            'icon': 'clock-history'
+        },
+        {
+            'id': 'anonymousMonitor',
+            'name': config.anonymousMonitorDesc,
+            'type': 'checkbox',
+            'value': config.anonymousMonitor,
             'icon': 'clock-history'
         },
         {

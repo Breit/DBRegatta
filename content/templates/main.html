@@ -10,7 +10,9 @@
         <link rel="stylesheet" href="{% static 'bootstrap/icons/' %}bootstrap-icons.css">
         <link rel="stylesheet" href="{% static 'css/' %}{{ config.siteCSS }}">
         {% block additionalCSS %}{% endblock %}
-        <script src="{% static 'bootstrap/js/' %}bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+        {% block additionalPreJS %}{% endblock %}
+        <script src="{% static 'bootstrap/js/' %}bootstrap.bundle.min.js" type="text/javascript" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+        <script src="{% static 'admin/js/vendor/jquery/' %}jquery.min.js" type="text/javascript" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
         {% block additionalJS %}{% endblock %}
     </head>
     <body>
@@ -99,7 +101,7 @@
                     </div>
                 </div>
             </header>
-            <div class="menu float-start d-flex flex-column flex-shrink-0 p-2 text-bg-dark border-end">
+            <div class="menu float-start d-flex flex-column flex-shrink-0 text-bg-dark border-end">
                 {% include 'menu.html' %}
                 {% block menu %}{% endblock %}
             </div>

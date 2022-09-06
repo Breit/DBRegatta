@@ -117,6 +117,17 @@ def trainings(request):
     siteData['content'] = {}
     return render(request, 'trainings.html', siteData)
 
+def skippers(request):
+    # handle login/logout
+    loginUser(request)
+
+    if not request.user.is_authenticated:
+        return redirect('/')
+
+    siteData = getSiteData('skippers', request.user)
+    siteData['content'] = {}
+    return render(request, 'skippers.html', siteData)
+
 def timetable(request):
     # handle login/logout
     loginUser(request)
@@ -289,16 +300,27 @@ def display(request):
     loginUser(request)
 
     # allow display for unauthenticated users
-    # if not request.user.is_authenticated:
-    #     return redirect('/')
+    if not config.anonymousMonitor and not request.user.is_authenticated:
+        return redirect('/')
 
     siteData = getSiteData('display', request.user)
-    siteData['display'] = {
-        'timetable': getCurrentTimeTable()
-    }
+    siteData['display'] = []
+    timetables = getCurrentTimeTable()
+    for timetable in timetables:
+        siteData['display'].append(
+            {
+                'type': 'timetable',
+                'data': timetable
+            }
+        )
 
     if raceBlockStarted('{}{}-'.format(config.heatPrefix, 1)):
-        siteData['display']['rankings'] = getRankingTable()
+        siteData['display'].append(
+            {
+                'type': 'rankings',
+                'data': getRankingTable()
+            }
+        )
 
     return render(request, 'display.html', siteData)
 
@@ -319,9 +341,15 @@ def settings(request):
         elif 'eventDate' in request.POST:
             config.eventDate = date.fromisoformat(request.POST['eventDate'])
         elif 'durationMonitorSlide' in request.POST:
-            config.displayInterval = float(request.POST['durationMonitorSlide']) * 1e3
+            config.displayInterval = int(float(request.POST['durationMonitorSlide']) * 1e3)
+        elif 'displayDataRefresh' in request.POST:
+            config.displayDataRefresh = int(float(request.POST['displayDataRefresh']) * 1e3)
+        elif 'maxRacesPerPage' in request.POST:
+            config.maxRacesPerPage = int(request.POST['maxRacesPerPage'])
         elif 'activateResults' in request.POST:
             config.activateResults = request.POST['activateResults'] == 'on'
+        elif 'anonymousMonitor' in request.POST:
+            config.anonymousMonitor = request.POST['anonymousMonitor'] == 'on'
         elif 'ownerName' in request.POST:
             config.ownerName = request.POST['ownerName']
         elif 'sponsorName' in request.POST:

@@ -22,7 +22,10 @@
                                 <div class="row">
                                     <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
                                     <div class="col-3">{{ config.timetableHeaderTeam }}</div>
-                                    <div class="col-6">{{ config.timetableHeaderCompany }}</div>
+                                    <div class="col-{% if entry.type == 'finale' %}5{% else %}6{% endif %}">{{ config.timetableHeaderCompany }}</div>
+                                    {% if entry.type == 'finale' %}
+                                        <div class="col-1 text-center">{{ config.timesHeaderRank }}</div>
+                                    {% endif %}
                                     <div class="col-1 text-center">{{ config.timesHeaderPlace }}</div>
                                     <div class="col-1 text-center">{{ config.timesHeaderTime }}</div>
                                 </div>
@@ -36,9 +39,12 @@
                                         <div class="row timetable_lane">
                                             <div class="col-1 text-center">{{ lane.lane }}</div>
                                             <div class="col-3 {% if lane.draw %}text-muted{% else %}fw-bold{% endif %}">{{ lane.team }}</div>
-                                            <div class="col-6">{{ lane.company }}</div>
-                                            <div class="col-1 text-center align-self-center">{{ lane.place }}</div>
-                                            <div class="col-1 text-center align-self-center{% if lane.finished %} fw-bold text-success{% else %} text-muted{% endif %}">{{ lane.time|asTime }}</div>
+                                            <div class="col-{% if entry.type == 'finale' %}5{% else %}6{% endif %}">{{ lane.company }}</div>
+                                            {% if entry.type == 'finale' %}
+                                                <div class="col-1 text-center text-primary fw-bold">{{ lane.rank }}</div>
+                                            {% endif %}
+                                            <div class="col-1 text-center">{{ lane.place }}</div>
+                                            <div class="col-1 text-center{% if lane.finished %} fw-bold text-success{% else %} text-muted{% endif %}">{{ lane.time|asTime }}</div>
                                         </div>
                                     {% endfor %}
                                 </div>
