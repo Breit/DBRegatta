@@ -12,6 +12,7 @@ urlpatterns = [
     path('results',   views.results),
     path('display',   views.display),
     path('trainings', views.trainings),
+    path('skippers',  views.skippers),
     path('djadmin',   views.djadmin),
     path('impressum', views.impressum)
 ]

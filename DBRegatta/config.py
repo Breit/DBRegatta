@@ -126,12 +126,18 @@ CONSTANCE_CONFIG = {
     'timeIcon':                 ('time.svg',                                    'Menu Icon for Time Page'),
     'timesHeaderTime':          ('Zeit',                                        'Header Text for Time Column'),
     'timesHeaderPlace':         ('Platz',                                       'Header Text for Place Column'),
+    'timesHeaderRank':          ('Rang',                                        'Header Text for Total Rank Column'),
     'refreshTimesText':         ('Zeiten eintragen',                            'Text for Refresh Times Button'),
 
     # Trainings Settings
     'trainingsPageCSS':         ('trainings.css',                               'CSS File for Site-specific Styling'),
     'trainingsTitle':           ('Trainings',                                   'Menu Title for Trainings Page'),
     'trainingsIcon':            ('rafting.svg',                                 'Menu Icon for Trainings Page'),
+
+    # Skippers Settings
+    'skippersPageCSS':          ('skippers.css',                                'CSS File for Site-specific Styling'),
+    'skippersTitle':            ('Steuerleute',                                 'Menu Title for Skippers Page'),
+    'skippersIcon':             ('skippers.svg',                                'Menu Icon for Skippers Page'),
 
     # Results Settings
     'resultsPageCSS':           ('results.css',                                 'CSS File for Site-specific Styling'),
@@ -147,11 +153,18 @@ CONSTANCE_CONFIG = {
     'displayPageCSS':           ('display.css',                                 'CSS File for Site-specific Styling'),
     'displayTitle':             ('Race Monitor',                                'Menu Title for Display Page'),
     'displayIcon':              ('billboard.svg',                               'Menu Icon for Display Page'),
-    'displayInterval':          (10000,                                         'Time in Milliseconds for Slides on Display Page'),
+    'displayInterval':          (10000,                                         'Time in Milliseconds for Slides on Display Page in Milliseconds'),
     'displayIntervalDesc':      ('Monitor Slide Intervall',                     'Description for Settings Page for Slides Interval on Display Page'),
+    'displayDataRefresh':       (60000,                                         'Content Refresh Timer for Data on Display Page in Milliseconds'),
+    'displayDataRefreshDesc':   ('Monitor Data Refresh',                        'Description for Content Refresh Timer for Data on Display Page'),
     'displayRankings':          ('Rangliste Vorrunde',                          'Rankings Header on Display Page'),
     'displayRank':              ('Rang',                                        'Rank Header on Display Page'),
     'displaySumTime':           ('Zeitsumme',                                   'Total Time Header on Display Page'),
+    'maxRacesPerPage':          (8,                                             'Maximum Number of Races to Show on Display Page'),
+    'maxRacesPerPageDesc':      ('Max. Rennen pro Seite',                       'Description for Maximum Number of Races to Show on Display Page'),
+    'racesPerPageDesc':         ('Teil',                                        'Descriptive Text If Races Are Split Over More Pages on Display Page'),
+    'anonymousMonitor':         (True,                                          'Allow Race Monitor Page for Unauthenticated Users'),
+    'anonymousMonitorDesc':     ('Race Monitor annonym',                        'Description for Allow Race Monitor Page for Unauthenticated Users'),
 
     # Settings for Settings Page
     'settingsPageCSS':          ('settings.css',                                'CSS File for Site-specific Styling'),
@@ -321,6 +334,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'timesHeader',
             'timesTableHeader',
             'timesHeaderPlace',
+            'timesHeaderRank',
             'timeIcon',
             'timesHeaderTime',
             'refreshTimesText',
@@ -332,6 +346,14 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'trainingsPageCSS',
             'trainingsTitle',
             'trainingsIcon',
+        ),
+        'collapse': True
+    },
+    'Skippers Settings': {
+        'fields': (
+            'skippersPageCSS',
+            'skippersTitle',
+            'skippersIcon',
         ),
         'collapse': True
     },
@@ -355,9 +377,16 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'displayIcon',
             'displayInterval',
             'displayIntervalDesc',
+            'displayDataRefresh',
+            'displayDataRefreshDesc',
             'displayRankings',
             'displayRank',
             'displaySumTime',
+            'maxRacesPerPage',
+            'maxRacesPerPageDesc',
+            'racesPerPageDesc',
+            'anonymousMonitor',
+            'anonymousMonitorDesc',
         ),
         'collapse': True
     },

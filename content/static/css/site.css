@@ -26,7 +26,7 @@
 
 .menu li:hover {
     background-color: var(--bs-gray-800) !important;
-    border-radius: var(--bs-nav-pills-border-radius) !important;
+    /* border-radius: var(--bs-nav-pills-border-radius) !important; */
 }
 
 .menu li:hover img {

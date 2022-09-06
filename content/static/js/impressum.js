@@ -8,6 +8,7 @@ function UnCryptMailto(s) {
     }
     return r;
 }
+
 function linkTo_UnCryptMailto(s) {
     location.href=UnCryptMailto(s);
 }

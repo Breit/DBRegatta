@@ -64,7 +64,7 @@
                             </form>
                         </div>
                     {% else %}
-                        <div class="col-6 mb-3">
+                        <div class="{% if c.id == 'eventTitle' %}col-12{% else %}col-6{% endif %} mb-3">
                             <form method="POST" action="" id="{{ c.id }}">
                                 {% csrf_token %}
                                 <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
