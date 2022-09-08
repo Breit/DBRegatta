@@ -125,7 +125,46 @@ def skippers(request):
         return redirect('/')
 
     siteData = getSiteData('skippers', request.user)
-    siteData['content'] = {}
+    siteData['content'] = {
+        'skipperList': getSkipperList()
+    }
+
+    if request.method == "POST":
+        if 'show_add_form' in request.POST:
+            siteData['content']['skipperForm'] = SkipperForm()
+        elif 'add_skipper' in request.POST:
+            newSkipper = SkipperForm(request.POST)
+            if newSkipper.is_valid():
+                newSkipper.save()
+                return redirect('/skippers')
+            else:
+                oldSkipper = Skipper.objects.get(name = request.POST['name'])
+                if oldSkipper:
+                    for f in oldSkipper._meta.fields:
+                        if f.name == 'id':
+                            continue
+                        setattr(oldSkipper, f.name, getattr(newSkipper.instance, f.name))
+                    oldSkipper.save()
+                    return redirect('/skippers')
+        elif 'delete_skipper' in request.POST:
+            skipper = Skipper.objects.get(id = request.POST['delete_skipper'])
+            if skipper:
+                skipper.delete()
+                return redirect('/skippers')
+        elif 'activate_skipper' in request.POST:
+            skipper = Skipper.objects.get(id = request.POST['activate_skipper'])
+            if skipper:
+                skipper.active = not skipper.active
+                skipper.save()
+                return redirect('/skippers')
+        elif 'edit_skipper' in request.POST:
+            if Skipper.objects.get(id = request.POST['edit_skipper']).exists():
+                return redirect('/skippers?edit_id={}'.format(request.POST['edit_skipper']))
+    elif 'edit_id' in request.GET:
+        skipper = Skipper.objects.get(id = int(request.GET['edit_id']))
+        if skipper:
+            siteData['content']['skipperForm'] = SkipperForm(instance=skipper)
+
     return render(request, 'skippers.html', siteData)
 
 def timetable(request):
@@ -207,33 +246,6 @@ def times(request):
         siteData['controls'] = getTimesControls()
     siteData['times'] = getRaceResultsTableContent()
 
-    # notifications
-    ## TODO ##
-    # move this to getSiteData()
-    last = None
-    started = None
-    for times in siteData['times']:
-        for r in times['races']:
-            if not started and r['status'] == 'started':
-                started = r['desc']
-            elif r['status'] == 'finished':
-                last = r['desc']
-    menu = [item for item in siteData['menu'] if item['id'] == 'times'][0]
-    if started is not None:
-        menu['notifications'].append(
-            {
-                'level': 'warning',
-                'count': started
-            }
-        )
-    elif last is not None:
-        menu['notifications'].append(
-            {
-                'level': 'success',
-                'count': last
-            }
-        )
-
     # handle POST requests
     if request.method == "POST":
         if 'refresh_times' in request.POST:
@@ -253,6 +265,12 @@ def times(request):
                 except:
                     pass
 
+                try:
+                    skipper = Skipper.objects.get(
+                        name = request.POST['skipper_select_' + lane['lane']]
+                    )
+                except:
+                    skipper = None
                 attendee = RaceAssign.objects.get(
                     id = lane['id'],
                     lane = lane['lane'],
@@ -263,9 +281,19 @@ def times(request):
                     id=attendee.team_id,
                     name=lane['team']
                 )
-                if team and attendee and race_time != attendee.time:
-                    attendee.time = race_time
-                    attendee.save()
+                if team and attendee:
+                    save = False
+                    if skipper and attendee.skipper_id != skipper.id:
+                        attendee.skipper_id = skipper.id
+                        save = True
+                    elif skipper is None and attendee.skipper_id is not None:
+                        attendee.skipper_id = None
+                        save = True
+                    elif attendee.time != race_time:
+                        attendee.time = race_time
+                        save = True
+                    if save:
+                        attendee.save()
 
                     # create finals or ascend winner from the last race
                     populateFinals(attendee)

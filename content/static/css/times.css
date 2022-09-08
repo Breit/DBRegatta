@@ -91,3 +91,17 @@ input[type=number] {
     min-width: 13rem !important;
     max-width: 13rem !important;
 }
+
+.col_time {
+    min-width: 5rem !important;
+    max-width: 5rem !important;
+}
+
+.col_num {
+    min-width: 3rem !important;
+    max-width: 3rem !important;
+}
+
+.col_skipper {
+    max-width: 15rem !important;
+}

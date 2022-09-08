@@ -9,7 +9,7 @@
     <div class="edit_team container-fluid">
         <h2 class="mt-2 mb-3">{{ config.editTeamHeader }}</h2>
         {% if content.forms.mod %}
-            <div class="d-flex align-items-start team_form">
+            <div class="d-flex align-items-start w-50 team_form">
                 <form method="POST" action="" id="mod_form">
                     {% include 'team_form.html' %}
                 </form>
@@ -26,7 +26,7 @@
                 <button type="submit" name="cancel_team" value="Cancel" class="btn btn-primary btn_icon" form="mod_form" formnovalidate>
                     <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                         <div class="pe-2">
-                            <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="add_team">
+                            <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_team">
                         </div>
                         <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
                     </div>
@@ -34,7 +34,7 @@
             </div>
         {% else %}
             {% if content.forms.add %}
-                <div class="d-flex align-items-start team_form">
+                <div class="d-flex align-items-start w-50 team_form">
                     <form method="POST" action="" id="add_form">
                         {% include 'team_form.html' %}
                     </form>
@@ -51,7 +51,7 @@
                     <button type="submit" name="cancel_team" value="Cancel" class="btn btn-primary btn_icon" form="add_form" formnovalidate>
                         <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div class="pe-2">
-                                <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="add_team">
+                                <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_team">
                             </div>
                             <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
                         </div>
@@ -61,7 +61,7 @@
                 <div class="d-flex align-items-start mt-3">
                     <form method="POST" action="" id="none_form">
                         {% csrf_token %}
-                        <button type="submit" name="show_add_form" value="Add" class="btn btn-primary btn_icon">
+                        <button type="submit" name="show_add_form" value="Add" class="btn btn-primary btn_icon btn_lg">
                             <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                 <div class="pe-2">
                                     <img src="{% static 'images/' %}{{ config.addTeamIcon }}" alt="add_team">
@@ -114,7 +114,7 @@
                 <tbody>
                     {% for t in content.teams %}
                         <tr class="border {% if content.forms.id and t.id == content.forms.id %} table-primary{% endif %}{% if not t.active %} fst-italic{% endif %}">
-                            <th scope="row" class="text-center{% if t.active and not t.wait %} table-success{% elif t.active and t.wait %} table-warning{% else %} table-secondary{% endif %}">{{ t.id }}</th>
+                            <th scope="row" class="text-center{% if t.active and not t.wait %} table-success{% elif t.active and t.wait %} table-warning{% else %} table-secondary{% endif %}">{{ forloop.counter }}</th>
                             <td class="fw-bold">{{ t.name }}</td>
                             <td>{{ t.company }}</td>
                             <td>{{ t.contact }}</td>

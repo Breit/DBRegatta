@@ -36,3 +36,7 @@
 .rankings_table:hover {
     filter: brightness(0.97);
 }
+
+.times_column {
+    min-width: 5.5rem;
+}

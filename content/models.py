@@ -27,7 +27,8 @@ class Race(models.Model):
 # for teams attending a race
 class RaceAssign(models.Model):
     race_id = models.BigIntegerField(blank=False)
-    team_id = models.BigIntegerField(blank=True)
+    team_id = models.BigIntegerField(blank=True, null=True)
+    skipper_id = models.BigIntegerField(blank=True, null=True)
     lane = models.CharField(max_length=20, blank=False)
     time = models.FloatField(null=False, blank=False, default=0.0)
 
@@ -40,7 +41,17 @@ class RaceDrawMode(models.Model):
 class Post(models.Model):
     enable = models.BooleanField(default=False)
     site = models.CharField(unique=True, max_length=20, blank=False)
-    content = models.TextField(null=True, blank=True)
+    content = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.site
+
+class Skipper(models.Model):
+    name = models.CharField(unique=True, max_length=20, blank=False)
+    fname = models.CharField(max_length=100, blank=True)
+    lname = models.CharField(max_length=100, blank=True)
+    active = models.BooleanField(default=False)
+    email = models.EmailField(blank=True)
+
+    def __str__(self):
+        return self.name

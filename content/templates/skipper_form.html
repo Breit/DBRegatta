@@ -1,0 +1,42 @@
+{% load static %}
+
+{% block skipper_form %}
+    {% csrf_token %}
+    <div class="row">
+        {% if content.skipperForm.name %}
+            <div class="col-8 mb-3">
+                <div class="input-group rounded {% if content.skipperForm.name.errors %}input-error{% endif %}">
+                    <span class="input-group-text"><i class="bi bi-tag"></i></span>
+                    {{ content.skipperForm.name }}
+                </div>
+            </div>
+        {% endif %}
+        {% if content.skipperForm.active %}
+            <div class="col-4 mb-3">
+                <div class="input-group">
+                    <div class="input-group-text form-switch px-1 {% if content.skipperForm.active.errors %}input-error{% endif %}">
+                        {{ content.skipperForm.active }}
+                    </div>
+                    <input type="text" class="form-control bg-light" value="{{ content.skipperForm.active.field.widget.attrs.placeholder }}" disabled>
+                </div>
+            </div>
+        {% endif %}
+        {% if content.skipperForm.fname and content.skipperForm.lname %}
+            <div class="col-12 mb-3">
+                <div class="input-group rounded {% if content.skipperForm.fname.errors or content.skipperForm.lname.errors %}input-error{% endif %}">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    {{ content.skipperForm.fname }}
+                    {{ content.skipperForm.lname }}
+                </div>
+            </div>
+        {% endif %}
+        {% if content.skipperForm.email %}
+            <div class="col-12 mb-3">
+                <div class="input-group rounded {% if content.skipperForm.email.errors %}input-error{% endif %}">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    {{ content.skipperForm.email }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

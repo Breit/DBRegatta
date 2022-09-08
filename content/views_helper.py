@@ -14,8 +14,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.forms.models import model_to_dict
 from django.conf import settings as dj_settings
 
-from .models import Race, RaceAssign, Team, RaceDrawMode, Post
-from .forms import TeamForm, PostForm
+from .models import Race, RaceAssign, Team, RaceDrawMode, Post, Skipper
+from .forms import TeamForm, PostForm, SkipperForm
 
 def loginUser(request, site: str = ''):
     if request.method == "POST":
@@ -42,6 +42,12 @@ def getTeamContent():
         'mod': False,
         'id': None
     }
+    return content
+
+def getSkipperList():
+    content = []
+    for skipper in Skipper.objects.all():
+        content.append(model_to_dict(skipper))
     return content
 
 def combineTimeOffset(t: time, offset: timedelta):
@@ -164,11 +170,20 @@ def getRaces(raceType: str):
             except ObjectDoesNotExist:
                 draw = None
             if team:
+                try:
+                    skipper = Skipper.objects.get(id=attendee.skipper_id)
+                    pass
+                except:
+                    skipper = None
                 entry['lanes'].append(
                     {
                         'lane': attendee.lane,
                         'team': team.name,
                         'company': team.company,
+                        'skipper': {
+                            'name': skipper.name if skipper else '-',
+                            'active': skipper.active if skipper else False,
+                        },
                         'draw': False
                     }
                 )
@@ -178,6 +193,10 @@ def getRaces(raceType: str):
                         'lane': draw.lane,
                         'team': draw.desc,
                         'company': '-',
+                        'skipper': {
+                            'name': '-',
+                            'active': False,
+                        },
                         'draw': True
                     }
                 )
@@ -490,21 +509,32 @@ def getSiteData(id: str = None, user = None):
         'url': 'teams',
         'thumb': config.teamsIcon,
         'active': True if id == 'teams' else False,
-        'notifications': [
+        'notifications': []
+    }
+    teams_active = Team.objects.filter(active=True, wait=False).count()
+    if teams_active:
+        menu_teams['notifications'].append(
             {
                 'level': 'success',
-                'count': Team.objects.filter(active=True, wait=False).count()
-            },
+                'count': teams_active
+            }
+        )
+    teams_wait = Team.objects.filter(active=True, wait=True).count()
+    if teams_active:
+        menu_teams['notifications'].append(
             {
                 'level': 'warning',
-                'count': Team.objects.filter(active=True, wait=True).count()
-            },
+                'count': teams_wait
+            }
+        )
+    teams_inactive = Team.objects.filter(active=False).count()
+    if teams_active:
+        menu_teams['notifications'].append(
             {
                 'level': 'secondary',
-                'count': Team.objects.filter(active=False).count()
+                'count': teams_inactive
             }
-        ]
-    }
+        )
 
     menu_trainings = {
         'id': 'trainings',
@@ -526,13 +556,24 @@ def getSiteData(id: str = None, user = None):
         'url': 'skippers',
         'thumb': config.skippersIcon,
         'active': True if id == 'skippers' else False,
-        'notifications': [
-            {
-                'level': 'danger',
-                'count': 'TODO'
-            }
-        ]
+        'notifications': []
     }
+    skippers_active = Skipper.objects.filter(active=True).count()
+    if skippers_active:
+        menu_skippers['notifications'].append(
+            {
+                'level': 'success',
+                'count': skippers_active
+            }
+        )
+    skippers_inactive = Skipper.objects.filter(active=False).count()
+    if skippers_inactive:
+        menu_skippers['notifications'].append(
+            {
+                'level': 'secondary',
+                'count': skippers_inactive
+            }
+        )
 
     menu_timetable = {
         'id': 'timetable',
@@ -551,6 +592,31 @@ def getSiteData(id: str = None, user = None):
         'active': True if id == 'times' else False,
         'notifications': []
     }
+    last = None
+    started = None
+    races = Race.objects.all().order_by('time')
+    for race in races:
+        assignments = RaceAssign.objects.filter(race_id=race.id)
+        finished = all([r.time != 0.0 for r in assignments]) and assignments.count()
+        running = any([r.time != 0.0 for r in assignments]) and assignments.count()
+        if not started and running and not finished:
+            started = race.name
+        elif finished:
+            last = race.name
+    if started is not None:
+        menu_times['notifications'].append(
+            {
+                'level': 'warning',
+                'count': started
+            }
+        )
+    elif last is not None:
+        menu_times['notifications'].append(
+            {
+                'level': 'success',
+                'count': last
+            }
+        )
 
     menu_results = {
         'id': 'results',
@@ -672,12 +738,20 @@ def getRaceTimes(raceType: str):
             except ObjectDoesNotExist:
                 draw = None
             if team:
+                try:
+                    skipper = Skipper.objects.get(id=attendee.skipper_id)
+                except:
+                    skipper = None
                 entry['lanes'].append(
                     {
                         'lane': attendee.lane,
                         'team': team.name,
                         'company': team.company,
                         'time': attendee.time,
+                        'skipper': {
+                            'name': skipper.name if skipper else '-',
+                            'active': skipper.active if skipper else False,
+                        },
                         'place': rankings[attendee.lane] if attendee.lane in rankings else '-',
                         'finished': attendee.time != 0.0,
                         'draw': False
@@ -690,6 +764,10 @@ def getRaceTimes(raceType: str):
                         'team': draw.desc,
                         'company': '-',
                         'time': None,
+                        'skipper': {
+                            'name': '-',
+                            'active': False
+                        },
                         'place': '-',
                         'finished': False,
                         'draw': True
@@ -785,7 +863,7 @@ def getTimesControls(race_id = None):
         else:
             return {}
 
-        attendees = RaceAssign.objects.filter(race_id=race_id)
+        attendees = RaceAssign.objects.filter(race_id=race_id).order_by('lane')
         selected_race = {
             'name': race.name,
             'id': race.id,
@@ -793,10 +871,18 @@ def getTimesControls(race_id = None):
             'lanes': []
         }
         for attendee in attendees:
+            try:
+                skipper = Skipper.objects.get(id=attendee.skipper_id)
+            except:
+                skipper = None
             lane = {
                 'id': attendee.id,
                 'lane': attendee.lane,
                 'team': Team.objects.get(id=attendee.team_id).name,
+                'skipper': {
+                    'name': skipper.name if skipper else '-',
+                    'active': skipper.active if skipper else False
+                },
                 'place': rankings[attendee.lane] if attendee.lane in rankings else '-',
                 'time': attendee.time,
                 'finished': attendee.time != 0.0
@@ -806,6 +892,7 @@ def getTimesControls(race_id = None):
 
     controls = {
         'races': [''],
+        'skippers': [''],
         'start_time_icon': 'view-list',
         'time_icon': 'clock-history',
         'selected_race': {}
@@ -825,6 +912,15 @@ def getTimesControls(race_id = None):
                 selected_race = getSelectedRace(race.id)
 
     controls['selected_race'] = selected_race
+
+    skippers = Skipper.objects.all()
+    for skipper in skippers:
+        controls['skippers'].append(
+            {
+                'name': skipper.name,
+                'active': skipper.active
+            }
+        )
 
     return controls
 
@@ -1023,6 +1119,7 @@ def clearHeatTimes():
     if len(attendees) > 0:
         for attendee in attendees:
             attendee.time = 0.0
+            attendee.skipper_id = None
             attendee.save()
 
 def backupDataBase():

@@ -130,11 +130,12 @@
                     <div class="row border-bottom small text-muted mt-2">
                         <div class="col-1 text-center">{{ config.timetableHeaderTime }}</div>
                         <div class="col-1 text-center">{{ config.timetableHeaderName }}</div>
-                        <div class="col-10">
+                        <div class="col">
                             <div class="row">
                                 <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
-                                <div class="col-4">{{ config.timetableHeaderTeam }}</div>
-                                <div class="col-7">{{ config.timetableHeaderCompany }}</div>
+                                <div class="col">{{ config.timetableHeaderTeam }}</div>
+                                <div class="col-6 d-none d-xl-block">{{ config.timetableHeaderCompany }}</div>
+                                <div class="col-1">{{ config.timetableHeaderSkipper }}</div>
                             </div>
                         </div>
                     </div>
@@ -143,12 +144,13 @@
                     <div class="row border-bottom timetable_race">
                         <div class="col-1 text-center align-self-center fw-bold">{{ race.time|time:'H:i' }}</div>
                         <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
-                        <div class="col-10">
+                        <div class="col">
                             {% for lane in race.lanes %}
                                 <div class="row timetable_lane">
                                     <div class="col-1 text-center">{{ lane.lane }}</div>
-                                    <div class="col-4 {% if lane.draw %}text-muted{% else %}fw-bold{% endif %}">{{ lane.team }}</div>
-                                    <div class="col-7">{{ lane.company }}</div>
+                                    <div class="col {% if lane.draw %}text-muted{% else %}fw-bold{% endif %}">{{ lane.team }}</div>
+                                    <div class="col-6 d-none d-xl-block">{{ lane.company }}</div>
+                                    <div class="col-1{% if not lane.skipper.active %} text-muted{% endif %}">{{ lane.skipper.name }}</div>
                                 </div>
                             {% endfor %}
                         </div>

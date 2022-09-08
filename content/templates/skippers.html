@@ -1,9 +1,134 @@
 {% extends 'main.html' %}
 {% load static %}
 
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{% static 'css/' %}{{ config.skippersPageCSS }}">
+{% endblock %}
+
 {% block content %}
     <div class="container-fluid">
-        <h2 class="mt-2 mb-3">{{ config.skippersTitle }}</h2>
+        <h2 class="mt-2 mb-3">{{ config.skippersEditHeading }}</h2>
+        {% if content.skipperForm %}
+            <div class="d-flex align-items-start w-50 skipper_form">
+                <form method="POST" action="" id="skipper_form">
+                    {% include 'skipper_form.html' %}
+                </form>
+            </div>
+            <div class="d-flex align-items-start mt-3">
+                <button type="submit" name="add_skipper" value="Submit" class="btn btn-primary btn_icon me-3" form="skipper_form">
+                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                        <div class="pe-2">
+                            <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="add_skipper">
+                        </div>
+                        <p class="m-0 ps-2 lead">{{ config.submitEditTeam }}</p>
+                    </div>
+                </button>
+                <button type="submit" name="cancel_skipper" value="Cancel" class="btn btn-primary btn_icon" form="skipper_form" formnovalidate>
+                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                        <div class="pe-2">
+                            <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_skipper">
+                        </div>
+                        <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                    </div>
+                </button>
+            </div>
+        {% else %}
+            <div class="d-flex align-items-start mt-3">
+                <form method="POST" action="" id="none_form">
+                    {% csrf_token %}
+                    <button type="submit" name="show_add_form" value="Add" class="btn btn-primary btn_icon btn_lg">
+                        <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                            <div class="pe-2">
+                                <img src="{% static 'images/' %}{{ config.addTeamIcon }}" alt="add_skipper">
+                            </div>
+                            <p class="m-0 ps-2 lead">{{ config.addSkipper }}</p>
+                        </div>
+                    </button>
+                </form>
+            </div>
+        {% endif %}
         <div class="container-fluid border-bottom pt-3 mb-4"></div>
+    </div>
+    <div class="container-fluid">
+        <h2 class="mt-2 mb-3">{{ config.skippersListHeading }}</h2>
+        <div class="container-fluid pt-0 mb-3">
+            {% if content.skipperList %}
+                <div class="row border-bottom small text-muted mt-2">
+                    <div class="col-1 id_col">#</div>
+                    <div class="col-2">{{ config.placeholderSkipperName }}</div>
+                    <div class="col-2">{{ config.placeholderSkipperFName }}</div>
+                    <div class="col-2">{{ config.placeholderSkipperLName }}</div>
+                    <div class="col">{{ config.placeholderSkipperEmail }}</div>
+                    <div class="col-1 text-center icon_col">{{ config.skipperTableHeaderOptions }}</div>
+                </div>
+                {% for skipper in content.skipperList %}
+                    <div class="row border-bottom align-items-center skipper_list py-1">
+                        <div class="col-1 id_col fw-bold text-primary{% if not skipper.active %} text-muted{% endif %}">{{ forloop.counter }}</div>
+                        <div class="col-2 fw-bold text-success{% if not skipper.active %} text-muted{% endif %}">{{ skipper.name }}</div>
+                        <div class="col-2{% if not skipper.active %} text-muted{% endif %}">{{ skipper.fname }}</div>
+                        <div class="col-2{% if not skipper.active %} text-muted{% endif %}">{{ skipper.lname }}</div>
+                        <div class="col{% if not skipper.active %} text-muted{% endif %}"><a href= "mailto:{{ skipper.email }}">{{ skipper.email }}</a></div>
+                        <div class="col-1 icon_col text-center icon_col">
+                            <div class="row m-0 flex-nowrap">
+                                <form method="POST" action="" id="edit_form_{{ skipper.id }}" class="col m-0 p-0">
+                                    {% csrf_token %}
+                                    <button type="submit" name="edit_skipper" value="{{ skipper.id }}" class="btn btn_skipper_table_icon p-0 ps-1">
+                                        <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_team">
+                                    </button>
+                                </form>
+                                <form method="POST" action="" id="activate_form_{{ skipper.id }}" class="col m-0 p-0">
+                                    {% csrf_token %}
+                                    <button type="submit" name="activate_skipper" value="{{ skipper.id }}" class="btn btn_skipper_table_icon p-0 ps-1">
+                                        {% if skipper.active %}
+                                            <img src="{% static 'images/' %}{{ config.activeTeamIcon }}" alt="active_skipper">
+                                        {% else %}
+                                            <img src="{% static 'images/' %}{{ config.inactiveTeamIcon }}" alt="inactive_skipper">
+                                        {% endif %}
+                                    </button>
+                                </form>
+                                <form method="POST" action="" id="delete_form_{{ skipper.id }}" class="col m-0 p-0">
+                                    {% csrf_token %}
+                                    <button type="button" class="btn btn_skipper_table_icon p-0 ps-1" data-bs-toggle="modal" data-bs-target="#deleteSkipperModal_{{ skipper.id }}">
+                                        <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_team">
+                                    </button>
+                                    <div class="modal fade" id="deleteSkipperModal_{{ skipper.id }}" tabindex="-1">
+                                        <div class="modal-dialog text-dark">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-danger text-light">
+                                                    <h5 class="modal-title" id="deleteSkipperLabel">{{ config.deleteSkipper }}</h5>
+                                                    <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                                                    <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                                                    <div class="container">{{ config.warningDeleteSkipper }}</div>
+                                                </div>
+                                                <div class="modal-footer justify-content-center bg-gray-200">
+                                                    <button type="submit" name="delete_skipper" value="{{ skipper.id }}" class="btn btn-primary btn_icon">
+                                                        <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                            <div class="pe-2">
+                                                                <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_skipper" class="p-0">
+                                                            </div>
+                                                            <p class="m-0 ps-2 lead">{{ config.deleteSkipper }}</p>
+                                                        </div>
+                                                    </button>
+                                                    <button type="button" name="cancelDeleteSkipper" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
+                                                        <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                            <div>
+                                                                <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelDeleteSkipper" class="p-0">
+                                                            </div>
+                                                            <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
