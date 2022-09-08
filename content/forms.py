@@ -2,7 +2,7 @@ from constance import config
 from django import forms
 from django.forms import ModelForm
 
-from .models import Team, Post
+from .models import Team, Post, Skipper
 
 class TeamForm(ModelForm):
     class Meta:
@@ -83,6 +83,7 @@ class TeamForm(ModelForm):
             'address': forms.Textarea(
                 attrs={
                     'class': 'form-control',
+                    'rows': 4,
                     'placeholder': config.placeholderTeamAddress
                 }
             )
@@ -121,6 +122,59 @@ class PostForm(forms.ModelForm):
                     'class': 'form-control',
                     'rows': 4,
                     'placeholder': config.placeholderPostContent
+                }
+            )
+        }
+
+class SkipperForm(forms.ModelForm):
+    class Meta:
+        model = Skipper
+
+        fields = (
+            'name',
+            'fname',
+            'lname',
+            'email',
+            'active'
+        )
+
+        labels = {
+            'name': '',
+            'fname': '',
+            'lname': '',
+            'email': '',
+            'active': ''
+        }
+
+        widgets = {
+            'name': forms.TextInput(
+                attrs = {
+                    'class': 'form-control',
+                    'placeholder': config.placeholderSkipperName
+                }
+            ),
+            'fname': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': config.placeholderSkipperFName
+                }
+            ),
+            'lname': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': config.placeholderSkipperLName
+                }
+            ),
+            'email': forms.EmailInput(
+                attrs = {
+                    'class': 'form-control',
+                    'placeholder': config.placeholderSkipperEmail
+                }
+            ),
+            'active': forms.CheckboxInput(
+                attrs = {
+                    'class': 'form-check-input m-0',
+                    'placeholder': config.placeholderSkipperActive
                 }
             )
         }

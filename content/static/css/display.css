@@ -53,3 +53,7 @@
 .carousel-inner {
     overflow-y: auto;
 }
+
+.times_column {
+    min-width: 6rem;
+}

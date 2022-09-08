@@ -66,3 +66,7 @@ input[type=number]::-webkit-inner-spin-button {
 .post_control {
     max-width: 88rem;
 }
+
+.col-1 {
+    min-width: 4rem;
+}

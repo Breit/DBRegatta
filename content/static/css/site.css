@@ -1,5 +1,8 @@
 :root {
     --bs-gray-950: #15171a;
+    --bs-green-100: #d1e7dd;
+    --bs-green-200: #a3cfbb;
+    --bs-green-300: #75b798;
 }
 
 .header {
