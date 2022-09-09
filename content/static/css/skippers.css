@@ -7,33 +7,26 @@
     max-width: 2rem;
 }
 
-.id_col:nth-child(even) {
-}
-
 .icon_col {
     min-width: 6.5rem;
     max-width: 6.5rem;
 }
 
 .skipper_list {
-    background-color: var(--bs-gray-100) !important;
+    background-color: var(--bs-gray-100);
 }
 
 .skipper_list:nth-child(even) {
-    background-color: var(--bs-gray-200) !important;
+    background-color: var(--bs-gray-200);
 }
 
 .skipper_list:hover {
-    background-color: var(--bs-gray-300) !important;
+    background-color: var(--bs-gray-300);
 }
 
 .skipper_list:nth-child(even):hover {
-    background-color: var(--bs-gray-300) !important;
+    background-color: var(--bs-gray-300);
 }
-
-/* .skipper_list:hover {
-    filter: brightness(0.97);
-} */
 
 .btn_skipper_table_icon img {
     height: 1.5rem;
@@ -57,4 +50,16 @@
 
 .modal-footer .btn-secondary {
     width: 11rem;
+}
+
+.teams_list:nth-child(even):hover {
+    background-color: var(--bs-gray-300);
+}
+
+.skipper_edit {
+    background-color: var(--bs-primary-100) !important;
+}
+
+.skipper_edit:hover {
+    background-color: var(--bs-primary-200) !important;
 }

@@ -38,5 +38,11 @@
 }
 
 .times_column {
-    min-width: 5.5rem;
+    min-width: 6.5rem;
+    max-width: 6.5rem;
+}
+
+.rank_column {
+    min-width: 4rem;
+    max-width: 4rem;
 }

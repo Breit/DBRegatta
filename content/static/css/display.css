@@ -55,5 +55,11 @@
 }
 
 .times_column {
-    min-width: 6rem;
+    min-width: 8rem;
+    max-width: 8rem;
+}
+
+.rank_column {
+    min-width: 5rem;
+    max-width: 5rem;
 }

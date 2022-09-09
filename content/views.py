@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.db.models import Q
 
 from .views_helper import *
 
@@ -101,12 +102,14 @@ def teams(request):
     else:  # handle request.GET
         # prepare form for modifying a team
         if 'edit_id' in request.GET:
-            if Team.objects.filter(id = request.GET['edit_id']).exists():
-                siteData['content']['forms']['id'] = int(request.GET['edit_id'])
+            try:
+                team = Team.objects.get(id = request.GET['edit_id'])
+            except:
+                team = None
+            if team:
                 siteData['content']['forms']['mod'] = True
-                siteData['content']['forms']['form'] = TeamForm(
-                    instance = Team.objects.get(id = request.GET['edit_id'])
-                )
+                siteData['content']['forms']['form'] = TeamForm(instance = team)
+                siteData['content']['forms']['id'] = team.id
 
     return render(request, 'teams.html', siteData)
 
@@ -177,9 +180,13 @@ def skippers(request):
             if skipper:
                 return redirect('/skippers?edit_id={}'.format(request.POST['edit_skipper']))
     elif 'edit_id' in request.GET:
-        skipper = Skipper.objects.get(id = int(request.GET['edit_id']))
+        try:
+            skipper = Skipper.objects.get(id = int(request.GET['edit_id']))
+        except:
+            skipper = None
         if skipper:
             siteData['content']['skipperForm'] = SkipperForm(instance=skipper)
+            siteData['content']['skipperForm_id'] = skipper.id
 
     return render(request, 'skippers.html', siteData)
 
@@ -301,23 +308,35 @@ def times(request):
                     lane = lane['lane'],
                     race_id = selected_race['id']
                 )
+
+                # get other lanes to check if the skipper is alreeady used
+                if skipper is not None:
+                    attendees = RaceAssign.objects.filter(
+                        ~Q(id = lane['id']),
+                        race_id = selected_race['id']
+                    )
+                    for other_attendee in attendees:
+                        if other_attendee.skipper_id == skipper.id:
+                            skipper = None
+                            break
+
                 # sanity check for the right team
                 team = Team.objects.get(
                     id=attendee.team_id,
                     name=lane['team']
                 )
+
                 if team and attendee:
                     save = False
                     if skipper and attendee.skipper_id != skipper.id:
-                        attendee.skipper_id = skipper.id
                         save = True
                     elif skipper is None and attendee.skipper_id is not None:
-                        attendee.skipper_id = None
                         save = True
                     elif attendee.time != race_time:
-                        attendee.time = race_time
                         save = True
                     if save:
+                        attendee.time = race_time
+                        attendee.skipper_id = skipper.id if skipper else None
                         attendee.save()
 
                     # create finals or ascend winner from the last race
@@ -349,7 +368,7 @@ def results(request):
         return redirect('/results')
 
     siteData = getSiteData('results', request.user)
-    siteData['results'] = getRaceResultsTableContent(heats=False)
+    siteData['results'] = getRaceResultsTableContent(heats=False, finalRanks=True)
     return render(request, 'results.html', siteData)
 
 def display(request):
@@ -366,22 +385,22 @@ def display(request):
 
     siteData = getSiteData('display', request.user)
     siteData['display'] = []
-    timetables = getCurrentTimeTable()
-    for timetable in timetables:
-        siteData['display'].append(
-            {
-                'type': 'timetable',
-                'data': timetable
-            }
-        )
 
-    if raceBlockStarted('{}{}-'.format(config.heatPrefix, 1)):
-        siteData['display'].append(
-            {
-                'type': 'rankings',
-                'data': getRankingTable()
-            }
-        )
+    if not raceBlockFinished(config.finalPrefix):
+        timetables = getCurrentTimeTable()
+        for timetable in timetables:
+            siteData['display'].append(
+                {
+                    'type': 'timetable',
+                    'data': timetable
+                }
+            )
+
+    if raceBlockFinished(config.finalPrefix):
+        siteData['display'].append(getFinalRankings())          # show finale rankings if finale has finished
+    else:
+        if raceBlockStarted(config.heatPrefix):
+            siteData['display'].append(getHeatRankings())       # show heats rankings only if finale is not finished
 
     return render(request, 'display.html', siteData)
 

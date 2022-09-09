@@ -71,17 +71,25 @@
 }
 
 .teams_list {
-    background-color: var(--bs-gray-100) !important;
+    background-color: var(--bs-gray-100);
 }
 
 .teams_list:nth-child(even) {
-    background-color: var(--bs-gray-200) !important;
+    background-color: var(--bs-gray-200);
 }
 
 .teams_list:hover {
-    background-color: var(--bs-gray-300) !important;
+    background-color: var(--bs-gray-300);
 }
 
 .teams_list:nth-child(even):hover {
-    background-color: var(--bs-gray-300) !important;
+    background-color: var(--bs-gray-300);
+}
+
+.team_edit {
+    background-color: var(--bs-primary-100) !important;
+}
+
+.team_edit:hover {
+    background-color: var(--bs-primary-200) !important;
 }
