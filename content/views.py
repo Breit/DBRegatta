@@ -453,6 +453,8 @@ def settings(request):
             clearHeatTimes()
         elif 'backupDatabase' in request.POST:
             backupDataBase()
+        elif 'displayOverscan' in request.POST:
+            config.overscan = int(request.POST['displayOverscan'])
         return redirect('/settings')
 
     return render(request, 'settings.html', siteData)

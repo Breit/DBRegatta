@@ -1070,6 +1070,15 @@ def getMainSettings():
             'icon': 'calendar3-event'
         },
         {
+            'id': 'displayOverscan',
+            'name': config.overscanDesc,
+            'type': 'number',
+            'value': config.overscan,
+            'icon': 'aspect-ratio',
+            'min': 0,
+            'max': config.overscanMax
+        },
+        {
             'id': 'durationMonitorSlide',
             'name': config.displayIntervalDesc,
             'type': 'number',

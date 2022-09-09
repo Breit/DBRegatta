@@ -16,8 +16,8 @@
         <script src="{% static 'js/' %}menu.js" type="text/javascript"></script>
         {% block additionalJS %}{% endblock %}
     </head>
-    <body>
-        <main class="bg-light">
+    <body class="bg-dark">
+        <main class="bg-light m-{% if display and config.overscan %}{{ config.overscan }}{% else %}0{% endif %}">
             <header class="header p-2 navbar sticky-top navbar-dark text-bg-dark border-bottom">
                 <div class="container-fluid ps-2">
                     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -109,7 +109,7 @@
             <div class="content_panel flex-row">
                 {% block content %}{% endblock %}
             </div>
-            <footer class="footer py-3 px-4 navbar fixed-bottom navbar-dark text-bg-dark border-top">
+            <footer class="footer py-3 px-4 navbar fixed-bottom navbar-dark text-bg-dark border-top m-{% if display and config.overscan %}{{ config.overscan }}{% else %}0{% endif %}">
                 <div class="d-flex align-items-start">
                     {% if config.sponsorLogo %}
                         {% if config.sponsorUrl %}
