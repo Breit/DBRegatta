@@ -135,7 +135,7 @@
                                 <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
                                 <div class="col">{{ config.timetableHeaderTeam }}</div>
                                 <div class="col-6 d-none d-xl-block">{{ config.timetableHeaderCompany }}</div>
-                                <div class="col-1">{{ config.timetableHeaderSkipper }}</div>
+                                <div class="col-1 col_skipper">{{ config.timetableHeaderSkipper }}</div>
                             </div>
                         </div>
                     </div>
@@ -150,7 +150,7 @@
                                     <div class="col-1 text-center">{{ lane.lane }}</div>
                                     <div class="col {% if lane.draw %}text-muted{% else %}fw-bold{% endif %}">{{ lane.team }}</div>
                                     <div class="col-6 d-none d-xl-block">{{ lane.company }}</div>
-                                    <div class="col-1{% if not lane.skipper.active %} text-muted{% endif %}">{{ lane.skipper.name }}</div>
+                                    <div class="col-1 col_skipper{% if not lane.skipper.active %} text-muted{% endif %}">{{ lane.skipper.name }}</div>
                                 </div>
                             {% endfor %}
                         </div>

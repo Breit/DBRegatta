@@ -44,8 +44,8 @@
                         <div class="row mx-0 py-1 timetable_lane">
                             <div class="col-1 col_num text-center align-self-center">{{ l.lane }}</div>
                             <div class="col fw-bold align-self-center">{{ l.team }}</div>
-                            <div class="col col_skipper">
-                                <div class="input-group h-100">
+                            <div class="col col_skipper_control align-self-center">
+                                <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-person"></i></span>
                                     <select id="skipper_select" name="skipper_select_{{ l.lane }}" class="form-select">
                                         {% for s in controls.skippers %}
@@ -55,14 +55,14 @@
                                 </div>
                             </div>
                             <div class="col-1 col_num text-center align-self-center d-none d-xl-block">{{ l.place }}</div>
-                            <div class="col pe-2 align-self-center col_times">
+                            <div class="col col_times pe-2 align-self-center">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-{{controls.time_icon}}"></i></span>
-                                    <input type="number" id="lane_time_min_{{ l.lane }}" name="lane_time_min_{{ l.lane }}" class="form-control text-center p-2" value="{{ l.time|splitTime:'min' }}" min="0" max="59">
+                                    <input type="number" id="lane_time_min_{{ l.lane }}" name="lane_time_min_{{ l.lane }}" class="form-control text-center px-2" value="{{ l.time|splitTime:'min' }}" min="0" max="59">
                                     <label class="input-group-text px-1 fw-bold" for="lane_info_sec">:</label>
-                                    <input type="number" id="lane_time_sec_{{ l.lane }}" name="lane_time_sec_{{ l.lane }}" class="form-control text-center p-2" value="{{ l.time|splitTime:'sec' }}" min="0" max="59">
+                                    <input type="number" id="lane_time_sec_{{ l.lane }}" name="lane_time_sec_{{ l.lane }}" class="form-control text-center px-2" value="{{ l.time|splitTime:'sec' }}" min="0" max="59">
                                     <label class="input-group-text px-1 fw-bold" for="lane_info_msec">.</label>
-                                    <input type="number" id="lane_time_msec_{{ l.lane }}" name="lane_time_hnd_{{ l.lane }}" class="form-control text-center p-2" value="{{ l.time|splitTime:'hnd' }}" min="0" max="99">
+                                    <input type="number" id="lane_time_msec_{{ l.lane }}" name="lane_time_hnd_{{ l.lane }}" class="form-control text-center px-2" value="{{ l.time|splitTime:'hnd' }}" min="0" max="99">
                                 </div>
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                                 <div class="col-1 col_num text-center">{{ config.timetableHeaderLane }}</div>
                                 <div class="col">{{ config.timetableHeaderTeam }}</div>
                                 <div class="col d-none d-xxl-block">{{ config.timetableHeaderCompany }}</div>
-                                <div class="col-1 d-none d-lg-block">{{ config.timesHeaderSkipper }}</div>
+                                <div class="col col_skipper d-none d-lg-block">{{ config.timesHeaderSkipper }}</div>
                                 <div class="col-1 col_num text-center">{{ config.timesHeaderPlace }}</div>
                                 <div class="col-1 col_time text-center px-1">{{ config.timesHeaderTime }}</div>
                             </div>
@@ -116,7 +116,7 @@
                                     <div class="col-1 col_num text-center align-self-center">{{ lane.lane }}</div>
                                     <div class="col align-self-center{% if lane.draw %} text-muted{% else %} fw-bold{% endif %}">{{ lane.team }}</div>
                                     <div class="col d-none d-xxl-block align-self-center">{{ lane.company }}</div>
-                                    <div class="col-1 d-none d-lg-block align-self-center{% if lane.skipper.active %} fw-bold{% else %} text-muted{% endif %}">{{ lane.skipper.name }}</div>
+                                    <div class="col col_skipper d-none d-lg-block align-self-center{% if lane.skipper.active %} fw-bold{% else %} text-muted{% endif %}">{{ lane.skipper.name }}</div>
                                     <div class="col-1 col_num text-center align-self-center">{{ lane.place }}</div>
                                     <div class="col-1 col_time text-center align-self-center px-1{% if lane.finished %} fw-bold text-success{% else %} text-muted{% endif %}">{{ lane.time|asTime }}</div>
                                 </div>

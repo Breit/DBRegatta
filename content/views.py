@@ -18,10 +18,14 @@ def teams(request):
     if not request.user.is_authenticated:
         return redirect('/')
 
+    # handly menu folding
+    if toggleFoldMenu(request):
+        return redirect('/teams')
+
     siteData = getSiteData('teams', request.user)
     siteData['content'] = getTeamContent()
 
-    if request.method == "POST":
+    if request.method == 'POST':
         # activate the add-new-team form
         if 'show_add_form' in request.POST:
             siteData['content']['forms']['add'] = True
@@ -113,6 +117,10 @@ def trainings(request):
     if not request.user.is_authenticated:
         return redirect('/')
 
+    # handly menu folding
+    if toggleFoldMenu(request):
+        return redirect('/trainings')
+
     siteData = getSiteData('trainings', request.user)
     siteData['content'] = {}
     return render(request, 'trainings.html', siteData)
@@ -124,12 +132,16 @@ def skippers(request):
     if not request.user.is_authenticated:
         return redirect('/')
 
+    # handly menu folding
+    if toggleFoldMenu(request):
+        return redirect('/skippers')
+
     siteData = getSiteData('skippers', request.user)
     siteData['content'] = {
         'skipperList': getSkipperList()
     }
 
-    if request.method == "POST":
+    if request.method == 'POST':
         if 'show_add_form' in request.POST:
             siteData['content']['skipperForm'] = SkipperForm()
         elif 'add_skipper' in request.POST:
@@ -158,7 +170,11 @@ def skippers(request):
                 skipper.save()
                 return redirect('/skippers')
         elif 'edit_skipper' in request.POST:
-            if Skipper.objects.get(id = request.POST['edit_skipper']).exists():
+            try:
+                skipper = Skipper.objects.get(id = request.POST['edit_skipper'])
+            except:
+                skipper = None
+            if skipper:
                 return redirect('/skippers?edit_id={}'.format(request.POST['edit_skipper']))
     elif 'edit_id' in request.GET:
         skipper = Skipper.objects.get(id = int(request.GET['edit_id']))
@@ -171,13 +187,18 @@ def timetable(request):
     # handle login/logout
     loginUser(request)
 
+    # handly menu folding
+    if toggleFoldMenu(request):
+        return redirect('/timetable')
+
+    # construct site
     siteData = getSiteData('timetable', request.user)
     siteData['timetable'] = getTimeTableContent()
 
     if request.user.is_authenticated:
         siteData['controls'] = getTimeTableSettings()
 
-        if request.method == "POST":
+        if request.method == 'POST':
             if 'content' in request.POST and 'enable' in request.POST:
                 try:
                     post = Post.objects.get(site='timetable')
@@ -225,8 +246,12 @@ def times(request):
     if not request.user.is_authenticated:
         return redirect('/')
 
+    # handly menu folding
+    if toggleFoldMenu(request):
+        return redirect('/times')
+
     # shortcut to URL with specific race_id
-    if request.method == "POST" and 'race_select' in request.POST:
+    if request.method == 'POST' and 'race_select' in request.POST:
         race = None
         if request.POST['race_select']:
             try:
@@ -247,7 +272,7 @@ def times(request):
     siteData['times'] = getRaceResultsTableContent()
 
     # handle POST requests
-    if request.method == "POST":
+    if request.method == 'POST':
         if 'refresh_times' in request.POST:
             selected_race = siteData['controls']['selected_race']
             for lane in selected_race['lanes']:
@@ -319,6 +344,10 @@ def results(request):
     if not config.activateResults and not request.user.is_authenticated:
         return redirect('/')
 
+    # handly menu folding
+    if toggleFoldMenu(request):
+        return redirect('/results')
+
     siteData = getSiteData('results', request.user)
     siteData['results'] = getRaceResultsTableContent(heats=False)
     return render(request, 'results.html', siteData)
@@ -330,6 +359,10 @@ def display(request):
     # allow display for unauthenticated users
     if not config.anonymousMonitor and not request.user.is_authenticated:
         return redirect('/')
+
+    # handly menu folding
+    if toggleFoldMenu(request):
+        return redirect('/display')
 
     siteData = getSiteData('display', request.user)
     siteData['display'] = []
@@ -359,11 +392,15 @@ def settings(request):
     if not request.user.is_authenticated:
         return redirect('/')
 
+    # handly menu folding
+    if toggleFoldMenu(request):
+        return redirect('/settings')
+
     siteData = getSiteData('settings', request.user)
     siteData['controls'] = getMainSettings()
     siteData['lastBackup'] = getLastDataBaseBackup()
 
-    if request.method == "POST":
+    if request.method == 'POST':
         if 'eventTitle' in request.POST:
             config.siteName = request.POST['eventTitle']
         elif 'eventDate' in request.POST:
@@ -408,6 +445,10 @@ def djadmin(request):
     if not request.user.is_authenticated and not request.user.is_superuser:
         return redirect('/')
 
+    # handly menu folding
+    if toggleFoldMenu(request):
+        return redirect('/djadmin')
+
     siteData = getSiteData('djadmin', request.user)
     siteData['url'] = "/admin"
     response = render(request, 'djadmin.html', siteData)
@@ -417,6 +458,10 @@ def djadmin(request):
 def impressum(request):
     # handle login/logout
     loginUser(request)
+
+    # handly menu folding
+    if toggleFoldMenu(request):
+        return redirect('/impressum')
 
     siteData = getSiteData('impressum', request.user)
     siteData['impressum'] = getImpressumData()

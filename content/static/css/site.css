@@ -21,7 +21,6 @@
 }
 
 .menu {
-    width: 17rem;
     height: calc(100vh - 4.27rem - 7rem - 0.125rem);
     border-color: var(--bs-gray-800) !important;
     background-color: var(--bs-gray-950) !important;
@@ -120,4 +119,8 @@
 
 .impressum a:hover {
     color: var(--bs-primary) !important;
+}
+
+.nav li.toggle:hover {
+    background-color: var(--bs-gray-950) !important;
 }
