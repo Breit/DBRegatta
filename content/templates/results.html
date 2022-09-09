@@ -32,7 +32,7 @@
                             </div>
                         </div>
                         {% for race in entry.races %}
-                            <div class="row border-bottom timetable_race px-1{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}">
+                            <div class="row border-bottom timetable_race{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}">
                                 <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
                                 <div class="col-11">
                                     {% for lane in race.lanes %}

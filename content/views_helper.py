@@ -27,6 +27,18 @@ def loginUser(request, site: str = ''):
         if 'logout' in request.POST:
             logout(request)
 
+def toggleFoldMenu(request):
+    # handly menu folding
+    if 'fold_menu' not in request.session:
+        if request.user.is_authenticated:
+            request.session['fold_menu'] = False        # default to full menu for auth users
+        else:
+            request.session['fold_menu'] = True         # default to folded menu for un-auth users (probably mobile users)
+    if request.method == 'POST' and 'menu_fold_toggle' in request.POST:
+        request.session['fold_menu'] = not request.session['fold_menu']
+        return True
+    return False
+
 # get teams list from database
 def getTeamContent():
     content = { 'teams': [] }
@@ -503,6 +515,9 @@ def getCurrentRaceBlock():
 
 # define default site data
 def getSiteData(id: str = None, user = None):
+    menu_toggle = {
+        'id': 'toggle'
+    }
     menu_teams = {
         'id': 'teams',
         'title': config.teamsTitle,
@@ -644,7 +659,7 @@ def getSiteData(id: str = None, user = None):
             }
         ]
 
-    menu_setings = {
+    menu_settings = {
         'id': 'settings',
         'title': config.settingsTitle,
         'url': 'settings',
@@ -682,7 +697,11 @@ def getSiteData(id: str = None, user = None):
 
     if user and user.is_authenticated:
         siteData['menu'].append(menu_display)
-        siteData['menu'].append(menu_setings)
+
+    siteData['menu'].append(menu_toggle)
+
+    if user and user.is_authenticated:
+        siteData['menu'].append(menu_settings)
 
     if user and user.is_authenticated and user.is_superuser:
         siteData['menu'].append(menu_admin)

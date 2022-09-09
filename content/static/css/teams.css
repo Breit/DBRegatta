@@ -15,7 +15,8 @@
 }
 
 .team_table_buttons {
-    width: 7rem !important;
+    min-width: 8rem !important;
+    max-width: 8rem !important;
 }
 
 .form-switch input[type=checkbox] {
@@ -59,6 +60,28 @@
     list-style-type: none;
 }
 
-td p {
-    margin: 0;
+.id_col {
+    min-width: 2rem !important;
+    max-width: 2rem !important;
+}
+
+.team_table_date {
+    min-width: 6rem !important;
+    max-width: 6rem !important;
+}
+
+.teams_list {
+    background-color: var(--bs-gray-100) !important;
+}
+
+.teams_list:nth-child(even) {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.teams_list:hover {
+    background-color: var(--bs-gray-300) !important;
+}
+
+.teams_list:nth-child(even):hover {
+    background-color: var(--bs-gray-300) !important;
 }

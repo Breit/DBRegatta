@@ -102,6 +102,11 @@ input[type=number] {
     max-width: 3rem !important;
 }
 
-.col_skipper {
+.col_skipper_control {
     max-width: 15rem !important;
+}
+
+.col_skipper {
+    min-width: 8rem !important;
+    max-width: 8rem !important;
 }

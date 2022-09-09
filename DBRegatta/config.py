@@ -151,6 +151,7 @@ CONSTANCE_CONFIG = {
     'addSkipper':               ('Steuermann hinzufügen',                       'Text for Add Skipper Button'),
     'deleteSkipper':            ('Steuermann löschen',                          'Text for Delete Skipper Button'),
     'warningDeleteSkipper':     ('Steuermann endgültig löschen?',               'Safety Warning Message for Deleting a Skipper'),
+    'skipperTableHeaderID':     ('#',                                           'Skippers Table Header ID'),
 
     # Results Settings
     'resultsPageCSS':           ('results.css',                                 'CSS File for Site-specific Styling'),
@@ -380,6 +381,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'addSkipper',
             'deleteSkipper',
             'warningDeleteSkipper',
+            'skipperTableHeaderID',
         ),
         'collapse': True
     },
