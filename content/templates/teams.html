@@ -109,7 +109,7 @@
                 </div>
             {% endif %}
             {% for t in content.teams %}
-                <div class="row border-bottom align-items-center teams_list py-1{% if content.forms.id and t.id == content.forms.id %} border border-primary{% endif %}{% if not t.active %} fst-italic{% endif %}">
+                <div class="row border-bottom align-items-center teams_list py-1{% if content.forms.id and t.id == content.forms.id %} border border-primary team_edit{% endif %}{% if not t.active %} fst-italic{% endif %}">
                     <div class="col-1 id_col fw-bold text-center text-primary">{{ forloop.counter }}</div>
                     <div class="col">
                         <span class="fw-bold{% if t.active and not t.wait %} text-success{% elif t.active and t.wait %} text-warning{% else %} text-muted{% endif %}">{{ t.name }}</span>

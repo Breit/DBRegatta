@@ -62,7 +62,7 @@
                     <div class="col-1 text-center icon_col">{{ config.skipperTableHeaderOptions }}</div>
                 </div>
                 {% for skipper in content.skipperList %}
-                    <div class="row border-bottom align-items-center skipper_list py-1">
+                    <div class="row border-bottom align-items-center skipper_list py-1{% if content.skipperForm_id and skipper.id == content.skipperForm_id %} border border-primary skipper_edit{% endif %}">
                         <div class="col-1 id_col fw-bold text-primary{% if not skipper.active %} text-muted{% endif %}">{{ forloop.counter }}</div>
                         <div class="col-2 fw-bold text-success{% if not skipper.active %} text-muted{% endif %}">{{ skipper.name }}</div>
                         <div class="col-2{% if not skipper.active %} text-muted{% endif %}">{{ skipper.fname }}</div>

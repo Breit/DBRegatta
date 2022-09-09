@@ -42,11 +42,22 @@ def toggleFoldMenu(request):
 # get teams list from database
 def getTeamContent():
     content = { 'teams': [] }
-    for team in Team.objects.all():
+
+    activeTeams = Team.objects.filter(active=True, wait=False)
+    for team in activeTeams:
         content['teams'].append(model_to_dict(team))
-    content['activeTeams'] = Team.objects.filter(active=True, wait=False).count()
-    content['inactiveTeams'] = Team.objects.filter(active=False).count()
-    content['waitlistTeams'] = Team.objects.filter(active=True, wait=True).count()
+
+    waitingTeams = Team.objects.filter(active=True, wait=True)
+    for team in waitingTeams:
+        content['teams'].append(model_to_dict(team))
+
+    inactiveTeams = Team.objects.filter(active=False)
+    for team in inactiveTeams:
+        content['teams'].append(model_to_dict(team))
+
+    content['activeTeams'] = activeTeams.count()
+    content['waitlistTeams'] = waitingTeams.count()
+    content['inactiveTeams'] = inactiveTeams.count()
     content['totalTeams'] = Team.objects.all().count()
     content['forms'] = {
         'form': TeamForm(),
@@ -467,9 +478,10 @@ def getRankings():
 
     return rankings
 
-def getRankingTable():
+def getHeatRankings():
     rankingTable = {
-        'desc': config.displayRankings,
+        'desc': '{} {}'.format(config.displayRankings, config.heatsTitle),
+        'type':'rankingHeats',
         'heats': ['{}{}'.format(config.heatPrefix, i + 1) for i in range(config.heatCount)],
         'ranks': [],
         'brackets': []
@@ -736,11 +748,9 @@ def getRaceTimes(raceType: str):
         # get rankings
         attendees = RaceAssign.objects.filter(race_id=race.id).order_by('time')
         rankings = {}
-        i = 1
-        for attendee in attendees:
+        for i, attendee in enumerate(attendees):
             if attendee.time != 0.0:
-                rankings[attendee.lane] = i
-                i += 1
+                rankings[attendee.lane] = i + 1
 
         # get times table data
         for lnum in range(lanesPerRace):
@@ -812,17 +822,115 @@ def getRaceTimes(raceType: str):
         races.append(entry)
     return races
 
+def getFinalRankings():
+    rankingTable = {
+        'desc': '{} {}'.format(config.displayRankings, config.finaleTitle),
+        'ranks': [],
+        'type': 'rankingFinals'
+    }
+
+    # deduce lane count from database
+    lanesPerRace = len(set([attendee.lane for attendee in RaceAssign.objects.all()]))
+
+    # get all final races and sort after race names, but obey number ordering
+    races_sorted = Race.objects.filter(name__startswith = config.finalPrefix)
+    races_sorted = [race for race in races_sorted]
+    races_sorted.sort(key=lambda x:[int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.name)])
+
+    rank_finale = getActiveTeams()
+
+    for race in races_sorted:
+        entry = {
+            'time': race.time,
+            'desc': race.name,
+            'lanes': []
+        }
+
+        # get rankings
+        attendees = RaceAssign.objects.filter(race_id=race.id).order_by('time')
+        placings = {}
+        for i, attendee in enumerate(attendees):
+            if attendee.time != 0.0:
+                placings[attendee.lane] = i + 1
+
+        # get times table data
+        for lnum in range(lanesPerRace):
+            try:
+                attendee = RaceAssign.objects.get(race_id=race.id, lane=(lnum + 1))
+                team = Team.objects.get(id=attendee.team_id)
+            except MultipleObjectsReturned:
+                attendee = RaceAssign.objects.filter(race_id=race.id, lane=(lnum + 1))[0]
+            except ObjectDoesNotExist:
+                attendee = None
+                team = None
+            if team and attendee:
+                entry['lanes'].append(
+                    {
+                        'team': team,
+                        'time': attendee.time,
+                        'place': placings[attendee.lane] if attendee.lane in placings else '-',
+                        'finished': attendee.time != 0.0
+                    }
+                )
+
+        # fill in ranks for finale
+        if len([lane for lane in entry['lanes'] if lane['finished']]) == lanesPerRace:
+            last_race = race.name == races_sorted[-1].name
+            for lane in entry['lanes']:
+                if not last_race and lane['place'] == 1:
+                    continue
+
+                assignments_finals = RaceAssign.objects.filter(
+                    team_id = lane['team'].id,
+                    race_id__in = [r.id for r in races_sorted]
+                ).order_by('time')
+
+                races_heats = Race.objects.filter(name__startswith = config.heatPrefix)
+                assignments_heats = RaceAssign.objects.filter(
+                    team_id = lane['team'].id,
+                    race_id__in = [r.id for r in races_heats]
+                ).order_by('time')
+
+                rankingTable['ranks'].append(
+                    {
+                        'rank': rank_finale - (lanesPerRace - lane['place']),
+                        'team': lane['team'].name,
+                        'company': lane['team'].company,
+                        'bt_heats': assignments_heats.first().time if assignments_heats.count() else None,
+                        'bt_finale': assignments_finals.first().time if assignments_finals.count() else None,
+                        'finale_time': lane['time'],
+                        'races': assignments_finals.count(),
+                    }
+                )
+            rank_finale -= lanesPerRace if last_race else lanesPerRace - 1
+
+        # sort rankings
+        rankingTable['ranks'].sort(key=lambda r: r['rank'])
+
+    return rankingTable
+
 # Check if selected race block is started
 def raceBlockStarted(raceType: str):
     started = False
     for race in Race.objects.filter(name__startswith = raceType):
         attendees = RaceAssign.objects.filter(race_id=race.id)
-        if any([attendee.time > 0.0 for attendee in attendees]):
+        if any([attendee.time > 0.0 for attendee in attendees]) and len(attendees) > 0:
             started = True
             break
     return started
 
-def getRaceResultsTableContent(heats: bool = True):
+# Check if selected race block is finished
+def raceBlockFinished(raceType: str):
+    finished = []
+    for race in Race.objects.filter(name__startswith = raceType):
+        attendees = RaceAssign.objects.filter(race_id=race.id)
+        if all([attendee.time > 0.0 for attendee in attendees]) and len(attendees) > 0:
+            finished.append(True)
+        else:
+            finished.append(False)
+    return all(finished)
+
+def getRaceResultsTableContent(heats: bool = True, finalRanks: bool = False):
     timetable = []
 
     # decide if heats or rankings are returned
@@ -846,8 +954,7 @@ def getRaceResultsTableContent(heats: bool = True):
         # get heat rankings
         races = Race.objects.filter(name__startswith = config.heatPrefix).order_by('time')
         if len(races) > 0:
-            timetable.append(getRankingTable())
-            timetable[-1]['type'] = 'ranking'
+            timetable.append(getHeatRankings())
             timetable[-1]['time'] = races.last().time
 
     # get finals
@@ -864,6 +971,9 @@ def getRaceResultsTableContent(heats: bool = True):
             'type': 'finale'
         }
     )
+
+    if finalRanks:
+        timetable.append(getFinalRankings())
 
     return timetable
 

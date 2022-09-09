@@ -10,12 +10,12 @@
     <div class="container-fluid">
         <h2 class="mt-2 mb-3">{{ config.resultsTableHeader }}</h2>
         {% for entry in results %}
-            <div class="container-fluid border border-primary pt-0 mb-3">
-                <div class="row bg-primary fs-4 text-light">
-                    <div class="col">{{ entry.desc }}</div>
-                </div>
-                {% if entry.type == 'heat' or entry.type == 'finale' %}
-                    {% if entry.races %}
+            {% if entry.type == 'heat' or entry.type == 'finale' %}
+                {% if entry.races %}
+                    <div class="container-fluid border border-primary pt-0 mb-3">
+                        <div class="row bg-primary fs-4 text-light">
+                            <div class="col">{{ entry.desc }}</div>
+                        </div>
                         <div class="row border-bottom small text-muted mt-2">
                             <div class="col-1 text-center">{{ config.timetableHeaderName }}</div>
                             <div class="col-11">
@@ -50,44 +50,27 @@
                                 </div>
                             </div>
                         {% endfor %}
-                    {% endif %}
-                {% elif entry.type == 'ranking' %}
-                    <div class="row border-bottom small text-muted mt-2">
-                        <div class="col-1 text-center">{{ config.displayRank }}</div>
-                        <div class="col">{{ config.timetableHeaderTeam }}</div>
-                        <div class="col-5 d-none d-xxl-block">{{ config.timetableHeaderCompany }}</div>
-                        <div class="col">
-                            <div class="row">
-                                {% for h in entry.heats %}
-                                    <div class="col text-center">{{ h }}</div>
-                                {% endfor %}
-                                <div class="col text-center times_column">{{ config.displaySumTime }}</div>
-                            </div>
-                        </div>
                     </div>
-                    {% for b in entry.brackets %}
-                        <!-- <div class="container-fluid border-bottom mb-4"> -->
-                            {% for r in entry.ranks %}
-                                {% if r.races == b %}
-                                    <div class="row rankings_table">
-                                        <div class="col-1 text-center text-primary fw-bold">{% if r.races > 0 %}{{ r.rank }}{% endif %}</div>
-                                        <div class="col fw-bold">{{ r.name }}</div>
-                                        <div class="col-5 d-none d-xxl-block">{{ r.company }}</div>
-                                        <div class="col">
-                                            <div class="row">
-                                                {% for t in r.times %}
-                                                    <div class="col text-center small">{% if t > 0 %}{{ t|asTime }}{% else %}-{% endif %}</div>
-                                                {% endfor %}
-                                                <div class="col text-center{% if r.races > 0 %} fw-bold text-success{% endif %} times_column">{% if r.races > 0 %}{{ r.times|sumUp|asTime }}{% else %}-{% endif %}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        <!-- </div> -->
-                    {% endfor %}
                 {% endif %}
-            </div>
+            {% elif entry.type == 'rankingHeats' %}
+                <div class="container-fluid border border-primary pt-0 mb-3">
+                    <div class="row bg-primary fs-4 text-light">
+                        <div class="col">{{ entry.desc }}</div>
+                    </div>
+                    {% block rankings_heats %}
+                        {% include 'results_heats_rankings.html' %}
+                    {% endblock %}
+                </div>
+            {% elif entry.type == 'rankingFinals' and entry.ranks|length %}
+                <div class="container-fluid border border-primary pt-0 mb-3">
+                    <div class="row bg-primary fs-4 text-light">
+                        <div class="col">{{ entry.desc }}</div>
+                    </div>
+                    {% block rankings_finale %}
+                        {% include 'results_final_rankings.html' %}
+                    {% endblock %}
+                </div>
+            {% endif %}
         {% endfor %}
     </div>
 {% endblock %}

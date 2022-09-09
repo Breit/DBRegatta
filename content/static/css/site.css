@@ -1,8 +1,11 @@
 :root {
     --bs-gray-950: #15171a;
-    --bs-green-100: #d1e7dd;
-    --bs-green-200: #a3cfbb;
-    --bs-green-300: #75b798;
+    --bs-success-100: #d1e7dd;
+    --bs-success-200: #a3cfbb;
+    --bs-success-300: #75b798;
+    --bs-primary-100: #cfe2ff;
+    --bs-primary-200: #9ec5fe;
+    --bs-primary-300: #6ea8fe;
 }
 
 .header {
