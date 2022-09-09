@@ -59,12 +59,12 @@
                                 <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
                                 <div class="input-group rounded ">
                                     <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
-                                    <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end pe-4" value="{{ c.value }}" onchange="this.form.submit()">
+                                    <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end pe-4" value="{{ c.value }}"{% if c.min %} min="{{ c.min }}"{% endif %}{% if c.max %} max="{{ c.max }}"{% endif %} onchange="this.form.submit()">
                                 </div>
                             </form>
                         </div>
                     {% else %}
-                        <div class="{% if c.id == 'eventTitle' %}col-12{% else %}col-6{% endif %} mb-3">
+                        <div class="{% if c.id == 'eventTitle' %}col-10{% else %}col-6{% endif %} mb-3">
                             <form method="POST" action="" id="{{ c.id }}">
                                 {% csrf_token %}
                                 <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>

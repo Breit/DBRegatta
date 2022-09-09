@@ -20,6 +20,7 @@
             {% for entry in display %}
                 <button type="button" data-bs-target="#resultsCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.counter == 1 %}active{% endif %}"></button>
             {% endfor %}
+            <div class="m-{{ config.overscan }}"></div>
         </div>
         <div class="carousel-inner d-flex h-100">
             {% for entry in display %}
@@ -48,7 +49,7 @@
                                         </div>
                                     </div>
                                     {% for race in entry.data.races %}
-                                        <div class="row border-bottom timetable_race{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %} fs-5">
+                                        <div class="row border-bottom timetable_race{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}{% if config.overscan > 3 %} fs-6{% else %} fs-5{% endif %}">
                                             <div class="col-1 text-center align-self-center fw-bold">{{ race.time|time:'H:i' }}</div>
                                             <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
                                             <div class="col-10">
@@ -71,14 +72,14 @@
                                 {% endif %}
                             </div>
                         {% elif entry.type == 'rankingHeats' %}
-                            <div class="container-fluid fs-5">
+                            <div class="container-fluid{% if config.overscan > 3 %} fs-6{% else %} fs-5{% endif %}">
                                 <h2 class="mt-2 mb-3">{{ entry.desc }}</h2>
                                 {% block rankings_heats %}
                                     {% include 'results_heats_rankings.html' %}
                                 {% endblock %}
                             </div>
                         {% elif entry.type == 'rankingFinals' and entry.ranks|length %}
-                            <div class="container-fluid fs-5">
+                            <div class="container-fluid{% if config.overscan > 3 %} fs-6{% else %} fs-5{% endif %}">
                                 <h2 class="mt-2 mb-3">{{ entry.desc }}</h2>
                                 {% block rankings_finale %}
                                     {% include 'results_final_rankings.html' %}
@@ -86,7 +87,7 @@
                             </div>
                         {% endif %}
                     </div>
-                    <div class="flex-grow-1"></div>
+                    <div class="flex-grow-1 m-{{ config.overscan }}"></div>
                 </div>
             {% endfor %}
         </div>

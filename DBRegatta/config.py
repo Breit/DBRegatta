@@ -27,6 +27,9 @@ CONSTANCE_CONFIG = {
     'ownerUrlDesc':             ('URL Veranstalter',                            'Site Owner URL Description'),
     'questionIcon':             ('question.svg',                                'Icon for Modal Questions'),
     'submitAbort':              ('Abbrechen',                                   'Text for Cancel Button'),
+    'overscan':                 (0,                                             'Overscan Margin for TV Displays'),
+    'overscanDesc':             ('Overscan Kompensation',                       'Label Text for Overscan Margin for TV Displays Control'),
+    'overscanMax':              (5,                                             'Maximum Overscan Margin for TV Displays'),
 
     # Teams Settings
     'teamsPageCSS':             ('teams.css',                                   'CSS File for Site-specific Styling'),
@@ -246,6 +249,9 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'ownerUrlDesc',
             'questionIcon',
             'submitAbort',
+            'overscan',
+            'overscanDesc',
+            'overscanMax',
         ),
         'collapse': True
     },
