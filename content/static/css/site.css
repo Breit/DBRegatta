@@ -127,3 +127,9 @@
 .nav li.toggle:hover {
     background-color: var(--bs-gray-950) !important;
 }
+
+@media only screen and (max-device-width: 480px) {
+    .overscroll {
+        height: 10rem;
+    }
+}
