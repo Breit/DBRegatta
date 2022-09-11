@@ -1,27 +1,27 @@
 {% load filter_tags %}
 
 {% block rankings_heats %}
-    <div class="row border-bottom small text-muted mt-2">
+    <div class="row flex-nowrap border-bottom small text-muted mt-2">
         <div class="col-1 text-center rank_column">{{ config.displayRank }}</div>
         <div class="col">{{ config.timetableHeaderTeam }}</div>
         <div class="col-5 d-none d-xl-block">{{ config.timetableHeaderCompany }}</div>
         {% for h in entry.heats %}
-            <div class="col text-center d-none d-md-block times_column">{{ h }}</div>
+            <div class="col-auto text-center d-none d-md-block times_column">{{ h }}</div>
         {% endfor %}
-        <div class="col text-center times_column">{{ config.displaySumTime }}</div>
+        <div class="col-auto text-center times_column">{{ config.displaySumTime }}</div>
     </div>
     {% for b in entry.brackets %}
-        <div class="container-fluid border-bottom p-0{% if not forloop.last %} mb-4{% endif %}">
+        <div class="container-fluid p-0{% if not forloop.last %} mb-4{% endif %}">
             {% for r in entry.ranks %}
                 {% if r.races == b %}
-                    <div class="row rankings_table">
+                    <div class="row flex-nowrap rankings_table{% if forloop.parentloop.first or forloop.last %} border-bottom{% endif %}{% if not forloop.parentloop.first %} border-top{% endif %}">
                         <div class="col-1 text-center text-primary fw-bold rank_column">{% if r.races > 0 %}{{ r.rank }}{% endif %}</div>
                         <div class="col fw-bold">{{ r.name }}</div>
                         <div class="col-5 d-none d-xl-block">{{ r.company }}</div>
                         {% for t in r.times %}
-                            <div class="col text-center small d-none d-md-block times_column">{% if t > 0 %}{{ t|asTime }}{% else %}-{% endif %}</div>
+                            <div class="col-auto text-center small d-none d-md-block times_column">{% if t > 0 %}{{ t|asTime }}{% else %}-{% endif %}</div>
                         {% endfor %}
-                        <div class="col text-center{% if r.races > 0 %} fw-bold text-success{% endif %} times_column">{% if r.races > 0 %}{{ r.times|sumUp|asTime }}{% else %}-{% endif %}</div>
+                        <div class="col-auto text-center{% if r.races > 0 %} fw-bold text-success{% endif %} times_column">{% if r.races > 0 %}{{ r.times|sumUp|asTime }}{% else %}-{% endif %}</div>
                     </div>
                 {% endif %}
             {% endfor %}

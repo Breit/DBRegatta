@@ -507,21 +507,69 @@ def getHeatRankings():
 
     return rankingTable
 
+# get started/finished status of all heats in the DB
+def getHeatsStatus():
+    heats_started = []
+    heats_finished = []
+
+    # deduce heat count from DB
+    heats = Race.objects.filter(name__startswith = config.heatPrefix)
+    heatcount = len(set(sum([re.findall(r'{}(\d+)-\d+'.format(config.heatPrefix), heat.name) for heat in heats], [])))
+
+    # get status on all heat races
+    for i in range(heatcount):
+        heats_started.append([])
+        heats_finished.append([])
+
+        heat_races = Race.objects.filter(name__startswith = '{}{}-'.format(config.heatPrefix, i + 1)).order_by('time')
+        for race in heat_races:
+            assignments = RaceAssign.objects.filter(race_id = race.id)
+            heats_started[-1].append(any(assign.time > 0.0 for assign in assignments) and assignments.count() > 0)
+            heats_finished[-1].append(all(assign.time > 0.0 for assign in assignments) and assignments.count() > 0)
+
+    return heats_started, heats_finished
+
+# get race names for notifications
+#   last    - the last race that has been finished
+#   next    - the first occurence of a race that has not been started
+#   started - the first race that has been started, but not finished
+def getNextRaceName():
+    last = None
+    next = None
+    started = None
+    races = Race.objects.all().order_by('time')
+    for race in races:
+        assignments = RaceAssign.objects.filter(race_id=race.id)
+        finished = all([assign.time != 0.0 for assign in assignments]) and assignments.count()
+        running = any([assign.time != 0.0 for assign in assignments]) and assignments.count()
+        if not started and running and not finished:
+            started = race.name
+        elif not next and not running and not finished:
+            next = race.name
+        elif finished:
+            last = race.name
+
+    return started, next, last
+
 # get current race block (Heat# or Final) for notifications
 def getCurrentRaceBlock():
     current_race_block = None
-    heats_started = False
-    for i in range(config.heatCount):
-        races = getRaceTimes('{}{}-'.format(config.heatPrefix, i + 1))
-        if len(races) > 0 and all(['lanes' in race for race in races]):
-            if any([any(lane['time'] > 0.0 for lane in race['lanes']) for race in races]):
-                heats_started = True
-                if all([all(lane['time'] > 0.0 for lane in race['lanes']) for race in races]):
-                    # current heat already complete
-                    continue
-                current_race_block = '{}{}'.format(config.heatPrefix, i + 1)
-    if heats_started and current_race_block is None:
-        current_race_block = config.finalPrefix
+    heats_started, heats_finished = getHeatsStatus()
+
+    # return None if no heat is started at all
+    if not any(sum(heats_started, [])):
+        return None
+
+    # return finale prefix if all heats are finished
+    if all(sum(heats_started, [])) and all(sum(heats_finished, [])):
+        return config.finalPrefix
+
+    # figure out which heat is started, but not finished
+    for i, (_, finished) in enumerate(zip(heats_started, heats_finished)):
+        if all(finished):
+            continue
+        current_race_block = '{}{}'.format(config.heatPrefix, i + 1)
+        break
 
     return current_race_block
 
@@ -619,17 +667,7 @@ def getSiteData(id: str = None, user = None):
         'active': True if id == 'times' else False,
         'notifications': []
     }
-    last = None
-    started = None
-    races = Race.objects.all().order_by('time')
-    for race in races:
-        assignments = RaceAssign.objects.filter(race_id=race.id)
-        finished = all([r.time != 0.0 for r in assignments]) and assignments.count()
-        running = any([r.time != 0.0 for r in assignments]) and assignments.count()
-        if not started and running and not finished:
-            started = race.name
-        elif finished:
-            last = race.name
+    last, next, started = getNextRaceName()
     if started is not None:
         menu_times['notifications'].append(
             {
@@ -642,6 +680,13 @@ def getSiteData(id: str = None, user = None):
             {
                 'level': 'success',
                 'count': last
+            }
+        )
+    if next is not None:
+        menu_times['notifications'].append(
+            {
+                'level': 'danger',
+                'count': next
             }
         )
 
@@ -805,13 +850,14 @@ def getRaceTimes(raceType: str):
 
         # fill in ranks for finale
         if raceType == config.finalPrefix:
-            if len([lane for lane in entry['lanes'] if lane['finished']]) == lanesPerRace:
+            lanesInRace = len(entry['lanes']) if len(entry['lanes']) > 0 else lanesPerRace
+            if len([lane for lane in entry['lanes'] if lane['finished']]) == lanesInRace:
                 last_race = race.name == races_sorted[-1].name
                 for lane in entry['lanes']:
                     if not last_race and lane['place'] == 1:
                         continue
-                    lane['rank'] = rank_finale - (lanesPerRace - lane['place'])
-                rank_finale -= lanesPerRace if last_race else lanesPerRace - 1
+                    lane['rank'] = rank_finale - (lanesInRace - lane['place'])
+                rank_finale -= lanesInRace if last_race else lanesInRace - 1
 
         if all(item['finished'] for item in entry['lanes']):
             entry['status'] = 'finished'
@@ -874,7 +920,8 @@ def getFinalRankings():
                 )
 
         # fill in ranks for finale
-        if len([lane for lane in entry['lanes'] if lane['finished']]) == lanesPerRace:
+        lanesInRace = len(entry['lanes']) if len(entry['lanes']) > 0 else lanesPerRace
+        if len([lane for lane in entry['lanes'] if lane['finished']]) == lanesInRace:
             last_race = race.name == races_sorted[-1].name
             for lane in entry['lanes']:
                 if not last_race and lane['place'] == 1:
@@ -893,7 +940,7 @@ def getFinalRankings():
 
                 rankingTable['ranks'].append(
                     {
-                        'rank': rank_finale - (lanesPerRace - lane['place']),
+                        'rank': rank_finale - (lanesInRace - lane['place']),
                         'team': lane['team'].name,
                         'company': lane['team'].company,
                         'bt_heats': assignments_heats.first().time if assignments_heats.count() else None,
@@ -902,7 +949,7 @@ def getFinalRankings():
                         'races': assignments_finals.count(),
                     }
                 )
-            rank_finale -= lanesPerRace if last_race else lanesPerRace - 1
+            rank_finale -= lanesInRace if last_race else lanesInRace - 1
 
         # sort rankings
         rankingTable['ranks'].sort(key=lambda r: r['rank'])
@@ -930,10 +977,10 @@ def raceBlockFinished(raceType: str):
             finished.append(False)
     return all(finished)
 
-def getRaceResultsTableContent(heats: bool = True, finalRanks: bool = False):
+def getRaceResultsTableContent(heats: bool = True, heatsRankings: bool = True, finals: bool = True, finalRanks: bool = True):
     timetable = []
 
-    # decide if heats or rankings are returned
+    # heats results
     if heats:
         # get heats
         for i in range(config.heatCount):
@@ -950,28 +997,31 @@ def getRaceResultsTableContent(heats: bool = True, finalRanks: bool = False):
                         'type': 'heat'
                     }
                 )
-    else:
-        # get heat rankings
+
+    # get heat rankings
+    if heatsRankings:
         races = Race.objects.filter(name__startswith = config.heatPrefix).order_by('time')
         if len(races) > 0:
             timetable.append(getHeatRankings())
             timetable[-1]['time'] = races.last().time
 
-    # get finals
-    timetable.append(
-        {
-            'time': combineTimeOffset(
-                timetable[-1]['races'][-1]['time']
-                    if 'races' in timetable[-1] and len(timetable[-1]['races']) > 0
-                    else timetable[-1]['time'],
-                config.offsetFinale
-            ),
-            'desc': config.finaleTitle,
-            'races': getRaceTimes(config.finalPrefix),
-            'type': 'finale'
-        }
-    )
+    # finals results
+    if finals:
+        timetable.append(
+            {
+                'time': combineTimeOffset(
+                    timetable[-1]['races'][-1]['time']
+                        if 'races' in timetable[-1] and len(timetable[-1]['races']) > 0
+                        else timetable[-1]['time'],
+                    config.offsetFinale
+                ),
+                'desc': config.finaleTitle,
+                'races': getRaceTimes(config.finalPrefix),
+                'type': 'finale'
+            }
+        )
 
+    # finals rankings
     if finalRanks:
         timetable.append(getFinalRankings())
 
@@ -1130,14 +1180,14 @@ def getMainSettings():
         {
             'id': 'ownerUrl',
             'name': config.ownerUrlDesc,
-            'type': 'text',
+            'type': 'url',
             'value': config.ownerUrl,
             'icon': 'link-45deg'
         },
         {
             'id': 'sponsorUrl',
             'name': config.sponsorUrlDesc,
-            'type': 'text',
+            'type': 'url',
             'value': config.sponsorUrl,
             'icon': 'link-45deg'
         },
@@ -1154,6 +1204,20 @@ def getMainSettings():
             'type': 'image',
             'value': config.sponsorLogo,
             'icon': 'image'
+        },
+        {
+            'id': 'liveResultsHint',
+            'name': config.liveResultsHintDesc,
+            'type': 'text',
+            'value': config.liveResultsHint,
+            'icon': 'info-square'
+        },
+        {
+            'id': 'siteDomain',
+            'name': config.liveResultsDomainDesc,
+            'type': 'text',
+            'value': config.domain,
+            'icon': 'link'
         }
     ]
 
@@ -1209,6 +1273,7 @@ def populateFinals(race_assignment: RaceAssign = None):
 
         # create all race assignments for the finals if necessary
         # fill rankings to finals
+        # TODO: If a heat race gets modified, decide if the finals should be re-populated based on rankings from heats!
         attendees = RaceAssign.objects.filter(race_id__in=race_ids)
         if len(attendees) == 0:
             rankings = getRankings()

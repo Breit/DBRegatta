@@ -1,6 +1,10 @@
 {% extends 'main.html' %}
 {% load static %}
 
+{% block additionalJS %}
+    <script type="text/javascript" src="{% static 'js/' %}trainings.js"></script>
+{% endblock %}
+
 {% block content %}
     <div class="container-fluid">
         <h2 class="mt-2 mb-3">{{ config.trainingsTitle }}</h2>

@@ -42,7 +42,31 @@
     max-width: 6.5rem;
 }
 
+.times_double_column {
+    max-width: 13rem;
+}
+
 .rank_column {
     min-width: 4rem;
     max-width: 4rem;
+}
+
+.m-n1 {
+    margin: -0.25rem !important;
+}
+
+.mt-n1 {
+    margin-top: -0.25rem !important;
+}
+
+.mb-n1 {
+    margin-bottom: -0.25rem !important;
+}
+
+.ms-n1 {
+    margin-left: -0.25rem !important;
+}
+
+.me-n1 {
+    margin-right: -0.25rem !important;
 }

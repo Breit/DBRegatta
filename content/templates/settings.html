@@ -12,18 +12,18 @@
             <div class="row">
                 {% for c in controls %}
                     {% if c.type == 'date' %}
-                        <div class="col-2 mb-3 fixed_col">
+                        <div class="col-auto mb-3">
                             <form method="POST" action="" id="{{ c.id }}">
                                 {% csrf_token %}
                                 <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
-                                <div class="input-group rounded ">
+                                <div class="input-group rounded fixed_input">
                                     <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
                                     <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end" value="{{ c.value|date:'Y-m-d' }}" onchange="this.form.submit()">
                                 </div>
                             </form>
                         </div>
                     {% elif c.type == 'image' %}
-                        <div class="col-3 mb-3">
+                        <div class="col-12 col-md-6 col-lg-3 mb-3">
                             <form method="POST" action="" id="{{ c.id }}">
                                 {% csrf_token %}
                                 <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
@@ -33,17 +33,17 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="col-3 mb-3 mt-auto">
+                        <div class="col-12 col-md-6 col-lg-3 mb-3 mt-auto">
                             <div class="logo border bg-dark p-2 border-secondary text-center">
                                 <img src="{% static 'images/' %}{{ c.value }}" alt="{{ c.id }}">
                             </div>
                         </div>
                     {% elif c.type == 'checkbox' %}
-                        <div class="col-2 mb-3 fixed_col">
+                        <div class="col-auto mb-3">
                             <form method="POST" action="" id="{{ c.id }}">
                                 {% csrf_token %}
                                 <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
-                                <div class="input-group rounded ">
+                                <div class="input-group rounded fixed_input">
                                     <div class="input-group-text form-switch px-1 {% if f.errors %}input-error{% endif %}">
                                         <input type="hidden" name="{{ c.id }}" value="off">
                                         <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-check-input text-end pe-4" onchange="this.form.submit()" {% if c.value %}checked{% endif %}>
@@ -53,18 +53,18 @@
                             </form>
                         </div>
                     {% elif c.type == 'number' %}
-                        <div class="col-2 mb-3 fixed_col">
+                        <div class="col-auto mb-3">
                             <form method="POST" action="" id="{{ c.id }}">
                                 {% csrf_token %}
                                 <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
-                                <div class="input-group rounded ">
+                                <div class="input-group rounded fixed_input">
                                     <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
                                     <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end pe-4" value="{{ c.value }}"{% if c.min %} min="{{ c.min }}"{% endif %}{% if c.max %} max="{{ c.max }}"{% endif %} onchange="this.form.submit()">
                                 </div>
                             </form>
                         </div>
                     {% else %}
-                        <div class="{% if c.id == 'eventTitle' %}col-10{% else %}col-6{% endif %} mb-3">
+                        <div class="{% if c.id == 'eventTitle' %}col-12 col-xl-10{% else %}col-12 col-lg-6{% endif %} mb-3">
                             <form method="POST" action="" id="{{ c.id }}">
                                 {% csrf_token %}
                                 <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
@@ -84,7 +84,7 @@
         <div class="container-fluid mb-4 ps-0">
             <form method="POST" action="" id="dev_options_times_form">
                 {% csrf_token %}
-                <button type="button" name="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon btn_lg me-3" data-bs-toggle="modal" data-bs-target="#resetFinalsModal">
+                <button type="button" name="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon btn_lg me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetFinalsModal">
                     <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                         <div class="pe-2">
                             <img src="{% static 'images/' %}{{ config.resetFinalsIcon }}" alt="reset_finals">
@@ -92,7 +92,7 @@
                         <p class="m-0 ps-2 lead">{{ config.resetFinals }}</p>
                     </div>
                 </button>
-                <div class="modal fade" id="resetFinalsModal" tabindex="-1">
+                <div class="modal fade" id="resetFinalsModal" data-bs-backdrop="static" tabindex="-1">
                     <div class="modal-dialog text-dark">
                         <div class="modal-content">
                             <div class="modal-header bg-danger text-light">
@@ -124,7 +124,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" id="resetHeats" class="btn btn-danger btn_icon btn_lg" data-bs-toggle="modal" data-bs-target="#resetHeatsModal">
+                <button type="button" id="resetHeats" class="btn btn-danger btn_icon btn_lg mb-3" data-bs-toggle="modal" data-bs-target="#resetHeatsModal">
                     <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                         <div class="pe-2">
                             <img src="{% static 'images/' %}{{ config.resetHeatsIcon }}" alt="reset_heats">
@@ -132,7 +132,7 @@
                         <p class="m-0 ps-2 lead">{{ config.resetHeats }}</p>
                     </div>
                 </button>
-                <div class="modal fade" id="resetHeatsModal" tabindex="-1">
+                <div class="modal fade" id="resetHeatsModal" data-bs-backdrop="static" tabindex="-1">
                     <div class="modal-dialog text-dark">
                         <div class="modal-content">
                             <div class="modal-header bg-danger text-light">
@@ -166,7 +166,7 @@
                 </div>
             </form>
         </div>
-        <h3 class="mt-4 mb-2">{{ config.devOptionsDatabase }}</h3>
+        <h3 class="my-2">{{ config.devOptionsDatabase }}</h3>
         <div class="container-fluid mb-4 ps-0">
             <div class="d-inline-flex">
                 <form method="POST" action="" id="dev_options_db_form">
