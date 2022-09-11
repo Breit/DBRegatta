@@ -63,3 +63,7 @@
     min-width: 5rem;
     max-width: 5rem;
 }
+
+#liveClock {
+    min-width: 6.25rem;
+}

@@ -8,9 +8,9 @@
     max-width: 100%;
 }
 
-.fixed_col {
-    min-width: 12rem;
-    max-width: 12rem;
+.fixed_input {
+    min-width: 10.5rem;
+    max-width: 10.5rem;
 }
 
 input[type=number]::-webkit-inner-spin-button,

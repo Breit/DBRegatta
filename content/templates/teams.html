@@ -157,7 +157,7 @@
                                 <button type="button" id="delete_team" class="btn btn_team_table_icon p-0 ps-1" data-bs-toggle="modal" data-bs-target="#deleteTeamModal">
                                     <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_team">
                                 </button>
-                                <div class="modal fade" id="deleteTeamModal" tabindex="-1">
+                                <div class="modal fade" id="deleteTeamModal" data-bs-backdrop="static" tabindex="-1">
                                     <div class="modal-dialog text-dark">
                                         <div class="modal-content">
                                             <div class="modal-header bg-danger text-light">

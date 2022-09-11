@@ -19,7 +19,7 @@ def teams(request):
     if not request.user.is_authenticated:
         return redirect('/')
 
-    # handly menu folding
+    # handle menu folding
     if toggleFoldMenu(request):
         return redirect('/teams')
 
@@ -120,7 +120,7 @@ def trainings(request):
     if not request.user.is_authenticated:
         return redirect('/')
 
-    # handly menu folding
+    # handle menu folding
     if toggleFoldMenu(request):
         return redirect('/trainings')
 
@@ -135,7 +135,7 @@ def skippers(request):
     if not request.user.is_authenticated:
         return redirect('/')
 
-    # handly menu folding
+    # handle menu folding
     if toggleFoldMenu(request):
         return redirect('/skippers')
 
@@ -194,7 +194,7 @@ def timetable(request):
     # handle login/logout
     loginUser(request)
 
-    # handly menu folding
+    # handle menu folding
     if toggleFoldMenu(request):
         return redirect('/timetable')
 
@@ -253,7 +253,7 @@ def times(request):
     if not request.user.is_authenticated:
         return redirect('/')
 
-    # handly menu folding
+    # handle menu folding
     if toggleFoldMenu(request):
         return redirect('/times')
 
@@ -276,7 +276,7 @@ def times(request):
         siteData['controls'] = getTimesControls(request.GET['race_id'])
     else:
         siteData['controls'] = getTimesControls()
-    siteData['times'] = getRaceResultsTableContent()
+    siteData['times'] = getRaceResultsTableContent(heatsRankings = False, finalRanks = False)
 
     # handle POST requests
     if request.method == 'POST':
@@ -363,12 +363,12 @@ def results(request):
     if not config.activateResults and not request.user.is_authenticated:
         return redirect('/')
 
-    # handly menu folding
+    # handle menu folding
     if toggleFoldMenu(request):
         return redirect('/results')
 
     siteData = getSiteData('results', request.user)
-    siteData['results'] = getRaceResultsTableContent(heats=False, finalRanks=True)
+    siteData['results'] = getRaceResultsTableContent(heatsRankings = raceBlockStarted(config.heatPrefix), finalRanks = raceBlockStarted(config.finalPrefix))
     return render(request, 'results.html', siteData)
 
 def display(request):
@@ -379,7 +379,7 @@ def display(request):
     if not config.anonymousMonitor and not request.user.is_authenticated:
         return redirect('/')
 
-    # handly menu folding
+    # handle menu folding
     if toggleFoldMenu(request):
         return redirect('/display')
 
@@ -411,7 +411,7 @@ def settings(request):
     if not request.user.is_authenticated:
         return redirect('/')
 
-    # handly menu folding
+    # handle menu folding
     if toggleFoldMenu(request):
         return redirect('/settings')
 
@@ -446,6 +446,10 @@ def settings(request):
             config.ownerLogo = request.POST['ownerLogo']
         elif 'sponsorLogo' in request.POST:
             config.sponsorLogo = request.POST['sponsorLogo']
+        elif 'siteDomain' in request.POST:
+            config.domain = request.POST['siteDomain']
+        elif 'liveResultsHint' in request.POST:
+            config.liveResultsHint = request.POST['liveResultsHint']
         elif 'resetFinals' in request.POST:
             clearFinals()
             populateFinals()
@@ -466,7 +470,7 @@ def djadmin(request):
     if not request.user.is_authenticated and not request.user.is_superuser:
         return redirect('/')
 
-    # handly menu folding
+    # handle menu folding
     if toggleFoldMenu(request):
         return redirect('/djadmin')
 
@@ -480,7 +484,7 @@ def impressum(request):
     # handle login/logout
     loginUser(request)
 
-    # handly menu folding
+    # handle menu folding
     if toggleFoldMenu(request):
         return redirect('/impressum')
 

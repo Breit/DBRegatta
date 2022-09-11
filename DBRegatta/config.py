@@ -30,6 +30,7 @@ CONSTANCE_CONFIG = {
     'overscan':                 (0,                                             'Overscan Margin for TV Displays'),
     'overscanDesc':             ('Overscan Kompensation',                       'Label Text for Overscan Margin for TV Displays Control'),
     'overscanMax':              (5,                                             'Maximum Overscan Margin for TV Displays'),
+    'domain':                   ('',                                            'Domain Name of the Site'),
 
     # Teams Settings
     'teamsPageCSS':             ('teams.css',                                   'CSS File for Site-specific Styling'),
@@ -170,15 +171,14 @@ CONSTANCE_CONFIG = {
     'displayPageCSS':           ('display.css',                                 'CSS File for Site-specific Styling'),
     'displayTitle':             ('Race Monitor',                                'Menu Title for Display Page'),
     'displayIcon':              ('billboard.svg',                               'Menu Icon for Display Page'),
-    'displayInterval':          (10000,                                         'Time in Milliseconds for Slides on Display Page in Milliseconds'),
+    'displayInterval':          (10000,                                         'Time Interval for Slides on Display Page in Milliseconds'),
     'displayIntervalDesc':      ('Monitor Slide Intervall',                     'Description for Settings Page for Slides Interval on Display Page'),
     'displayDataRefresh':       (60000,                                         'Content Refresh Timer for Data on Display Page in Milliseconds'),
     'displayDataRefreshDesc':   ('Monitor Data Refresh',                        'Description for Content Refresh Timer for Data on Display Page'),
     'displayRankings':          ('Rangliste',                                   'Rankings Header on Display Page'),
     'displayRank':              ('Rang',                                        'Rank Header on Display Page'),
     'displaySumTime':           ('Zeitsumme',                                   'Total Time Header on Display Page'),
-    'displayBTHeats':           ('BT Vorrunde',                                 'Best Time Heats Header on Display Page'),
-    'displayBTFinals':          ('BT Finale',                                   'Best Time Finals Header on Display Page'),
+    'displayBestTime':          ('Schnellste Zeit',                             'Best Time Header on Display Page'),
     'displayFinalTime':         ('Zeit Finale',                                 'Finale Time Header on Display Page'),
     'displayRaces':             ('Finalrennen',                                 'Finale Races Count Header on Display Page'),
     'maxRacesPerPage':          (8,                                             'Maximum Number of Races to Show on Display Page'),
@@ -186,6 +186,9 @@ CONSTANCE_CONFIG = {
     'racesPerPageDesc':         ('Teil',                                        'Descriptive Text If Races Are Split Over More Pages on Display Page'),
     'anonymousMonitor':         (True,                                          'Allow Race Monitor Page for Unauthenticated Users'),
     'anonymousMonitorDesc':     ('Race Monitor annonym',                        'Description for Allow Race Monitor Page for Unauthenticated Users'),
+    'liveResultsHint':          ('Live-Ergebnisse auf:',                        'Live Results Hint at the Bottom of the Display Page'),
+    'liveResultsHintDesc':      ('Hinweistext für Live-Ergebnisse Race Monitor','Description for Live Results Hint at the Bottom of the Display Page'),
+    'liveResultsDomainDesc':    ('Link zu Live-Ergebnissen Race Monitor',       'Description for Live Results Hint Domain at the Bottom of the Display Page'),
 
     # Settings for Settings Page
     'settingsPageCSS':          ('settings.css',                                'CSS File for Site-specific Styling'),
@@ -252,6 +255,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'overscan',
             'overscanDesc',
             'overscanMax',
+            'domain',
         ),
         'collapse': True
     },
@@ -420,8 +424,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'displayRankings',
             'displayRank',
             'displaySumTime',
-            'displayBTHeats',
-            'displayBTFinals',
+            'displayBestTime',
             'displayRaces',
             'displayFinalTime',
             'maxRacesPerPage',
@@ -429,6 +432,9 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'racesPerPageDesc',
             'anonymousMonitor',
             'anonymousMonitorDesc',
+            'liveResultsHint',
+            'liveResultsHintDesc',
+            'liveResultsDomainDesc',
         ),
         'collapse': True
     },

@@ -91,7 +91,7 @@
                                     <button type="button" class="btn btn_skipper_table_icon p-0 ps-1" data-bs-toggle="modal" data-bs-target="#deleteSkipperModal_{{ skipper.id }}">
                                         <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_team">
                                     </button>
-                                    <div class="modal fade" id="deleteSkipperModal_{{ skipper.id }}" tabindex="-1">
+                                    <div class="modal fade" id="deleteSkipperModal_{{ skipper.id }}" data-bs-backdrop="static" tabindex="-1">
                                         <div class="modal-dialog text-dark">
                                             <div class="modal-content">
                                                 <div class="modal-header bg-danger text-light">
