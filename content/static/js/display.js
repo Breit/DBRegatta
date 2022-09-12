@@ -3,7 +3,7 @@ $(document).ready(
     {
         window.setInterval(
             function() {
-                $("#liveClock").html(new Date().toLocaleTimeString());
+                $("#liveClock").html(new Date().toLocaleTimeString('de-DE'));
             },
             1000
         );

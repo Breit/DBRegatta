@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
+    <div class="container-fluid bg-light sticky-top pt-1">
         <h2 class="mt-2 mb-3">{{ config.editTeamHeader }}</h2>
         {% if content.forms.mod %}
             <div class="d-flex align-items-start w-50 team_form">
@@ -114,15 +114,15 @@
                     <div class="col">
                         <span class="fw-bold{% if t.active and not t.wait %} text-success{% elif t.active and t.wait %} text-warning{% else %} text-muted{% endif %}">{{ t.name }}</span>
                         <br>
-                        <span>{{ t.company }}</span>
+                        <span class="small">{{ t.company }}</span>
                     </div>
                     <div class="col d-none d-md-block">
                         <span>{{ t.contact }}</span>
                         <br>
-                        <a href= "mailto:{{ t.email }}">{{ t.email }}</a>
+                        <a href= "mailto:{{ t.email }}" class="small">{{ t.email }}</a>
                     </div>
-                    <div class="col d-none d-xxl-block">{{ t.address|linebreaks }}</div>
-                    <div class="col-2 d-none d-xl-block">{{ t.phone }}</div>
+                    <div class="col d-none d-xxl-block small">{{ t.address|linebreaks }}</div>
+                    <div class="col-2 d-none d-xl-block small">{{ t.phone }}</div>
                     <div class="col-1 d-none d-lg-block team_table_date text-center">{{ t.date|date:'d.m.Y' }}</div>
                     <div class="col-1 px-2 text-center team_table_buttons">
                         <div class="row m-0 flex-nowrap">

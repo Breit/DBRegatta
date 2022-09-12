@@ -12,13 +12,13 @@
             <div class="row">
                 {% for c in controls %}
                     {% if c.type == 'date' %}
-                        <div class="col-auto mb-3">
+                        <div class="col mb-3">
                             <form method="POST" action="" id="{{ c.id }}">
                                 {% csrf_token %}
                                 <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
                                 <div class="input-group rounded fixed_input">
                                     <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
-                                    <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end" value="{{ c.value|date:'Y-m-d' }}" onchange="this.form.submit()">
+                                    <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end ps-0" value="{{ c.value|date:'Y-m-d' }}" onchange="this.form.submit()">
                                 </div>
                             </form>
                         </div>
@@ -39,7 +39,7 @@
                             </div>
                         </div>
                     {% elif c.type == 'checkbox' %}
-                        <div class="col-auto mb-3">
+                        <div class="col mb-3">
                             <form method="POST" action="" id="{{ c.id }}">
                                 {% csrf_token %}
                                 <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
@@ -53,7 +53,7 @@
                             </form>
                         </div>
                     {% elif c.type == 'number' %}
-                        <div class="col-auto mb-3">
+                        <div class="col mb-3">
                             <form method="POST" action="" id="{{ c.id }}">
                                 {% csrf_token %}
                                 <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
@@ -64,7 +64,7 @@
                             </form>
                         </div>
                     {% else %}
-                        <div class="{% if c.id == 'eventTitle' %}col-12 col-xl-10{% else %}col-12 col-lg-6{% endif %} mb-3">
+                        <div class="{% if c.id == 'eventTitle' %}col-12 col-xxl-10{% else %}col-12 col-lg-6{% endif %} mb-3">
                             <form method="POST" action="" id="{{ c.id }}">
                                 {% csrf_token %}
                                 <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>

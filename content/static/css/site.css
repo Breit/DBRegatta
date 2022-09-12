@@ -6,10 +6,12 @@
     --bs-primary-100: #cfe2ff;
     --bs-primary-200: #9ec5fe;
     --bs-primary-300: #6ea8fe;
+    --bs-header-zindex: 1030;
 }
 
 .header {
     border-color: var(--bs-gray-800) !important;
+    z-index: var(--bs-header-zindex) !important;
 }
 
 .header img{
@@ -62,6 +64,22 @@
     width: 17rem;
 }
 
+.btn_collapse {
+    height: 2rem;
+}
+
+.btn_collapse:hover {
+    background-color:rgba(0, 0, 0, 0.1);
+}
+
+.btn_collapse[aria-expanded=false] .icon_expanded {
+    display: none;
+}
+
+.btn_collapse[aria-expanded=true] .icon_collapsed {
+    display: none;
+}
+
 .btn_lg {
     width: 19rem !important;
 }
@@ -87,7 +105,7 @@
 }
 
 .modal-backdrop {
-    z-index: 0;
+    z-index: calc(var(--bs-header-zindex) - 1) !important;
 }
 
 .bg-gray-200 {

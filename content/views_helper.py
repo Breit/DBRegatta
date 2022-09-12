@@ -540,16 +540,16 @@ def getNextRaceName():
     races = Race.objects.all().order_by('time')
     for race in races:
         assignments = RaceAssign.objects.filter(race_id=race.id)
-        finished = all([assign.time != 0.0 for assign in assignments]) and assignments.count()
-        running = any([assign.time != 0.0 for assign in assignments]) and assignments.count()
-        if not started and running and not finished:
-            started = race.name
-        elif not next and not running and not finished:
-            next = race.name
-        elif finished:
+        finished = all([assign.time != 0.0 for assign in assignments]) and assignments.count() > 0
+        running = any([assign.time != 0.0 for assign in assignments]) and assignments.count() > 0
+        if finished:
             last = race.name
-
-    return started, next, last
+        else:
+            if not started and running:
+                started = race.name
+            elif not next and not running and not finished:
+                next = race.name
+    return last, next, started
 
 # get current race block (Heat# or Final) for notifications
 def getCurrentRaceBlock():

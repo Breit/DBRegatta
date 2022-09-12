@@ -9,8 +9,7 @@
 }
 
 .fixed_input {
-    min-width: 10.5rem;
-    max-width: 10.5rem;
+    min-width: 10.35rem;
 }
 
 input[type=number]::-webkit-inner-spin-button,
