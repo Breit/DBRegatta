@@ -1,0 +1,13 @@
+TODO: DBRegatta
+- Divide settings into sub-sections
+- Javascript for settings
+- Javascript for times
+- Javascript for teams
+- Javascript for skippers
+- Javascript for timetable
+- Reset Button / Delete Teams and Races
+- Landing page with registration button for teams
+- Open/Close registration button
+- Default to results for un-auth users after races are finished
+- Trainings Page
+- PDF Export

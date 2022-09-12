@@ -6,49 +6,25 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid bg-light sticky-top pt-1">
-        <h2 class="mt-2 mb-3">{{ config.editTeamHeader }}</h2>
-        {% if content.forms.mod %}
-            <div class="d-flex align-items-start w-50 team_form">
-                <form method="POST" action="" id="mod_form">
-                    {% include 'team_form.html' %}
-                </form>
-            </div>
-            <div class="d-flex align-items-start mt-3">
-                <button type="submit" name="mod_team" value="Submit" class="btn btn-primary btn_icon me-3" form="mod_form">
-                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                        <div class="pe-2">
-                            <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="add_team">
-                        </div>
-                        <p class="m-0 ps-2 lead">{{ config.submitEditTeam }}</p>
-                    </div>
-                </button>
-                <button type="submit" name="cancel_team" value="Cancel" class="btn btn-primary btn_icon" form="mod_form" formnovalidate>
-                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                        <div class="pe-2">
-                            <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_team">
-                        </div>
-                        <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
-                    </div>
-                </button>
-            </div>
-        {% else %}
-            {% if content.forms.add %}
-                <div class="d-flex align-items-start w-50 team_form">
-                    <form method="POST" action="" id="add_form">
+    <div class="container-fluid bg-light sticky-top">
+        <div class="pb-3 pt-1 border-bottom border-3 collapse show" id="collapseControls">
+            <h2 class="mt-2 mb-3">{{ config.editTeamHeader }}</h2>
+            {% if content.forms.mod %}
+                <div class="d-flex align-items-start team_form">
+                    <form method="POST" action="" id="mod_form">
                         {% include 'team_form.html' %}
                     </form>
                 </div>
                 <div class="d-flex align-items-start mt-3">
-                    <button type="submit" name="add_team" value="Submit" class="btn btn-primary btn_icon me-3" form="add_form">
+                    <button type="submit" name="mod_team" value="Submit" class="btn btn-primary btn_icon me-3" form="mod_form">
                         <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div class="pe-2">
                                 <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="add_team">
                             </div>
-                            <p class="m-0 ps-2 lead">{{ config.submitAddTeam }}</p>
+                            <p class="m-0 ps-2 lead">{{ config.submitEditTeam }}</p>
                         </div>
                     </button>
-                    <button type="submit" name="cancel_team" value="Cancel" class="btn btn-primary btn_icon" form="add_form" formnovalidate>
+                    <button type="submit" name="cancel_team" value="Cancel" class="btn btn-primary btn_icon" form="mod_form" formnovalidate>
                         <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div class="pe-2">
                                 <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_team">
@@ -58,22 +34,51 @@
                     </button>
                 </div>
             {% else %}
-                <div class="d-flex align-items-start mt-3">
-                    <form method="POST" action="" id="none_form">
-                        {% csrf_token %}
-                        <button type="submit" name="show_add_form" value="Add" class="btn btn-primary btn_icon btn_lg">
+                {% if content.forms.add %}
+                    <div class="d-flex align-items-start">
+                        <form method="POST" action="" id="add_form">
+                            {% include 'team_form.html' %}
+                        </form>
+                    </div>
+                    <div class="d-flex align-items-start mt-3">
+                        <button type="submit" name="add_team" value="Submit" class="btn btn-primary btn_icon me-3" form="add_form">
                             <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                 <div class="pe-2">
-                                    <img src="{% static 'images/' %}{{ config.addTeamIcon }}" alt="add_team">
+                                    <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="add_team">
                                 </div>
-                                <p class="m-0 ps-2 lead">{{ config.addTeam }}</p>
+                                <p class="m-0 ps-2 lead">{{ config.submitAddTeam }}</p>
                             </div>
                         </button>
-                    </form>
-                </div>
+                        <button type="submit" name="cancel_team" value="Cancel" class="btn btn-primary btn_icon" form="add_form" formnovalidate>
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div class="pe-2">
+                                    <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_team">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                            </div>
+                        </button>
+                    </div>
+                {% else %}
+                    <div class="d-flex align-items-start mt-3">
+                        <form method="POST" action="" id="none_form">
+                            {% csrf_token %}
+                            <button type="submit" name="show_add_form" value="Add" class="btn btn-primary btn_icon btn_lg">
+                                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                    <div class="pe-2">
+                                        <img src="{% static 'images/' %}{{ config.addTeamIcon }}" alt="add_team">
+                                    </div>
+                                    <p class="m-0 ps-2 lead">{{ config.addTeam }}</p>
+                                </div>
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
             {% endif %}
-        {% endif %}
-        <div class="container-fluid border-bottom pt-3 mb-4"></div>
+        </div>
+        <button type="submit" name="refreshTimes" value="Refresh" class="btn btn_collapse float-end mt-1 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#collapseControls"  aria-expanded="true">
+            <i class="bi bi-chevron-compact-up icon_expanded"></i>
+            <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+        </button>
     </div>
     <div class="container-fluid">
         <div class="team_header">

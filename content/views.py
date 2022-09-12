@@ -457,6 +457,12 @@ def settings(request):
             clearHeatTimes()
         elif 'backupDatabase' in request.POST:
             backupDataBase()
+        elif 'resetTeams' in request.POST:
+            # TODO
+            pass
+        elif 'resetSkippers' in request.POST:
+            # TODO
+            pass
         elif 'displayOverscan' in request.POST:
             config.overscan = int(request.POST['displayOverscan'])
         return redirect('/settings')

@@ -44,7 +44,7 @@ class TeamForm(ModelForm):
             ),
             'date': forms.DateInput(
                 attrs = {
-                    'class': 'form-control',
+                    'class': 'form-control text-end px-1',
                     'placeholder': config.placeholderTeamSignupDate,
                     'type': 'date'
                 }

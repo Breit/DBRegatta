@@ -8,7 +8,7 @@
 {% block content %}
     <div class="container-fluid">
         <h2 class="my-2">{{ config.settingsTitle }}</h2>
-        <div class="d-flex align-items-start timetable_form">
+        <div class="pt-1 border-bottom border-3 align-items-start">
             <div class="row">
                 {% for c in controls %}
                     {% if c.type == 'date' %}
@@ -34,7 +34,7 @@
                             </form>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 mb-3 mt-auto">
-                            <div class="logo border bg-dark p-2 border-secondary text-center">
+                            <div class="logo border bg-dark p-2 border-secondary border-1 text-center">
                                 <img src="{% static 'images/' %}{{ c.value }}" alt="{{ c.id }}">
                             </div>
                         </div>
@@ -78,7 +78,6 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="container-fluid border-bottom pt-3 mb-4"></div>
         <h2 class="my-2">{{ config.settingsAdvancedHeader }}</h2>
         <h3 class="mt-4 mb-2">{{ config.devOptionsTimetable }}</h3>
         <div class="container-fluid mb-4 ps-0">
@@ -166,8 +165,103 @@
                 </div>
             </form>
         </div>
-        <h3 class="my-2">{{ config.devOptionsDatabase }}</h3>
+
+
+
+
+        <h3 class="mt-4 mb-2">{{ config.devOptionsData }}</h3>
         <div class="container-fluid mb-4 ps-0">
+            <form method="POST" action="" id="dev_options_data_form">
+                {% csrf_token %}
+                <button type="button" name="resetSkippers" value="ResetSkippers" class="btn btn-danger btn_icon btn_lg me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetSkippersModal">
+                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                        <div class="pe-2">
+                            <img src="{% static 'images/' %}{{ config.resetSkippersIcon }}" alt="reset_skippers">
+                        </div>
+                        <p class="m-0 ps-2 lead">{{ config.resetSkippers }}</p>
+                    </div>
+                </button>
+                <div class="modal fade" id="resetSkippersModal" data-bs-backdrop="static" tabindex="-1">
+                    <div class="modal-dialog text-dark">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger text-light">
+                                <h5 class="modal-title" id="resetSkippersLabel">{{ config.resetSkippers }}</h5>
+                                <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                                <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                                <div class="container">{{ config.warningResetSkippers|linebreaks }}</div>
+                            </div>
+                            <div class="modal-footer justify-content-center bg-gray-200">
+                                <button type="submit" name="resetSkippers" value="ResetSkippers" class="btn btn-danger btn_icon btn_lg" form="dev_options_data_form">
+                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                        <div class="pe-2">
+                                            <img src="{% static 'images/' %}{{ config.resetSkippersIcon }}" alt="reset_skippers">
+                                        </div>
+                                        <p class="m-0 ps-2 lead">{{ config.resetSkippers }}</p>
+                                    </div>
+                                </button>
+                                <button type="button" name="cancelResetSkippers" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
+                                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                        <div>
+                                            <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelResetSkippers" class="p-0">
+                                        </div>
+                                        <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" id="resetTeams" class="btn btn-danger btn_icon btn_lg mb-3" data-bs-toggle="modal" data-bs-target="#resetTeamsModal">
+                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                        <div class="pe-2">
+                            <img src="{% static 'images/' %}{{ config.resetTeamsIcon }}" alt="reset_teams">
+                        </div>
+                        <p class="m-0 ps-2 lead">{{ config.resetTeams }}</p>
+                    </div>
+                </button>
+                <div class="modal fade" id="resetTeamsModal" data-bs-backdrop="static" tabindex="-1">
+                    <div class="modal-dialog text-dark">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger text-light">
+                                <h5 class="modal-title" id="resetTeamsLabel">{{ config.resetTeams }}</h5>
+                                <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                                <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                                <div class="container">{{ config.warningResetTeams|linebreaks }}</div>
+                            </div>
+                            <div class="modal-footer justify-content-center bg-gray-200">
+                                <button type="submit" name="resetTeams" value="ResetTeams" class="btn btn-danger btn_icon btn_lg" form="dev_options_times_form">
+                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                        <div class="pe-2">
+                                            <img src="{% static 'images/' %}{{ config.resetTeamsIcon }}" alt="reset_teams">
+                                        </div>
+                                        <p class="m-0 ps-2 lead">{{ config.resetTeams }}</p>
+                                    </div>
+                                </button>
+                                <button type="button" name="cancelResetTeams" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
+                                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                        <div>
+                                            <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelResetTeams" class="p-0">
+                                        </div>
+                                        <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+
+
+
+        <h3 class="my-2">{{ config.devOptionsDatabase }}</h3>
+        <div class="container-fluid pb-3 ps-0 pt-1 align-items-start">
             <div class="d-inline-flex">
                 <form method="POST" action="" id="dev_options_db_form">
                     {% csrf_token %}
@@ -185,7 +279,6 @@
                 <p class="float-left m-0 ps-2 lead">Letztes Backup: <strong class="{% if not lastBackup %}text-danger{% else %}text-success{% endif %}">{% if lastBackup %}{{ lastBackup }}{% else %}{{ config.noBackup }}{% endif %}</strong></p>
             </div>
         </div>
-        <div class="container-fluid border-bottom pt-3 mb-4"></div>
     </div>
     <div class="container-fluid overscroll"></div>
 {% endblock %}
