@@ -65,11 +65,13 @@
 }
 
 .btn_collapse {
-    height: 2rem;
+    opacity: 0.3;
 }
 
 .btn_collapse:hover {
-    background-color:rgba(0, 0, 0, 0.1);
+    color: var(--bs-primary) !important;
+    background-color:rgba(0, 0, 0, 0.05);
+    opacity: 1.0;
 }
 
 .btn_collapse[aria-expanded=false] .icon_expanded {
@@ -148,6 +150,6 @@
 
 @media only screen and (max-device-width: 480px) {
     .overscroll {
-        height: 10rem;
+        height: 15rem;
     }
 }

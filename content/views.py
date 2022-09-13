@@ -8,7 +8,10 @@ def main(request):
     loginUser(request)
 
     if not request.user.is_authenticated:
-        return redirect('/timetable')
+        if raceBlockFinished(config.finalPrefix):
+            return redirect('/results')
+        else:
+            return redirect('/timetable')
     else:
         return redirect('/times')
 
@@ -458,11 +461,9 @@ def settings(request):
         elif 'backupDatabase' in request.POST:
             backupDataBase()
         elif 'resetTeams' in request.POST:
-            # TODO
-            pass
+            clearTeams()
         elif 'resetSkippers' in request.POST:
-            # TODO
-            pass
+            clearSkippers()
         elif 'displayOverscan' in request.POST:
             config.overscan = int(request.POST['displayOverscan'])
         return redirect('/settings')

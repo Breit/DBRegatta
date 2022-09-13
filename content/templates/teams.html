@@ -83,23 +83,25 @@
     <div class="container-fluid">
         <div class="team_header">
             <h2 class="mt-2 mb-3">{{ config.teamListHeader }}</h2>
-            <div class="progress mb-4 border">
-                {% if content.activeTeams %}
-                    <div class="progress-bar team_active bg-success fw-bold text-dark" role="progressbar" style="width: calc(100% * {{ content.activeTeams }} / {{ content.totalTeams }})">
-                        {{ content.activeTeams }} {{ config.activeTeams }}
-                    </div>
-                {% endif %}
-                {% if content.waitlistTeams %}
-                    <div class="progress-bar team_wait bg-warning fw-bold text-dark" role="progressbar" style="width: calc(100% * {{ content.waitlistTeams }} / {{ content.totalTeams }})">
-                        {{ content.waitlistTeams }} {{ config.waitlistTeams }}
-                    </div>
-                {% endif %}
-                {% if content.inactiveTeams %}
-                    <div class="progress-bar team_inactive bg-secondary fw-bold text-dark" role="progressbar" style="width: calc(100% * {{ content.inactiveTeams }} / {{ content.totalTeams }})">
-                        {{ content.inactiveTeams }} {{ config.inactiveTeams }}
-                    </div>
-                {% endif %}
-            </div>
+            {% if content.teams %}
+                <div class="progress mb-4 border">
+                    {% if content.activeTeams %}
+                        <div class="progress-bar team_active bg-success fw-bold text-dark" role="progressbar" style="width: calc(100% * {{ content.activeTeams }} / {{ content.totalTeams }})">
+                            {{ content.activeTeams }} {{ config.activeTeams }}
+                        </div>
+                    {% endif %}
+                    {% if content.waitlistTeams %}
+                        <div class="progress-bar team_wait bg-warning fw-bold text-dark" role="progressbar" style="width: calc(100% * {{ content.waitlistTeams }} / {{ content.totalTeams }})">
+                            {{ content.waitlistTeams }} {{ config.waitlistTeams }}
+                        </div>
+                    {% endif %}
+                    {% if content.inactiveTeams %}
+                        <div class="progress-bar team_inactive bg-secondary fw-bold text-dark" role="progressbar" style="width: calc(100% * {{ content.inactiveTeams }} / {{ content.totalTeams }})">
+                            {{ content.inactiveTeams }} {{ config.inactiveTeams }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
         <div class="container-fluid pt-0 mb-3">
             {% if content.teams %}

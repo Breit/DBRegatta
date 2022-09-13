@@ -297,9 +297,7 @@ def getTimeTableContent():
 
 def createTimeTable():
     # drop existing races
-    RaceAssign.objects.all().delete()
-    Race.objects.all().delete()
-    RaceDrawMode.objects.all().delete()
+    clearRaces()
 
     # create race tables for heats
     start = combineTimeOffset(config.timeBegin, config.offsetHeat)
@@ -1007,19 +1005,20 @@ def getRaceResultsTableContent(heats: bool = True, heatsRankings: bool = True, f
 
     # finals results
     if finals:
-        timetable.append(
-            {
-                'time': combineTimeOffset(
-                    timetable[-1]['races'][-1]['time']
-                        if 'races' in timetable[-1] and len(timetable[-1]['races']) > 0
-                        else timetable[-1]['time'],
-                    config.offsetFinale
-                ),
-                'desc': config.finaleTitle,
-                'races': getRaceTimes(config.finalPrefix),
-                'type': 'finale'
-            }
-        )
+        if len(timetable) > 0:
+            timetable.append(
+                {
+                    'time': combineTimeOffset(
+                        timetable[-1]['races'][-1]['time']
+                            if 'races' in timetable[-1] and len(timetable[-1]['races']) > 0
+                            else timetable[-1]['time'],
+                        config.offsetFinale
+                    ),
+                    'desc': config.finaleTitle,
+                    'races': getRaceTimes(config.finalPrefix),
+                    'type': 'finale'
+                }
+            )
 
     # finals rankings
     if finalRanks:
@@ -1296,22 +1295,23 @@ def populateFinals(race_assignment: RaceAssign = None):
 # CAUTION: Developer Tools !!!
 # remove all finals including racing times from the DB
 def clearFinals():
+    # get race IDs for finale races
     races = Race.objects.filter(name__startswith = config.finalPrefix)
     race_ids = [race.id for race in races]
-    attendees = RaceAssign.objects.filter(race_id__in=race_ids)
-    if len(attendees) > 0:
-        for attendee in attendees:
-            attendee.delete()
 
-# remove all finals including racing times from the DB
-def clearHeats():
-    clearFinals()
-    races = Race.objects.filter(name__startswith = config.heatPrefix)
-    race_ids = [race.id for race in races]
-    attendees = RaceAssign.objects.filter(race_id__in=race_ids)
-    if len(attendees) > 0:
-        for attendee in attendees:
-            attendee.delete()
+    # delete all finale assignments
+    RaceAssign.objects.filter(race_id__in=race_ids).delete()
+
+# remove all heats including racing times from the DB including finals and race assignments
+def clearRaces():
+    # delete all race assignments for the heats
+    RaceAssign.objects.all().delete()
+
+    # delete all race draw modes
+    RaceDrawMode.objects.all().delete()
+
+    # remove all races
+    Race.objects.all().delete()
 
 # remove all heat racing times from the DB and clear all finals
 def clearHeatTimes():
@@ -1361,3 +1361,20 @@ def getImpressumData():
     except:
         pass
     return impressum
+
+def clearSkippers():
+    # clear all skippers from race assignments
+    assignments = RaceAssign.objects.all()
+    for assignment in assignments:
+        assignment.skipper_id = None
+        assignment.save()
+
+    # empty skipper DB
+    Skipper.objects.all().delete()
+
+def clearTeams():
+    # clear all heats and finals including race assignments
+    clearRaces()
+
+    # empty team DB
+    Team.objects.all().delete()
