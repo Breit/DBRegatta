@@ -19,13 +19,22 @@ from .forms import TeamForm, PostForm, SkipperForm
 
 def loginUser(request, site: str = ''):
     if request.method == "POST":
+        log_action= False
         if 'login' in request.POST:
             user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
             if user is not None:
                 login(request, user)
-
-        if 'logout' in request.POST:
+                log_action = True
+        elif 'logout' in request.POST:
             logout(request)
+            log_action = True
+
+        # revert to default menu fold status
+        if log_action:
+            if request.user.is_authenticated:
+                request.session['fold_menu'] = False
+            else:
+                request.session['fold_menu'] = True
 
 def toggleFoldMenu(request):
     # handly menu folding
