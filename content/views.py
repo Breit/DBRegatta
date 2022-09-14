@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.http.response import HttpResponseRedirect
 
 from .views_helper import *
+
+def handler404(request, *args, **kwargs):
+    return HttpResponseRedirect('/')
 
 def main(request):
     # handle login/logout
@@ -30,89 +34,81 @@ def teams(request):
     siteData['content'] = getTeamContent()
 
     if request.method == 'POST':
-        # activate the add-new-team form
-        if 'show_add_form' in request.POST:
-            siteData['content']['forms']['add'] = True
-
         # submit a new team
-        elif 'add_team' in request.POST:
+        if 'add_team' in request.POST:
             newTeamForm = TeamForm(request.POST)
             if Team.objects.filter(name=request.POST['name']).exists():
-                siteData['content']['forms']['add'] = True
-                siteData['content']['forms']['form'] = newTeamForm
+                siteData['content']['form'] = newTeamForm
             if newTeamForm['date'].data == '':
-                siteData['content']['forms']['add'] = True
-                siteData['content']['forms']['form'] = newTeamForm
+                siteData['content']['form'] = newTeamForm
                 newTeamForm.add_error('date', 'Date missing')
             elif newTeamForm.is_valid():
                 newTeamForm.save()
-                siteData['content'] = getTeamContent()              # refresh from DB
                 return redirect('/teams')
-
-        # abort submitting teams changes
-        elif 'cancel_team' in request.POST:
-            return redirect('/teams')
 
         # toggle team activation
         elif 'activate_team' in request.POST:
-            if Team.objects.filter(name=request.POST['activate_team']).exists():
-                modTeam = Team.objects.get(name=request.POST['activate_team'])
+            try:
+                modTeam = Team.objects.get(id = request.POST['activate_team'])
+            except:
+                modTeam = None
+            if modTeam:
                 modTeam.active = not modTeam.active
+                modTeam.wait = modTeam.active
                 modTeam.save()
-                siteData['content'] = getTeamContent()              # refresh from DB
             return redirect('/teams')
 
         # toggle team waitlist
         elif 'waitlist_team' in request.POST:
-            if Team.objects.filter(name=request.POST['waitlist_team']).exists():
-                modTeam = Team.objects.get(name=request.POST['waitlist_team'])
+            try:
+                modTeam = Team.objects.get(id = request.POST['waitlist_team'])
+            except:
+                modTeam = None
+            if modTeam:
                 modTeam.wait = not modTeam.wait
                 if modTeam.wait:
                     modTeam.active = True
                 modTeam.save()
-                siteData['content'] = getTeamContent()              # refresh from DB
             return redirect('/teams')
 
         # delete team from database
         elif 'delete_team' in request.POST:
-            if Team.objects.filter(name = request.POST['delete_team']).exists():
-                modTeam = Team.objects.get(name = request.POST['delete_team'])
-                modTeam.delete()
-                siteData['content'] = getTeamContent()              # refresh from DB
+            try:
+                delTeam = Team.objects.get(id = request.POST['delete_team'])
+            except:
+                delTeam = None
+            if delTeam:    # also delete all race assignements with the team as well
+                assignments = RaceAssign.objects.filter(team_id=delTeam.id)
+                for assignment in assignments:
+                    assignment.delete()
+                delTeam.delete()
             return redirect('/teams')
 
         # show edit team form
         elif 'edit_team' in request.POST:
-            if Team.objects.filter(id = request.POST['edit_team']).exists():
-                return redirect('/teams?edit_id={}'.format(request.POST['edit_team']))
+            try:
+                modTeam = Team.objects.get(id = request.POST['edit_team'])
+            except:
+                modTeam = None
+            if modTeam:
+                siteData['content']['form'] = TeamForm(instance = modTeam)
 
         # submit_mod_team
         elif 'mod_team' in request.POST:
-            if 'edit_id' in request.GET:
-                if Team.objects.filter(id=request.GET['edit_id']).exists():
-                    modTeamForm = TeamForm(
-                        request.POST,
-                        instance = Team.objects.get(id = request.GET['edit_id'])
-                    )
-                    if modTeamForm.is_valid():
-                        modTeamForm.save()
-                        siteData['content'] = getTeamContent()      # refresh from DB
-                        return redirect('/teams')
-                    else:
-                        siteData['content']['forms']['mod'] = True
-                        siteData['content']['forms']['form'] = modTeamForm
-                        siteData['content']['forms']['id'] = int(request.GET['edit_id'])
-    else:  # handle request.GET
-        # prepare form for modifying a team
-        if 'edit_id' in request.GET:
             try:
-                team = Team.objects.get(id = request.GET['edit_id'])
+                modTeam = Team.objects.get(id = request.POST['mod_team'])
             except:
-                team = None
-            if team:
-                siteData['content']['forms']['mod'] = True
-                siteData['content']['forms']['form'] = TeamForm(instance = team)
-                siteData['content']['forms']['id'] = team.id
+                modTeam = None
+            if modTeam:
+                modTeamForm = TeamForm(
+                    request.POST,
+                    instance = modTeam
+                )
+                if modTeamForm.is_valid():
+                    modTeamForm.save()
+                    return redirect('/teams')
+                else:
+                    siteData['content']['form'] = modTeamForm
 
     return render(request, 'teams.html', siteData)
 

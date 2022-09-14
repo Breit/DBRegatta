@@ -68,12 +68,7 @@ def getTeamContent():
     content['waitlistTeams'] = waitingTeams.count()
     content['inactiveTeams'] = inactiveTeams.count()
     content['totalTeams'] = Team.objects.all().count()
-    content['forms'] = {
-        'form': TeamForm(),
-        'add': False,
-        'mod': False,
-        'id': None
-    }
+    content['form'] = TeamForm()
     return content
 
 def getSkipperList():

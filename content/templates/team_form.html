@@ -1,11 +1,10 @@
 {% load static %}
 
 {% block team_form %}
-    {% csrf_token %}
     <div class="row">
-        {% for f in content.forms.form %}
+        {% for f in content.form %}
             {% if f.field.widget.input_type == 'checkbox' %}
-            <div class="col-12 col-sm-6 col-md-4 col-xl-2 mb-3">
+            <div class="col-12 col-sm-6 col-lg-4 mb-3">
                 <div class="input-group">
                     <div class="input-group-text form-switch px-1 {% if f.errors %}input-error{% endif %}">
                         {{ f }}
@@ -14,51 +13,51 @@
                 </div>
             </div>
             {% elif f.html_name == 'date' %}
-                <div class="col-12 col-sm-6 col-md-4 col-xl-2 mb-3">
+                <div class="col-12 col-sm-6 col-lg-4 mb-3">
                     <div class="input-group rounded{% if f.errors %} input-error{% endif %}">
-                        <span class="input-group-text"><i class="bi bi-calendar3-event"></i></span>
+                        <span class="input-group-text{% if f.field.required %} text-primary{% endif %}"><i class="bi bi-calendar3-event"></i></span>
                         {{ f }}
                     </div>
                 </div>
             {% elif f.html_name == 'email' %}
-                <div class="col-6 col-xl-3 mb-3">
+                <div class="col-12 col-lg-6 mb-3">
                     <div class="input-group rounded{% if f.errors %} input-error{% endif %}">
-                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <span class="input-group-text{% if f.field.required %} text-primary{% endif %}"><i class="bi bi-envelope"></i></span>
                         {{ f }}
                     </div>
                 </div>
             {% elif f.html_name == 'phone' %}
-                <div class="col-6 col-xl-3 mb-3">
+                <div class="col-12 col-lg-6 mb-3">
                     <div class="input-group rounded{% if f.errors %} input-error{% endif %}">
-                        <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                        <span class="input-group-text{% if f.field.required %} text-primary{% endif %}"><i class="bi bi-telephone"></i></span>
                         {{ f }}
                     </div>
                 </div>
             {% elif f.html_name == 'name' %}
-                <div class="col-12 col-xl-6 mb-3">
+                <div class="col-12 mb-3">
                     <div class="input-group rounded{% if f.errors %} input-error{% endif %}">
-                        <span class="input-group-text"><i class="bi bi-tag"></i></span>
+                        <span class="input-group-text{% if f.field.required %} text-primary{% endif %}"><i class="bi bi-tag"></i></span>
                         {{ f }}
                     </div>
                 </div>
             {% elif f.html_name == 'company' %}
                 <div class="col-12 mb-3">
                     <div class="input-group rounded{% if f.errors %} input-error{% endif %}">
-                        <span class="input-group-text"><i class="bi bi-building"></i></span>
+                        <span class="input-group-text{% if f.field.required %} text-primary{% endif %}"><i class="bi bi-building"></i></span>
                         {{ f }}
                     </div>
                 </div>
             {% elif f.html_name == 'contact' %}
-                <div class="col-12 col-xl-6 mb-3">
+                <div class="col-12 mb-3">
                     <div class="input-group rounded{% if f.errors %} input-error{% endif %}">
-                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <span class="input-group-text{% if f.field.required %} text-primary{% endif %}"><i class="bi bi-person"></i></span>
                         {{ f }}
                     </div>
                 </div>
             {% elif f.html_name == 'address' %}
-                <div class="col-12 mb-3">
+                <div class="col-12 mb-0">
                     <div class="input-group rounded{% if f.errors %} input-error{% endif %}">
-                        <span class="input-group-text"><i class="bi bi-house"></i></span>
+                        <span class="input-group-text{% if f.field.required %} text-primary{% endif %}"><i class="bi bi-house"></i></span>
                         {{ f }}
                     </div>
                 </div>

@@ -5,7 +5,7 @@ from django.core.validators import MaxLengthValidator
 class Team(models.Model):
     active = models.BooleanField(default=False)
     wait = models.BooleanField(default=False)
-    date = models.DateField(blank=True)
+    date = models.DateField(blank=False)
     name = models.CharField(max_length=200, unique=True, blank=False)
     company = models.CharField(max_length=200, blank=False)
     contact = models.CharField(max_length=200, blank=True)

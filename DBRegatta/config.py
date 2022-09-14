@@ -34,9 +34,11 @@ CONSTANCE_CONFIG = {
 
     # Teams Settings
     'teamsPageCSS':             ('teams.css',                                   'CSS File for Site-specific Styling'),
+    'teamsPageJS':              ('teams.js',                                    'JS File for Site-specific Data Handling'),
     'teamsTitle':               ('Teamverwaltung',                              'Menu Title for Teams Page'),
     'teamsIcon':                ('team.svg',                                    'Menu Icon for Teams Page'),
-    'editTeamHeader':           ('Bearbeitung Teams',                           'Header Text for Add Team'),
+    'addTeamHeader':            ('Team hinzufügen',                             'Header Text for Add Team'),
+    'editTeamHeader':           ('Team bearbeiten',                             'Header Text for Edit Team'),
     'teamListHeader':           ('Teamliste',                                   'Header Text for Teams List'),
     'activeTeams':              ('Aktiv',                                       'Text for Active Teams Statistics'),
     'waitlistTeams':            ('Warteliste',                                  'Text for Waitlist Teams Statistics'),
@@ -46,7 +48,6 @@ CONSTANCE_CONFIG = {
     'submitAddTeam':            ('Hinzufügen',                                  'Text for Save New Team Button'),
     'submitEditTeam':           ('Speichern',                                   'Text for Save Team Changes Button'),
     'deleteTeam':               ('Team löschen',                                'Text for Delete Team Button'),
-    'warningDeleteTeam':        ('Team endgültig löschen?',                     'Safety Warning Message for deleting a Team'),
     'addTeamIcon':              ('add.svg',                                     'Icon for Adding new Team'),
     'removeTeamIcon':           ('trash.svg',                                   'Icon for Deleting Teams'),
     'activeTeamIcon':           ('active.svg',                                  'Icon for Active Teams'),
@@ -74,6 +75,7 @@ CONSTANCE_CONFIG = {
     'placeholderTeamEmail':     ('Email Adresse',                               'Placeholder Text for Teams Form: Team Email'),
     'placeholderTeamPhone':     ('Telefonnummer',                               'Placeholder Text for Teams Form: Team Phone Number'),
     'placeholderTeamAddress':   ('Adresse',                                     'Placeholder Text for Teams Form: Team Address'),
+    'warningDeleteTeam':        ('Team endgültig löschen?\nAlle Rennauslosungen für dieses Team und alle Ergebnisse gehen dabei ebenfalls verloren.', 'Safety Warning Message for deleting a Team'),
 
     # Timetable Settings
     'timetablePageCSS':         ('timetable.css',                               'CSS File for Site-specific Styling'),
@@ -269,8 +271,10 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'Team Settings': {
         'fields': (
             'teamsPageCSS',
+            'teamsPageJS',
             'teamsTitle',
             'teamsIcon',
+            'addTeamHeader',
             'editTeamHeader',
             'teamListHeader',
             'activeTeams',
