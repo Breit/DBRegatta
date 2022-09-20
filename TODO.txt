@@ -2,7 +2,6 @@ TODO: DBRegatta
 - Divide settings into sub-sections
 - Javascript for settings
 - Javascript for times
-- Javascript for teams
 - Javascript for skippers
 - Javascript for timetable
 - Landing page with registration button for teams

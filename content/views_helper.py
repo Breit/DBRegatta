@@ -1109,118 +1109,138 @@ def getTimesControls(race_id = None):
 def getMainSettings():
     settings = [
         {
-            'id': 'eventTitle',
-            'name': config.siteNameDesc,
-            'type': 'text',
-            'value': config.siteName,
-            'icon': 'tag'
+            'title': 'TODO: Regatta',
+            'controls': [
+                {
+                    'id': 'eventTitle',
+                    'name': config.siteNameDesc,
+                    'type': 'text',
+                    'value': config.siteName,
+                    'icon': 'tag'
+                },
+                {
+                    'id': 'eventDate',
+                    'name': config.eventDateDesc,
+                    'type': 'date',
+                    'value': config.eventDate,
+                    'icon': 'calendar3-event'
+                }
+            ]
         },
         {
-            'id': 'eventDate',
-            'name': config.eventDateDesc,
-            'type': 'date',
-            'value': config.eventDate,
-            'icon': 'calendar3-event'
+            'title': 'TODO: Access',
+            'controls': [
+                {
+                    'id': 'activateResults',
+                    'name': config.activateResultsDesc,
+                    'type': 'checkbox',
+                    'value': config.activateResults,
+                    'icon': 'clock-history'
+                },
+                {
+                    'id': 'anonymousMonitor',
+                    'name': config.anonymousMonitorDesc,
+                    'type': 'checkbox',
+                    'value': config.anonymousMonitor,
+                    'icon': 'clock-history'
+                }
+            ]
         },
         {
-            'id': 'displayOverscan',
-            'name': config.overscanDesc,
-            'type': 'number',
-            'value': config.overscan,
-            'icon': 'aspect-ratio',
-            'min': 0,
-            'max': config.overscanMax
+            'title': 'TODO: Race Monitor',
+            'controls': [
+                {
+                    'id': 'displayOverscan',
+                    'name': config.overscanDesc,
+                    'type': 'number',
+                    'value': config.overscan,
+                    'icon': 'aspect-ratio',
+                    'min': 0,
+                    'max': config.overscanMax
+                },
+                {
+                    'id': 'durationMonitorSlide',
+                    'name': config.displayIntervalDesc,
+                    'type': 'number',
+                    'value': int(config.displayInterval / 1e3),
+                    'icon': 'clock-history'
+                },
+                {
+                    'id': 'displayDataRefresh',
+                    'name': config.displayDataRefreshDesc,
+                    'type': 'number',
+                    'value': int(config.displayDataRefresh / 1e3),
+                    'icon': 'clock-history'
+                },
+                {
+                    'id': 'maxRacesPerPage',
+                    'name': config.maxRacesPerPageDesc,
+                    'type': 'number',
+                    'value': config.maxRacesPerPage,
+                    'icon': 'file-ruled'
+                },
+                {
+                    'id': 'liveResultsHint',
+                    'name': config.liveResultsHintDesc,
+                    'type': 'text',
+                    'value': config.liveResultsHint,
+                    'icon': 'info-square'
+                },
+                {
+                    'id': 'siteDomain',
+                    'name': config.liveResultsDomainDesc,
+                    'type': 'text',
+                    'value': config.domain,
+                    'icon': 'link'
+                }
+            ]
         },
         {
-            'id': 'durationMonitorSlide',
-            'name': config.displayIntervalDesc,
-            'type': 'number',
-            'value': int(config.displayInterval / 1e3),
-            'icon': 'clock-history'
-        },
-        {
-            'id': 'displayDataRefresh',
-            'name': config.displayDataRefreshDesc,
-            'type': 'number',
-            'value': int(config.displayDataRefresh / 1e3),
-            'icon': 'clock-history'
-        },
-        {
-            'id': 'maxRacesPerPage',
-            'name': config.maxRacesPerPageDesc,
-            'type': 'number',
-            'value': config.maxRacesPerPage,
-            'icon': 'file-ruled'
-        },
-        {
-            'id': 'activateResults',
-            'name': config.activateResultsDesc,
-            'type': 'checkbox',
-            'value': config.activateResults,
-            'icon': 'clock-history'
-        },
-        {
-            'id': 'anonymousMonitor',
-            'name': config.anonymousMonitorDesc,
-            'type': 'checkbox',
-            'value': config.anonymousMonitor,
-            'icon': 'clock-history'
-        },
-        {
-            'id': 'ownerName',
-            'name': config.ownerNameDesc,
-            'type': 'text',
-            'value': config.ownerName,
-            'icon': 'person-circle'
-        },
-        {
-            'id': 'sponsorName',
-            'name': config.sponsorNameDesc,
-            'type': 'text',
-            'value': config.sponsorName,
-            'icon': 'building'
-        },
-        {
-            'id': 'ownerUrl',
-            'name': config.ownerUrlDesc,
-            'type': 'url',
-            'value': config.ownerUrl,
-            'icon': 'link-45deg'
-        },
-        {
-            'id': 'sponsorUrl',
-            'name': config.sponsorUrlDesc,
-            'type': 'url',
-            'value': config.sponsorUrl,
-            'icon': 'link-45deg'
-        },
-        {
-            'id': 'ownerLogo',
-            'name': config.ownerLogoDesc,
-            'type': 'image',
-            'value': config.ownerLogo,
-            'icon': 'image'
-        },
-        {
-            'id': 'sponsorLogo',
-            'name': config.sponsorLogoDesc,
-            'type': 'image',
-            'value': config.sponsorLogo,
-            'icon': 'image'
-        },
-        {
-            'id': 'liveResultsHint',
-            'name': config.liveResultsHintDesc,
-            'type': 'text',
-            'value': config.liveResultsHint,
-            'icon': 'info-square'
-        },
-        {
-            'id': 'siteDomain',
-            'name': config.liveResultsDomainDesc,
-            'type': 'text',
-            'value': config.domain,
-            'icon': 'link'
+            'title': 'TODO: Footer',
+            'controls': [
+                {
+                    'id': 'ownerName',
+                    'name': config.ownerNameDesc,
+                    'type': 'text',
+                    'value': config.ownerName,
+                    'icon': 'person-circle'
+                },
+                {
+                    'id': 'sponsorName',
+                    'name': config.sponsorNameDesc,
+                    'type': 'text',
+                    'value': config.sponsorName,
+                    'icon': 'building'
+                },
+                {
+                    'id': 'ownerUrl',
+                    'name': config.ownerUrlDesc,
+                    'type': 'url',
+                    'value': config.ownerUrl,
+                    'icon': 'link-45deg'
+                },
+                {
+                    'id': 'sponsorUrl',
+                    'name': config.sponsorUrlDesc,
+                    'type': 'url',
+                    'value': config.sponsorUrl,
+                    'icon': 'link-45deg'
+                },
+                {
+                    'id': 'ownerLogo',
+                    'name': config.ownerLogoDesc,
+                    'type': 'image',
+                    'value': config.ownerLogo,
+                    'icon': 'image'
+                },
+                {
+                    'id': 'sponsorLogo',
+                    'name': config.sponsorLogoDesc,
+                    'type': 'image',
+                    'value': config.sponsorLogo,
+                    'icon': 'image'
+                }
+            ]
         }
     ]
 

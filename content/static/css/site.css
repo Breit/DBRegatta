@@ -6,7 +6,58 @@
     --bs-primary-100: #cfe2ff;
     --bs-primary-200: #9ec5fe;
     --bs-primary-300: #6ea8fe;
+    --bs-purple-100: #e2d9f3;
+    --bs-purple-200: #c5b3e6;
+    --bs-purple-300: #a98eda;
     --bs-header-zindex: 1030;
+}
+
+.bg-primary-100 {
+    background-color: var(--bs-primary-100) !important;
+}
+
+.bg-primary-200 {
+    background-color: var(--bs-primary-200) !important;
+}
+
+.bg-primary-300 {
+    background-color: var(--bs-primary-300) !important;
+}
+
+.bg-purple-100 {
+    background-color: var(--bs-purple-100) !important;
+}
+
+.bg-purple-200 {
+    background-color: var(--bs-purple-200) !important;
+}
+
+.bg-purple-300 {
+    background-color: var(--bs-purple-300) !important;
+}
+
+.border-primary-100 {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-primary-100)!important;
+}
+
+.border-primary-200 {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-primary-200)!important;
+}
+
+.border-primary-300 {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-primary-300)!important;
+}
+
+.border-purple-100 {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-purple-100)!important;
+}
+
+.border-purple-200 {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-purple-200)!important;
+}
+
+.border-purple-300 {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-purple-300)!important;
 }
 
 .header {
@@ -146,6 +197,10 @@
 
 .nav li.toggle:hover {
     background-color: var(--bs-gray-950) !important;
+}
+
+.rounded-bottom-right {
+    border-bottom-right-radius: 0.375rem !important;
 }
 
 @media only screen and (max-device-width: 480px) {

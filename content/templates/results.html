@@ -1,6 +1,7 @@
 {% extends 'main.html' %}
 {% load static %}
 {% load filter_tags %}
+{% load filter_tags_results %}
 
 {% block additionalCSS %}
     <link rel="stylesheet" href="{% static 'css/' %}{{ config.resultsPageCSS }}">
@@ -12,63 +13,69 @@
         {% for entry in results %}
             {% if entry.type == 'heat' or entry.type == 'finale' %}
                 {% if entry.races %}
-                    <div class="container-fluid border border-primary pt-0 mb-3">
-                        <div class="row bg-primary fs-4 text-light">
+                    <div class="container-fluid p-0">
+                        <div class="row bg-primary-300 fs-4 mx-0 text-light rounded-top">
                             <div class="col">{{ entry.desc }}</div>
                         </div>
-                        <div class="row border-bottom small text-muted mt-2">
-                            <div class="col-1 text-center">{{ config.timetableHeaderName }}</div>
-                            <div class="col-11">
-                                <div class="row">
-                                    <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
-                                    <div class="col">{{ config.timetableHeaderTeam }}</div>
-                                    <div class="col-{% if entry.type == 'finale' %}5{% else %}6{% endif %} d-none d-xl-block">{{ config.timetableHeaderCompany }}</div>
-                                    {% if entry.type == 'finale' %}
-                                        <div class="col-1 text-center">{{ config.timesHeaderRank }}</div>
-                                    {% endif %}
-                                    <div class="col-1 text-center">{{ config.timesHeaderPlace }}</div>
-                                    <div class="col-1 text-center times_column">{{ config.timesHeaderTime }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        {% for race in entry.races %}
-                            <div class="row border-bottom timetable_race{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}">
-                                <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
+                        <div class="border border-primary-300 pt-0 mb-3 rounded-bottom">
+                            <div class="row border-bottom small text-muted mt-2 mx-0">
+                                <div class="col-1 text-center">{{ config.timetableHeaderName }}</div>
                                 <div class="col-11">
-                                    {% for lane in race.lanes %}
-                                        <div class="row timetable_lane">
-                                            <div class="col-1 text-center">{{ lane.lane }}</div>
-                                            <div class="col {% if lane.draw %}text-muted{% else %}fw-bold{% endif %}">{{ lane.team }}</div>
-                                            <div class="col-{% if entry.type == 'finale' %}5{% else %}6{% endif %} d-none d-xl-block">{{ lane.company }}</div>
-                                            {% if entry.type == 'finale' %}
-                                                <div class="col-1 text-center text-primary fw-bold">{{ lane.rank }}</div>
-                                            {% endif %}
-                                            <div class="col-1 text-center">{{ lane.place }}</div>
-                                            <div class="col-1 text-center{% if lane.finished %} fw-bold text-success{% else %} text-muted{% endif %} times_column">{{ lane.time|asTime }}</div>
-                                        </div>
-                                    {% endfor %}
+                                    <div class="row">
+                                        <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
+                                        <div class="col">{{ config.timetableHeaderTeam }}</div>
+                                        <div class="col-{% if entry.type == 'finale' %}5{% else %}6{% endif %} d-none d-xl-block">{{ config.timetableHeaderCompany }}</div>
+                                        {% if entry.type == 'finale' %}
+                                            <div class="col-1 text-center">{{ config.timesHeaderRank }}</div>
+                                        {% endif %}
+                                        <div class="col-1 text-center">{{ config.timesHeaderPlace }}</div>
+                                        <div class="col-1 text-center times_column">{{ config.timesHeaderTime }}</div>
+                                    </div>
                                 </div>
                             </div>
-                        {% endfor %}
+                            {% for race in entry.races %}
+                                <div class="row border-bottom mx-0 timetable_race{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}{% if forloop.last %} rounded-bottom{% endif %}">
+                                    <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
+                                    <div class="col-11">
+                                        {% for lane in race.lanes %}
+                                            <div class="row timetable_lane{% if forloop.last and forloop.parentloop.last %} rounded-bottom-right{% endif %}">
+                                                <div class="col-1 text-center">{{ lane.lane }}</div>
+                                                <div class="col {% if lane.draw %}text-muted{% else %}fw-bold{% endif %}">{{ lane.team }}</div>
+                                                <div class="col-{% if entry.type == 'finale' %}5{% else %}6{% endif %} d-none d-xl-block">{{ lane.company }}</div>
+                                                {% if entry.type == 'finale' %}
+                                                    <div class="col-1 text-center text-primary fw-bold">{{ lane.rank }}</div>
+                                                {% endif %}
+                                                <div class="col-1 text-center">{{ lane.place }}</div>
+                                                <div class="col-1 text-center{% if lane.finished %} fw-bold text-success{% else %} text-muted{% endif %} times_column">{{ lane.time|asTime }}</div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 {% endif %}
             {% elif entry.type == 'rankingHeats' %}
-                <div class="container-fluid border border-primary pt-0 mb-3">
-                    <div class="row bg-primary fs-4 text-light">
+                <div class="container-fluid p-0">
+                    <div class="row bg-purple-300 fs-4 mx-0 text-light rounded-top">
                         <div class="col">{{ entry.desc }}</div>
                     </div>
-                    {% block rankings_heats %}
-                        {% include 'results_heats_rankings.html' %}
-                    {% endblock %}
+                    <div class="border border-purple-300 pt-0 mb-3 rounded-bottom">
+                        {% block rankings_heats %}
+                            {% include 'results_heats_rankings.html' %}
+                        {% endblock %}
+                    </div>
                 </div>
             {% elif entry.type == 'rankingFinals' and entry.ranks|length %}
-                <div class="container-fluid border border-primary pt-0 mb-3">
-                    <div class="row bg-primary fs-4 text-light">
+                <div class="container-fluid p-0">
+                    <div class="row bg-purple-300 fs-4 mx-0 text-light rounded-top">
                         <div class="col">{{ entry.desc }}</div>
                     </div>
-                    {% block rankings_finale %}
-                        {% include 'results_final_rankings.html' %}
-                    {% endblock %}
+                    <div class="border border-purple-300 pt-0 mb-3 rounded-bottom">
+                        {% block rankings_finale %}
+                            {% include 'results_final_rankings.html' %}
+                        {% endblock %}
+                    </div>
                 </div>
             {% endif %}
         {% endfor %}

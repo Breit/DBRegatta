@@ -1,5 +1,6 @@
 {% extends 'main.html' %}
 {% load static %}
+{% load filter_tags_teams %}
 
 {% block additionalCSS %}
     <link rel="stylesheet" href="{% static 'css/' %}{{ config.teamsPageCSS }}">
@@ -100,7 +101,7 @@
         <div class="team_header">
             <h2 class="mt-2 mb-3">{{ config.teamListHeader }}</h2>
             {% if content.teams %}
-                <div class="progress mb-4 border rounded">
+                <div class="progress mb-4 rounded">
                     {% if content.activeTeams %}
                         <div class="progress-bar team_active bg-success fw-bold text-dark" role="progressbar" style="width: calc(100% * {{ content.activeTeams }} / {{ content.totalTeams }})">
                             {{ content.activeTeams }} {{ config.activeTeams }}
@@ -120,48 +121,48 @@
             {% endif %}
         </div>
         {% if content.activeTeams %}
-            <div class="container-fluid border border-primary pt-0 mb-3">
-                <div class="row bg-primary fs-4 text-light">
+            <div class="container-fluid p-0">
+                <div class="row bg-primary fs-4 mx-0 text-light rounded-top">
                     <div class="col">{{ config.activeTeams }}</div>
                 </div>
-                {% if content.teams %}
-                    {% include 'team_table_header.html' %}
-                {% endif %}
-                {% for t in content.teams %}
-                    {% if t.active and not t.wait %}
-                        {% include 'team_table_row.html' %}
+                <div class="border border-primary pt-0 mb-3 rounded-bottom">
+                    {% if content.teams %}
+                        {% include 'team_table_header.html' %}
                     {% endif %}
-                {% endfor %}
+                    {% for t in content.teams|active_teams %}
+                        {% include 'team_table_row.html' %}
+                    {% endfor %}
+                </div>
             </div>
         {% endif %}
         {% if content.waitlistTeams %}
-            <div class="container-fluid border border-primary pt-0 mb-3">
-                <div class="row bg-primary fs-4 text-light">
+            <div class="container-fluid p-0">
+                <div class="row bg-primary fs-4 mx-0 text-light rounded-top">
                     <div class="col">{{ config.waitlistTeams }}</div>
                 </div>
-                {% if content.teams %}
-                    {% include 'team_table_header.html' %}
-                {% endif %}
-                {% for t in content.teams %}
-                    {% if t.active and t.wait %}
-                        {% include 'team_table_row.html' %}
+                <div class="border border-primary pt-0 mb-3 rounded-bottom">
+                    {% if content.teams %}
+                        {% include 'team_table_header.html' %}
                     {% endif %}
-                {% endfor %}
+                    {% for t in content.teams|waitlist_teams %}
+                        {% include 'team_table_row.html' %}
+                    {% endfor %}
+                </div>
             </div>
         {% endif %}
         {% if content.inactiveTeams %}
-            <div class="container-fluid border border-primary pt-0 mb-3">
-                <div class="row bg-primary fs-4 text-light">
+            <div class="container-fluid p-0">
+                <div class="row bg-primary fs-4 mx-0 text-light rounded-top">
                     <div class="col">{{ config.inactiveTeams }}</div>
                 </div>
-                {% if content.teams %}
-                    {% include 'team_table_header.html' %}
-                {% endif %}
-                {% for t in content.teams %}
-                    {% if not t.active %}
-                        {% include 'team_table_row.html' %}
+                <div class="border border-primary pt-0 mb-3 rounded-bottom">
+                    {% if content.teams %}
+                        {% include 'team_table_header.html' %}
                     {% endif %}
-                {% endfor %}
+                    {% for t in content.teams|inactive_teams %}
+                        {% include 'team_table_row.html' %}
+                    {% endfor %}
+                </div>
             </div>
         {% endif %}
     </div>
