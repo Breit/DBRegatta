@@ -8,14 +8,11 @@
 {% block content %}
     <div class="container-fluid">
         <h2 class="my-3">{{ config.settingsTitle }}</h2>
-        <div class="row">
             {% for section in controls %}
-                <div class="col-12 mb-2">
-                    <div class="container-fluid p-0">
-                        <div class="row bg-primary-300 fs-4 mx-0 text-light rounded-top">
-                            <div class="col">{{ section.title }}</div>
-                        </div>
-                        <div class="row border border-primary-300 pt-0 mb-3 mx-0 rounded-bottom">
+                <div class="card mb-4">
+                    <div class="card-header fs-5 py-0">{{ section.title }}</div>
+                    <div class="card-body p-0">
+                        <div class="row pt-0 mx-0 rounded-bottom">
                             {% for c in section.controls %}
                                 {% if c.type == 'date' %}
                                     <div class="col-12 col-xxl-2 col-xl-3 col-lg-4 col-md-5 mb-3">
@@ -86,16 +83,13 @@
                     </div>
                 </div>
             {% endfor %}
-        </div>
         {% if user.is_superuser %}
             <h2 class="my-3">{{ config.settingsAdvancedHeader }}</h2>
-            <div class="row">
-                <div class="col-12 col-lg-6 mb-2">
-                    <div class="container-fluid p-0">
-                        <div class="row bg-purple-300 fs-4 mx-0 text-light rounded-top">
-                            <div class="col">{{ config.devOptionsTimetable }}</div>
-                        </div>
-                        <div class="container-fluid border border-purple-300 pt-3 mb-3 mx-0 rounded-bottom">
+            <div class="row g-3">
+                <div class="col-12 col-lg-6">
+                    <div class="card border-purple-300 p-0">
+                        <div class="card-header bg-purple-100 fs-5 py-0">{{ config.devOptionsTimetable }}</div>
+                        <div class="card-body p-3 pb-0">
                             <form method="POST" action="" id="dev_options_times_form">
                                 {% csrf_token %}
                                 <button type="button" name="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon btn_lg me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetFinalsModal">
@@ -182,12 +176,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-6 mb-2">
-                    <div class="container-fluid p-0">
-                        <div class="row bg-purple-300 fs-4 mx-0 text-light rounded-top">
-                            <div class="col">{{ config.devOptionsData }}</div>
-                        </div>
-                        <div class="container-fluid border border-purple-300 pt-3 mb-3 mx-0 rounded-bottom">
+                <div class="col-12 col-lg-6">
+                    <div class="card border-purple-300 p-0">
+                        <div class="card-header bg-purple-100 fs-5 py-0">{{ config.devOptionsData }}</div>
+                        <div class="card-body p-3 pb-0">
                             <form method="POST" action="" id="dev_options_data_form">
                                 {% csrf_token %}
                                 <button type="button" name="resetSkippers" value="ResetSkippers" class="btn btn-danger btn_icon btn_lg me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetSkippersModal">
@@ -275,11 +267,9 @@
                     </div>
                 </div>
                 <div class="col-12 mb-2">
-                    <div class="container-fluid p-0">
-                        <div class="row bg-purple-300 fs-4 mx-0 text-light rounded-top">
-                            <div class="col">{{ config.devOptionsDatabase }}</div>
-                        </div>
-                        <div class="container-fluid border border-purple-300 pt-3 mb-3 mx-0 rounded-bottom">
+                    <div class="card border-purple-300 p-0">
+                        <div class="card-header bg-purple-100 fs-5 py-0">{{ config.devOptionsDatabase }}</div>
+                        <div class="card-body p-3 pb-0">
                             <div class="d-inline-flex">
                                 <form method="POST" action="" id="dev_options_db_form">
                                     {% csrf_token %}

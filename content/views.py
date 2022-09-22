@@ -140,7 +140,9 @@ def skippers(request):
 
     siteData = getSiteData('skippers', request.user)
     siteData['content'] = {
-        'skipperList': getSkipperList()
+        'skipperList': getSkipperList(),
+        'activeSkippers': Skipper.objects.filter(active = True).count(),
+        'inactiveSkippers': Skipper.objects.filter(active = False).count()
     }
 
     if request.method == 'POST':

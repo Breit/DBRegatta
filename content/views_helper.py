@@ -1109,7 +1109,7 @@ def getTimesControls(race_id = None):
 def getMainSettings():
     settings = [
         {
-            'title': 'TODO: Regatta',
+            'title': config.settingsHeaderRegatta,
             'controls': [
                 {
                     'id': 'eventTitle',
@@ -1128,7 +1128,7 @@ def getMainSettings():
             ]
         },
         {
-            'title': 'TODO: Access',
+            'title': config.settingsHeaderAccess,
             'controls': [
                 {
                     'id': 'activateResults',
@@ -1147,7 +1147,7 @@ def getMainSettings():
             ]
         },
         {
-            'title': 'TODO: Race Monitor',
+            'title': config.settingsHeaderMonitor,
             'controls': [
                 {
                     'id': 'displayOverscan',
@@ -1196,7 +1196,7 @@ def getMainSettings():
             ]
         },
         {
-            'title': 'TODO: Footer',
+            'title': config.settingsHeaderFooter,
             'controls': [
                 {
                     'id': 'ownerName',

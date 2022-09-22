@@ -8,20 +8,12 @@
     max-width: 6.5rem;
 }
 
-.skipper_list {
+.skipper_list:nth-child(even) {
     background-color: var(--bs-gray-100);
 }
 
-.skipper_list:nth-child(even) {
-    background-color: var(--bs-gray-200);
-}
-
 .skipper_list:hover {
-    background-color: var(--bs-gray-300);
-}
-
-.skipper_list:nth-child(even):hover {
-    background-color: var(--bs-gray-300);
+    background-color: var(--bs-gray-200);
 }
 
 .btn_skipper_table_icon img {
@@ -46,10 +38,6 @@
 
 .modal-footer .btn-secondary {
     width: 11rem;
-}
-
-.teams_list:nth-child(even):hover {
-    background-color: var(--bs-gray-300);
 }
 
 .skipper_edit {

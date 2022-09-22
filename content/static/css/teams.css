@@ -66,20 +66,12 @@
     max-width: 6rem !important;
 }
 
-.teams_list {
+.teams_list:nth-child(even) {
     background-color: var(--bs-gray-100);
 }
 
-.teams_list:nth-child(even) {
-    background-color: var(--bs-gray-200);
-}
-
 .teams_list:hover {
-    background-color: var(--bs-gray-300);
-}
-
-.teams_list:nth-child(even):hover {
-    background-color: var(--bs-gray-300);
+    background-color: var(--bs-gray-200);
 }
 
 .team_edit {

@@ -145,6 +145,8 @@ CONSTANCE_CONFIG = {
     # Skippers Settings
     'skippersPageCSS':          ('skippers.css',                                'CSS File for Site-specific Styling'),
     'skippersTitle':            ('Steuerleute',                                 'Menu Title for Skippers Page'),
+    'activeSkipperTitle':       ('Aktiv',                                       'Table Title for Active Skippers'),
+    'inactiveSkipperTitle':     ('Inaktiv',                                     'Table Title for Inactive Skippers'),
     'skippersIcon':             ('skippers.svg',                                'Menu Icon for Skippers Page'),
     'skippersEditHeading':      ('Steuerleute bearbeiten',                      'Heading for Editing Skippers on Skippers Page'),
     'skippersListHeading':      ('Liste Steuerleute',                           'Menu Title for Skippers Page'),
@@ -195,6 +197,10 @@ CONSTANCE_CONFIG = {
     # Settings for Settings Page
     'settingsPageCSS':          ('settings.css',                                'CSS File for Site-specific Styling'),
     'settingsTitle':            ('Einstellungen',                               'Menu Title for Settings Page'),
+    'settingsHeaderRegatta':    ('Regatta',                                     'Section Title for Regatta Settings on Settings Page'),
+    'settingsHeaderAccess':     ('Zugriffsrechte',                              'Section Title for Access Settings on Settings Page'),
+    'settingsHeaderMonitor':    ('Race Monitor',                                'Section Title for Race Monitor Settings on Settings Page'),
+    'settingsHeaderFooter':     ('Fußzeile',                                    'Section Title for Footer Settings on Settings Page'),
     'settingsIcon':             ('settings.svg',                                'Menu Icon for Settings Page'),
     'settingsAdvancedHeader':   ('Entwickleroptionen',                          'Header for Advanced Settings'),
     'placeholderPostContent':   ('Mitteilung',                                  'Placeholder Text for Post Content Control'),
@@ -394,6 +400,8 @@ CONSTANCE_CONFIG_FIELDSETS = {
         'fields': (
             'skippersPageCSS',
             'skippersTitle',
+            'activeSkipperTitle',
+            'inactiveSkipperTitle',
             'skippersIcon',
             'skippersEditHeading',
             'skippersListHeading',
@@ -453,6 +461,10 @@ CONSTANCE_CONFIG_FIELDSETS = {
         'fields': (
             'settingsPageCSS',
             'settingsTitle',
+            'settingsHeaderRegatta',
+            'settingsHeaderAccess',
+            'settingsHeaderMonitor',
+            'settingsHeaderFooter',
             'settingsIcon',
             'settingsAdvancedHeader',
             'placeholderPostContent',

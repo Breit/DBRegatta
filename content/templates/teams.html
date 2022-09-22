@@ -121,11 +121,9 @@
             {% endif %}
         </div>
         {% if content.activeTeams %}
-            <div class="container-fluid p-0">
-                <div class="row bg-primary fs-4 mx-0 text-light rounded-top">
-                    <div class="col">{{ config.activeTeams }}</div>
-                </div>
-                <div class="border border-primary pt-0 mb-3 rounded-bottom">
+            <div class="card mb-3">
+                <div class="card-header fs-5 py-0">{{ config.activeTeams }}</div>
+                <div class="card-body p-0">
                     {% if content.teams %}
                         {% include 'team_table_header.html' %}
                     {% endif %}
@@ -136,11 +134,9 @@
             </div>
         {% endif %}
         {% if content.waitlistTeams %}
-            <div class="container-fluid p-0">
-                <div class="row bg-primary fs-4 mx-0 text-light rounded-top">
-                    <div class="col">{{ config.waitlistTeams }}</div>
-                </div>
-                <div class="border border-primary pt-0 mb-3 rounded-bottom">
+            <div class="card mb-3">
+                <div class="card-header fs-5 py-0">{{ config.waitlistTeams }}</div>
+                <div class="card-body p-0">
                     {% if content.teams %}
                         {% include 'team_table_header.html' %}
                     {% endif %}
@@ -151,11 +147,9 @@
             </div>
         {% endif %}
         {% if content.inactiveTeams %}
-            <div class="container-fluid p-0">
-                <div class="row bg-primary fs-4 mx-0 text-light rounded-top">
-                    <div class="col">{{ config.inactiveTeams }}</div>
-                </div>
-                <div class="border border-primary pt-0 mb-3 rounded-bottom">
+            <div class="card mb-3">
+                <div class="card-header fs-5 py-0">{{ config.inactiveTeams }}</div>
+                <div class="card-body p-0">
                     {% if content.teams %}
                         {% include 'team_table_header.html' %}
                     {% endif %}
