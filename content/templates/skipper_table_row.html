@@ -9,23 +9,22 @@
         <div class="col d-none d-lg-block{% if not skipper.active %} text-muted{% endif %}"><a href= "mailto:{{ skipper.email }}">{{ skipper.email }}</a></div>
         <div class="col-1 icon_col text-center px-2 icon_col">
             <div class="row m-0 flex-nowrap">
-                <form method="POST" action="" id="edit_form_{{ skipper.id }}" class="col m-0 p-0">
+                <form method="POST" action="" id="edit_form_{{ skipper.id }}" class="col-4 m-0 p-0">
                     {% csrf_token %}
                     <button type="submit" name="edit_skipper" value="{{ skipper.id }}" class="btn btn_skipper_table_icon p-0">
                         <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_team">
                     </button>
                 </form>
-                <form method="POST" action="" id="activate_form_{{ skipper.id }}" class="col m-0 p-0">
-                    {% csrf_token %}
-                    <button type="submit" name="activate_skipper" value="{{ skipper.id }}" class="btn btn_skipper_table_icon p-0">
+                <div class="col-4 m-0 p-0 skipper_table_button">
+                    <button type="button" name="activate_skipper" value="{{ skipper.id }}" class="btn btn_skipper_table_icon p-0 ps-1" onclick="button_toggle_skipper('activate_skipper', {{ skipper.id }})">
                         {% if skipper.active %}
-                            <img src="{% static 'images/' %}{{ config.activeTeamIcon }}" alt="active_skipper">
+                            <img src="{% static 'images/' %}{{ config.activeTeamIcon }}" alt="active_team">
                         {% else %}
-                            <img src="{% static 'images/' %}{{ config.inactiveTeamIcon }}" alt="inactive_skipper">
+                            <img src="{% static 'images/' %}{{ config.inactiveTeamIcon }}" alt="inactive_team">
                         {% endif %}
                     </button>
-                </form>
-                <form method="POST" action="" id="delete_form_{{ skipper.id }}" class="col m-0 p-0">
+                </div>
+                <form method="POST" action="" id="delete_form_{{ skipper.id }}" class="col-4 m-0 p-0">
                     {% csrf_token %}
                     <button type="button" class="btn btn_skipper_table_icon p-0" data-bs-toggle="modal" data-bs-target="#deleteSkipperModal_{{ skipper.id }}">
                         <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_team">

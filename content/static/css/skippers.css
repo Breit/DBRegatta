@@ -8,6 +8,15 @@
     max-width: 6.5rem;
 }
 
+.progress {
+    height: 4rem;
+    border-radius: 0;
+}
+
+.skipper_progress {
+    min-width: 8rem;
+}
+
 .skipper_list:nth-child(even) {
     background-color: var(--bs-gray-100);
 }

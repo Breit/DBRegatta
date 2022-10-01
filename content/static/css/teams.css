@@ -26,22 +26,12 @@
 }
 
 .progress {
-    height: 2rem;
+    height: 4rem;
     border-radius: 0;
 }
 
-.team_active {
-    background-color: var(--bs-green) !important;
-    filter: brightness(1.2) saturate(0.7) hue-rotate(-30deg);
-}
-
-.team_inactive {
-    background-color: var(--bs-gray-400) !important;
-}
-
-.team_wait {
-    background-color: var(--bs-warning) !important;
-    filter: brightness(1.0) saturate(1.0);
+.team_progress {
+    min-width: 8rem;
 }
 
 .error {

@@ -98,30 +98,37 @@
     </div>
 
     <div class="container-fluid" id="team_table">
-        <div class="team_header">
-            <h2 class="mt-2 mb-3">{{ config.teamListHeader }}</h2>
-            {% if content.teams %}
-                <div class="progress mb-4 rounded">
-                    {% if content.activeTeams %}
-                        <div class="progress-bar team_active bg-success fw-bold text-dark" role="progressbar" style="width: calc(100% * {{ content.activeTeams }} / {{ content.totalTeams }})">
-                            {{ content.activeTeams }} {{ config.activeTeams }}
+        <h2 class="my-2 display-6">{{ config.teamListHeader }}</h2>
+        {% if content.teams %}
+            <div class="progress mb-4 bg-light">
+                {% if content.activeTeams %}
+                    <div class="progress-bar px-2 me-2 team_progress bg-light border-bottom border-success border-5 text-success" role="progressbar" style="width: calc(100% * {{ content.activeTeams }} / {{ content.totalTeams }})">
+                        <div class="flex-row text-start">
+                            <span class="display-3 fw-bold">{{ content.activeTeams }}</span>
+                            <span class="lead">{{ config.activeTeams }}</span>
                         </div>
-                    {% endif %}
-                    {% if content.waitlistTeams %}
-                        <div class="progress-bar team_wait bg-warning fw-bold text-dark" role="progressbar" style="width: calc(100% * {{ content.waitlistTeams }} / {{ content.totalTeams }})">
-                            {{ content.waitlistTeams }} {{ config.waitlistTeams }}
+                    </div>
+                {% endif %}
+                {% if content.waitlistTeams %}
+                    <div class="progress-bar px-2 me-2 team_progress bg-light border-bottom border-warning border-5 text-warning" role="progressbar" style="width: calc(100% * {{ content.waitlistTeams }} / {{ content.totalTeams }})">
+                        <div class="flex-row text-start">
+                            <span class="display-3 fw-bold">{{ content.waitlistTeams }}</span>
+                            <span class="lead">{{ config.waitlistTeams }}</span>
                         </div>
-                    {% endif %}
-                    {% if content.inactiveTeams %}
-                        <div class="progress-bar team_inactive bg-secondary fw-bold text-dark" role="progressbar" style="width: calc(100% * {{ content.inactiveTeams }} / {{ content.totalTeams }})">
-                            {{ content.inactiveTeams }} {{ config.inactiveTeams }}
+                    </div>
+                {% endif %}
+                {% if content.inactiveTeams %}
+                    <div class="progress-bar px-2 team_progress bg-light border-bottom border-secondary border-5 text-secondary" role="progressbar" style="width: calc(100% * {{ content.inactiveTeams }} / {{ content.totalTeams }})">
+                        <div class="flex-row text-start">
+                            <span class="display-3 fw-bold">{{ content.inactiveTeams }}</span>
+                            <span class="lead">{{ config.inactiveTeams }}</span>
                         </div>
-                    {% endif %}
-                </div>
-            {% endif %}
-        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
         {% if content.activeTeams %}
-            <div class="card mb-3">
+            <div class="card mb-3 shadow">
                 <div class="card-header fs-5 py-0">{{ config.activeTeams }}</div>
                 <div class="card-body p-0">
                     {% if content.teams %}
@@ -134,7 +141,7 @@
             </div>
         {% endif %}
         {% if content.waitlistTeams %}
-            <div class="card mb-3">
+            <div class="card mb-3 shadow">
                 <div class="card-header fs-5 py-0">{{ config.waitlistTeams }}</div>
                 <div class="card-body p-0">
                     {% if content.teams %}
@@ -147,7 +154,7 @@
             </div>
         {% endif %}
         {% if content.inactiveTeams %}
-            <div class="card mb-3">
+            <div class="card mb-3 shadow">
                 <div class="card-header fs-5 py-0">{{ config.inactiveTeams }}</div>
                 <div class="card-body p-0">
                     {% if content.teams %}
@@ -160,7 +167,7 @@
             </div>
         {% endif %}
     </div>
-    <div class="container-fluid mb-3 pt-1">
+    <div class="container-fluid mb-3 pt-3">
         <button type="button" name="show_team_form" value="AddTeam" class="btn btn-primary btn_icon btn_lg" data-bs-toggle="modal" data-bs-target="#formTeamModal">
             <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                 <div class="pe-2">

@@ -6,6 +6,9 @@
     --bs-primary-100: #cfe2ff;
     --bs-primary-200: #9ec5fe;
     --bs-primary-300: #6ea8fe;
+    --bs-secondary-100: #f8f9fa;
+    --bs-secondary-200: #e9ecef;
+    --bs-secondary-300: #dee2e6;
     --bs-purple-100: #e2d9f3;
     --bs-purple-200: #c5b3e6;
     --bs-purple-300: #a98eda;
@@ -22,6 +25,18 @@
 
 .bg-primary-300 {
     background-color: var(--bs-primary-300) !important;
+}
+
+.bg-secondary-100 {
+    background-color: var(--bs-secondary-100) !important;
+}
+
+.bg-secondary-200 {
+    background-color: var(--bs-secondary-200) !important;
+}
+
+.bg-secondary-300 {
+    background-color: var(--bs-secondary-300) !important;
 }
 
 .bg-purple-100 {

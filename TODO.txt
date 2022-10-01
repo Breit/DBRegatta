@@ -1,5 +1,5 @@
 TODO: DBRegatta
-- Divide settings into sub-sections
+- Skipper Delete Modal separate
 - Javascript for settings
 - Javascript for times
 - Javascript for skippers

@@ -144,6 +144,7 @@ CONSTANCE_CONFIG = {
 
     # Skippers Settings
     'skippersPageCSS':          ('skippers.css',                                'CSS File for Site-specific Styling'),
+    'skippersPageJS':           ('skippers.js',                                 'JS File for Site-specific Data Handling'),
     'skippersTitle':            ('Steuerleute',                                 'Menu Title for Skippers Page'),
     'activeSkipperTitle':       ('Aktiv',                                       'Table Title for Active Skippers'),
     'inactiveSkipperTitle':     ('Inaktiv',                                     'Table Title for Inactive Skippers'),
@@ -399,6 +400,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'Skippers Settings': {
         'fields': (
             'skippersPageCSS',
+            'skippersPageJS',
             'skippersTitle',
             'activeSkipperTitle',
             'inactiveSkipperTitle',
