@@ -281,7 +281,7 @@ def results(request):
         return redirect('/')
 
     siteData = getSiteData('results', request.user)
-    siteData['results'] = getRaceResultsTableContent()
+    siteData['results'] = getRaceResultsTableContent(heats=False)
     return render(request, 'results.html', siteData)
 
 def display(request):
