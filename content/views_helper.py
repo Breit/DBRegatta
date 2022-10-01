@@ -600,8 +600,15 @@ def getRaceTimes(raceType: str):
     # deduce lane count from database
     lanesPerRace = len(set([attendee.lane for attendee in RaceAssign.objects.all()]))
 
+    # get all final races and sort after race names, but obey number ordering
+    races_sorted = Race.objects.filter(name__startswith = raceType)
+    races_sorted = [race for race in races_sorted]
+    races_sorted.sort(key=lambda x:[int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.name)])
+
     races = []
-    for race in Race.objects.filter(name__startswith = raceType):
+    if raceType == config.finalPrefix:
+        rank_finale = Team.objects.filter(active=True, wait=False).count()
+    for race in races_sorted:
         entry = {
             'time': race.time,
             'desc': race.name,
@@ -655,6 +662,18 @@ def getRaceTimes(raceType: str):
                         'draw': True
                     }
                 )
+
+        # fill in ranks for finale
+        if raceType == config.finalPrefix:
+            if len([lane for lane in entry['lanes'] if lane['finished']]) == lanesPerRace:
+                for l in reversed(range(lanesPerRace)):
+                    for lane in entry['lanes']:
+                        if race.name != races_sorted[-1].name and l == lanesPerRace - 1:
+                            continue
+                        if lane['lane'] == l + 1:
+                            lane['rank'] = rank_finale
+                            rank_finale -= 1
+
         if all(item['finished'] for item in entry['lanes']):
             entry['status'] = 'finished'
         elif any(item['finished'] for item in entry['lanes']):
@@ -674,24 +693,33 @@ def raceBlockStarted(raceType: str):
             break
     return started
 
-def getRaceResultsTableContent():
+def getRaceResultsTableContent(heats: bool = True):
     timetable = []
 
-    # get heats
-    for i in range(config.heatCount):
-        races = getRaceTimes('{}{}-'.format(config.heatPrefix, i + 1))
+    # decide if heats or rankings are returned
+    if heats:
+        # get heats
+        for i in range(config.heatCount):
+            races = getRaceTimes('{}{}-'.format(config.heatPrefix, i + 1))
+            if len(races) > 0:
+                timetable.append(
+                    {
+                        'time': races[0]['time'] if len(races) > 0 else combineTimeOffset(
+                            config.timeBegin,
+                            config.offsetHeat
+                        ),
+                        'desc': '{} {}'.format(config.heatsTitle, i + 1),
+                        'races': races,
+                        'type': 'heat'
+                    }
+                )
+    else:
+        # get heat rankings
+        races = Race.objects.filter(name__startswith = config.heatPrefix).order_by('time')
         if len(races) > 0:
-            timetable.append(
-                {
-                    'time': races[0]['time'] if len(races) > 0 else combineTimeOffset(
-                        config.timeBegin,
-                        config.offsetHeat
-                    ),
-                    'desc': '{} {}'.format(config.heatsTitle, i + 1),
-                    'races': races,
-                    'type': 'heat'
-                }
-            )
+            timetable.append(getRankingTable())
+            timetable[-1]['type'] = 'ranking'
+            timetable[-1]['time'] = races.last().time
 
     # get finals
     timetable.append(
