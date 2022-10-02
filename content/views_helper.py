@@ -977,7 +977,7 @@ def raceBlockFinished(raceType: str):
             finished.append(True)
         else:
             finished.append(False)
-    return all(finished)
+    return all(finished) and len(finished) > 0
 
 def getRaceResultsTableContent(heats: bool = True, heatsRankings: bool = True, finals: bool = True, finalRanks: bool = True):
     timetable = []
