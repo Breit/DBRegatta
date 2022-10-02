@@ -51,8 +51,10 @@
 
 .skipper_edit {
     background-color: var(--bs-primary-100) !important;
+    outline: 1px solid var(--bs-primary) !important;
 }
 
-.skipper_edit:hover {
-    background-color: var(--bs-primary-200) !important;
+.input-group.input-error {
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(255, 0, 0, .25);
 }

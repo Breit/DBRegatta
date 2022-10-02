@@ -142,26 +142,18 @@ def skippers(request):
     siteData['content'] = {
         'skipperList': getSkipperList(),
         'activeSkippers': Skipper.objects.filter(active = True).count(),
-        'inactiveSkippers': Skipper.objects.filter(active = False).count()
+        'inactiveSkippers': Skipper.objects.filter(active = False).count(),
+        'skipperForm': SkipperForm()
     }
 
     if request.method == 'POST':
-        if 'show_add_form' in request.POST:
-            siteData['content']['skipperForm'] = SkipperForm()
-        elif 'add_skipper' in request.POST:
+        if 'add_skipper' in request.POST:
             newSkipper = SkipperForm(request.POST)
-            if newSkipper.is_valid():
+            if Skipper.objects.filter(name=request.POST['name']).exists():
+                siteData['content']['skipperForm'] = newSkipper
+            elif newSkipper.is_valid():
                 newSkipper.save()
                 return redirect('/skippers')
-            else:
-                oldSkipper = Skipper.objects.get(name = request.POST['name'])
-                if oldSkipper:
-                    for f in oldSkipper._meta.fields:
-                        if f.name == 'id':
-                            continue
-                        setattr(oldSkipper, f.name, getattr(newSkipper.instance, f.name))
-                    oldSkipper.save()
-                    return redirect('/skippers')
         elif 'delete_skipper' in request.POST:
             skipper = Skipper.objects.get(id = request.POST['delete_skipper'])
             if skipper:
@@ -179,15 +171,22 @@ def skippers(request):
             except:
                 skipper = None
             if skipper:
-                return redirect('/skippers?edit_id={}'.format(request.POST['edit_skipper']))
-    elif 'edit_id' in request.GET:
-        try:
-            skipper = Skipper.objects.get(id = int(request.GET['edit_id']))
-        except:
-            skipper = None
-        if skipper:
-            siteData['content']['skipperForm'] = SkipperForm(instance=skipper)
-            siteData['content']['skipperForm_id'] = skipper.id
+                siteData['content']['skipperForm'] = SkipperForm(instance=skipper)
+        elif 'mod_skipper' in request.POST:
+            try:
+                skipper = Skipper.objects.get(id = request.POST['mod_skipper'])
+            except:
+                skipper = None
+            if skipper:
+                skipperForm = SkipperForm(
+                    request.POST,
+                    instance = skipper
+                )
+                if skipperForm.is_valid():
+                    skipperForm.save()
+                    return redirect('/skippers')
+                else:
+                    siteData['content']['skipperForm'] = skipperForm
 
     return render(request, 'skippers.html', siteData)
 

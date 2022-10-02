@@ -31,7 +31,7 @@ Run the DBRegatta Django web app, type:
 
 This should launch the Django webserver serving the app on the IP address and port specified. To bind on all interfaces, use `0.0.0.0` as the IP address. If the IP address is being omitted, the server will launch on localhost (`127.0.0.1`).
 
-## Manage the site
+## Managing the site
 To configure anything on the site, you need to create a superuser first. To do this, simply type:
 
 > `python manage.py createsuperuser`
