@@ -1,0 +1,28 @@
+{% load static %}
+
+{% block menu %}
+<ul class="nav nav-pills flex-column flex-nowrap h-100 gap-1 my-1" id="{% if request.session.fold_menu %}folded{% else %}full{% endif %}">
+    {% csrf_token %}
+    {% for m in menu %}
+        {% if m.id == 'toggle' %}
+            <li class="nav-item flex-row h-100 w-100 toggle" onclick="toggleFoldMenu()"></li>
+        {% else %}
+            <li class="nav-item flex-row" id="{{ m.id }}">
+                <a class="nav-link d-inline-flex w-100 p-1 rounded-0{% if m.active %} active{% endif %}" href="{{ m.url }}">
+                    <div class="p-2">
+                        <img src="{% static 'images/' %}{{ m.thumb }}" alt="{{ m.title }}_icon">
+                    </div>
+                    <span class="item_title ps-2 pe-3 my-auto lead text-light w-100{% if request.session.fold_menu %} d-none{% endif %}">{{ m.title }}</span>
+                    {% if m.notifications %}
+                    <div class="item_badges d-flex flex-column pe-1 align-self-center{% if request.session.fold_menu %} d-none{% endif %}">
+                        {% for n in m.notifications %}
+                            <span class="badge text-light text-bg-{{ n.level }}{% if not forloop.last%} mb-1{% endif %}">{{ n.count }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </a>
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endblock %}

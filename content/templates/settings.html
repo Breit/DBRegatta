@@ -1,0 +1,296 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{% static 'css/' %}{{ config.settingsPageCSS }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h2 class="my-3 display-6">{{ config.settingsTitle }}</h2>
+            {% for section in controls %}
+                <div class="card mb-4 shadow">
+                    <div class="card-header fs-5 py-0">{{ section.title }}</div>
+                    <div class="card-body p-0">
+                        <div class="row pt-0 mx-0 rounded-bottom">
+                            {% for c in section.controls %}
+                                {% if c.type == 'date' %}
+                                    <div class="col-12 col-xxl-2 col-xl-3 col-lg-4 col-md-5 mb-3">
+                                        <form method="POST" action="" id="{{ c.id }}">
+                                            {% csrf_token %}
+                                            <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
+                                            <div class="input-group rounded fixed_input">
+                                                <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                                <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end px-1" value="{{ c.value|date:'Y-m-d' }}" onchange="this.form.submit()">
+                                            </div>
+                                        </form>
+                                    </div>
+                                {% elif c.type == 'image' %}
+                                    <div class="col-12 col-md-6 col-lg-3 mb-3">
+                                        <form method="POST" action="" id="{{ c.id }}">
+                                            {% csrf_token %}
+                                            <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
+                                            <div class="input-group rounded">
+                                                <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                                <input type="text" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-start" value="{{ c.value }}" onchange="this.form.submit()">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3 mb-3 mt-auto">
+                                        <div class="logo border bg-dark p-2 border-secondary border-1 text-center">
+                                            <img src="{{ MEDIA_URL }}images/{{ c.value }}" alt="{{ c.id }}">
+                                        </div>
+                                    </div>
+                                {% elif c.type == 'checkbox' %}
+                                    <div class="col mb-3">
+                                        <form method="POST" action="" id="{{ c.id }}">
+                                            {% csrf_token %}
+                                            <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
+                                            <div class="input-group rounded fixed_input">
+                                                <div class="input-group-text form-switch px-1 {% if f.errors %}input-error{% endif %}">
+                                                    <input type="hidden" name="{{ c.id }}" value="off">
+                                                    <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-check-input text-end pe-4" onchange="this.form.submit()" {% if c.value %}checked{% endif %}>
+                                                </div>
+                                                <input type="text" class="form-control bg-light" value="{% if c.value %}{{ config.activeResultsDesc }}{% else %}{{ config.inactiveResultsDesc }}{% endif %}" disabled>
+                                            </div>
+                                        </form>
+                                    </div>
+                                {% elif c.type == 'number' %}
+                                    <div class="col mb-3">
+                                        <form method="POST" action="" id="{{ c.id }}">
+                                            {% csrf_token %}
+                                            <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
+                                            <div class="input-group rounded fixed_input">
+                                                <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                                <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end pe-4" value="{{ c.value }}"{% if c.min %} min="{{ c.min }}"{% endif %}{% if c.max %} max="{{ c.max }}"{% endif %} onchange="this.form.submit()">
+                                            </div>
+                                        </form>
+                                    </div>
+                                {% else %}
+                                    <div class="{% if c.id == 'eventTitle' %}col-12 col-xxl-10 col-xl-9 col-lg-8 col-md-7{% else %}col-12 col-lg-6{% endif %} mb-3">
+                                        <form method="POST" action="" id="{{ c.id }}">
+                                            {% csrf_token %}
+                                            <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
+                                            <div class="input-group rounded ">
+                                                <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                                <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-start" value="{{ c.value }}" onchange="this.form.submit()">
+                                            </div>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% if user.is_superuser %}
+            <h2 class="my-3 display-6">{{ config.settingsAdvancedHeader }}</h2>
+            <div class="row g-3">
+                <div class="col-12 col-lg-6">
+                    <div class="card border-purple-300 p-0 shadow">
+                        <div class="card-header bg-purple-100 fs-5 py-0">{{ config.devOptionsTimetable }}</div>
+                        <div class="card-body p-3 pb-0">
+                            <form method="POST" action="" id="dev_options_times_form">
+                                {% csrf_token %}
+                                <button type="button" name="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon btn_lg me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetFinalsModal">
+                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                        <div class="pe-2">
+                                            <img src="{% static 'images/' %}{{ config.resetFinalsIcon }}" alt="reset_finals">
+                                        </div>
+                                        <p class="m-0 ps-2 lead">{{ config.resetFinals }}</p>
+                                    </div>
+                                </button>
+                                <div class="modal fade" id="resetFinalsModal" data-bs-backdrop="static" tabindex="-1">
+                                    <div class="modal-dialog text-dark">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-warning text-dark">
+                                                <h5 class="modal-title" id="resetFinalsLabel">{{ config.resetFinals }}</h5>
+                                                <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                                                <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                                                <div class="container">{{ config.warningResetFinals|linebreaks }}</div>
+                                            </div>
+                                            <div class="modal-footer justify-content-center bg-gray-200">
+                                                <button type="submit" name="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon btn_lg" form="dev_options_times_form">
+                                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                        <div class="pe-2">
+                                                            <img src="{% static 'images/' %}{{ config.resetFinalsIcon }}" alt="reset_finals">
+                                                        </div>
+                                                        <p class="m-0 ps-2 lead">{{ config.resetFinals }}</p>
+                                                    </div>
+                                                </button>
+                                                <button type="button" name="cancelResetFinals" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
+                                                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                        <div>
+                                                            <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelResetFinals" class="p-0">
+                                                        </div>
+                                                        <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" id="resetHeats" class="btn btn-danger btn_icon btn_lg mb-3" data-bs-toggle="modal" data-bs-target="#resetHeatsModal">
+                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                        <div class="pe-2">
+                                            <img src="{% static 'images/' %}{{ config.resetHeatsIcon }}" alt="reset_heats">
+                                        </div>
+                                        <p class="m-0 ps-2 lead">{{ config.resetHeats }}</p>
+                                    </div>
+                                </button>
+                                <div class="modal fade" id="resetHeatsModal" data-bs-backdrop="static" tabindex="-1">
+                                    <div class="modal-dialog text-dark">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-light">
+                                                <h5 class="modal-title" id="resetHeatsLabel">{{ config.resetHeats }}</h5>
+                                                <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                                                <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                                                <div class="container">{{ config.warningResetHeats|linebreaks }}</div>
+                                            </div>
+                                            <div class="modal-footer justify-content-center bg-gray-200">
+                                                <button type="submit" name="resetHeats" value="ResetHeats" class="btn btn-danger btn_icon btn_lg" form="dev_options_times_form">
+                                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                        <div class="pe-2">
+                                                            <img src="{% static 'images/' %}{{ config.resetHeatsIcon }}" alt="reset_heats">
+                                                        </div>
+                                                        <p class="m-0 ps-2 lead">{{ config.resetHeats }}</p>
+                                                    </div>
+                                                </button>
+                                                <button type="button" name="cancelResetHeats" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
+                                                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                        <div>
+                                                            <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelResetHeats" class="p-0">
+                                                        </div>
+                                                        <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="card border-purple-300 p-0 shadow">
+                        <div class="card-header bg-purple-100 fs-5 py-0">{{ config.devOptionsData }}</div>
+                        <div class="card-body p-3 pb-0">
+                            <form method="POST" action="" id="dev_options_data_form">
+                                {% csrf_token %}
+                                <button type="button" name="resetSkippers" value="ResetSkippers" class="btn btn-danger btn_icon btn_lg me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetSkippersModal">
+                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                        <div class="pe-2">
+                                            <img src="{% static 'images/' %}{{ config.resetSkippersIcon }}" alt="reset_skippers">
+                                        </div>
+                                        <p class="m-0 ps-2 lead">{{ config.resetSkippers }}</p>
+                                    </div>
+                                </button>
+                                <div class="modal fade" id="resetSkippersModal" data-bs-backdrop="static" tabindex="-1">
+                                    <div class="modal-dialog text-dark">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-light">
+                                                <h5 class="modal-title" id="resetSkippersLabel">{{ config.resetSkippers }}</h5>
+                                                <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                                                <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                                                <div class="container">{{ config.warningResetSkippers|linebreaks }}</div>
+                                            </div>
+                                            <div class="modal-footer justify-content-center bg-gray-200">
+                                                <button type="submit" name="resetSkippers" value="ResetSkippers" class="btn btn-danger btn_icon btn_lg" form="dev_options_data_form">
+                                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                        <div class="pe-2">
+                                                            <img src="{% static 'images/' %}{{ config.resetSkippersIcon }}" alt="reset_skippers">
+                                                        </div>
+                                                        <p class="m-0 ps-2 lead">{{ config.resetSkippers }}</p>
+                                                    </div>
+                                                </button>
+                                                <button type="button" name="cancelResetSkippers" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
+                                                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                        <div>
+                                                            <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelResetSkippers" class="p-0">
+                                                        </div>
+                                                        <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" id="resetTeams" class="btn btn-danger btn_icon btn_lg mb-3" data-bs-toggle="modal" data-bs-target="#resetTeamsModal">
+                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                        <div class="pe-2">
+                                            <img src="{% static 'images/' %}{{ config.resetTeamsIcon }}" alt="reset_teams">
+                                        </div>
+                                        <p class="m-0 ps-2 lead">{{ config.resetTeams }}</p>
+                                    </div>
+                                </button>
+                                <div class="modal fade" id="resetTeamsModal" data-bs-backdrop="static" tabindex="-1">
+                                    <div class="modal-dialog text-dark">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-light">
+                                                <h5 class="modal-title" id="resetTeamsLabel">{{ config.resetTeams }}</h5>
+                                                <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                                                <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                                                <div class="container">{{ config.warningResetTeams|linebreaks }}</div>
+                                            </div>
+                                            <div class="modal-footer justify-content-center bg-gray-200">
+                                                <button type="submit" name="resetTeams" value="ResetTeams" class="btn btn-danger btn_icon btn_lg" form="dev_options_times_form">
+                                                    <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                        <div class="pe-2">
+                                                            <img src="{% static 'images/' %}{{ config.resetTeamsIcon }}" alt="reset_teams">
+                                                        </div>
+                                                        <p class="m-0 ps-2 lead">{{ config.resetTeams }}</p>
+                                                    </div>
+                                                </button>
+                                                <button type="button" name="cancelResetTeams" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
+                                                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                        <div>
+                                                            <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelResetTeams" class="p-0">
+                                                        </div>
+                                                        <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mb-2">
+                    <div class="card border-purple-300 p-0 shadow">
+                        <div class="card-header bg-purple-100 fs-5 py-0">{{ config.devOptionsDatabase }}</div>
+                        <div class="card-body p-3 pb-0">
+                            <div class="d-inline-flex">
+                                <form method="POST" action="" id="dev_options_db_form">
+                                    {% csrf_token %}
+                                    <button type="submit" name="backupDatabase" value="BackupDatabase" class="btn btn-primary btn_icon btn_lg me-3 mb-3" form="dev_options_db_form">
+                                        <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                            <div class="pe-2">
+                                                <img src="{% static 'images/' %}{{ config.backupDatabaseIcon }}" alt="backup_database">
+                                            </div>
+                                            <p class="m-0 ps-2 lead">{{ config.backupDatabase }}</p>
+                                        </div>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="d-inline-flex">
+                                <p class="float-left m-0 ps-2 lead">Letztes Backup: <strong class="{% if not lastBackup %}text-danger{% else %}text-success{% endif %}">{% if lastBackup %}{{ lastBackup }}{% else %}{{ config.noBackup }}{% endif %}</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="container-fluid overscroll"></div>
+{% endblock %}

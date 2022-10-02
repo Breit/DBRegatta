@@ -1,0 +1,112 @@
+.timetable_race {
+    z-index: 1;
+    background-color: var(--bs-gray-100) !important;
+}
+
+.timetable_race:nth-child(odd) {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.timetable_race:hover {
+    filter: brightness(0.97);
+}
+
+.timetable_lane {
+    z-index: 2;
+    background-color: var(--bs-gray-100) !important;
+}
+
+.timetable_race:nth-child(odd) .timetable_lane {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.timetable_lane:hover {
+    filter: brightness(0.97);
+}
+
+.race_finished:nth-child(even) .timetable_lane {
+    background-color: #d1e7dd !important;
+}
+
+.race_finished:nth-child(odd) .timetable_lane {
+    background-color: #c1d6cc !important;
+}
+
+.race_finished .timetable_lane:hover {
+    filter: brightness(0.97);
+}
+
+.race_finished:nth-child(even) {
+    background-color: #d1e7dd !important;
+}
+
+.race_finished:nth-child(odd) {
+    background-color: #c1d6cc !important;
+}
+
+.race_finished:hover {
+    filter: brightness(0.97);
+}
+
+.race_started:nth-child(even) .timetable_lane {
+    background-color: #fff3cd !important;
+}
+
+.race_started:nth-child(odd) .timetable_lane {
+    background-color: #ece1be !important;
+}
+
+.race_started .timetable_lane:hover {
+    filter: brightness(0.97);
+}
+
+.race_started:nth-child(even) {
+    background-color: #fff3cd !important;
+}
+
+.race_started:nth-child(odd) {
+    background-color: #ece1be !important;
+}
+
+.race_started:hover {
+    filter: brightness(0.97);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.col_select_race {
+    min-width: 10rem !important;
+    max-width: 15rem !important;
+}
+
+.col_times {
+    min-width: 13rem !important;
+    max-width: 13rem !important;
+}
+
+.col_time {
+    min-width: 5rem !important;
+    max-width: 5rem !important;
+}
+
+.col_num {
+    min-width: 3rem !important;
+    max-width: 3rem !important;
+}
+
+.col_skipper_control {
+    max-width: 15rem !important;
+}
+
+.col_skipper {
+    min-width: 8rem !important;
+    max-width: 8rem !important;
+}

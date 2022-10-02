@@ -1,0 +1,38 @@
+.logo {
+    height: 4rem;
+    border-radius: 0.375rem;
+}
+
+.logo img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.fixed_input {
+    min-width: 10.35rem;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: inner-spin-button !important;
+    width: 25px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+}
+
+.form-switch input[type=checkbox] {
+    margin-left: 0;
+    margin-top: 0;
+}
+
+.modal {
+    --bs-modal-width: 34rem;
+}

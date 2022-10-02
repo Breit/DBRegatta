@@ -1,0 +1,168 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load markdownify %}
+
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{% static 'css/' %}{{ config.timetablePageCSS }}">
+{% endblock %}
+
+{% block content %}
+    {% if controls %}
+        <div class="modal fade" id="createTimetableModal" tabindex="-1" data-bs-backdrop="static">
+            <div class="modal-dialog text-dark">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-light">
+                        <h5 class="modal-title" id="createTimetableLabel">{{ config.createTimetableText }}</h5>
+                        <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                        <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                        <div class="container">{{ config.warningCreateTimetable }}</div>
+                    </div>
+                    <div class="modal-footer justify-content-center bg-gray-200">
+                        <button type="submit" name="createTimetable" value="Create" class="btn btn-primary btn_icon" form="timetable_form">
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div class="pe-2">
+                                    <img src="{% static 'images/' %}{{ config.createTimetableIcon }}" alt="createTimetable">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.createTimetableText }}</p>
+                            </div>
+                        </button>
+                        <button type="button" name="cancelCreateTimetable" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div>
+                                    <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelCreateTimetable">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid bg-light sticky-top">
+            <div class="pb-3 pt-1 border-bottom border-3 collapse show" id="collapseControls">
+                <h2 class="mt-2 mb-3">{{ config.timetableSettingsHeader }}</h2>
+                <div class="d-flex align-items-start">
+                    <div class="row">
+                        {% for c in controls %}
+                            {% if c.type == 'textarea' %}
+                                <div class="col-12 mb-3 post_control">
+                                    <form method="POST" action="" id="{{ c.id }}">
+                                        {% csrf_token %}
+                                        <label for="{{ c.id }}" class="form-label small">{{ config.timetablePostDesc }}</label>
+                                        <div class="input-group rounded text-muted">
+                                            <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                            {{ c.value.content }}
+                                            <div class="input-group-text form-switch p-0 d-inline-flex flex-column">
+                                                <div class="flex-grow-1"></div>
+                                                <input type="hidden" name="{{ c.value.enable.name }}" value="off">
+                                                {{ c.value.enable }}
+                                                <div class="flex-grow-1"></div>
+                                                <button type="submit" id="postSave" class="btn btn-primary"><i class="bi bi-save2"></i></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            {% elif c.type == 'time' %}
+                                <div class="col-xs-1 mb-3 single_control">
+                                    <form method="POST" action="" id="{{ c.id }}">
+                                        {% csrf_token %}
+                                        <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
+                                        <div class="input-group rounded ">
+                                            <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                            <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end" value="{{ c.value|time:'H:i' }}" onchange="this.form.submit()">
+                                        </div>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <div class="col-xs-1 mb-3 single_control">
+                                    <form method="POST" action="" id="{{ c.id }}">
+                                        {% csrf_token %}
+                                        <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
+                                        <div class="input-group rounded ">
+                                            <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                            <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end pe-4" value="{{ c.value }}" {% if c.min %}min="{{ c.min }}"{% endif %} {% if c.max %}max="{{ c.max }}"{% endif %} onchange="this.form.submit()">
+                                        </div>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="d-flex align-items-start mt-3">
+                    <form method="POST" action="" id="timetable_form">
+                        {% csrf_token %}
+                        <button type="submit" name="refreshTimes" value="Refresh" class="btn btn-primary btn_icon me-3">
+                            <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div class="pe-2">
+                                    <img src="{% static 'images/' %}{{ config.refreshTimetableIcon }}" alt="refreshTimes">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.refreshTimetableText }}</p>
+                            </div>
+                        </button>
+                        <button type="button" id="createTimetableButton" class="btn btn-warning btn_icon" data-bs-toggle="modal" data-bs-target="#createTimetableModal">
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div>
+                                    <img src="{% static 'images/' %}{{ config.createTimetableIcon }}" alt="createTimetable">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.createTimetableText }}</p>
+                            </div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <button type="submit" name="refreshTimes" value="Refresh" class="btn btn_collapse float-end mt-1 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#collapseControls"  aria-expanded="true">
+                <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+            </button>
+        </div>
+    {% endif %}
+    <div class="container-fluid">
+        <h2 class="mt-2 mb-3">{{ config.timetableHeader }}</h2>
+        {% if post %}
+            <div class="container mx-0 px-0 mb-4">
+                {{ post|markdownify|safe }}
+            </div>
+        {% endif %}
+        {% for entry in timetable %}
+            <div class="container-fluid border border-primary pt-0 mb-3">
+                <div class="row bg-primary fs-4 text-light">
+                    <div class="col-1 text-center">{{ entry.time|time:'H:i'}}</div>
+                    <div class="col">{{ entry.desc }}</div>
+                </div>
+                {% if entry.races %}
+                    <div class="row border-bottom small text-muted mt-2">
+                        <div class="col-1 text-center">{{ config.timetableHeaderTime }}</div>
+                        <div class="col-1 text-center">{{ config.timetableHeaderName }}</div>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
+                                <div class="col">{{ config.timetableHeaderTeam }}</div>
+                                <div class="col-6 d-none d-xl-block">{{ config.timetableHeaderCompany }}</div>
+                                <div class="col-1 col_skipper">{{ config.timetableHeaderSkipper }}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% for race in entry.races %}
+                    <div class="row border-bottom timetable_race">
+                        <div class="col-1 text-center align-self-center fw-bold">{{ race.time|time:'H:i' }}</div>
+                        <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
+                        <div class="col">
+                            {% for lane in race.lanes %}
+                                <div class="row timetable_lane">
+                                    <div class="col-1 text-center">{{ lane.lane }}</div>
+                                    <div class="col {% if lane.draw %}text-muted{% else %}fw-bold{% endif %}">{{ lane.team }}</div>
+                                    <div class="col-6 d-none d-xl-block">{{ lane.company }}</div>
+                                    <div class="col-1 col_skipper{% if not lane.skipper.active %} text-muted{% endif %}">{{ lane.skipper.name }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="container-fluid overscroll"></div>
+{% endblock %}

@@ -1,0 +1,58 @@
+.id_col {
+    min-width: 2rem;
+    max-width: 2rem;
+}
+
+.icon_col {
+    min-width: 6.5rem;
+    max-width: 6.5rem;
+}
+
+.progress {
+    height: 4rem;
+    border-radius: 0;
+}
+
+.skipper_progress {
+    min-width: 8rem;
+}
+
+.skipper_list:nth-child(even) {
+    background-color: var(--bs-gray-100);
+}
+
+.skipper_list:hover {
+    background-color: var(--bs-gray-200);
+}
+
+.btn_skipper_table_icon img {
+    height: 1.5rem;
+}
+
+.btn_skipper_table_icon:hover img {
+    transform: scale(1.5);
+}
+
+.btn_skipper_table_icon {
+    border: 0;
+}
+
+.skipper_table_buttons {
+    width: 7rem !important;
+}
+
+.modal-footer .btn-primary {
+    width: 17rem;
+}
+
+.modal-footer .btn-secondary {
+    width: 11rem;
+}
+
+.skipper_edit {
+    background-color: var(--bs-primary-100) !important;
+}
+
+.skipper_edit:hover {
+    background-color: var(--bs-primary-200) !important;
+}

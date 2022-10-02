@@ -1,0 +1,69 @@
+.menu {
+    display: none !important;
+}
+
+.timetable_race {
+    z-index: 1;
+    background-color: var(--bs-gray-100) !important;
+}
+
+.timetable_race:nth-child(even) {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.timetable_race:hover {
+    filter: brightness(0.97);
+}
+
+.timetable_lane {
+    z-index: 2;
+    background-color: var(--bs-gray-100) !important;
+}
+
+.timetable_race:nth-child(even) .timetable_lane {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.timetable_lane:hover {
+    filter: brightness(0.97);
+}
+
+.rankings_table {
+    z-index: 1;
+    background-color: var(--bs-gray-100) !important;
+}
+
+.rankings_table:nth-child(odd) {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.rankings_table:hover {
+    filter: brightness(0.97);
+}
+
+.carousel-indicators {
+    margin-bottom: 0.3rem;
+}
+
+.carousel-indicators [data-bs-target] {
+    background-color: var(--bs-primary) !important;
+    border: 0 !important;
+}
+
+.carousel-inner {
+    overflow-y: auto;
+}
+
+.times_column {
+    min-width: 8rem;
+    max-width: 8rem;
+}
+
+.rank_column {
+    min-width: 5rem;
+    max-width: 5rem;
+}
+
+#liveClock {
+    min-width: 6.25rem;
+}

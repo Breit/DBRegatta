@@ -1,0 +1,10 @@
+TODO: DBRegatta
+- Skipper Delete Modal separate
+- Javascript for settings
+- Javascript for times
+- Javascript for skippers
+- Javascript for timetable
+- Landing page with registration button for teams
+- Open/Close registration button
+- Trainings Page
+- PDF Export

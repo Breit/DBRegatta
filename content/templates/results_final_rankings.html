@@ -1,0 +1,35 @@
+{% load filter_tags %}
+
+{% block rankings_finale %}
+    <div class="row flex-nowrap border-bottom small text-muted mt-2 mx-0 px-0 align-items-end">
+        <div class="col-1 text-center rank_column">{{ config.displayRank }}</div>
+        <div class="col">{{ config.timetableHeaderTeam }}</div>
+        <div class="col-4 d-none d-xl-block">{{ config.timetableHeaderCompany }}</div>
+        <div class="col-auto d-none d-md-block">
+            <div class="row flex-nowrap mb-n1 times_double_column">
+                <div class="col-12 text-center">{{ config.displayBestTime }}</div>
+            </div>
+            <div class="row flex-nowrap times_double_column">
+                <div class="col-6 text-center d-none d-md-block times_column">{{ config.heatsTitle }}</div>
+                <div class="col-6 text-center d-none d-sm-block times_column">{{ config.finaleTitle }}</div>
+            </div>
+        </div>
+        <div class="col-auto text-center d-none d-lg-block times_column">{{ config.displayRaces }}</div>
+        <div class="col-auto text-center times_column">{{ config.displayFinalTime }}</div>
+    </div>
+    {% for r in entry.ranks %}
+        <div class="row flex-nowrap rankings_table mx-0 px-0{% if not forloop.first %} border-top{% endif %}{% if forloop.last %}{% if display %} border-bottom{% else %} rounded-bottom{% endif %}{% endif %}">
+            <div class="col-1 text-center text-primary fw-bold rank_column">{{ r.rank }}</div>
+            <div class="col fw-bold">{{ r.team }}</div>
+            <div class="col-4 d-none d-xl-block">{{ r.company }}</div>
+            <div class="col-auto">
+                <div class="row flex-nowrap times_double_column">
+                    <div class="col-6 text-center small d-none d-md-block times_column">{{ r.bt_heats|asTime }}</div>
+                    <div class="col-6 text-center small d-none d-sm-block times_column">{{ r.bt_finale|asTime }}</div>
+                </div>
+            </div>
+            <div class="col-auto text-center d-none d-lg-block times_column">{{ r.races }}</div>
+            <div class="col-auto text-center fw-bold text-success times_column">{{ r.finale_time|asTime }}</div>
+        </div>
+    {% endfor %}
+{% endblock %}

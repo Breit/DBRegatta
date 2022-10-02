@@ -1,0 +1,155 @@
+{% load static %}
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=0.42">
+        <title>{{ config.siteName }}</title>
+        <link rel="icon" type="image/png"  href="{% static 'images/' %}{{ config.siteLogo }}">
+        <link rel="stylesheet" href="{% static 'bootstrap/css/' %}bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'bootstrap/icons/' %}bootstrap-icons.css">
+        <link rel="stylesheet" href="{% static 'css/' %}{{ config.siteCSS }}">
+        {% block additionalCSS %}{% endblock %}
+        {% block additionalPreJS %}{% endblock %}
+        <script src="{% static 'admin/js/vendor/jquery/' %}jquery.min.js" type="text/javascript" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
+        <script src="{% static 'bootstrap/js/' %}bootstrap.bundle.min.js" type="text/javascript" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+        <script src="{% static 'js/' %}menu.js" type="text/javascript"></script>
+        {% block additionalJS %}{% endblock %}
+    </head>
+    <body class="bg-dark">
+        <main class="bg-light m-{% if display and config.overscan %}{{ config.overscan }}{% else %}0{% endif %}">
+            <header class="header p-2 navbar sticky-top navbar-dark text-bg-dark border-bottom">
+                <div class="container-fluid ps-2">
+                    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                        <a href="{{ config.homeUrl }}" class="d-flex align-items-center mb-3 mb-md-0 text-decoration-none">
+                            <img class="bi me-2" src="{% static 'images/' %}{{ config.homeIcon }}" alt="Home">
+                        </a>
+                        <h1 class="mb-3 mb-md-0 me-md-auto text-decoration-none fw-lighter">{{ config.siteName }} {{ config.eventDate|date:'d.m.Y' }}</h1>
+                    </div>
+                    <div class="d-flex flex-nowrap align-items-center justify-content-center justify-content-lg-end">
+                        {% if display %}
+                            <div class="lead fs-3 text-light" id="liveClock"></div>
+                        {% else %}
+                            <button type="button" id="login_button" class="btn-link bg-dark border border-0 m-0 p-0" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                <i class="bi bi-person-circle{% if user_name %} text-light{% else %} text-muted{% endif %} fs-2"></i>
+                            </button>
+                            <div class="modal fade" id="loginModal" tabindex="-1">
+                                <div class="modal-dialog text-dark">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-gray-200">
+                                            {% if user_name %}
+                                                <h5 class="modal-title" id="loginModalLabel">{{ config.logoutButtonText }}</h5>
+                                            {% else %}
+                                                <h5 class="modal-title" id="loginModalLabel">{{ config.loginButtonText }}</h5>
+                                            {% endif %}
+                                            <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="login modal-body d-flex flex-wrap justify-content-center align-items-center">
+                                            <img src="{% static 'images/' %}{{ config.homeIcon }}">
+                                            <form method="POST" action="" id="login_form">
+                                                {% csrf_token %}
+                                                {% if user_name %}
+                                                    <div class="container">
+                                                        {{ config.loginGreeting1 }}{% if user_fname %}<span class="text-primary"> {{ user_fname }}</span>{% else %}<span class="text-primary"> {{user_name}}</span>{% endif %}{{ config.loginGreeting2 }}
+                                                    </div>
+                                                {% else %}
+                                                    <div class="row mx-5 mt-3">
+                                                        <div class="col-12 mb-3 p-0">
+                                                            <div class="input-group rounded">
+                                                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                                                <input type="text" name="username" class="form-control" placeholder="{{ config.loginUserName }}" maxlength="200" id="username">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12 p-0">
+                                                            <div class="input-group rounded">
+                                                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                                                <input type="password" name="password" class="form-control" placeholder="{{ config.loginPassword }}" maxlength="200" id="password">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer justify-content-center bg-gray-200">
+                                            {% if user_name %}
+                                                <button type="submit" name="logout" value="Logout" class="btn btn-primary btn_icon" form="login_form">
+                                                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                        <div class="pe-2">
+                                                            <img src="{% static 'images/' %}{{ config.logoutIcon }}" alt="logout" class="p-0">
+                                                        </div>
+                                                        <p class="m-0 ps-2 lead">{{ config.logoutButtonText }}</p>
+                                                    </div>
+                                                </button>
+                                            {% else %}
+                                                <button type="submit" name="login" value="Login" class="btn btn-primary btn_icon" form="login_form">
+                                                    <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                        <div class="pe-2">
+                                                            <img src="{% static 'images/' %}{{ config.loginIcon }}" alt="login" class="p-0">
+                                                        </div>
+                                                        <p class="m-0 ps-2 lead">{{ config.loginButtonText }}</p>
+                                                    </div>
+                                                </button>
+                                            {% endif %}
+                                            <button type="button" name="cancelLogin" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
+                                                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                    <div>
+                                                        <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelLogin" class="p-0">
+                                                    </div>
+                                                    <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </header>
+            <div class="menu float-start d-flex flex-column flex-shrink-0 text-bg-dark border-end">
+                {% include 'menu.html' %}
+                {% block menu %}{% endblock %}
+            </div>
+            <div class="content_panel flex-row">
+                {% block content %}{% endblock %}
+            </div>
+            <footer class="footer py-3 px-4 navbar fixed-bottom navbar-dark text-bg-dark border-top m-{% if display and config.overscan %}{{ config.overscan }}{% else %}0{% endif %}">
+                <div class="d-flex align-items-start">
+                    {% if config.sponsorLogo %}
+                        {% if config.sponsorUrl %}
+                            <a href="{{ config.sponsorUrl }}">
+                        {% endif %}
+                        <img src="{{ MEDIA_URL }}images/{{ config.sponsorLogo }}" alt="{{ config.sponsorName }}">
+                        {% if config.sponsorUrl %}
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="d-flex flex-column align-items-center mt-auto lead">
+                    {% if display and config.domain %}
+                    <div Class="d-flex flex-row">
+                        <div class="fs-3">{{ config.liveResultsHint }}</div>
+                        <div class="fs-3 ms-2"><strong>{{ config.domain }}</strong></div>
+                    </div>
+                    {% endif %}
+                    {% if impressum %}
+                        <div class="d-flex align-items-center mt-auto impressum">
+                            <a href="{{ impressum }}" class="{% if display %}text-dark{% else %}text-muted{% endif %} lead text-decoration-none">Impressum</a>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="d-flex align-items-end">
+                    {% if config.ownerLogo %}
+                        {% if config.ownerUrl %}
+                            <a href="{{ config.ownerUrl }}">
+                        {% endif %}
+                        <img src="{{ MEDIA_URL }}images/{{ config.ownerLogo }}" alt="{{ config.ownerName }}">
+                        {% if config.ownerUrl %}
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </footer>
+        </main>
+    </body>
+</html>

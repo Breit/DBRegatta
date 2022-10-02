@@ -1,0 +1,13 @@
+{% load static %}
+
+{% block team_table_header %}
+    <div class="row border-bottom small text-muted text-nowrap mt-2 mx-0">
+        <div class="col-1 id_col text-center">{{ config.teamTableHeaderID }}</div>
+        <div class="col">{{ config.teamTableHeaderTeam }} / {{ config.teamTableHeaderCompany }}</div>
+        <div class="col d-none d-md-block">{{ config.teamTableHeaderCaptain }} / {{ config.teamTableHeaderEmail }}</div>
+        <div class="col d-none d-xxl-block">{{ config.teamTableHeaderAddress }}</div>
+        <div class="col-2 d-none d-xl-block">{{ config.teamTableHeaderPhone }}</div>
+        <div class="col-1 d-none d-lg-block team_table_date text-center">{{ config.teamTableHeaderDate }}</div>
+        <div class="col-1 text-center team_table_buttons">{{ config.teamTableHeaderOptions }}</div>
+    </div>
+{% endblock %}

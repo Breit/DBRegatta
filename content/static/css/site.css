@@ -1,0 +1,225 @@
+:root {
+    --bs-gray-950: #15171a;
+    --bs-success-100: #d1e7dd;
+    --bs-success-200: #a3cfbb;
+    --bs-success-300: #75b798;
+    --bs-primary-100: #cfe2ff;
+    --bs-primary-200: #9ec5fe;
+    --bs-primary-300: #6ea8fe;
+    --bs-secondary-100: #f8f9fa;
+    --bs-secondary-200: #e9ecef;
+    --bs-secondary-300: #dee2e6;
+    --bs-purple-100: #e2d9f3;
+    --bs-purple-200: #c5b3e6;
+    --bs-purple-300: #a98eda;
+    --bs-header-zindex: 1030;
+}
+
+.bg-primary-100 {
+    background-color: var(--bs-primary-100) !important;
+}
+
+.bg-primary-200 {
+    background-color: var(--bs-primary-200) !important;
+}
+
+.bg-primary-300 {
+    background-color: var(--bs-primary-300) !important;
+}
+
+.bg-secondary-100 {
+    background-color: var(--bs-secondary-100) !important;
+}
+
+.bg-secondary-200 {
+    background-color: var(--bs-secondary-200) !important;
+}
+
+.bg-secondary-300 {
+    background-color: var(--bs-secondary-300) !important;
+}
+
+.bg-purple-100 {
+    background-color: var(--bs-purple-100) !important;
+}
+
+.bg-purple-200 {
+    background-color: var(--bs-purple-200) !important;
+}
+
+.bg-purple-300 {
+    background-color: var(--bs-purple-300) !important;
+}
+
+.border-primary-100 {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-primary-100)!important;
+}
+
+.border-primary-200 {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-primary-200)!important;
+}
+
+.border-primary-300 {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-primary-300)!important;
+}
+
+.border-purple-100 {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-purple-100)!important;
+}
+
+.border-purple-200 {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-purple-200)!important;
+}
+
+.border-purple-300 {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-purple-300)!important;
+}
+
+.header {
+    border-color: var(--bs-gray-800) !important;
+    z-index: var(--bs-header-zindex) !important;
+}
+
+.header img{
+    height: 3.3rem;
+    cursor: pointer;
+    padding-bottom: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.header img:hover {
+    transform: scale(1.2);
+}
+
+.menu {
+    height: calc(100vh - 4.27rem - 7rem - 0.125rem);
+    border-color: var(--bs-gray-800) !important;
+    background-color: var(--bs-gray-950) !important;
+}
+
+.menu li:hover {
+    background-color: var(--bs-gray-800) !important;
+    /* border-radius: var(--bs-nav-pills-border-radius) !important; */
+}
+
+.menu li:hover img {
+    transform: scale(1.2);
+}
+
+.menu img {
+    height: 3rem;
+    width: 3rem;
+}
+
+.content_panel {
+    position: relative;
+    height: calc(100vh - 4.27rem - 7rem - 0.125rem);
+    overflow: auto;
+}
+
+.footer {
+    border-color: var(--bs-gray-800) !important;
+    bottom: 0;
+}
+
+.footer img {
+    height: 5rem;
+}
+
+.btn_icon {
+    width: 17rem;
+}
+
+.btn_collapse {
+    opacity: 0.3;
+}
+
+.btn_collapse:hover {
+    color: var(--bs-primary) !important;
+    background-color:rgba(0, 0, 0, 0.05);
+    opacity: 1.0;
+}
+
+.btn_collapse[aria-expanded=false] .icon_expanded {
+    display: none;
+}
+
+.btn_collapse[aria-expanded=true] .icon_collapsed {
+    display: none;
+}
+
+.btn_lg {
+    width: 19rem !important;
+}
+
+.btn_icon img {
+    height: 3rem;
+}
+
+.btn_icon:hover img {
+    transform: scale(1.2);
+}
+
+.login_form {
+    width: 17rem;
+}
+
+.home_icon {
+    width: 8rem;
+}
+
+#login_button i:hover {
+    color: var(--bs-primary) !important;
+}
+
+.modal-backdrop {
+    z-index: calc(var(--bs-header-zindex) - 1) !important;
+}
+
+.bg-gray-200 {
+    background-color: var(--bs-gray-200) !important;
+}
+
+.login img {
+    height: 6rem !important;
+    cursor: auto;
+}
+
+.login img:hover {
+    transform: scale(1.0);
+}
+
+.modal-body img {
+    height: 4rem;
+    cursor: auto;
+}
+
+.modal-footer .btn-primary {
+    width: 16rem;
+}
+
+.modal-footer .btn-secondary {
+    width: 12rem;
+}
+
+.nav-link .badge {
+    font-size: 0.6rem;
+}
+
+.impressum a:hover {
+    color: var(--bs-primary) !important;
+}
+
+.nav li.toggle:hover {
+    background-color: var(--bs-gray-950) !important;
+}
+
+.rounded-bottom-right {
+    border-bottom-right-radius: 0.375rem !important;
+}
+
+@media only screen and (max-device-width: 480px) {
+    .overscroll {
+        height: 15rem;
+    }
+}

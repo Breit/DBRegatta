@@ -1,0 +1,22 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block additionalJS %}
+    <script type="text/javascript" src="{% static 'js/' %}trainings.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid bg-light sticky-top">
+        <div class="pb-3 pt-1 border-bottom border-3 collapse show" id="collapseControls">
+            <h2 class="mt-2 mb-3">{{ config.trainingsTitle }}</h2>
+        </div>
+        <button type="submit" name="refreshTimes" value="Refresh" class="btn btn_collapse float-end mt-1 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#collapseControls"  aria-expanded="true">
+            <i class="bi bi-chevron-compact-up icon_expanded"></i>
+            <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+        </button>
+    </div>
+    <div class="container-fluid">
+
+    </div>
+    <div class="container-fluid overscroll"></div>
+{% endblock %}

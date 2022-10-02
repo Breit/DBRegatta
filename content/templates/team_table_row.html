@@ -1,0 +1,52 @@
+{% load static %}
+
+{% block team_table_row %}
+    <div class="row align-items-center mx-0 teams_list py-1{% if forloop.last %} rounded-bottom{% else %} border-bottom{% endif %}" id="team_{{ t.id }}">
+        <div class="col-1 id_col fw-bold text-center text-nowrap text-primary">{{ forloop.counter }}</div>
+        <div class="col">
+            <span class="fw-bold{% if t.active and not t.wait %} text-success{% elif t.active and t.wait %} text-warning{% else %} text-muted{% endif %}">{{ t.name }}</span>
+            <br>
+            <span class="small">{{ t.company }}</span>
+        </div>
+        <div class="col d-none d-md-block">
+            <span>{{ t.contact }}</span>
+            <br>
+            <a href= "mailto:{{ t.email }}" class="small">{{ t.email }}</a>
+        </div>
+        <div class="col d-none d-xxl-block small">{{ t.address|linebreaks }}</div>
+        <div class="col-2 d-none d-xl-block small">{{ t.phone }}</div>
+        <div class="col-1 d-none d-lg-block text-nowrap team_table_date text-center">{{ t.date|date:'d.m.Y' }}</div>
+        <div class="col-1 px-2 text-center text-nowrap team_table_buttons">
+            <div class="row m-0 flex-nowrap">
+                <div class="col-3 m-0 p-0 team_table_button">
+                    <button type="button" name="edit_team" value="{{ t.id }}" class="btn btn_team_table_icon p-0 ps-1" onclick="button_mod_team({{ t.id }})">
+                        <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_team">
+                    </button>
+                </div>
+                <div class="col-3 m-0 p-0 team_table_button">
+                    <button type="button" name="activate_team" value="{{ t.id }}" class="btn btn_team_table_icon p-0 ps-1" onclick="button_toggle_team('activate_team', {{ t.id }})">
+                        {% if t.active %}
+                            <img src="{% static 'images/' %}{{ config.activeTeamIcon }}" alt="active_team">
+                        {% else %}
+                            <img src="{% static 'images/' %}{{ config.inactiveTeamIcon }}" alt="inactive_team">
+                        {% endif %}
+                    </button>
+                </div>
+                <div class="col-3 m-0 p-0 team_table_button">
+                    <button type="button" name="waitlist_team" value="{{ t.id }}" class="btn btn_team_table_icon p-0 ps-1" onclick="button_toggle_team('waitlist_team', {{ t.id }})">
+                        {% if t.wait %}
+                            <img src="{% static 'images/' %}{{ config.waitTeamIcon }}" alt="wait_team">
+                        {% else %}
+                            <img src="{% static 'images/' %}{{ config.nowaitTeamIcon }}" alt="nowait_team">
+                        {% endif %}
+                    </button>
+                </div>
+                <div class="col-3 m-0 p-0 team_table_button">
+                    <button type="button" class="btn btn_team_table_icon p-0 ps-1" onclick="request_delete_team('{{ t.name }}', {{ t.id }})">
+                        <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_team">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
