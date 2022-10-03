@@ -10,7 +10,7 @@
         <h2 class="my-3 display-6">{{ config.settingsTitle }}</h2>
             {% for section in controls %}
                 <div class="card mb-4 shadow">
-                    <div class="card-header fs-5 py-0">{{ section.title }}</div>
+                    <div class="card-header fs-4 py-0">{{ section.title }}</div>
                     <div class="card-body p-0">
                         <div class="row pt-0 mx-0 rounded-bottom">
                             {% for c in section.controls %}
@@ -88,11 +88,11 @@
             <div class="row g-3">
                 <div class="col-12 col-lg-6">
                     <div class="card p-0 shadow">
-                        <div class="card-header bg-purple-100 fs-5 py-0">{{ config.devOptionsTimetable }}</div>
+                        <div class="card-header bg-purple-100 fs-4 py-0">{{ config.devOptionsTimetable }}</div>
                         <div class="card-body p-3 pb-0">
                             <form method="POST" action="" id="dev_options_times_form">
                                 {% csrf_token %}
-                                <button type="button" name="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon btn_lg me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetFinalsModal">
+                                <button type="button" name="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon btn_lg shadow me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetFinalsModal">
                                     <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                         <div class="pe-2">
                                             <img src="{% static 'images/' %}{{ config.resetFinalsIcon }}" alt="reset_finals">
@@ -132,7 +132,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button type="button" id="resetHeats" class="btn btn-danger btn_icon btn_lg mb-3" data-bs-toggle="modal" data-bs-target="#resetHeatsModal">
+                                <button type="button" id="resetHeats" class="btn btn-danger btn_icon btn_lg shadow mb-3" data-bs-toggle="modal" data-bs-target="#resetHeatsModal">
                                     <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                         <div class="pe-2">
                                             <img src="{% static 'images/' %}{{ config.resetHeatsIcon }}" alt="reset_heats">
@@ -178,11 +178,11 @@
                 </div>
                 <div class="col-12 col-lg-6">
                     <div class="card p-0 shadow">
-                        <div class="card-header bg-purple-100 fs-5 py-0">{{ config.devOptionsData }}</div>
+                        <div class="card-header bg-purple-100 fs-4 py-0">{{ config.devOptionsData }}</div>
                         <div class="card-body p-3 pb-0">
                             <form method="POST" action="" id="dev_options_data_form">
                                 {% csrf_token %}
-                                <button type="button" name="resetSkippers" value="ResetSkippers" class="btn btn-danger btn_icon btn_lg me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetSkippersModal">
+                                <button type="button" name="resetSkippers" value="ResetSkippers" class="btn btn-danger btn_icon btn_lg shadow me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetSkippersModal">
                                     <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                         <div class="pe-2">
                                             <img src="{% static 'images/' %}{{ config.resetSkippersIcon }}" alt="reset_skippers">
@@ -222,7 +222,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button type="button" id="resetTeams" class="btn btn-danger btn_icon btn_lg mb-3" data-bs-toggle="modal" data-bs-target="#resetTeamsModal">
+                                <button type="button" id="resetTeams" class="btn btn-danger btn_icon btn_lg shadow mb-3" data-bs-toggle="modal" data-bs-target="#resetTeamsModal">
                                     <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                         <div class="pe-2">
                                             <img src="{% static 'images/' %}{{ config.resetTeamsIcon }}" alt="reset_teams">
@@ -268,12 +268,12 @@
                 </div>
                 <div class="col-12 mb-2">
                     <div class="card p-0 shadow">
-                        <div class="card-header bg-purple-100 fs-5 py-0">{{ config.devOptionsDatabase }}</div>
+                        <div class="card-header bg-purple-100 fs-4 py-0">{{ config.devOptionsDatabase }}</div>
                         <div class="card-body p-3 pb-0">
                             <div class="d-inline-flex">
                                 <form method="POST" action="" id="dev_options_db_form">
                                     {% csrf_token %}
-                                    <button type="submit" name="backupDatabase" value="BackupDatabase" class="btn btn-primary btn_icon btn_lg me-3 mb-3" form="dev_options_db_form">
+                                    <button type="submit" name="backupDatabase" value="BackupDatabase" class="btn btn-primary btn_icon btn_lg shadow me-3 mb-3" form="dev_options_db_form">
                                         <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                             <div class="pe-2">
                                                 <img src="{% static 'images/' %}{{ config.backupDatabaseIcon }}" alt="backup_database">

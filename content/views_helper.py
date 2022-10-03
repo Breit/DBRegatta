@@ -1057,10 +1057,15 @@ def getTimesControls(race_id = None):
                 skipper = Skipper.objects.get(id=attendee.skipper_id)
             except:
                 skipper = None
+            try:
+                team = Team.objects.get(id=attendee.team_id)
+            except:
+                team = None
             lane = {
                 'id': attendee.id,
                 'lane': attendee.lane,
-                'team': Team.objects.get(id=attendee.team_id).name,
+                'team': team.name if team else '-',
+                'company': team.company if team else '-',
                 'skipper': {
                     'name': skipper.name if skipper else '-',
                     'active': skipper.active if skipper else False

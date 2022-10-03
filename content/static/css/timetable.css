@@ -23,29 +23,24 @@ input[type=number]::-webkit-inner-spin-button {
     filter: saturate(0.8);
 }
 
-.timetable_race {
-    z-index: 1;
+.timetable_race:nth-child(even) {
     background-color: var(--bs-gray-100) !important;
-}
-
-.timetable_race:nth-child(odd) {
-    background-color: var(--bs-gray-200) !important;
 }
 
 .timetable_race:hover {
     filter: brightness(0.97);
 }
 
-.timetable_lane {
-    z-index: 2;
+.timetable_race:nth-child(odd):hover {
     background-color: var(--bs-gray-100) !important;
 }
 
-.timetable_race:nth-child(odd) .timetable_lane {
-    background-color: var(--bs-gray-200) !important;
+.timetable_lane {
+    z-index: 2;
 }
 
 .timetable_lane:hover {
+    background-color: var(--bs-gray-100) !important;
     filter: brightness(0.97);
 }
 
