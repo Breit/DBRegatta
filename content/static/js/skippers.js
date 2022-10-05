@@ -19,87 +19,87 @@ function button_toggle_skipper(action, skipper_id)
         }
     );
 }
-// TODO
-function request_delete_team(team_name, team_id)
+
+function request_delete_skipper(skipper_name, skipper_id)
 {
-    $('#button_delete_team').prop('value', team_id);
-    $('#del_team_warning').text(team_name);
-    $('#deleteTeamModal').modal('toggle');
+    $('#button_delete_skipper').prop('value', skipper_id);
+    $('#del_skipper_warning').text(skipper_name);
+    $('#deleteSkipperModal').modal('toggle');
 }
 
-function button_mod_team(team_id)
+function button_mod_skipper(skipper_id)
 {
-    $('#team_' + team_id).addClass('team_edit');
-    $('#team_' + team_id)[0].scrollIntoView();
+    $('#skipper_' + skipper_id).addClass('skipper_edit');
+    $('#skipper_' + skipper_id)[0].scrollIntoView();
 
     $('#wait').removeClass('d-none').addClass('d-block');
 
-    $('#button_edit_team').prop('disabled', true);
-    $('#button_cancel_team').prop('disabled', true);
+    $('#button_edit_skipper').prop('disabled', true);
+    $('#button_cancel_skipper').prop('disabled', true);
 
-    $('#team_form').attr('name', 'mod_team');
-    $('#button_edit_team').prop('value', team_id);
+    $('#skipper_form').attr('name', 'mod_skipper');
+    $('#button_edit_skipper').prop('value', skipper_id);
 
-    $('#formAddTeamLabel').removeClass('d-block').addClass('d-none');
-    $('#formEditTeamLabel').removeClass('d-none').addClass('d-block');
+    $('#formAddSkipperLabel').removeClass('d-block').addClass('d-none');
+    $('#formEditSkipperLabel').removeClass('d-none').addClass('d-block');
 
-    $('#button_add_team').removeClass('d-block').addClass('d-none');
-    $('#button_edit_team').removeClass('d-none').addClass('d-block');
+    $('#button_add_skipper').removeClass('d-block').addClass('d-none');
+    $('#button_edit_skipper').removeClass('d-none').addClass('d-block');
 
-    $('#formTeamModal').modal('toggle');
+    $('#formSkipperModal').modal('toggle');
 
     const csrftoken = getCookie('csrftoken');
     $.post(
         {
             url: window.location.href,
-            data: { 'edit_team': team_id },
+            data: { 'edit_skipper': skipper_id },
             headers: { 'X-CSRFToken': csrftoken }
         },
         function(data, status){
             if (status == 'success')
             {
-                $('#team_form').html($(data).find('#team_form').html());
+                $('#skipper_form').html($(data).find('#skipper_form').html());
             }
 
             $('#wait').removeClass('d-block').addClass('d-none');
 
-            $('#button_edit_team').prop('disabled', false);
-            $('#button_cancel_team').prop('disabled', false);
+            $('#button_edit_skipper').prop('disabled', false);
+            $('#button_cancel_skipper').prop('disabled', false);
         }
     );
 }
 
 $(document).ready(function()
 {
-    $('#team_form').submit(function(e)
+    $('#skipper_form').submit(function(e)
     {
         e.preventDefault();
 
         $('#wait').removeClass('d-none').addClass('d-block');
 
-        $('#button_add_team').prop('disabled', true);
-        $('#button_edit_team').prop('disabled', true);
-        $('#button_cancel_team').prop('disabled', true);
+        $('#button_add_skipper').prop('disabled', true);
+        $('#button_edit_skipper').prop('disabled', true);
+        $('#button_cancel_skipper').prop('disabled', true);
 
-        var edit_team = false;
+        var edit_skipper = false;
         var edit_id = null;
-        if ($("#team_form").attr('name') == 'mod_team')
+        if ($("#skipper_form").attr('name') == 'mod_skipper')
         {
-            edit_team = true;
-            edit_id = $("#button_edit_team").prop('value');
+            edit_skipper = true;
+            edit_id = $("#button_edit_skipper").prop('value');
         }
         const csrftoken = getCookie('csrftoken');
         var form_data = null;
-        if (edit_team)
+        if (edit_skipper)
         {
-            form_data = 'mod_team=';
+            form_data = 'mod_skipper=';
             form_data += edit_id;
             form_data += '&';
             form_data += $(this).serialize();
         }
         else
         {
-            form_data = 'add_team=&';
+            form_data = 'add_skipper=&';
             form_data += $(this).serialize();
         }
 
@@ -114,48 +114,48 @@ $(document).ready(function()
                 if (status == 'success')
                 {
                     $('.menu').html($(data).find('.menu').html());
-                    $('#team_table').html($(data).find('#team_table').html());
+                    $('#skipper_table').html($(data).find('#skipper_table').html());
 
-                    const form_content = $(data).find('#team_form');
-                    $('#team_form').html(form_content.html());
-                    $('#team_form').attr('name', form_content.attr('name'));
+                    const form_content = $(data).find('#skipper_form');
+                    $('#skipper_form').html(form_content.html());
+                    $('#skipper_form').attr('name', form_content.attr('name'));
                 }
 
                 $('#wait').removeClass('d-block').addClass('d-none');
 
-                $('#button_add_team').prop('disabled', false);
-                $('#button_edit_team').prop('disabled', false);
-                $('#button_cancel_team').prop('disabled', false);
+                $('#button_add_skipper').prop('disabled', false);
+                $('#button_edit_skipper').prop('disabled', false);
+                $('#button_cancel_skipper').prop('disabled', false);
 
-                if (!$('#team_form .input-error').length)
+                if (!$('#skipper_form .input-error').length)
                 {
-                    $('#formTeamModal').modal('toggle');
+                    $('#formSkipperModal').modal('toggle');
 
-                    $('#formAddTeamLabel').removeClass('d-none').addClass('d-block');
-                    $('#formEditTeamLabel').removeClass('d-block').addClass('d-none');
+                    $('#formAddSkipperLabel').removeClass('d-none').addClass('d-block');
+                    $('#formEditSkipperLabel').removeClass('d-block').addClass('d-none');
 
-                    $('#button_add_team').removeClass('d-none').addClass('d-block');
-                    $('#button_edit_team').removeClass('d-block').addClass('d-none');
+                    $('#button_add_skipper').removeClass('d-none').addClass('d-block');
+                    $('#button_edit_skipper').removeClass('d-block').addClass('d-none');
 
                     $('.content_panel').scrollTop($('.content_panel')[0].scrollHeight);
 
-                    if (edit_team && edit_id !== null && edit_id !== undefined)
+                    if (edit_skipper && edit_id !== null && edit_id !== undefined)
                     {
-                        $('#team_' + edit_id).removeClass('team_edit');
+                        $('#skipper_' + edit_id).removeClass('skipper_edit');
                     }
                 }
             }
         );
     });
 
-    $('#button_cancel_team').click(function()
+    $('#button_cancel_skipper').click(function()
     {
-        var edit_team = false;
+        var edit_skipper = false;
         var edit_id = null;
-        if ($("#team_form").attr('name') == 'mod_team')
+        if ($("#skipper_form").attr('name') == 'mod_skipper')
         {
-            edit_team = true;
-            edit_id = $("#button_edit_team").prop('value');
+            edit_skipper = true;
+            edit_id = $("#button_edit_skipper").prop('value');
         }
 
         $.get(
@@ -166,41 +166,41 @@ $(document).ready(function()
             {
                 if (status == 'success')
                 {
-                    const form_content = $(data).find('#team_form');
-                    $('#team_form').html(form_content.html());
-                    $('#team_form').attr('name', form_content.attr('name'));
+                    const form_content = $(data).find('#skipper_form');
+                    $('#skipper_form').html(form_content.html());
+                    $('#skipper_form').attr('name', form_content.attr('name'));
                 }
 
-                if (edit_team && edit_id !== null && edit_id !== undefined)
+                if (edit_skipper && edit_id !== null && edit_id !== undefined)
                 {
-                    $('#team_' + edit_id).removeClass('team_edit');
+                    $('#skipper_' + edit_id).removeClass('skipper_edit');
                 }
 
-                $('#team_form').trigger('reset');
+                $('#skipper_form').trigger('reset');
 
-                $('#formAddTeamLabel').removeClass('d-none').addClass('d-block');
-                $('#formEditTeamLabel').removeClass('d-block').addClass('d-none');
+                $('#formAddSkipperLabel').removeClass('d-none').addClass('d-block');
+                $('#formEditSkipperLabel').removeClass('d-block').addClass('d-none');
 
-                $('#button_add_team').removeClass('d-none').addClass('d-block');
-                $('#button_edit_team').removeClass('d-block').addClass('d-none');
+                $('#button_add_skipper').removeClass('d-none').addClass('d-block');
+                $('#button_edit_skipper').removeClass('d-block').addClass('d-none');
             }
         );
     });
 
-    $('#button_delete_team').click(function()
+    $('#button_delete_skipper').click(function()
     {
         const csrftoken = getCookie('csrftoken');
         $.post(
             {
                 url: window.location.href,
-                data: { delete_team: $('#button_delete_team').prop('value') },
+                data: { delete_skipper: $('#button_delete_skipper').prop('value') },
                 headers: { 'X-CSRFToken': csrftoken }
             },
             function(data, status){
                 if (status == 'success')
                 {
                     $('.menu').html($(data).find('.menu').html());
-                    $('#team_table').html($(data).find('#team_table').html());
+                    $('#skipper_table').html($(data).find('#skipper_table').html());
                 }
             }
         );
