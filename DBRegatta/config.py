@@ -79,6 +79,7 @@ CONSTANCE_CONFIG = {
 
     # Timetable Settings
     'timetablePageCSS':         ('timetable.css',                               'CSS File for Site-specific Styling'),
+    'timetablePageJS':          ('timetable.js',                                'JS File for Site-specific Data Handling'),
     'timetableTitle':           ('Zeitplan',                                    'Menu Title for Timetable Page'),
     'timetableIcon':            ('timetable.svg',                               'Menu Icon for Timetable Page'),
     'timetableHeader':          ('Rennplan',                                    'Header Label for Timetable Page'),
@@ -125,6 +126,7 @@ CONSTANCE_CONFIG = {
 
     # Time Settings
     'timesPageCSS':             ('times.css',                                   'CSS File for Site-specific Styling'),
+    'timesPageJS':              ('times.js',                                    'JS File for Site-specific Data Handling'),
     'timeTitle':                ('Zeiteingabe',                                 'Menu Title for Time Page'),
     'timeRaceDesc':             ('Rennen',                                      'Text for Race Select Drop-Down'),
     'timesHeader':              ('Zeiteingabe',                                 'Header Label for Time Entry on Time Page'),
@@ -166,6 +168,7 @@ CONSTANCE_CONFIG = {
 
     # Results Settings
     'resultsPageCSS':           ('results.css',                                 'CSS File for Site-specific Styling'),
+    'resultsPageJS':            ('results.js',                                  'JS File for Site-specific Data Handling'),
     'resultsTitle':             ('Ergebnisse',                                  'Menu Title for Results Page'),
     'resultsIcon':              ('results.svg',                                 'Menu Icon for Results Page'),
     'resultsTableHeader':       ('Ergebnisliste',                               'Header Label for Race Results on Results Page'),
@@ -329,6 +332,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'Timetable Settings': {
         'fields': (
             'timetablePageCSS',
+            'timetablePageJS',
             'timetableTitle',
             'timetableIcon',
             'timetableHeader',
@@ -378,6 +382,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'Time Settings': {
         'fields': (
             'timesPageCSS',
+            'timesPageJS',
             'timeTitle',
             'timeRaceDesc',
             'timesHeader',
@@ -428,6 +433,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'Results Settings': {
         'fields': (
             'resultsPageCSS',
+            'resultsPageJS',
             'resultsTitle',
             'resultsIcon',
             'resultsTableHeader',

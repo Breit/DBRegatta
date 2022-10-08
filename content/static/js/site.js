@@ -52,6 +52,15 @@ function toggleFoldMenu()
         );
         $("#folded").attr("id", "full");
     }
-
-    // $(".menu").load(window.location.href + " .menu");
 }
+
+$(document).ready(function()
+{
+    $('.card-body.collapse').on('show.bs.collapse', function () {
+        $(this).siblings('.card-header').removeClass('card-header-collapsed');
+    });
+
+    $('.card-body.collapse').on('hidden.bs.collapse', function () {
+        $(this).siblings('.card-header').addClass('card-header-collapsed');
+    });
+});

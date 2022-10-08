@@ -1,5 +1,6 @@
 {% extends 'main.html' %}
 {% load static %}
+{% load filter_tags %}
 {% load filter_tags_skipper %}
 
 {% block additionalCSS %}
@@ -122,8 +123,18 @@
         <div class="container-fluid m-0 p-0">
             {% if content.activeSkippers %}
                 <div class="card mb-3 shadow">
-                    <div class="card-header fs-4 py-0">{{ config.activeSkipperTitle }}</div>
-                    <div class="card-body p-0">
+                    <div class="card-header fs-4 py-0">
+                        <div class="row flex-nowrap">
+                            <div class="col">{{ config.activeSkipperTitle }}</div>
+                            <div class="col-auto ms-auto p-0">
+                                <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ config.activeSkipperTitle|uid }}" aria-expanded="true">
+                                    <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                    <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 collapse show" id="{{ config.activeSkipperTitle|uid }}">
                         {% include 'skipper_table_header.html' %}
                         {% for skipper in content.skipperList|active_skipper %}
                             {% include 'skipper_table_row.html' %}
@@ -133,8 +144,18 @@
             {% endif %}
             {% if content.inactiveSkippers %}
                 <div class="card mb-3 shadow">
-                    <div class="card-header fs-4 py-0">{{ config.inactiveSkipperTitle }}</div>
-                    <div class="card-body p-0">
+                    <div class="card-header fs-4 py-0">
+                        <div class="row flex-nowrap">
+                            <div class="col">{{ config.inactiveSkipperTitle }}</div>
+                            <div class="col-auto ms-auto p-0">
+                                <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ config.inactiveSkipperTitle|uid }}" aria-expanded="true">
+                                    <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                    <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 collapse show" id="{{ config.inactiveSkipperTitle|uid }}">
                         {% include 'skipper_table_header.html' %}
                         {% for skipper in content.skipperList|inactive_skipper %}
                             {% include 'skipper_table_row.html' %}

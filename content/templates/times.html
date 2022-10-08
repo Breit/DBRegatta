@@ -86,7 +86,7 @@
                 </button>
             </div>
         </div>
-        <button type="submit" name="refreshTimes" value="Refresh" class="btn btn_collapse float-end mt-1 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#collapseControls"  aria-expanded="true">
+        <button type="submit" name="refreshTimes" value="Refresh" class="btn btn_collapse float-end mt-1 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#collapseControls" aria-expanded="true">
             <i class="bi bi-chevron-compact-up icon_expanded"></i>
             <i class="bi bi-chevron-compact-down icon_collapsed"></i>
         </button>
@@ -95,21 +95,29 @@
         <h2 class="mt-2 mb-3 display-6">{{ config.timesTableHeader }}</h2>
         {% for entry in times %}
             <div class="card mb-3 shadow">
-                <div class="card-header fs-4 py-0">
+                <div class="card-header fs-4 py-0{% if not entry.races %} card-header-collapsed{% endif %}">
                     <div class="row flex-nowrap">
                         <div class="col-auto text-center">{{ entry.time|time:'H:i'}}</div>
                         <div class="col">{{ entry.desc }}</div>
+                        {% if entry.races %}
+                            <div class="col-auto ms-auto p-0">
+                                <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ entry.desc|uid }}" aria-expanded="true">
+                                    <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                    <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                                </button>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
-                <div class="card-body p-0">
-                    {% if entry.races %}
+                {% if entry.races %}
+                    <div class="card-body p-0 collapse show" id="{{ entry.desc|uid }}">
                         <div class="row flex-nowrap timetable_header border-bottom small text-muted mx-0 mt-2">
                             <div class="col col_time text-center">{{ config.timetableHeaderTime }}</div>
                             <div class="col col_time text-center">{{ config.timetableHeaderName }}</div>
                             <div class="col">
                                 <div class="row">
                                     <div class="col-1 col_num text-center">{{ config.timetableHeaderLane }}</div>
-                                    <div class="col">{{ config.timetableHeaderTeam }}</div>
+                                    <div class="col col-xxl-3">{{ config.timetableHeaderTeam }}</div>
                                     <div class="col d-none d-xxl-block">{{ config.timetableHeaderCompany }}</div>
                                     <div class="col col_skipper d-none d-lg-block">{{ config.timesHeaderSkipper }}</div>
                                     <div class="col col_num text-center">{{ config.timesHeaderPlace }}</div>
@@ -117,26 +125,26 @@
                                 </div>
                             </div>
                         </div>
-                    {% endif %}
-                    {% for race in entry.races %}
-                        <div class="row flex-nowrap timetable_race mx-0{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}{% if forloop.last %} rounded-bottom{% else %} border-bottom{% endif %}">
-                            <div class="col col_time text-center align-self-center fw-bold">{{ race.time|time:'H:i' }}</div>
-                            <div class="col col_time text-center align-self-center">{{ race.desc }}</div>
-                            <div class="col">
-                                {% for lane in race.lanes %}
-                                    <div class="row timetable_lane{% if forloop.parentloop.last and forloop.last %} rounded-bottom-right{% endif %}">
-                                        <div class="col-1 col_num text-center align-self-center">{{ lane.lane }}</div>
-                                        <div class="col align-self-center{% if lane.draw %} text-muted{% else %} fw-bold{% endif %}">{{ lane.team }}</div>
-                                        <div class="col d-none d-xxl-block align-self-center">{{ lane.company }}</div>
-                                        <div class="col col_skipper d-none d-lg-block align-self-center{% if lane.skipper.active %} fw-bold{% else %} text-muted{% endif %}">{{ lane.skipper.name }}</div>
-                                        <div class="col col_num text-center align-self-center">{{ lane.place }}</div>
-                                        <div class="col col_time text-center align-self-center px-1{% if lane.finished %} fw-bold text-success{% else %} text-muted{% endif %}">{{ lane.time|asTime }}</div>
-                                    </div>
-                                {% endfor %}
+                        {% for race in entry.races %}
+                            <div class="row flex-nowrap timetable_race mx-0{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}{% if forloop.last %} rounded-bottom{% else %} border-bottom{% endif %}">
+                                <div class="col col_time text-center align-self-center fw-bold">{{ race.time|time:'H:i' }}</div>
+                                <div class="col col_time text-center align-self-center">{{ race.desc }}</div>
+                                <div class="col">
+                                    {% for lane in race.lanes %}
+                                        <div class="row timetable_lane{% if forloop.parentloop.last and forloop.last %} rounded-bottom-right{% endif %}">
+                                            <div class="col-1 col_num text-center align-self-center">{{ lane.lane }}</div>
+                                            <div class="col col-xxl-3 align-self-center{% if lane.draw %} text-muted{% else %} fw-bold{% endif %}">{{ lane.team }}</div>
+                                            <div class="col d-none d-xxl-block align-self-center">{{ lane.company }}</div>
+                                            <div class="col col_skipper d-none d-lg-block align-self-center{% if lane.skipper.active %} fw-bold{% else %} text-muted{% endif %}">{{ lane.skipper.name }}</div>
+                                            <div class="col col_num text-center align-self-center">{{ lane.place }}</div>
+                                            <div class="col col_time text-center align-self-center px-1{% if lane.finished %} fw-bold text-success{% else %} text-muted{% endif %}">{{ lane.time|asTime }}</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             </div>
-                        </div>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
         {% endfor %}
     </div>

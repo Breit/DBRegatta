@@ -1,5 +1,6 @@
 {% extends 'main.html' %}
 {% load static %}
+{% load filter_tags %}
 
 {% block additionalCSS %}
     <link rel="stylesheet" href="{% static 'css/' %}{{ config.settingsPageCSS }}">
@@ -10,8 +11,18 @@
         <h2 class="my-3 display-6">{{ config.settingsTitle }}</h2>
             {% for section in controls %}
                 <div class="card mb-4 shadow">
-                    <div class="card-header fs-4 py-0">{{ section.title }}</div>
-                    <div class="card-body p-0">
+                    <div class="card-header fs-4 py-0">
+                        <div class="row flex-nowrap">
+                            <div class="col">{{ section.title }}</div>
+                            <div class="col-auto ms-auto p-0">
+                                <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ section.title|uid }}" aria-expanded="true">
+                                    <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                    <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 collapse show" id="{{ section.title|uid }}">
                         <div class="row pt-0 mx-0 rounded-bottom">
                             {% for c in section.controls %}
                                 {% if c.type == 'date' %}
@@ -111,10 +122,20 @@
         {% if user.is_superuser %}
             <h2 class="my-3 display-6">{{ config.settingsAdvancedHeader }}</h2>
             <div class="row g-3">
-                <div class="col-12 col-lg-6">
+                <div class="col-12">
                     <div class="card p-0 shadow">
-                        <div class="card-header bg-purple-100 fs-4 py-0">{{ config.devOptionsTimetable }}</div>
-                        <div class="card-body p-3 pb-0">
+                        <div class="card-header bg-purple-100 fs-4 py-0 card-header-collapsed">
+                            <div class="row flex-nowrap">
+                                <div class="col">{{ config.devOptionsTimetable }}</div>
+                                <div class="col-auto ms-auto p-0">
+                                    <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ config.devOptionsTimetable|uid }}" aria-expanded="false">
+                                        <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                        <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-3 pb-0 collapse" id="{{ config.devOptionsTimetable|uid }}">
                             <form method="POST" action="" id="dev_options_times_form">
                                 {% csrf_token %}
                                 <button type="button" name="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon btn_lg shadow me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetFinalsModal">
@@ -201,13 +222,23 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-6">
+                <div class="col-12">
                     <div class="card p-0 shadow">
-                        <div class="card-header bg-purple-100 fs-4 py-0">{{ config.devOptionsData }}</div>
-                        <div class="card-body p-3 pb-0">
+                        <div class="card-header bg-purple-100 fs-4 py-0 card-header-collapsed">
+                            <div class="row flex-nowrap">
+                                <div class="col">{{ config.devOptionsData }}</div>
+                                <div class="col-auto ms-auto p-0">
+                                    <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ config.devOptionsData|uid }}" aria-expanded="false">
+                                        <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                        <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-3 pb-0 collapse" id="{{ config.devOptionsData|uid }}">
                             <form method="POST" action="" id="dev_options_data_form">
                                 {% csrf_token %}
-                                <button type="button" name="resetSkippers" value="ResetSkippers" class="btn btn-danger btn_icon btn_lg shadow me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetSkippersModal">
+                                <button type="button" name="resetSkippers" value="ResetSkippers" class="btn btn-warning btn_icon btn_lg shadow me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetSkippersModal">
                                     <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                         <div class="pe-2">
                                             <img src="{% static 'images/' %}{{ config.resetSkippersIcon }}" alt="reset_skippers">
@@ -293,8 +324,18 @@
                 </div>
                 <div class="col-12 mb-2">
                     <div class="card p-0 shadow">
-                        <div class="card-header bg-purple-100 fs-4 py-0">{{ config.devOptionsDatabase }}</div>
-                        <div class="card-body p-3 pb-0">
+                        <div class="card-header bg-purple-100 fs-4 py-0">
+                            <div class="row flex-nowrap">
+                                <div class="col">{{ config.devOptionsDatabase }}</div>
+                                <div class="col-auto ms-auto p-0">
+                                    <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ config.devOptionsDatabase|uid }}" aria-expanded="true">
+                                        <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                        <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-3 pb-0 collapse show" id="{{ config.devOptionsDatabase|uid }}">
                             <div class="d-inline-flex">
                                 <form method="POST" action="" id="dev_options_db_form">
                                     {% csrf_token %}

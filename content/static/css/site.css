@@ -139,7 +139,7 @@
 
 .btn_collapse:hover {
     color: var(--bs-primary) !important;
-    background-color:rgba(0, 0, 0, 0.05);
+    /* background-color:rgba(0, 0, 0, 0.05); */
     opacity: 1.0;
 }
 
@@ -222,7 +222,12 @@
 }
 
 .shadow {
-    box-shadow: 0 .25rem 0.5rem rgba(0,0,0,.1)!important;
+    box-shadow: 0 .25rem 0.5rem rgba(0,0,0,.1) !important;
+}
+
+.card-header-collapsed {
+    border-radius: var(--bs-card-inner-border-radius) var(--bs-card-inner-border-radius) !important;
+    border-bottom: 0;
 }
 
 @media only screen and (max-device-width: 480px) {

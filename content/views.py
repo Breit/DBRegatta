@@ -218,13 +218,13 @@ def timetable(request):
             elif 'createTimetable' in request.POST:
                 createTimeTable()
             return redirect('/timetable')
-    else:
-        try:
-            post = Post.objects.get(site='timetable')
-            if post.enable:
-                siteData['post'] = post.content
-        except:
-            pass
+
+    try:
+        post = Post.objects.get(site='timetable')
+        if post.enable:
+            siteData['post'] = post.content
+    except:
+        pass
 
     return render(request, 'timetable.html', siteData)
 
