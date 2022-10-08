@@ -19,9 +19,20 @@
                                         <form method="POST" action="" id="{{ c.id }}">
                                             {% csrf_token %}
                                             <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
-                                            <div class="input-group rounded fixed_input">
+                                            <div class="input-group rounded shadow-sm fixed_input">
                                                 <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
                                                 <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end px-1" value="{{ c.value|date:'Y-m-d' }}" onchange="this.form.submit()">
+                                            </div>
+                                        </form>
+                                    </div>
+                                {% elif c.type == 'time' %}
+                                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                                        <form method="POST" action="" id="{{ c.id }}">
+                                            {% csrf_token %}
+                                            <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
+                                            <div class="input-group rounded">
+                                                <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
+                                                <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end" value="{{ c.value|time:'H:i' }}" onchange="this.form.submit()">
                                             </div>
                                         </form>
                                     </div>
@@ -30,23 +41,23 @@
                                         <form method="POST" action="" id="{{ c.id }}">
                                             {% csrf_token %}
                                             <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
-                                            <div class="input-group rounded">
+                                            <div class="input-group shadow-sm rounded">
                                                 <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
                                                 <input type="text" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-start" value="{{ c.value }}" onchange="this.form.submit()">
                                             </div>
                                         </form>
                                     </div>
                                     <div class="col-12 col-md-6 col-lg-3 mb-3 mt-auto">
-                                        <div class="logo border bg-dark p-2 border-secondary border-1 text-center">
+                                        <div class="logo border bg-dark p-2 border-secondary border-1 text-center shadow-sm">
                                             <img src="{{ MEDIA_URL }}images/{{ c.value }}" alt="{{ c.id }}">
                                         </div>
                                     </div>
                                 {% elif c.type == 'checkbox' %}
-                                    <div class="col mb-3">
+                                    <div class="col-auto mb-3">
                                         <form method="POST" action="" id="{{ c.id }}">
                                             {% csrf_token %}
                                             <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
-                                            <div class="input-group rounded fixed_input">
+                                            <div class="input-group shadow-sm rounded fixed_input">
                                                 <div class="input-group-text form-switch px-1 {% if f.errors %}input-error{% endif %}">
                                                     <input type="hidden" name="{{ c.id }}" value="off">
                                                     <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-check-input text-end pe-4" onchange="this.form.submit()" {% if c.value %}checked{% endif %}>
@@ -56,14 +67,28 @@
                                         </form>
                                     </div>
                                 {% elif c.type == 'number' %}
-                                    <div class="col mb-3">
+                                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                                         <form method="POST" action="" id="{{ c.id }}">
                                             {% csrf_token %}
                                             <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
-                                            <div class="input-group rounded fixed_input">
+                                            <div class="input-group shadow-sm rounded fixed_input">
                                                 <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
                                                 <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-end pe-4" value="{{ c.value }}"{% if c.min %} min="{{ c.min }}"{% endif %}{% if c.max %} max="{{ c.max }}"{% endif %} onchange="this.form.submit()">
                                             </div>
+                                        </form>
+                                    </div>
+                                {% elif c.type == 'button' %}
+                                    <div class="col-auto mb-3 ms-auto mt-auto">
+                                        <form method="POST" action="" id="{{ c.id }}_form">
+                                            {% csrf_token %}
+                                            <button type="submit" name="{{ c.id }}" value="Refresh" class="btn btn-primary btn_icon shadow">
+                                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                                    <div class="pe-2">
+                                                        <img src="{% static 'images/' %}{{ c.icon }}" alt="{{ c.id }}">
+                                                    </div>
+                                                    <p class="m-0 ps-2 lead">{{ c.name }}</p>
+                                                </div>
+                                            </button>
                                         </form>
                                     </div>
                                 {% else %}
@@ -71,7 +96,7 @@
                                         <form method="POST" action="" id="{{ c.id }}">
                                             {% csrf_token %}
                                             <label for="{{ c.id }}" class="form-label small">{{ c.name }}</label>
-                                            <div class="input-group rounded ">
+                                            <div class="input-group shadow-sm rounded">
                                                 <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
                                                 <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-start" value="{{ c.value }}" onchange="this.form.submit()">
                                             </div>

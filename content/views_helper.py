@@ -91,66 +91,6 @@ def getTimeTableSettings():
 
     settings = [
         {
-            'id': 'timeBegin',
-            'name': config.timeBeginDesc,
-            'type': 'time',
-            'value': config.timeBegin,
-            'icon': 'clock'
-        },
-        {
-            'id': 'offsetHeat',
-            'name': config.offsetHeatDesc,
-            'type': 'number',
-            'value': config.offsetHeat.seconds // 60,
-            'icon': 'clock-history'
-        },
-        {
-            'id': 'offsetFinale',
-            'name': config.offsetFinaleDesc,
-            'type': 'number',
-            'value': config.offsetFinale.seconds // 60,
-            'icon': 'clock-history'
-        },
-        {
-            'id': 'offsetCeremony',
-            'name': config.offsetCeremonyDesc,
-            'type': 'number',
-            'value': config.offsetCeremony.seconds // 60,
-            'icon': 'clock-history'
-        },
-        {
-            'id': 'lanesPerRace',
-            'name': config.lanesPerRaceDesc,
-            'type': 'number',
-            'value': config.lanesPerRace,
-            'min': config.lanesPerRaceMin,
-            'max': config.lanesPerRaceMax,
-            'icon': 'layout-three-columns'
-        },
-        {
-            'id': 'heatCount',
-            'name': config.heatCountDesc,
-            'type': 'number',
-            'value': config.heatCount,
-            'min': config.heatCountMin,
-            'max': config.heatCountMax,
-            'icon': 'repeat'
-        },
-        {
-            'id': 'intervalHeat',
-            'name': config.intervalHeatDesc,
-            'type': 'number',
-            'value': config.intervalHeat.seconds // 60,
-            'icon': 'distribute-horizontal'
-        },
-        {
-            'id': 'intervalFinal',
-            'name': config.intervalFinalDesc,
-            'type': 'number',
-            'value': config.intervalFinal.seconds // 60,
-            'icon': 'distribute-horizontal'
-        },
-        {
             'id': 'timetablePost',
             'name': config.placeholderPostContent,
             'type': 'textarea',
@@ -1148,6 +1088,77 @@ def getMainSettings():
                     'type': 'checkbox',
                     'value': config.anonymousMonitor,
                     'icon': 'clock-history'
+                }
+            ]
+        },
+        {
+            'title': config.settingsTimetable,
+            'controls': [
+                {
+                    'id': 'timeBegin',
+                    'name': config.timeBeginDesc,
+                    'type': 'time',
+                    'value': config.timeBegin,
+                    'icon': 'clock'
+                },
+                {
+                    'id': 'offsetHeat',
+                    'name': config.offsetHeatDesc,
+                    'type': 'number',
+                    'value': config.offsetHeat.seconds // 60,
+                    'icon': 'clock-history'
+                },
+                {
+                    'id': 'offsetFinale',
+                    'name': config.offsetFinaleDesc,
+                    'type': 'number',
+                    'value': config.offsetFinale.seconds // 60,
+                    'icon': 'clock-history'
+                },
+                {
+                    'id': 'offsetCeremony',
+                    'name': config.offsetCeremonyDesc,
+                    'type': 'number',
+                    'value': config.offsetCeremony.seconds // 60,
+                    'icon': 'clock-history'
+                },
+                {
+                    'id': 'lanesPerRace',
+                    'name': config.lanesPerRaceDesc,
+                    'type': 'number',
+                    'value': config.lanesPerRace,
+                    'min': config.lanesPerRaceMin,
+                    'max': config.lanesPerRaceMax,
+                    'icon': 'layout-three-columns'
+                },
+                {
+                    'id': 'heatCount',
+                    'name': config.heatCountDesc,
+                    'type': 'number',
+                    'value': config.heatCount,
+                    'min': config.heatCountMin,
+                    'max': config.heatCountMax,
+                    'icon': 'repeat'
+                },
+                {
+                    'id': 'intervalHeat',
+                    'name': config.intervalHeatDesc,
+                    'type': 'number',
+                    'value': config.intervalHeat.seconds // 60,
+                    'icon': 'distribute-horizontal'
+                },
+                {
+                    'id': 'intervalFinal',
+                    'name': config.intervalFinalDesc,
+                    'type': 'number',
+                    'value': config.intervalFinal.seconds // 60,
+                    'icon': 'distribute-horizontal'
+                },
+                {
+                    'id': 'refreshTimes',
+                    'name': config.refreshTimetableText,
+                    'type': 'button',
+                    'icon': config.refreshTimetableIcon
                 }
             ]
         },

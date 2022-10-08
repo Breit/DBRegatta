@@ -215,26 +215,8 @@ def timetable(request):
                 post.enable = request.POST['enable'] == 'on'
                 post.content = request.POST['content']
                 post.save()
-            elif 'timeBegin' in request.POST:
-                config.timeBegin = time.fromisoformat(request.POST['timeBegin'])
-            elif 'offsetHeat' in request.POST:
-                config.offsetHeat = timedelta(minutes=int(request.POST['offsetHeat']))
-            elif 'offsetFinale' in request.POST:
-                config.offsetFinale = timedelta(minutes=int(request.POST['offsetFinale']))
-            elif 'offsetCeremony' in request.POST:
-                config.offsetCeremony = timedelta(minutes=int(request.POST['offsetCeremony']))
-            elif 'heatCount' in request.POST:
-                config.heatCount = int(request.POST['heatCount'])
-            elif 'lanesPerRace' in request.POST:
-                config.lanesPerRace = int(request.POST['lanesPerRace'])
-            elif 'intervalHeat' in request.POST:
-                config.intervalHeat = timedelta(minutes=int(request.POST['intervalHeat']))
-            elif 'intervalFinal' in request.POST:
-                config.intervalFinal = timedelta(minutes=int(request.POST['intervalFinal']))
             elif 'createTimetable' in request.POST:
                 createTimeTable()
-            elif 'refreshTimes' in request.POST:
-                updateTimeTable()
             return redirect('/timetable')
     else:
         try:
@@ -450,6 +432,24 @@ def settings(request):
             config.domain = request.POST['siteDomain']
         elif 'liveResultsHint' in request.POST:
             config.liveResultsHint = request.POST['liveResultsHint']
+        elif 'timeBegin' in request.POST:
+            config.timeBegin = time.fromisoformat(request.POST['timeBegin'])
+        elif 'offsetHeat' in request.POST:
+            config.offsetHeat = timedelta(minutes=int(request.POST['offsetHeat']))
+        elif 'offsetFinale' in request.POST:
+            config.offsetFinale = timedelta(minutes=int(request.POST['offsetFinale']))
+        elif 'offsetCeremony' in request.POST:
+            config.offsetCeremony = timedelta(minutes=int(request.POST['offsetCeremony']))
+        elif 'heatCount' in request.POST:
+            config.heatCount = int(request.POST['heatCount'])
+        elif 'lanesPerRace' in request.POST:
+            config.lanesPerRace = int(request.POST['lanesPerRace'])
+        elif 'intervalHeat' in request.POST:
+            config.intervalHeat = timedelta(minutes=int(request.POST['intervalHeat']))
+        elif 'intervalFinal' in request.POST:
+            config.intervalFinal = timedelta(minutes=int(request.POST['intervalFinal']))
+        elif 'refreshTimes' in request.POST:
+            updateTimeTable()
         elif 'resetFinals' in request.POST:
             clearFinals()
             populateFinals()

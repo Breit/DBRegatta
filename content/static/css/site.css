@@ -198,11 +198,11 @@
 }
 
 .modal-footer .btn-primary {
-    width: 16rem;
+    width: 17rem;
 }
 
 .modal-footer .btn-secondary {
-    width: 12rem;
+    width: 11rem;
 }
 
 .nav-link .badge {
@@ -219,6 +219,10 @@
 
 .rounded-bottom-right {
     border-bottom-right-radius: 0.375rem !important;
+}
+
+.shadow {
+    box-shadow: 0 .25rem 0.5rem rgba(0,0,0,.1)!important;
 }
 
 @media only screen and (max-device-width: 480px) {

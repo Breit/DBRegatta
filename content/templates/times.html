@@ -9,7 +9,7 @@
 {% block content %}
     <div class="container-fluid bg-light sticky-top">
         <div class="pb-3 pt-1 border-bottom border-3 collapse show" id="collapseControls">
-            <h2 class="mt-2 mb-3">{{ config.timesHeader }}</h2>
+            <h2 class="mt-2 mb-3 display-6">{{ config.timesHeader }}</h2>
             <div class="row m-0 border-bottom border-1">
                 <div class="col-2 mx-0 px-2 small text-muted text-center mt-2 col_select_race">{{ config.timeRaceDesc }}</div>
                 <div class="col-1 small text-muted text-center mt-2 d-none d-xl-block">{{ config.timetableHeaderTime }}</div>
@@ -27,7 +27,7 @@
                 <div class="col-2 my-1 mx-0 px-2 align-self-center col_select_race">
                     <form method="POST" action="" id="race_select">
                         {% csrf_token %}
-                        <div class="input-group">
+                        <div class="input-group shadow-sm rounded">
                             <span class="input-group-text"><i class="bi bi-{{controls.start_time_icon}}"></i></span>
                             <select id="race_select" name="race_select" class="form-select form-select-lg text-center" onchange="this.form.submit()">
                                 {% for r in controls.races %}
@@ -50,7 +50,7 @@
                                     <span class="small">{{ l.company }}</span>
                                 </div>
                                 <div class="col col_skipper_control align-self-center">
-                                    <div class="input-group">
+                                    <div class="input-group shadow-sm rounded">
                                         <span class="input-group-text"><i class="bi bi-person"></i></span>
                                         <select id="skipper_select" name="skipper_select_{{ l.lane }}" class="form-select">
                                             {% for s in controls.skippers %}
@@ -61,7 +61,7 @@
                                 </div>
                                 <div class="col-1 col_num text-center align-self-center d-none d-xl-block">{{ l.place }}</div>
                                 <div class="col col_times pe-2 align-self-center">
-                                    <div class="input-group">
+                                    <div class="input-group shadow-sm rounded">
                                         <span class="input-group-text"><i class="bi bi-{{controls.time_icon}}"></i></span>
                                         <input type="number" id="lane_time_min_{{ l.lane }}" name="lane_time_min_{{ l.lane }}" class="form-control text-center px-2" value="{{ l.time|splitTime:'min' }}" min="0" max="59">
                                         <label class="input-group-text px-1 fw-bold" for="lane_info_sec">:</label>
@@ -76,7 +76,7 @@
                 </div>
             </div>
             <div class="d-flex align-items-start mt-3">
-                <button type="submit" name="refresh_times" value="Refresh" class="btn btn-primary btn_icon" form="submit_times_form">
+                <button type="submit" name="refresh_times" value="Refresh" class="btn btn-primary btn_icon shadow" form="submit_times_form">
                     <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                         <div class="pe-2">
                             <img src="{% static 'images/' %}{{ config.timeIcon }}" alt="refresh_times">
