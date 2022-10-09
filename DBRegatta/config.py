@@ -202,6 +202,7 @@ CONSTANCE_CONFIG = {
 
     # Settings for Settings Page
     'settingsPageCSS':          ('settings.css',                                'CSS File for Site-specific Styling'),
+    'settingsPageJS':           ('settings.js',                                 'JS File for Site-specific Data Handling'),
     'settingsTitle':            ('Einstellungen',                               'Menu Title for Settings Page'),
     'settingsHeaderRegatta':    ('Regatta',                                     'Section Title for Regatta Settings on Settings Page'),
     'settingsHeaderAccess':     ('Zugriffsrechte',                              'Section Title for Access Settings on Settings Page'),
@@ -473,6 +474,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'Settings Page Settings': {
         'fields': (
             'settingsPageCSS',
+            'settingsPageJS',
             'settingsTitle',
             'settingsHeaderRegatta',
             'settingsHeaderAccess',
