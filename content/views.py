@@ -221,8 +221,12 @@ def timetable(request):
 
     try:
         post = Post.objects.get(site='timetable')
-        if post.enable:
+        if request.user.is_authenticated:
             siteData['post'] = post.content
+            siteData['post_disabled'] = not post.enable
+        elif post.enable:
+            siteData['post'] = post.content
+
     except:
         pass
 

@@ -89,15 +89,13 @@ def getTimeTableSettings():
         post.save()
     post_form = PostForm(instance = post)
 
-    settings = [
-        {
-            'id': 'timetablePost',
-            'name': config.placeholderPostContent,
-            'type': 'textarea',
-            'value': post_form,
-            'icon': 'file-richtext'
-        }
-    ]
+    settings = {
+        'id': 'timetablePost',
+        'name': config.placeholderPostContent,
+        'type': 'textarea',
+        'value': post_form,
+        'icon': 'file-richtext'
+    }
 
     return settings
 

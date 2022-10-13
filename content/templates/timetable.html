@@ -45,37 +45,66 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="editPostModal" tabindex="-1" data-bs-backdrop="static">
+            <div class="modal-dialog modal-xl text-dark">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-light">
+                        <h5 class="modal-title" id="editPostLabel">{{ config.timetablePostDesc }}</h5>
+                        <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                        {% if controls %}
+                            <div class="row mx-0 px-0 w-100" id="{{ controls.id }}">
+                                <div class="col m-0 p-0">
+                                    <div class="input-group rounded shadow-sm">
+                                        <div class="input-group-text form-switch px-2 d-inline-flex flex-column">
+                                            <div class="flex-grow-1"></div>
+                                            <input type="hidden" name="{{ controls.value.enable.name }}" value="off">
+                                                {{ controls.value.enable }}
+                                            <div class="flex-grow-1"></div>
+                                        </div>
+                                        {{ controls.value.content }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                        <button type="button" name="editPost" id="editPost" value="Edit" class="btn btn-primary btn_icon shadow" onclick="button_save_post({{ controls.id }})">
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div class="pe-2">
+                                    <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="editPost">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.submitEditPost }}</p>
+                            </div>
+                        </button>
+                        <button type="button" name="cancelEditPost" id="cancelEditPost" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div>
+                                    <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelEditPost">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                            </div>
+                        </button>
+                        <div class="spinner-border text-primary d-none me-auto" role="status" id="wait"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endif %}
     <div class="container-fluid">
         <h2 class="mt-2 mb-3 display-6">{{ config.timetableHeader }}</h2>
         {% if post %}
-            <div class="container mx-0 px-0 mb-4">
-                {{ post|markdownify|safe }}
-            </div>
-        {% endif %}
-        {% if controls %}
-            <div class="row mx-0 px-0 mb-4">
-                {% for c in controls %}
-                    <div class="col m-0 p-0">
-                        <form method="POST" action="" id="{{ c.id }}">
-                            {% csrf_token %}
-                            {% if c.type != 'textarea' %}
-                                <label for="{{ c.id }}" class="form-label small">{{ config.timetablePostDesc }}</label>
-                            {% endif %}
-                            <div class="input-group rounded text-muted shadow-sm">
-                                <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
-                                {{ c.value.content }}
-                                <div class="input-group-text form-switch p-0 d-inline-flex flex-column">
-                                    <div class="flex-grow-1"></div>
-                                    <input type="hidden" name="{{ c.value.enable.name }}" value="off">
-                                    {{ c.value.enable }}
-                                    <div class="flex-grow-1"></div>
-                                    <button type="submit" id="postSave" class="btn btn-primary"><i class="bi bi-save2"></i></button>
-                                </div>
-                            </div>
-                        </form>
+            <div class="container mx-0 px-0 mb-4 position-relative" id="timetable_post">
+                <div class="container m-0 p-0{% if post_disabled %} text-muted{% endif %}">
+                    {{ post|markdownify|safe }}
+                </div>
+                {% if controls %}
+                    <div class="position-absolute bottom-0 end-0 edit_icon"{% if controls %} data-bs-toggle="modal" data-bs-target="#editPostModal"{% endif %}>
+                        <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_team">
                     </div>
-                {% endfor %}
+                {% endif %}
             </div>
         {% endif %}
         {% for entry in timetable %}
