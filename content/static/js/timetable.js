@@ -22,7 +22,7 @@ function button_save_post(edit_id)
             headers: { 'X-CSRFToken': csrftoken }
         },
         function(data, status){
-            if (status == 'success')
+            if (status === 'success')
             {
                 $('#timetable_post').html($(data).find('#timetable_post').html());
             }

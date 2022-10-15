@@ -1,4 +1,6 @@
 :root {
+    --bs-gray-050: #fcfcfd;
+    --bs-gray-150: #f0f2f4;
     --bs-gray-950: #15171a;
     --bs-success-100: #d1e7dd;
     --bs-success-200: #a3cfbb;
@@ -16,6 +18,8 @@
     --bs-purple-200: #c5b3e6;
     --bs-purple-300: #a98eda;
     --bs-header-zindex: 1030;
+    --bs-table-row-hover: #f1f1f2;
+    --bs-table-lane-hover: #eaeaeb;
 }
 
 .bg-primary-100 {

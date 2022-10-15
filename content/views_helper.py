@@ -968,86 +968,36 @@ def getRaceResultsTableContent(heats: bool = True, heatsRankings: bool = True, f
 
     return timetable
 
-def getTimesControls(race_id = None):
-    def getSelectedRace(race_id):
-        race = Race.objects.get(id=race_id)
-        rankings = {}
-        if race:
-            # get rankings
-            attendees = RaceAssign.objects.filter(race_id=race.id).order_by('time')
-            i = 1
-            for attendee in attendees:
-                if attendee.time != 0.0:
-                    rankings[attendee.lane] = i
-                    i += 1
-        else:
-            return {}
-
-        attendees = RaceAssign.objects.filter(race_id=race_id).order_by('lane')
-        selected_race = {
-            'name': race.name,
-            'id': race.id,
-            'time': race.time,
-            'lanes': []
-        }
-        for attendee in attendees:
-            try:
-                skipper = Skipper.objects.get(id=attendee.skipper_id)
-            except:
-                skipper = None
-            try:
-                team = Team.objects.get(id=attendee.team_id)
-            except:
-                team = None
-            lane = {
-                'id': attendee.id,
-                'lane': attendee.lane,
-                'team': team.name if team else '-',
-                'company': team.company if team else '-',
-                'skipper': {
-                    'name': skipper.name if skipper else '-',
-                    'active': skipper.active if skipper else False
-                },
-                'place': rankings[attendee.lane] if attendee.lane in rankings else '-',
-                'time': attendee.time,
-                'finished': attendee.time != 0.0
-            }
-            selected_race['lanes'].append(lane)
-        return selected_race
-
-    controls = {
-        'races': [''],
+def getTimesData():
+    data = {
+        'current_race': {},
         'skippers': [''],
-        'start_time_icon': 'view-list',
-        'time_icon': 'clock-history',
-        'selected_race': {}
+        'skipper_icon': 'person',
+        'time_icon': 'clock-history'
     }
 
-    if race_id:
-        selected_race = getSelectedRace(race_id)
-    else:
-        selected_race = None
+    current_race = None
 
     for race in Race.objects.all():
-        controls['races'].append(race.name)
-
-        if selected_race is None:
+        if current_race is None:
             attendees = RaceAssign.objects.filter(race_id=race.id)
             if sum([1 if attendee.time else 0 for attendee in attendees]) < len(attendees):
-                selected_race = getSelectedRace(race.id)
+                current_race = race.name
+        else:
+            break
 
-    controls['selected_race'] = selected_race
+    data['current_race'] = current_race
 
     skippers = Skipper.objects.all()
     for skipper in skippers:
-        controls['skippers'].append(
+        data['skippers'].append(
             {
                 'name': skipper.name,
                 'active': skipper.active
             }
         )
 
-    return controls
+    return data
 
 def getMainSettings():
     settings = [

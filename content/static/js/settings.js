@@ -33,7 +33,7 @@ function update_setting(setting_id)
             headers: { 'X-CSRFToken': csrftoken }
         },
         function(data, status){
-            if (status == 'success')
+            if (status === 'success')
             {
                 const main = data.match(/<main.*?>.*?<\/main.*?>/s);
                 if (main.length > 0)

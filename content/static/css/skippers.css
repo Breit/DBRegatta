@@ -18,12 +18,15 @@
 }
 
 .skipper_list:nth-child(even) {
-    background-color: var(--bs-gray-100);
+    background-color: var(--bs-gray-100) !important;
+}
+
+.skipper_list {
+    background-color: var(--bs-white) !important;
 }
 
 .skipper_list:hover {
-    background-color: var(--bs-gray-100);
-    filter: brightness(0.97);
+    background-color: var(--bs-table-row-hover) !important;
 }
 
 .btn_skipper_table_icon img {

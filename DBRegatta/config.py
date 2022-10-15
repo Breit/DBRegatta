@@ -138,6 +138,8 @@ CONSTANCE_CONFIG = {
     'timesHeaderRank':          ('Rang',                                        'Header Text for Total Rank Column'),
     'timesHeaderSkipper':       ('Steuer',                                      'Header Text for Skipper Column'),
     'refreshTimesText':         ('Zeiten eintragen',                            'Text for Refresh Times Button'),
+    'resetTimesText':           ('Zurücksetzen',                                'Text for Reset Times Button'),
+    'resetIcon':                ('reload.svg',                                  'Button Icon for Reload Button'),
 
     # Trainings Settings
     'trainingsPageCSS':         ('trainings.css',                               'CSS File for Site-specific Styling'),
@@ -396,6 +398,8 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'timeIcon',
             'timesHeaderTime',
             'refreshTimesText',
+            'resetTimesText',
+            'resetIcon',
         ),
         'collapse': True
     },

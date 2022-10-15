@@ -27,12 +27,12 @@ input[type=number]::-webkit-inner-spin-button {
     background-color: var(--bs-gray-100) !important;
 }
 
-.timetable_race:hover {
-    filter: brightness(0.97);
+.timetable_race {
+    background-color: var(--bs-white) !important;
 }
 
-.timetable_race:nth-child(odd):hover {
-    background-color: var(--bs-gray-100) !important;
+.timetable_race:hover {
+    background-color: var(--bs-table-row-hover) !important;
 }
 
 .timetable_lane {
@@ -40,8 +40,7 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .timetable_lane:hover {
-    background-color: var(--bs-gray-100) !important;
-    filter: brightness(0.97);
+    background-color: var(--bs-table-lane-hover) !important;
 }
 
 .col-1 {
