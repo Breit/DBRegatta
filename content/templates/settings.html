@@ -138,8 +138,8 @@
                                             <img src="{% static 'images/' %}{{ config.questionIcon }}">
                                             <div class="container">{{ config.warningResetFinals|linebreaks }}</div>
                                         </div>
-                                        <div class="modal-footer justify-content-center bg-gray-200">
-                                            <button type="button" id="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon btn_lg" onclick="update_setting('resetFinals')">
+                                        <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                                            <button type="button" id="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon" onclick="update_setting('resetFinals')">
                                                 <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                                     <div class="pe-2">
                                                         <img src="{% static 'images/' %}{{ config.resetFinalsIcon }}" alt="reset_finals">
@@ -178,8 +178,8 @@
                                             <img src="{% static 'images/' %}{{ config.questionIcon }}">
                                             <div class="container">{{ config.warningResetHeats|linebreaks }}</div>
                                         </div>
-                                        <div class="modal-footer justify-content-center bg-gray-200">
-                                            <button type="button" id="resetHeats" value="ResetHeats" class="btn btn-danger btn_icon btn_lg" onclick="update_setting('resetHeats')">
+                                        <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                                            <button type="button" id="resetHeats" value="ResetHeats" class="btn btn-danger btn_icon" onclick="update_setting('resetHeats')">
                                                 <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                                     <div class="pe-2">
                                                         <img src="{% static 'images/' %}{{ config.resetHeatsIcon }}" alt="reset_heats">
@@ -227,7 +227,7 @@
                             <div class="modal fade" id="resetSkippersModal" data-bs-backdrop="static" tabindex="-1">
                                 <div class="modal-dialog text-dark">
                                     <div class="modal-content">
-                                        <div class="modal-header bg-danger text-light">
+                                        <div class="modal-header bg-warning text-light">
                                             <h5 class="modal-title" id="resetSkippersLabel">{{ config.resetSkippers }}</h5>
                                             <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
                                         </div>
@@ -235,8 +235,8 @@
                                             <img src="{% static 'images/' %}{{ config.questionIcon }}">
                                             <div class="container">{{ config.warningResetSkippers|linebreaks }}</div>
                                         </div>
-                                        <div class="modal-footer justify-content-center bg-gray-200">
-                                            <button type="button" id="resetSkippers" value="ResetSkippers" class="btn btn-danger btn_icon btn_lg" onclick="update_setting('resetSkippers')">
+                                        <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                                            <button type="button" id="resetSkippers" value="ResetSkippers" class="btn btn-warning btn_icon" onclick="update_setting('resetSkippers')">
                                                 <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                                     <div class="pe-2">
                                                         <img src="{% static 'images/' %}{{ config.resetSkippersIcon }}" alt="reset_skippers">
@@ -275,8 +275,8 @@
                                             <img src="{% static 'images/' %}{{ config.questionIcon }}">
                                             <div class="container">{{ config.warningResetTeams|linebreaks }}</div>
                                         </div>
-                                        <div class="modal-footer justify-content-center bg-gray-200">
-                                            <button type="button" id="resetTeams" value="ResetTeams" class="btn btn-danger btn_icon btn_lg" onclick="update_setting('resetTeams')">
+                                        <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                                            <button type="button" id="resetTeams" value="ResetTeams" class="btn btn-danger btn_icon" onclick="update_setting('resetTeams')">
                                                 <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                                     <div class="pe-2">
                                                         <img src="{% static 'images/' %}{{ config.resetTeamsIcon }}" alt="reset_teams">

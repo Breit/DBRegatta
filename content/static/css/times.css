@@ -40,11 +40,11 @@
 }
 
 .race_edit .btn-primary {
-    width: 14rem;
+    width: auto;
 }
 
 .race_edit .btn-secondary {
-    width: 12rem;
+    width: auto;
 }
 
 .race_edit .btn_icon img {

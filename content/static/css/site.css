@@ -202,11 +202,27 @@
 }
 
 .modal-footer .btn-primary {
-    width: 17rem;
+    width: auto;
 }
 
 .modal-footer .btn-secondary {
-    width: 11rem;
+    width: auto;
+}
+
+.modal-footer .btn-warning {
+    width: auto;
+}
+
+.modal-footer .btn-success {
+    width: auto;
+}
+
+.modal-footer .btn-danger {
+    width: auto;
+}
+
+.modal-footer .btn_icon img {
+    height: 2rem;
 }
 
 .nav-link .badge {

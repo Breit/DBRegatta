@@ -45,14 +45,6 @@
     width: 7rem !important;
 }
 
-.modal-footer .btn-primary {
-    width: 17rem;
-}
-
-.modal-footer .btn-secondary {
-    width: 11rem;
-}
-
 .skipper_edit {
     background-color: var(--bs-primary-100) !important;
     outline: 1px solid var(--bs-primary) !important;
