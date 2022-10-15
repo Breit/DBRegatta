@@ -731,7 +731,7 @@ def getRaceTimes(raceType: str):
         }
 
         # get rankings
-        attendees = RaceAssign.objects.filter(race_id=race.id).order_by('time')
+        attendees = RaceAssign.objects.filter(race_id=race.id, time__gt=0.0).order_by('time')
         rankings = {}
         for i, attendee in enumerate(attendees):
             if attendee.time != 0.0:
