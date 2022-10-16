@@ -11,7 +11,7 @@ function button_toggle_skipper(action, skipper_id)
             headers: { 'X-CSRFToken': csrftoken }
         },
         function(data, status){
-            if (status == 'success')
+            if (status === 'success')
             {
                 $('.menu').html($(data).find('.menu').html());
                 $('#skipper_table').html($(data).find('#skipper_table').html());
@@ -56,7 +56,7 @@ function button_mod_skipper(skipper_id)
             headers: { 'X-CSRFToken': csrftoken }
         },
         function(data, status){
-            if (status == 'success')
+            if (status === 'success')
             {
                 $('#skipper_form').html($(data).find('#skipper_form').html());
             }
@@ -83,7 +83,7 @@ $(document).ready(function()
 
         var edit_skipper = false;
         var edit_id = null;
-        if ($("#skipper_form").attr('name') == 'mod_skipper')
+        if ($("#skipper_form").attr('name') === 'mod_skipper')
         {
             edit_skipper = true;
             edit_id = $("#button_edit_skipper").prop('value');
@@ -111,7 +111,7 @@ $(document).ready(function()
             },
             function(data, status)
             {
-                if (status == 'success')
+                if (status === 'success')
                 {
                     $('.menu').html($(data).find('.menu').html());
                     $('#skipper_table').html($(data).find('#skipper_table').html());
@@ -197,7 +197,7 @@ $(document).ready(function()
                 headers: { 'X-CSRFToken': csrftoken }
             },
             function(data, status){
-                if (status == 'success')
+                if (status === 'success')
                 {
                     $('.menu').html($(data).find('.menu').html());
                     $('#skipper_table').html($(data).find('#skipper_table').html());

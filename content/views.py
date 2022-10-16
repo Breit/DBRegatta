@@ -215,34 +215,20 @@ def timetable(request):
                 post.enable = request.POST['enable'] == 'on'
                 post.content = request.POST['content']
                 post.save()
-            elif 'timeBegin' in request.POST:
-                config.timeBegin = time.fromisoformat(request.POST['timeBegin'])
-            elif 'offsetHeat' in request.POST:
-                config.offsetHeat = timedelta(minutes=int(request.POST['offsetHeat']))
-            elif 'offsetFinale' in request.POST:
-                config.offsetFinale = timedelta(minutes=int(request.POST['offsetFinale']))
-            elif 'offsetCeremony' in request.POST:
-                config.offsetCeremony = timedelta(minutes=int(request.POST['offsetCeremony']))
-            elif 'heatCount' in request.POST:
-                config.heatCount = int(request.POST['heatCount'])
-            elif 'lanesPerRace' in request.POST:
-                config.lanesPerRace = int(request.POST['lanesPerRace'])
-            elif 'intervalHeat' in request.POST:
-                config.intervalHeat = timedelta(minutes=int(request.POST['intervalHeat']))
-            elif 'intervalFinal' in request.POST:
-                config.intervalFinal = timedelta(minutes=int(request.POST['intervalFinal']))
             elif 'createTimetable' in request.POST:
                 createTimeTable()
-            elif 'refreshTimes' in request.POST:
-                updateTimeTable()
             return redirect('/timetable')
-    else:
-        try:
-            post = Post.objects.get(site='timetable')
-            if post.enable:
-                siteData['post'] = post.content
-        except:
-            pass
+
+    try:
+        post = Post.objects.get(site='timetable')
+        if request.user.is_authenticated:
+            siteData['post'] = post.content
+            siteData['post_disabled'] = not post.enable
+        elif post.enable:
+            siteData['post'] = post.content
+
+    except:
+        pass
 
     return render(request, 'timetable.html', siteData)
 
@@ -257,102 +243,69 @@ def times(request):
     if toggleFoldMenu(request):
         return redirect('/times')
 
-    # shortcut to URL with specific race_id
-    if request.method == 'POST' and 'race_select' in request.POST:
-        race = None
-        if request.POST['race_select']:
-            try:
-                race = Race.objects.get(name = request.POST['race_select'])
-            except:
-                pass
-        else:
-            return redirect('/times')
-        if race:
-            return redirect('/times?race_id={}'.format(race.id))
-
     # construct site data
     siteData = getSiteData('times', request.user)
-    if 'race_id' in request.GET:
-        siteData['controls'] = getTimesControls(request.GET['race_id'])
-    else:
-        siteData['controls'] = getTimesControls()
     siteData['times'] = getRaceResultsTableContent(heatsRankings = False, finalRanks = False)
+    siteData['data'] = getTimesData()
 
     # handle POST requests
     if request.method == 'POST':
-        if 'refresh_times' in request.POST:
-            selected_race = siteData['controls']['selected_race']
-            for lane in selected_race['lanes']:
+        if 'race_name' in request.POST:
+            attendees = None
+            try:
+                race = Race.objects.get(name=request.POST['race_name'])
+                attendees = RaceAssign.objects.filter(race_id=race.id)
+            except:
+                pass
+            for attendee in attendees:
                 race_time = 0.0
                 try:
-                    race_time = float(request.POST['lane_time_min_' + lane['lane']]) * 60.0
+                    race_time = float(request.POST['lane_time_min_' + attendee.lane]) * 60.0
                 except:
                     pass
                 try:
-                    race_time += float(request.POST['lane_time_sec_' + lane['lane']])
+                    race_time += float(request.POST['lane_time_sec_' + attendee.lane])
                 except:
                     pass
                 try:
-                    race_time += float(request.POST['lane_time_hnd_' + lane['lane']]) / 100.0
+                    race_time += float(request.POST['lane_time_hnd_' + attendee.lane]) / 100.0
                 except:
                     pass
 
                 try:
                     skipper = Skipper.objects.get(
-                        name = request.POST['skipper_select_' + lane['lane']]
+                        name = request.POST['skipper_select_' + attendee.lane]
                     )
                 except:
                     skipper = None
-                attendee = RaceAssign.objects.get(
-                    id = lane['id'],
-                    lane = lane['lane'],
-                    race_id = selected_race['id']
-                )
 
-                # get other lanes to check if the skipper is alreeady used
+                # get other lanes to check if the skipper is already used
                 if skipper is not None:
-                    attendees = RaceAssign.objects.filter(
-                        ~Q(id = lane['id']),
-                        race_id = selected_race['id']
+                    attendees_check = RaceAssign.objects.filter(
+                        ~Q(id = attendee.id),
+                        race_id = attendee.race_id
                     )
-                    for other_attendee in attendees:
+                    for other_attendee in attendees_check:
                         if other_attendee.skipper_id == skipper.id:
                             skipper = None
                             break
 
-                # sanity check for the right team
-                team = Team.objects.get(
-                    id=attendee.team_id,
-                    name=lane['team']
-                )
+                save = False
+                if skipper and attendee.skipper_id != skipper.id:
+                    save = True
+                elif skipper is None and attendee.skipper_id is not None:
+                    save = True
+                elif attendee.time != race_time:
+                    save = True
+                if save:
+                    attendee.time = race_time
+                    attendee.skipper_id = skipper.id if skipper else None
+                    attendee.save()
 
-                if team and attendee:
-                    save = False
-                    if skipper and attendee.skipper_id != skipper.id:
-                        save = True
-                    elif skipper is None and attendee.skipper_id is not None:
-                        save = True
-                    elif attendee.time != race_time:
-                        save = True
-                    if save:
-                        attendee.time = race_time
-                        attendee.skipper_id = skipper.id if skipper else None
-                        attendee.save()
+                # create finals or ascend winner from the last race
+                populateFinals(attendee)
 
-                    # create finals or ascend winner from the last race
-                    populateFinals(attendee)
-
-            # decide which race to edit next
-            if 'race_id' in request.GET:
-                attendees = RaceAssign.objects.filter(race_id = request.GET['race_id'])
-                if any(attendee.time == 0.0 for attendee in attendees):
-                    return redirect('/times?race_id={}'.format(request.GET['race_id']))
             return redirect('/times')
-
-        elif 'race_select' in request.POST and request.POST['race_select']:
-            race = Race.objects.get(name = request.POST['race_select'])
-            if race:
-                return redirect('/times?race_id={}'.format(race.id))
 
     return render(request, 'times.html', siteData)
 
@@ -450,6 +403,24 @@ def settings(request):
             config.domain = request.POST['siteDomain']
         elif 'liveResultsHint' in request.POST:
             config.liveResultsHint = request.POST['liveResultsHint']
+        elif 'timeBegin' in request.POST:
+            config.timeBegin = time.fromisoformat(request.POST['timeBegin'])
+        elif 'offsetHeat' in request.POST:
+            config.offsetHeat = timedelta(minutes=int(request.POST['offsetHeat']))
+        elif 'offsetFinale' in request.POST:
+            config.offsetFinale = timedelta(minutes=int(request.POST['offsetFinale']))
+        elif 'offsetCeremony' in request.POST:
+            config.offsetCeremony = timedelta(minutes=int(request.POST['offsetCeremony']))
+        elif 'heatCount' in request.POST:
+            config.heatCount = int(request.POST['heatCount'])
+        elif 'lanesPerRace' in request.POST:
+            config.lanesPerRace = int(request.POST['lanesPerRace'])
+        elif 'intervalHeat' in request.POST:
+            config.intervalHeat = timedelta(minutes=int(request.POST['intervalHeat']))
+        elif 'intervalFinal' in request.POST:
+            config.intervalFinal = timedelta(minutes=int(request.POST['intervalFinal']))
+        elif 'refreshTimes' in request.POST:
+            updateTimeTable()
         elif 'resetFinals' in request.POST:
             clearFinals()
             populateFinals()

@@ -11,7 +11,7 @@ function button_toggle_team(action, team_id)
             headers: { 'X-CSRFToken': csrftoken }
         },
         function(data, status){
-            if (status == 'success')
+            if (status === 'success')
             {
                 $('.menu').html($(data).find('.menu').html());
                 $('#team_table').html($(data).find('#team_table').html());
@@ -56,7 +56,7 @@ function button_mod_team(team_id)
             headers: { 'X-CSRFToken': csrftoken }
         },
         function(data, status){
-            if (status == 'success')
+            if (status === 'success')
             {
                 $('#team_form').html($(data).find('#team_form').html());
             }
@@ -111,7 +111,7 @@ $(document).ready(function()
             },
             function(data, status)
             {
-                if (status == 'success')
+                if (status === 'success')
                 {
                     $('.menu').html($(data).find('.menu').html());
                     $('#team_table').html($(data).find('#team_table').html());
@@ -152,7 +152,7 @@ $(document).ready(function()
     {
         var edit_team = false;
         var edit_id = null;
-        if ($("#team_form").attr('name') == 'mod_team')
+        if ($("#team_form").attr('name') === 'mod_team')
         {
             edit_team = true;
             edit_id = $("#button_edit_team").prop('value');
@@ -164,7 +164,7 @@ $(document).ready(function()
             },
             function(data, status)
             {
-                if (status == 'success')
+                if (status === 'success')
                 {
                     const form_content = $(data).find('#team_form');
                     $('#team_form').html(form_content.html());
@@ -197,7 +197,7 @@ $(document).ready(function()
                 headers: { 'X-CSRFToken': csrftoken }
             },
             function(data, status){
-                if (status == 'success')
+                if (status === 'success')
                 {
                     $('.menu').html($(data).find('.menu').html());
                     $('#team_table').html($(data).find('#team_table').html());

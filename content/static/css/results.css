@@ -1,40 +1,38 @@
 .timetable_race {
-    z-index: 1;
-    background-color: var(--bs-gray-100) !important;
+    background-color: var(--bs-white) !important;
 }
 
 .timetable_race:nth-child(even) {
-    background-color: var(--bs-gray-200) !important;
+    background-color: var(--bs-gray-100) !important;
 }
 
 .timetable_race:hover {
-    filter: brightness(0.97);
+    background-color: var(--bs-table-row-hover) !important;
 }
 
 .timetable_lane {
     z-index: 2;
-    background-color: var(--bs-gray-100) !important;
-}
-
-.timetable_race:nth-child(even) .timetable_lane {
-    background-color: var(--bs-gray-200) !important;
+    cursor: pointer;
 }
 
 .timetable_lane:hover {
-    filter: brightness(0.97);
+    background-color: var(--bs-table-lane-hover) !important;
 }
 
 .rankings_table {
-    z-index: 1;
-    background-color: var(--bs-gray-100) !important;
+    cursor: pointer;
 }
 
 .rankings_table:nth-child(even) {
-    background-color: var(--bs-gray-200) !important;
+    background-color: var(--bs-gray-100) !important;
 }
 
 .rankings_table:hover {
-    filter: brightness(0.97);
+    background-color: var(--white) !important;
+}
+
+.rankings_table:hover {
+    background-color: var(--bs-table-row-hover) !important;
 }
 
 .times_column {

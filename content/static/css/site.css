@@ -1,4 +1,6 @@
 :root {
+    --bs-gray-050: #fcfcfd;
+    --bs-gray-150: #f0f2f4;
     --bs-gray-950: #15171a;
     --bs-success-100: #d1e7dd;
     --bs-success-200: #a3cfbb;
@@ -9,10 +11,15 @@
     --bs-secondary-100: #f8f9fa;
     --bs-secondary-200: #e9ecef;
     --bs-secondary-300: #dee2e6;
+    --bs-warning-100: #fff3cd;
+    --bs-warning-200: #ffe69c;
+    --bs-warning-300: #ffda6a;
     --bs-purple-100: #e2d9f3;
     --bs-purple-200: #c5b3e6;
     --bs-purple-300: #a98eda;
     --bs-header-zindex: 1030;
+    --bs-table-row-hover: #f1f1f2;
+    --bs-table-lane-hover: #eaeaeb;
 }
 
 .bg-primary-100 {
@@ -136,7 +143,7 @@
 
 .btn_collapse:hover {
     color: var(--bs-primary) !important;
-    background-color:rgba(0, 0, 0, 0.05);
+    /* background-color:rgba(0, 0, 0, 0.05); */
     opacity: 1.0;
 }
 
@@ -195,11 +202,27 @@
 }
 
 .modal-footer .btn-primary {
-    width: 16rem;
+    width: auto;
 }
 
 .modal-footer .btn-secondary {
-    width: 12rem;
+    width: auto;
+}
+
+.modal-footer .btn-warning {
+    width: auto;
+}
+
+.modal-footer .btn-success {
+    width: auto;
+}
+
+.modal-footer .btn-danger {
+    width: auto;
+}
+
+.modal-footer .btn_icon img {
+    height: 2rem;
 }
 
 .nav-link .badge {
@@ -216,6 +239,15 @@
 
 .rounded-bottom-right {
     border-bottom-right-radius: 0.375rem !important;
+}
+
+.shadow {
+    box-shadow: 0 .25rem 0.5rem rgba(0,0,0,.1) !important;
+}
+
+.card-header-collapsed {
+    border-radius: var(--bs-card-inner-border-radius) var(--bs-card-inner-border-radius) !important;
+    border-bottom: 0;
 }
 
 @media only screen and (max-device-width: 480px) {

@@ -1,4 +1,6 @@
 import math
+#import base64
+import hashlib
 from django import template
 
 register = template.Library()
@@ -88,6 +90,21 @@ def startswith(value, arg):
     try:
         if value.startswith(arg):
             return value.replace(arg, '')
+    except:
+        pass
+
+    return ''
+
+'''
+String to id filter
+Generate UID from string to use string as ID in HTML templates.
+'''
+@register.filter
+def uid(value):
+    try:
+        m = hashlib.md5()
+        m.update(value.encode('utf-8'))
+        return 'id_' + m.hexdigest()
     except:
         pass
 

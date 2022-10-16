@@ -1,5 +1,6 @@
 {% extends 'main.html' %}
 {% load static %}
+{% load filter_tags %}
 {% load filter_tags_skipper %}
 
 {% block additionalCSS %}
@@ -28,7 +29,7 @@
                     </div>
                 </div>
                 <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
-                    <button type="submit" name="submit_skipper" value="Submit" id="button_add_skipper" form="skipper_form" class="btn btn-primary btn_icon d-block">
+                    <button type="submit" name="submit_skipper" value="Submit" id="button_add_skipper" form="skipper_form" class="btn btn-primary btn_icon shadow-sm d-block">
                         <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div class="pe-2">
                                 <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="add_skipper" class="p-0">
@@ -36,7 +37,7 @@
                             <p class="m-0 ps-2 lead">{{ config.submitAddSkipper }}</p>
                         </div>
                     </button>
-                    <button type="submit" name="submit_skipper" value="Submit" id="button_edit_skipper" form="skipper_form" class="btn btn-primary btn_icon d-none">
+                    <button type="submit" name="submit_skipper" value="Submit" id="button_edit_skipper" form="skipper_form" class="btn btn-primary btn_icon shadow-sm d-none">
                         <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div class="pe-2">
                                 <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="edit_skipper" class="p-0">
@@ -44,7 +45,7 @@
                             <p class="m-0 ps-2 lead">{{ config.submitEditSkipper }}</p>
                         </div>
                     </button>
-                    <button type="button" name="cancel_skipper" value="Submit" id="button_cancel_skipper" class="btn btn-secondary btn_icon" data-bs-dismiss="modal" formnovalidate>
+                    <button type="button" name="cancel_skipper" value="Submit" id="button_cancel_skipper" class="btn btn-secondary btn_icon shadow-sm" data-bs-dismiss="modal" formnovalidate>
                         <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div>
                                 <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_skipper" class="p-0">
@@ -75,7 +76,7 @@
                         <p>{{ config.warningDeleteSkipper|linebreaks }}</p>
                     </div>
                 </div>
-                <div class="modal-footer flex-row-reverse justify-content-center bg-gray-200">
+                <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
                     <button type="button" name="delete_skipper" id="button_delete_skipper" value="" class="btn btn-primary btn_icon" data-bs-dismiss="modal">
                         <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div class="pe-2">
@@ -122,8 +123,18 @@
         <div class="container-fluid m-0 p-0">
             {% if content.activeSkippers %}
                 <div class="card mb-3 shadow">
-                    <div class="card-header fs-5 py-0">{{ config.activeSkipperTitle }}</div>
-                    <div class="card-body p-0">
+                    <div class="card-header fs-4 py-0">
+                        <div class="row flex-nowrap">
+                            <div class="col">{{ config.activeSkipperTitle }}</div>
+                            <div class="col-auto ms-auto p-0">
+                                <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ config.activeSkipperTitle|uid }}" aria-expanded="true">
+                                    <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                    <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 collapse show" id="{{ config.activeSkipperTitle|uid }}">
                         {% include 'skipper_table_header.html' %}
                         {% for skipper in content.skipperList|active_skipper %}
                             {% include 'skipper_table_row.html' %}
@@ -133,8 +144,18 @@
             {% endif %}
             {% if content.inactiveSkippers %}
                 <div class="card mb-3 shadow">
-                    <div class="card-header fs-5 py-0">{{ config.inactiveSkipperTitle }}</div>
-                    <div class="card-body p-0">
+                    <div class="card-header fs-4 py-0">
+                        <div class="row flex-nowrap">
+                            <div class="col">{{ config.inactiveSkipperTitle }}</div>
+                            <div class="col-auto ms-auto p-0">
+                                <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ config.inactiveSkipperTitle|uid }}" aria-expanded="true">
+                                    <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                    <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 collapse show" id="{{ config.inactiveSkipperTitle|uid }}">
                         {% include 'skipper_table_header.html' %}
                         {% for skipper in content.skipperList|inactive_skipper %}
                             {% include 'skipper_table_row.html' %}

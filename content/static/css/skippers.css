@@ -18,11 +18,15 @@
 }
 
 .skipper_list:nth-child(even) {
-    background-color: var(--bs-gray-100);
+    background-color: var(--bs-gray-100) !important;
+}
+
+.skipper_list {
+    background-color: var(--bs-white) !important;
 }
 
 .skipper_list:hover {
-    background-color: var(--bs-gray-200);
+    background-color: var(--bs-table-row-hover) !important;
 }
 
 .btn_skipper_table_icon img {
@@ -39,14 +43,6 @@
 
 .skipper_table_buttons {
     width: 7rem !important;
-}
-
-.modal-footer .btn-primary {
-    width: 17rem;
-}
-
-.modal-footer .btn-secondary {
-    width: 11rem;
 }
 
 .skipper_edit {

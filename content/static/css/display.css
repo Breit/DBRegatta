@@ -2,42 +2,33 @@
     display: none !important;
 }
 
-.timetable_race {
-    z-index: 1;
-    background-color: var(--bs-gray-100) !important;
-}
-
 .timetable_race:nth-child(even) {
-    background-color: var(--bs-gray-200) !important;
+    background-color: var(--bs-gray-100) !important;
 }
 
 .timetable_race:hover {
     filter: brightness(0.97);
 }
 
-.timetable_lane {
-    z-index: 2;
+.timetable_race:nth-child(odd):hover {
     background-color: var(--bs-gray-100) !important;
 }
 
-.timetable_race:nth-child(even) .timetable_lane {
-    background-color: var(--bs-gray-200) !important;
+.timetable_lane {
+    z-index: 2;
 }
 
 .timetable_lane:hover {
+    background-color: var(--bs-gray-100) !important;
     filter: brightness(0.97);
 }
 
-.rankings_table {
-    z-index: 1;
-    background-color: var(--bs-gray-100) !important;
-}
-
-.rankings_table:nth-child(odd) {
-    background-color: var(--bs-gray-200) !important;
+.rankings_table:nth-child(even) {
+    background-color: var(--bs-gray-100);
 }
 
 .rankings_table:hover {
+    background-color: var(--bs-gray-100);
     filter: brightness(0.97);
 }
 

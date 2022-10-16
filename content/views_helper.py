@@ -89,75 +89,13 @@ def getTimeTableSettings():
         post.save()
     post_form = PostForm(instance = post)
 
-    settings = [
-        {
-            'id': 'timeBegin',
-            'name': config.timeBeginDesc,
-            'type': 'time',
-            'value': config.timeBegin,
-            'icon': 'clock'
-        },
-        {
-            'id': 'offsetHeat',
-            'name': config.offsetHeatDesc,
-            'type': 'number',
-            'value': config.offsetHeat.seconds // 60,
-            'icon': 'clock-history'
-        },
-        {
-            'id': 'offsetFinale',
-            'name': config.offsetFinaleDesc,
-            'type': 'number',
-            'value': config.offsetFinale.seconds // 60,
-            'icon': 'clock-history'
-        },
-        {
-            'id': 'offsetCeremony',
-            'name': config.offsetCeremonyDesc,
-            'type': 'number',
-            'value': config.offsetCeremony.seconds // 60,
-            'icon': 'clock-history'
-        },
-        {
-            'id': 'lanesPerRace',
-            'name': config.lanesPerRaceDesc,
-            'type': 'number',
-            'value': config.lanesPerRace,
-            'min': config.lanesPerRaceMin,
-            'max': config.lanesPerRaceMax,
-            'icon': 'layout-three-columns'
-        },
-        {
-            'id': 'heatCount',
-            'name': config.heatCountDesc,
-            'type': 'number',
-            'value': config.heatCount,
-            'min': config.heatCountMin,
-            'max': config.heatCountMax,
-            'icon': 'repeat'
-        },
-        {
-            'id': 'intervalHeat',
-            'name': config.intervalHeatDesc,
-            'type': 'number',
-            'value': config.intervalHeat.seconds // 60,
-            'icon': 'distribute-horizontal'
-        },
-        {
-            'id': 'intervalFinal',
-            'name': config.intervalFinalDesc,
-            'type': 'number',
-            'value': config.intervalFinal.seconds // 60,
-            'icon': 'distribute-horizontal'
-        },
-        {
-            'id': 'timetablePost',
-            'name': config.placeholderPostContent,
-            'type': 'textarea',
-            'value': post_form,
-            'icon': 'file-richtext'
-        }
-    ]
+    settings = {
+        'id': 'timetablePost',
+        'name': config.placeholderPostContent,
+        'type': 'textarea',
+        'value': post_form,
+        'icon': 'file-richtext'
+    }
 
     return settings
 
@@ -793,7 +731,7 @@ def getRaceTimes(raceType: str):
         }
 
         # get rankings
-        attendees = RaceAssign.objects.filter(race_id=race.id).order_by('time')
+        attendees = RaceAssign.objects.filter(race_id=race.id, time__gt=0.0).order_by('time')
         rankings = {}
         for i, attendee in enumerate(attendees):
             if attendee.time != 0.0:
@@ -1030,81 +968,36 @@ def getRaceResultsTableContent(heats: bool = True, heatsRankings: bool = True, f
 
     return timetable
 
-def getTimesControls(race_id = None):
-    def getSelectedRace(race_id):
-        race = Race.objects.get(id=race_id)
-        rankings = {}
-        if race:
-            # get rankings
-            attendees = RaceAssign.objects.filter(race_id=race.id).order_by('time')
-            i = 1
-            for attendee in attendees:
-                if attendee.time != 0.0:
-                    rankings[attendee.lane] = i
-                    i += 1
-        else:
-            return {}
-
-        attendees = RaceAssign.objects.filter(race_id=race_id).order_by('lane')
-        selected_race = {
-            'name': race.name,
-            'id': race.id,
-            'time': race.time,
-            'lanes': []
-        }
-        for attendee in attendees:
-            try:
-                skipper = Skipper.objects.get(id=attendee.skipper_id)
-            except:
-                skipper = None
-            lane = {
-                'id': attendee.id,
-                'lane': attendee.lane,
-                'team': Team.objects.get(id=attendee.team_id).name,
-                'skipper': {
-                    'name': skipper.name if skipper else '-',
-                    'active': skipper.active if skipper else False
-                },
-                'place': rankings[attendee.lane] if attendee.lane in rankings else '-',
-                'time': attendee.time,
-                'finished': attendee.time != 0.0
-            }
-            selected_race['lanes'].append(lane)
-        return selected_race
-
-    controls = {
-        'races': [''],
+def getTimesData():
+    data = {
+        'current_race': {},
         'skippers': [''],
-        'start_time_icon': 'view-list',
-        'time_icon': 'clock-history',
-        'selected_race': {}
+        'skipper_icon': 'person',
+        'time_icon': 'clock-history'
     }
 
-    if race_id:
-        selected_race = getSelectedRace(race_id)
-    else:
-        selected_race = None
+    current_race = None
 
     for race in Race.objects.all():
-        controls['races'].append(race.name)
-
-        if selected_race is None:
+        if current_race is None:
             attendees = RaceAssign.objects.filter(race_id=race.id)
             if sum([1 if attendee.time else 0 for attendee in attendees]) < len(attendees):
-                selected_race = getSelectedRace(race.id)
+                current_race = race.name
+        else:
+            break
 
-    controls['selected_race'] = selected_race
+    data['current_race'] = current_race
 
     skippers = Skipper.objects.all()
     for skipper in skippers:
-        controls['skippers'].append(
+        data['skippers'].append(
             {
                 'name': skipper.name,
                 'active': skipper.active
             }
         )
 
-    return controls
+    return data
 
 def getMainSettings():
     settings = [
@@ -1143,6 +1036,77 @@ def getMainSettings():
                     'type': 'checkbox',
                     'value': config.anonymousMonitor,
                     'icon': 'clock-history'
+                }
+            ]
+        },
+        {
+            'title': config.settingsTimetable,
+            'controls': [
+                {
+                    'id': 'timeBegin',
+                    'name': config.timeBeginDesc,
+                    'type': 'time',
+                    'value': config.timeBegin,
+                    'icon': 'clock'
+                },
+                {
+                    'id': 'offsetHeat',
+                    'name': config.offsetHeatDesc,
+                    'type': 'number',
+                    'value': config.offsetHeat.seconds // 60,
+                    'icon': 'clock-history'
+                },
+                {
+                    'id': 'offsetFinale',
+                    'name': config.offsetFinaleDesc,
+                    'type': 'number',
+                    'value': config.offsetFinale.seconds // 60,
+                    'icon': 'clock-history'
+                },
+                {
+                    'id': 'offsetCeremony',
+                    'name': config.offsetCeremonyDesc,
+                    'type': 'number',
+                    'value': config.offsetCeremony.seconds // 60,
+                    'icon': 'clock-history'
+                },
+                {
+                    'id': 'lanesPerRace',
+                    'name': config.lanesPerRaceDesc,
+                    'type': 'number',
+                    'value': config.lanesPerRace,
+                    'min': config.lanesPerRaceMin,
+                    'max': config.lanesPerRaceMax,
+                    'icon': 'layout-three-columns'
+                },
+                {
+                    'id': 'heatCount',
+                    'name': config.heatCountDesc,
+                    'type': 'number',
+                    'value': config.heatCount,
+                    'min': config.heatCountMin,
+                    'max': config.heatCountMax,
+                    'icon': 'repeat'
+                },
+                {
+                    'id': 'intervalHeat',
+                    'name': config.intervalHeatDesc,
+                    'type': 'number',
+                    'value': config.intervalHeat.seconds // 60,
+                    'icon': 'distribute-horizontal'
+                },
+                {
+                    'id': 'intervalFinal',
+                    'name': config.intervalFinalDesc,
+                    'type': 'number',
+                    'value': config.intervalFinal.seconds // 60,
+                    'icon': 'distribute-horizontal'
+                },
+                {
+                    'id': 'refreshTimes',
+                    'name': config.refreshTimetableText,
+                    'type': 'button',
+                    'icon': config.refreshTimetableIcon
                 }
             ]
         },

@@ -1,5 +1,6 @@
 {% extends 'main.html' %}
 {% load static %}
+{% load filter_tags %}
 {% load filter_tags_teams %}
 
 {% block additionalCSS %}
@@ -28,7 +29,7 @@
                     </div>
                 </div>
                 <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
-                    <button type="submit" name="submit_team" value="Submit" id="button_add_team" form="team_form" class="btn btn-primary btn_icon d-block">
+                    <button type="submit" name="submit_team" value="Submit" id="button_add_team" form="team_form" class="btn btn-primary btn_icon shadow d-block">
                         <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div class="pe-2">
                                 <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="add_team" class="p-0">
@@ -36,7 +37,7 @@
                             <p class="m-0 ps-2 lead">{{ config.submitAddTeam }}</p>
                         </div>
                     </button>
-                    <button type="submit" name="submit_team" value="Submit" id="button_edit_team" form="team_form" class="btn btn-primary btn_icon d-none">
+                    <button type="submit" name="submit_team" value="Submit" id="button_edit_team" form="team_form" class="btn btn-primary btn_icon shadow d-none">
                         <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div class="pe-2">
                                 <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="edit_team" class="p-0">
@@ -44,7 +45,7 @@
                             <p class="m-0 ps-2 lead">{{ config.submitEditTeam }}</p>
                         </div>
                     </button>
-                    <button type="button" name="cancel_team" value="Submit" id="button_cancel_team" class="btn btn-secondary btn_icon" data-bs-dismiss="modal" formnovalidate>
+                    <button type="button" name="cancel_team" value="Submit" id="button_cancel_team" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal" formnovalidate>
                         <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div>
                                 <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_team" class="p-0">
@@ -75,8 +76,8 @@
                         <p>{{ config.warningDeleteTeam|linebreaks }}</p>
                     </div>
                 </div>
-                <div class="modal-footer flex-row-reverse justify-content-center bg-gray-200">
-                    <button type="button" name="delete_team" id="button_delete_team" value="" class="btn btn-primary btn_icon" data-bs-dismiss="modal">
+                <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                    <button type="button" name="delete_team" id="button_delete_team" value="" class="btn btn-primary btn_icon shadow" data-bs-dismiss="modal">
                         <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div class="pe-2">
                                 <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_team" class="p-0">
@@ -84,7 +85,7 @@
                             <p class="m-0 ps-2 lead">{{ config.deleteTeam }}</p>
                         </div>
                     </button>
-                    <button type="button" name="cancel_delete_team" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
+                    <button type="button" name="cancel_delete_team" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
                         <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div>
                                 <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelDeleteTeam" class="p-0">
@@ -129,8 +130,18 @@
         {% endif %}
         {% if content.activeTeams %}
             <div class="card mb-3 shadow">
-                <div class="card-header fs-5 py-0">{{ config.activeTeams }}</div>
-                <div class="card-body p-0">
+                <div class="card-header fs-4 py-0">
+                    <div class="row flex-nowrap">
+                        <div class="col">{{ config.activeTeams }}</div>
+                        <div class="col-auto ms-auto p-0">
+                            <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ config.activeTeams|uid }}" aria-expanded="true">
+                                <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0 collapse show" id="{{ config.activeTeams|uid }}">
                     {% if content.teams %}
                         {% include 'team_table_header.html' %}
                     {% endif %}
@@ -142,8 +153,18 @@
         {% endif %}
         {% if content.waitlistTeams %}
             <div class="card mb-3 shadow">
-                <div class="card-header fs-5 py-0">{{ config.waitlistTeams }}</div>
-                <div class="card-body p-0">
+                <div class="card-header fs-4 py-0">
+                    <div class="row flex-nowrap">
+                        <div class="col">{{ config.waitlistTeams }}</div>
+                        <div class="col-auto ms-auto p-0">
+                            <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ config.waitlistTeams|uid }}" aria-expanded="true">
+                                <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0 collapse show" id="{{ config.waitlistTeams|uid }}">
                     {% if content.teams %}
                         {% include 'team_table_header.html' %}
                     {% endif %}
@@ -155,8 +176,18 @@
         {% endif %}
         {% if content.inactiveTeams %}
             <div class="card mb-3 shadow">
-                <div class="card-header fs-5 py-0">{{ config.inactiveTeams }}</div>
-                <div class="card-body p-0">
+                <div class="card-header fs-4 py-0">
+                    <div class="row flex-nowrap">
+                        <div class="col">{{ config.inactiveTeams }}</div>
+                        <div class="col-auto ms-auto p-0">
+                            <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ config.inactiveTeams|uid }}" aria-expanded="true">
+                                <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0 collapse show" id="{{ config.inactiveTeams|uid }}">
                     {% if content.teams %}
                         {% include 'team_table_header.html' %}
                     {% endif %}

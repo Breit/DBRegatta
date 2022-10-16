@@ -79,14 +79,15 @@ CONSTANCE_CONFIG = {
 
     # Timetable Settings
     'timetablePageCSS':         ('timetable.css',                               'CSS File for Site-specific Styling'),
+    'timetablePageJS':          ('timetable.js',                                'JS File for Site-specific Data Handling'),
     'timetableTitle':           ('Zeitplan',                                    'Menu Title for Timetable Page'),
     'timetableIcon':            ('timetable.svg',                               'Menu Icon for Timetable Page'),
-    'timetableSettingsHeader':  ('Zeitplan Einstellungen',                      'Header Label for Settings Section on the Timetable Page'),
     'timetableHeader':          ('Rennplan',                                    'Header Label for Timetable Page'),
     'refreshTimetableIcon':     ('expired.svg',                                 'Icon for Refresh Times Button'),
     'createTimetableIcon':      ('timetable.svg',                               'Icon for Timetable Draw Button'),
     'refreshTimetableText':     ('Zeiten aktualisieren',                        'Text for Refresh Times Button'),
-    'createTimetableText':      ('Zeitplan verlosen',                           'Text for Timetable Draw Button'),
+    'createTimetableText':      ('Zeitplan neu verlosen',                       'Text for Timetable Draw Button'),
+    'submitEditPost':           ('Speichern',                                   'Text for Save Post Button'),
     'lanesPerRace':             (3,                                             'Lanes per Race'),
     'lanesPerRaceMin':          (1,                                             'Minimum Lanes per Race'),
     'lanesPerRaceMax':          (10,                                            'Maximum Lanes per Race'),
@@ -116,8 +117,8 @@ CONSTANCE_CONFIG = {
     'timetableHeaderCompany':   ('Firma',                                       'Timetable Table Header for Company Name'),
     'timetableHeaderSkipper':   ('Steuer',                                      'Timetable Table Header for Skipper Column'),
     'timetableHeaderLane':      ('Bahn',                                        'Timetable Table Header for Lane'),
-    'teamCaptainsMeetingTitle': ('Team Captains Meeting am Strandschleicher',   'Text for Team Captains Meeting'),
-    'victoryCeremonyTitle':     ('Siegerehrung am Strandschleicher',            'Text for Victory Ceremony'),
+    'teamCaptainsMeetingTitle': ('Team Captains Meeting',                       'Text for Team Captains Meeting'),
+    'victoryCeremonyTitle':     ('Siegerehrung',                                'Text for Victory Ceremony'),
     'heatsTitle':               ('Vorrunde',                                    'Name for Heats'),
     'finaleTitle':              ('Finale',                                      'Name for Finale'),
     'finaleTemplate1':          ('Platz {} aus VR',                             'Template Placeholder 1 for Finale'),
@@ -126,6 +127,7 @@ CONSTANCE_CONFIG = {
 
     # Time Settings
     'timesPageCSS':             ('times.css',                                   'CSS File for Site-specific Styling'),
+    'timesPageJS':              ('times.js',                                    'JS File for Site-specific Data Handling'),
     'timeTitle':                ('Zeiteingabe',                                 'Menu Title for Time Page'),
     'timeRaceDesc':             ('Rennen',                                      'Text for Race Select Drop-Down'),
     'timesHeader':              ('Zeiteingabe',                                 'Header Label for Time Entry on Time Page'),
@@ -136,6 +138,8 @@ CONSTANCE_CONFIG = {
     'timesHeaderRank':          ('Rang',                                        'Header Text for Total Rank Column'),
     'timesHeaderSkipper':       ('Steuer',                                      'Header Text for Skipper Column'),
     'refreshTimesText':         ('Zeiten eintragen',                            'Text for Refresh Times Button'),
+    'resetTimesText':           ('Zurücksetzen',                                'Text for Reset Times Button'),
+    'resetIcon':                ('reload.svg',                                  'Button Icon for Reload Button'),
 
     # Trainings Settings
     'trainingsPageCSS':         ('trainings.css',                               'CSS File for Site-specific Styling'),
@@ -167,6 +171,7 @@ CONSTANCE_CONFIG = {
 
     # Results Settings
     'resultsPageCSS':           ('results.css',                                 'CSS File for Site-specific Styling'),
+    'resultsPageJS':            ('results.js',                                  'JS File for Site-specific Data Handling'),
     'resultsTitle':             ('Ergebnisse',                                  'Menu Title for Results Page'),
     'resultsIcon':              ('results.svg',                                 'Menu Icon for Results Page'),
     'resultsTableHeader':       ('Ergebnisliste',                               'Header Label for Race Results on Results Page'),
@@ -200,9 +205,11 @@ CONSTANCE_CONFIG = {
 
     # Settings for Settings Page
     'settingsPageCSS':          ('settings.css',                                'CSS File for Site-specific Styling'),
+    'settingsPageJS':           ('settings.js',                                 'JS File for Site-specific Data Handling'),
     'settingsTitle':            ('Einstellungen',                               'Menu Title for Settings Page'),
     'settingsHeaderRegatta':    ('Regatta',                                     'Section Title for Regatta Settings on Settings Page'),
     'settingsHeaderAccess':     ('Zugriffsrechte',                              'Section Title for Access Settings on Settings Page'),
+    'settingsTimetable':        ('Zeitplan',                                    'Section Title for Timetable Settings on Settings Page'),
     'settingsHeaderMonitor':    ('Race Monitor',                                'Section Title for Race Monitor Settings on Settings Page'),
     'settingsHeaderFooter':     ('Fußzeile',                                    'Section Title for Footer Settings on Settings Page'),
     'settingsIcon':             ('settings.svg',                                'Menu Icon for Settings Page'),
@@ -329,15 +336,16 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'Timetable Settings': {
         'fields': (
             'timetablePageCSS',
+            'timetablePageJS',
             'timetableTitle',
             'timetableIcon',
-            'timetableSettingsHeader',
             'timetableHeader',
             'refreshTimetableIcon',
             'createTimetableIcon',
             'refreshTimetableText',
             'createTimetableText',
             'warningCreateTimetable',
+            'submitEditPost',
             'lanesPerRace',
             'lanesPerRaceMin',
             'lanesPerRaceMax',
@@ -379,6 +387,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'Time Settings': {
         'fields': (
             'timesPageCSS',
+            'timesPageJS',
             'timeTitle',
             'timeRaceDesc',
             'timesHeader',
@@ -389,6 +398,8 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'timeIcon',
             'timesHeaderTime',
             'refreshTimesText',
+            'resetTimesText',
+            'resetIcon',
         ),
         'collapse': True
     },
@@ -429,6 +440,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'Results Settings': {
         'fields': (
             'resultsPageCSS',
+            'resultsPageJS',
             'resultsTitle',
             'resultsIcon',
             'resultsTableHeader',
@@ -468,9 +480,11 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'Settings Page Settings': {
         'fields': (
             'settingsPageCSS',
+            'settingsPageJS',
             'settingsTitle',
             'settingsHeaderRegatta',
             'settingsHeaderAccess',
+            'settingsTimetable',
             'settingsHeaderMonitor',
             'settingsHeaderFooter',
             'settingsIcon',

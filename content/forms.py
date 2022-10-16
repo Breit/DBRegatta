@@ -120,7 +120,7 @@ class PostForm(forms.ModelForm):
             'content': forms.Textarea(
                 attrs={
                     'class': 'form-control',
-                    'rows': 4,
+                    'rows': 12,
                     'placeholder': config.placeholderPostContent
                 }
             )
