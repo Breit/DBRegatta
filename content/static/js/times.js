@@ -1,25 +1,31 @@
 function edit_race(race_id)
 {
     var old_race = $('.current_race');
-    $(old_race).find('.race_display').removeClass('d-none');
-    $(old_race).find('.race_edit').addClass('d-none');
-    $(old_race).removeClass('current_race');
-    if (!$(old_race).is(':last-child'))
+    if (old_race !== undefined)
     {
-        $(old_race).addClass('border-bottom');
+        $(old_race).find('.race_display').removeClass('d-none');
+        $(old_race).find('.race_edit').addClass('d-none');
+        $(old_race).removeClass('current_race');
+        if (!$(old_race).is(':last-child'))
+        {
+            $(old_race).addClass('border-bottom');
+        }
     }
 
     var new_race = $('#' + race_id);
-    $(new_race).addClass('current_race');
-    $(new_race).removeClass('border-bottom');
-    $(new_race).find('.race_display').addClass('d-none');
-    $(new_race).find('.race_edit').removeClass('d-none');
-    $(new_race).find('.race_edit')[0].scrollIntoView(
-        {
-            behavior: 'smooth',
-            block: 'center'
-        }
-    );
+    if (new_race !== undefined)
+    {
+        $(new_race).addClass('current_race');
+        $(new_race).removeClass('border-bottom');
+        $(new_race).find('.race_display').addClass('d-none');
+        $(new_race).find('.race_edit').removeClass('d-none');
+        $(new_race).find('.race_edit')[0].scrollIntoView(
+            {
+                behavior: 'smooth',
+                block: 'center'
+            }
+        );
+    }
 }
 
 function reset(race_id)
@@ -106,15 +112,18 @@ function prep()
     });
 
     var cs = $('.current_race');
-    $(cs).removeClass('border-bottom');
-    $(cs).find('.race_display').addClass('d-none');
-    $(cs).find('.race_edit').removeClass('d-none');
-    $(cs).find('.race_edit')[0].scrollIntoView(
-        {
-            behavior: 'smooth',
-            block: 'center'
-        }
-    );
+    if (cs !== undefined)
+    {
+        $(cs).removeClass('border-bottom');
+        $(cs).find('.race_display').addClass('d-none');
+        $(cs).find('.race_edit').removeClass('d-none');
+        $(cs).find('.race_edit')[0].scrollIntoView(
+            {
+                behavior: 'smooth',
+                block: 'center'
+            }
+        );
+    }
 }
 
 $(document).ready(function()
