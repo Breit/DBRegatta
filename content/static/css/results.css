@@ -1,9 +1,9 @@
-.timetable_race:nth-child(even) {
-    background-color: var(--bs-gray-100) !important;
-}
-
 .timetable_race {
     background-color: var(--bs-white) !important;
+}
+
+.timetable_race:nth-child(even) {
+    background-color: var(--bs-gray-100) !important;
 }
 
 .timetable_race:hover {
@@ -12,10 +12,15 @@
 
 .timetable_lane {
     z-index: 2;
+    cursor: pointer;
 }
 
 .timetable_lane:hover {
     background-color: var(--bs-table-lane-hover) !important;
+}
+
+.rankings_table {
+    cursor: pointer;
 }
 
 .rankings_table:nth-child(even) {

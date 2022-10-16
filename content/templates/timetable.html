@@ -94,7 +94,7 @@
         </div>
     {% endif %}
     <div class="container-fluid">
-        <h2 class="mt-2 mb-3 display-6">{{ config.timetableHeader }}</h2>
+        <h2 class="mt-2 mb-3 display-6" id="site_title">{{ config.timetableHeader }}</h2>
         {% if post %}
             <div class="container mx-0 px-0 mb-4 position-relative" id="timetable_post">
                 <div class="container m-0 p-0{% if post_disabled %} text-muted{% endif %}">
@@ -144,9 +144,9 @@
                                 <div class="col">
                                     {% for lane in race.lanes %}
                                         <div class="row timetable_lane{% if forloop.parentloop.last and forloop.last %} rounded-bottom-right{% endif %}">
-                                            <div class="col-1 text-center">{{ lane.lane }}</div>
-                                            <div class="col {% if lane.draw %}text-muted{% else %}fw-bold{% endif %}">{{ lane.team }}</div>
-                                            <div class="col-6 d-none d-xl-block">{{ lane.company }}</div>
+                                            <div class="col-1 col_lane text-center">{{ lane.lane }}</div>
+                                            <div class="col col_team {% if lane.draw %}text-muted{% else %}fw-bold{% endif %}">{{ lane.team }}</div>
+                                            <div class="col-6 col_company d-none d-xl-block">{{ lane.company }}</div>
                                             <div class="col-1 col_skipper{% if not lane.skipper.active %} text-muted{% endif %}">{{ lane.skipper.name }}</div>
                                         </div>
                                     {% endfor %}

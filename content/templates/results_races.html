@@ -39,7 +39,7 @@
                         {% for lane in race.lanes %}
                             <div class="row timetable_lane{% if forloop.last and forloop.parentloop.last %} rounded-bottom-right{% endif %}">
                                 <div class="col-1 text-center">{{ lane.lane }}</div>
-                                <div class="col {% if lane.draw %}text-muted{% else %}fw-bold{% endif %}">{{ lane.team }}</div>
+                                <div class="col col_team{% if lane.draw %} text-muted{% else %} fw-bold{% endif %}">{{ lane.team }}</div>
                                 <div class="col-{% if entry.type == 'finale' %}5{% else %}6{% endif %} d-none d-xl-block">{{ lane.company }}</div>
                                 {% if entry.type == 'finale' %}
                                     <div class="col-1 text-center text-primary fw-bold">{{ lane.rank }}</div>

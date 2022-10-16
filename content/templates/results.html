@@ -7,9 +7,13 @@
     <link rel="stylesheet" href="{% static 'css/' %}{{ config.resultsPageCSS }}">
 {% endblock %}
 
+{% block additionalJS %}
+    <script language="JavaScript" src="{% static 'js/' %}{{config.resultsPageJS}}" type="text/javascript"></script>
+{% endblock %}
+
 {% block content %}
     <div class="container-fluid">
-        <h2 class="mt-2 mb-3 display-6">{{ config.resultsTableHeader }}</h2>
+        <h2 class="mt-2 mb-3 display-6" id="site_title">{{ config.resultsTableHeader }}</h2>
         {% for entry in results %}
             {% if entry.type == 'heat' or entry.type == 'finale' %}
                 {% if entry.races %}

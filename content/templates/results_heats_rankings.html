@@ -30,7 +30,7 @@
                 {% for r in entry.ranks|ranks_bracket:b %}
                     <div class="row flex-nowrap mx-0 p-0 rankings_table{% if not forloop.parentloop.first and forloop.first %} mt-4{% endif %}{% if forloop.last and not forloop.parentloop.last %} border-bottom{% endif %}{% if not forloop.first or not forloop.parentloop.first %} border-top{% endif %}{% if forloop.last %} rounded-bottom{% endif %}">
                         <div class="col-1 text-center text-primary fw-bold rank_column">{% if r.races > 0 %}{{ r.rank }}{% endif %}</div>
-                        <div class="col fw-bold">{{ r.name }}</div>
+                        <div class="col col_team fw-bold">{{ r.name }}</div>
                         <div class="col-5 d-none d-xl-block">{{ r.company }}</div>
                         {% for t in r.times %}
                             <div class="col-auto text-center small d-none d-md-block times_column">{% if t > 0 %}{{ t|asTime }}{% else %}-{% endif %}</div>
