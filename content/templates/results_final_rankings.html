@@ -3,14 +3,12 @@
 {% block rankings_finale %}
     <div class="card mb-3 shadow">
         <div class="card-header bg-purple-300 text-light{% if display %} display-6 py-1{% else %} fs-4 py-0{% endif %}">
-            <div class="row flex-nowrap">
+            <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ entry.desc|uid }}" aria-expanded="true">
                 <div class="col">{{ entry.desc }}</div>
                 {% if not display %}
-                    <div class="col-auto ms-auto p-0">
-                        <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-light" data-bs-toggle="collapse" data-bs-target="#{{ entry.desc|uid }}" aria-expanded="true">
-                            <i class="bi bi-chevron-compact-up icon_expanded"></i>
-                            <i class="bi bi-chevron-compact-down icon_collapsed"></i>
-                        </button>
+                    <div class="col-auto my-auto px-2 text-light fs-6">
+                        <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                        <i class="bi bi-chevron-compact-down icon_collapsed"></i>
                     </div>
                 {% endif %}
             </div>

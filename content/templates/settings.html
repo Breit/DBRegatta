@@ -16,13 +16,11 @@
             {% for section in controls %}
                 <div class="card mb-4 shadow">
                     <div class="card-header fs-4 py-0">
-                        <div class="row flex-nowrap">
+                        <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ section.title|uid }}" aria-expanded="true">
                             <div class="col">{{ section.title }}</div>
-                            <div class="col-auto ms-auto p-0">
-                                <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ section.title|uid }}" aria-expanded="true">
-                                    <i class="bi bi-chevron-compact-up icon_expanded"></i>
-                                    <i class="bi bi-chevron-compact-down icon_collapsed"></i>
-                                </button>
+                            <div class="col-auto my-auto px-2 text-secondary fs-6">
+                                <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                <i class="bi bi-chevron-compact-down icon_collapsed"></i>
                             </div>
                         </div>
                     </div>
@@ -108,13 +106,11 @@
                 <div class="col-12">
                     <div class="card p-0 shadow">
                         <div class="card-header bg-purple-100 fs-4 py-0 card-header-collapsed">
-                            <div class="row flex-nowrap">
+                            <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ config.devOptionsTimetable|uid }}" aria-expanded="false">
                                 <div class="col">{{ config.devOptionsTimetable }}</div>
-                                <div class="col-auto ms-auto p-0">
-                                    <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ config.devOptionsTimetable|uid }}" aria-expanded="false">
-                                        <i class="bi bi-chevron-compact-up icon_expanded"></i>
-                                        <i class="bi bi-chevron-compact-down icon_collapsed"></i>
-                                    </button>
+                                <div class="col-auto my-auto px-2 text-secondary fs-6">
+                                    <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                    <i class="bi bi-chevron-compact-down icon_collapsed"></i>
                                 </div>
                             </div>
                         </div>
@@ -205,13 +201,11 @@
                 <div class="col-12">
                     <div class="card p-0 shadow">
                         <div class="card-header bg-purple-100 fs-4 py-0 card-header-collapsed">
-                            <div class="row flex-nowrap">
+                            <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ config.devOptionsData|uid }}" aria-expanded="false">
                                 <div class="col">{{ config.devOptionsData }}</div>
-                                <div class="col-auto ms-auto p-0">
-                                    <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ config.devOptionsData|uid }}" aria-expanded="false">
-                                        <i class="bi bi-chevron-compact-up icon_expanded"></i>
-                                        <i class="bi bi-chevron-compact-down icon_collapsed"></i>
-                                    </button>
+                                <div class="col-auto my-auto px-2 text-secondary fs-6">
+                                    <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                    <i class="bi bi-chevron-compact-down icon_collapsed"></i>
                                 </div>
                             </div>
                         </div>
@@ -302,13 +296,11 @@
                 <div class="col-12 mb-2">
                     <div class="card p-0 shadow">
                         <div class="card-header bg-purple-100 fs-4 py-0">
-                            <div class="row flex-nowrap">
+                            <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ config.devOptionsDatabase|uid }}" aria-expanded="true">
                                 <div class="col">{{ config.devOptionsDatabase }}</div>
-                                <div class="col-auto ms-auto p-0">
-                                    <button type="button" value="Refresh" class="btn btn_collapse float-end h-100 px-2 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#{{ config.devOptionsDatabase|uid }}" aria-expanded="true">
-                                        <i class="bi bi-chevron-compact-up icon_expanded"></i>
-                                        <i class="bi bi-chevron-compact-down icon_collapsed"></i>
-                                    </button>
+                                <div class="col-auto my-auto px-2 text-secondary fs-6">
+                                    <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                    <i class="bi bi-chevron-compact-down icon_collapsed"></i>
                                 </div>
                             </div>
                         </div>

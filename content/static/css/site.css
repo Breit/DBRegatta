@@ -133,26 +133,31 @@
     height: 5rem;
 }
 
-.btn_icon {
-    width: 17rem;
+.hdr_collapse {
+    cursor: pointer;
 }
 
-.btn_collapse {
+.hdr_collapse[aria-expanded=false] .icon_expanded {
+    display: none;
+}
+
+.hdr_collapse[aria-expanded=true] .icon_collapsed {
+    display: none;
+}
+
+.hdr_collapse .icon_expanded,
+.hdr_collapse .icon_collapsed {
     opacity: 0.3;
 }
 
-.btn_collapse:hover {
+.hdr_collapse:hover .icon_expanded,
+.hdr_collapse:hover .icon_collapsed {
     color: var(--bs-primary) !important;
-    /* background-color:rgba(0, 0, 0, 0.05); */
     opacity: 1.0;
 }
 
-.btn_collapse[aria-expanded=false] .icon_expanded {
-    display: none;
-}
-
-.btn_collapse[aria-expanded=true] .icon_collapsed {
-    display: none;
+.btn_icon {
+    width: 17rem;
 }
 
 .btn_lg {
