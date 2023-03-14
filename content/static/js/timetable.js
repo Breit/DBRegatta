@@ -1,6 +1,6 @@
 function button_save_post(edit_id)
 {
-    $('#wait').removeClass('d-none').addClass('d-block');
+    $('#wait_post').removeClass('d-none').addClass('d-block');
 
     $('#editPost').prop('disabled', true);
     $('#cancelEditPost').prop('disabled', true);
@@ -27,12 +27,63 @@ function button_save_post(edit_id)
                 $('#timetable_post').html($(data).find('#timetable_post').html());
             }
 
-            $('#wait').removeClass('d-block').addClass('d-none');
+            $('#wait_post').removeClass('d-block').addClass('d-none');
 
             $('#editPost').prop('disabled', false);
             $('#cancelEditPost').prop('disabled', false);
 
             $('#editPostModal').modal('toggle');
+        }
+    );
+}
+
+function trigger(action)
+{
+    const csrftoken = getCookie('csrftoken');
+    var data = {};
+    if (action)
+    {
+        data[action] = true;
+    }
+
+    if ($('#wait_' + action).length > 0)
+    {
+        $('#wait_' + action).removeClass('d-none').addClass('d-block');
+    }
+    if ($('#' + action + 'Submit').length > 0)
+    {
+        $('#' + action + 'Submit').prop('disabled', true);
+    }
+    if ($('#' + action + 'Cancel').length > 0)
+    {
+        $('#' + action + 'Cancel').prop('disabled', true);
+    }
+
+    $.post(
+        {
+            url: window.location.href,
+            data: data,
+            headers: { 'X-CSRFToken': csrftoken }
+        },
+        function(data, status)
+        {
+            if ($('#wait_' + action).length > 0)
+            {
+                $('#wait_' + action).removeClass('d-block').addClass('d-none');
+            }
+
+            if ($('#' + action + 'Modal').length > 0)
+            {
+                $('#' + action + 'Modal').modal('hide');
+            }
+            if (status === 'success')
+            {
+                const main = data.match(/<main.*?>.*?<\/main.*?>/s);
+                if (main.length > 0)
+                {
+                    $('main').html(main);
+                }
+            }
         }
     );
 }

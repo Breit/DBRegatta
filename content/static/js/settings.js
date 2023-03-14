@@ -2,6 +2,20 @@ function update_setting(setting_id)
 {
     const csrftoken = getCookie('csrftoken');
     var data = {};
+
+    if ($('#wait_' + setting_id).length > 0)
+    {
+        $('#wait_' + setting_id).removeClass('d-none').addClass('d-block');
+    }
+    if ($('#' + setting_id + 'Submit').length > 0)
+    {
+        $('#' + setting_id + 'Submit').prop('disabled', true);
+    }
+    if ($('#' + setting_id + 'Cancel').length > 0)
+    {
+        $('#' + setting_id + 'Cancel').prop('disabled', true);
+    }
+
     switch ($('#' + setting_id).attr('type'))
     {
         case 'date':
@@ -33,6 +47,14 @@ function update_setting(setting_id)
             headers: { 'X-CSRFToken': csrftoken }
         },
         function(data, status){
+            if ($('#wait_' + setting_id).length > 0)
+            {
+                $('#wait_' + setting_id).removeClass('d-block').addClass('d-none');
+            }
+            if ($('#' + setting_id + 'Modal').length > 0)
+            {
+                $('#' + setting_id + 'Modal').modal('hide');
+            }
             if (status === 'success')
             {
                 const main = data.match(/<main.*?>.*?<\/main.*?>/s);

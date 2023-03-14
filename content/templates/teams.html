@@ -85,7 +85,7 @@
                             <p class="m-0 ps-2 lead">{{ config.deleteTeam }}</p>
                         </div>
                     </button>
-                    <button type="button" name="cancel_delete_team" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
+                    <button type="button" name="cancel_delete_team" id="cancel_delete_team" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
                         <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                             <div>
                                 <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelDeleteTeam" class="p-0">
@@ -93,6 +93,7 @@
                             <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
                         </div>
                     </button>
+                    <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_delete"></div>
                 </div>
             </div>
         </div>

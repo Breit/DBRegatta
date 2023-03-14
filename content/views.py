@@ -426,6 +426,8 @@ def settings(request):
             populateFinals()
         elif 'resetHeats' in request.POST:
             clearHeatTimes()
+        elif 'resetTimetable' in request.POST:
+            clearRaces()
         elif 'backupDatabase' in request.POST:
             backupDataBase()
         elif 'resetTeams' in request.POST:
