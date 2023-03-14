@@ -3,4 +3,3 @@ TODO: DBRegatta
 - Open/Close registration button
 - Trainings Page
 - PDF Export
-- Rounded borders in collapsed results/rankings/timetable view
