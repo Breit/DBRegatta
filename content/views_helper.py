@@ -208,32 +208,34 @@ def getTimeTableContent():
             )
 
     # get finals
-    timetable.append(
-        {
-            'time': combineTimeOffset(
-                timetable[-1]['races'][-1]['time']
-                    if 'races' in timetable[-1] and len(timetable[-1]['races']) > 0
-                    else timetable[-1]['time'],
-                config.offsetFinale
-            ),
-            'desc': config.finaleTitle,
-            'races': getRaces(config.finalPrefix),
-            'type': 'finale'
-        }
-    )
+    finale_races = getRaces(config.finalPrefix)
+    if (len(finale_races) > 0):
+        timetable.append(
+            {
+                'time': combineTimeOffset(
+                    timetable[-1]['races'][-1]['time']
+                        if 'races' in timetable[-1] and len(timetable[-1]['races']) > 0
+                        else timetable[-1]['time'],
+                    config.offsetFinale
+                ),
+                'desc': config.finaleTitle,
+                'races': finale_races,
+                'type': 'finale'
+            }
+        )
 
-    timetable.append(
-        {
-            'time': combineTimeOffset(
-                timetable[-1]['races'][-1]['time']
-                    if 'races' in timetable[-1] and len(timetable[-1]['races']) > 0
-                    else timetable[-1]['time'],
-                config.offsetCeremony
-            ),
-            'desc': config.victoryCeremonyTitle,
-            'type': 'ceremony'
-        }
-    )
+        timetable.append(
+            {
+                'time': combineTimeOffset(
+                    timetable[-1]['races'][-1]['time']
+                        if 'races' in timetable[-1] and len(timetable[-1]['races']) > 0
+                        else timetable[-1]['time'],
+                    config.offsetCeremony
+                ),
+                'desc': config.victoryCeremonyTitle,
+                'type': 'ceremony'
+            }
+        )
 
     return timetable
 

@@ -190,6 +190,9 @@ $(document).ready(function()
     $('#button_delete_team').click(function()
     {
         const csrftoken = getCookie('csrftoken');
+        $('#wait_delete').removeClass('d-none').addClass('d-block');
+        $('#button_delete_team').prop('disabled', true);
+        $('#cancel_delete_team').prop('disabled', true);
         $.post(
             {
                 url: window.location.href,
@@ -197,6 +200,9 @@ $(document).ready(function()
                 headers: { 'X-CSRFToken': csrftoken }
             },
             function(data, status){
+                $('#wait_delete').removeClass('d-block').addClass('d-none');
+                $('#button_delete_team').prop('disabled', false);
+                $('#cancel_delete_team').prop('disabled', false);
                 if (status === 'success')
                 {
                     $('.menu').html($(data).find('.menu').html());
