@@ -246,6 +246,9 @@ def createTimeTable():
     # create race tables for heats
     start = combineTimeOffset(config.timeBegin, config.offsetHeat)
     teams = Team.objects.filter(active=True, wait=False)
+    if teams.count() == 0:
+        return
+
     teams_idx = list(range(teams.count()))
     lastHeat = []
     for hnum in range(config.heatCount):
@@ -290,39 +293,40 @@ def createTimeTable():
             lastHeat.append(t)
 
     # create race tables for finals
-    start = combineTimeOffset(race.time, config.offsetFinale)
-    pnum = teams.count()
-    rname = ''
-    if teams.count() == 0:
-        races = 0
-    elif teams.count() == 1:
-        races = 1
-    else:
-        races = math.ceil((teams.count() - 1) / max(1, (config.lanesPerRace - 1)))
-    for rnum in range(races):
-        race = Race()
-        race.time = start
-        race.name = '{}{}'.format(config.finalPrefix, rnum + 1)
-        race.save()
-
-        # create finale draw assignments
-        if rnum == 0:
-            lanes = teams.count() - (races - 1) * (config.lanesPerRace - 1)
+    if 'race' in locals():
+        start = combineTimeOffset(race.time, config.offsetFinale)
+        pnum = teams.count()
+        rname = ''
+        if teams.count() == 0:
+            races = 0
+        elif teams.count() == 1:
+            races = 1
         else:
-            lanes = config.lanesPerRace
-        for lnum in range(lanes):
-            rdm = RaceDrawMode()
-            rdm.race_id = race.id
-            rdm.lane = lnum + 1
-            if rnum == 0 or lnum != 0:
-                rdm.desc = config.finaleTemplate1.format(pnum)
-                pnum -= 1
-            else:
-                rdm.desc = config.finaleTemplate2.format(rname)
-            rdm.save()
+            races = math.ceil((teams.count() - 1) / max(1, (config.lanesPerRace - 1)))
+        for rnum in range(races):
+            race = Race()
+            race.time = start
+            race.name = '{}{}'.format(config.finalPrefix, rnum + 1)
+            race.save()
 
-        rname = race.name
-        start = combineTimeOffset(start, config.intervalFinal)
+            # create finale draw assignments
+            if rnum == 0:
+                lanes = teams.count() - (races - 1) * (config.lanesPerRace - 1)
+            else:
+                lanes = config.lanesPerRace
+            for lnum in range(lanes):
+                rdm = RaceDrawMode()
+                rdm.race_id = race.id
+                rdm.lane = lnum + 1
+                if rnum == 0 or lnum != 0:
+                    rdm.desc = config.finaleTemplate1.format(pnum)
+                    pnum -= 1
+                else:
+                    rdm.desc = config.finaleTemplate2.format(rname)
+                rdm.save()
+
+            rname = race.name
+            start = combineTimeOffset(start, config.intervalFinal)
 
 def updateTimeTable():
     # update all heats at once
