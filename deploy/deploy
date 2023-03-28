@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+TARGET_DIR=src
+USER=www
+GROUP=www
+
+# stop server
+pkill -f runserver
+
+# if nothing is checked out yet, check the sources out from GitHub
+[ ! -d "$SCRIPT_DIR/$TARGET_DIR" ] && git clone https://github.com/Breit/DBRegatta.git --no-checkout --origin github "$SCRIPT_DIR/$TARGET_DIR"
+
+# update to latest branch: main
+# TODO: check for a specific release tag and pull that
+cd "$SCRIPT_DIR/$TARGET_DIR"
+git fetch
+git pull
+git reset --hard main
+
+# fix ownership
+chown -R $USER:$GROUP "$SCRIPT_DIR/$TARGET_DIR"
+
+# migrate DB to latest version
+su -m $USER -c "$SCRIPT_DIR/venv/dbsprint/bin/python $SCRIPT_DIR/$TARGET_DIR/manage.py makemigrations"
+su -m $USER -c "$SCRIPT_DIR/venv/dbsprint/bin/python $SCRIPT_DIR/$TARGET_DIR/manage.py migrate"
+
+# generate new secret key
+KEY=$(su -m $USER -c "$SCRIPT_DIR/venv/dbsprint/bin/python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'")
+ESCAPED_KEY=$(printf '%s\n' "$KEY" | sed -e 's/[\/&]/\\&/g')
+sed -i "" "s/\(SECRET_KEY = '\).*\('\)/\1$ESCAPED_KEY\2/" $SCRIPT_DIR/$TARGET_DIR/DBRegatta/settings.py
+
+# disable debug mode
+sed -i "" "s/\(DEBUG = '\).*\('\)/\1False\2/" $SCRIPT_DIR/$TARGET_DIR/DBRegatta/settings.py

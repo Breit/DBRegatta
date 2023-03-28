@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+USER=www
+
+# check if server is running and start it if not
+pgrep -f runserver > /dev/null || su -m $USER -c "$SCRIPT_DIR/venv/dbsprint/bin/python $SCRIPT_DIR/src/manage.py runserver 127.0.0.1:11768 &"

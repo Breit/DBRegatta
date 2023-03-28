@@ -143,8 +143,19 @@ CONSTANCE_CONFIG = {
 
     # Trainings Settings
     'trainingsPageCSS':         ('trainings.css',                               'CSS File for Site-specific Styling'),
+    'trainingsPageJS':          ('trainings.js',                                'JS File for Site-specific Data Handling'),
     'trainingsTitle':           ('Trainings',                                   'Menu Title for Trainings Page'),
     'trainingsIcon':            ('rafting.svg',                                 'Menu Icon for Trainings Page'),
+    'trainingsTableHeader':     ('Liste Trainings',                             'Header Label for Trainings Page'),
+    'trainingsCountTrainings':  ('Trainings',                                   'Header Label for Trainings Page - Trainings Count'),
+    'trainingsCountTeams':      ('Teams',                                       'Header Label for Trainings Page - Teams Count'),
+    'trainingsCountSkipper':    ('Steuerleute',                                 'Header Label for Trainings Page - Skipper Count'),
+    'addTraining':              ('Training hinzufügen',                         'Text for Add Training Button'),
+    'placeholderTrainingDate':  ('Datum',                                       'Placeholder Text for Trainings Form: Training Date'),
+    'placeholderTrainingTime':  ('Uhrzeit',                                     'Placeholder Text for Trainings Form: Training Date'),
+    'placeholderTrainingNotes': ('Notizen',                                     'Placeholder Text for Trainings Form: Trainings Notes'),
+    'trainingsTableHeaderID':   ('#',                                           'Trainings Table Header ID'),
+    'trainingsTableHeaderEdit': ('Bearbeiten',                                  'Options Header Text for Trainings Table on Trainings Page'),
 
     # Skippers Settings
     'skippersPageCSS':          ('skippers.css',                                'CSS File for Site-specific Styling'),
@@ -409,8 +420,19 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'Trainings Settings': {
         'fields': (
             'trainingsPageCSS',
+            'trainingsPageJS',
             'trainingsTitle',
             'trainingsIcon',
+            'trainingsTableHeader',
+            'trainingsCountTrainings',
+            'trainingsCountTeams',
+            'trainingsCountSkipper',
+            'addTraining',
+            'placeholderTrainingDate',
+            'placeholderTrainingTime',
+            'placeholderTrainingNotes',
+            'trainingsTableHeaderID',
+            'trainingsTableHeaderEdit',
         ),
         'collapse': True
     },
