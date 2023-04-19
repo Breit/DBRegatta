@@ -3,3 +3,5 @@ TODO: DBRegatta
 - Open/Close registration button
 - Trainings Page
 - PDF Export
+- Reset Button for Team Registration (Position and Date)
+- Training Statistics

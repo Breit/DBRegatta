@@ -194,6 +194,7 @@ class TrainingForm(forms.ModelForm):
         model = Training
 
         fields = (
+            'active',
             'date',
             'time',
             'team_id',
@@ -202,6 +203,7 @@ class TrainingForm(forms.ModelForm):
         )
 
         labels = {
+            'active': '',
             'date': '',
             'time': '',
             'team_id': '',
@@ -210,37 +212,50 @@ class TrainingForm(forms.ModelForm):
         }
 
         widgets = {
-            'date': forms.DateInput(   # SplitDateTimeWidget?
+            'active': forms.CheckboxInput(
+                attrs = {
+                    'class': 'form-check-input',
+                    'placeholder': config.placeholderTrainingActive
+                }
+            ),
+            'date': forms.DateInput(
                 attrs = {
                     'class': 'form-control text-end px-1',
-                    'placeholder': config.placeholderTrainingDate,
-                    'type': 'date'
+                    'placeholder': config.placeholderTrainingDateTime,
+                    'type': 'date',
+                    'icon': 'calendar-event'
                 }
             ),
             'time': forms.TimeInput(
-                attrs={
+                format=('%H:%M'),
+                attrs = {
                     'class': 'form-control text-end px-1',
-                    'placeholder': config.placeholderTrainingTime,
-                    'type': 'time'
+                    'placeholder': config.placeholderTrainingDateTime,
+                    'type': 'time',
+                    'list': 'training_time_select',
+                    'icon': 'clock'
                 }
             ),
-            'team_id': forms.Select(
+            'team_id': forms.NumberInput(
                 attrs={
                     'class': 'form-control',
-                    'placeholder': config.placeholderTeamName
+                    'placeholder': config.placeholderTeamName,
+                    'icon': 'tag'
                 }
             ),
-            'skipper_id': forms.Select(
+            'skipper_id': forms.NumberInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderSkipperName
+                    'placeholder': config.skipper,
+                    'icon': 'person'
                 }
             ),
             'notes': forms.Textarea(
                 attrs={
                     'class': 'form-control',
-                    'rows': 12,
-                    'placeholder': config.placeholderTrainingNotes
+                    'rows': 8,
+                    'placeholder': config.placeholderTrainingNotes,
+                    'icon': 'house'
                 }
             )
         }

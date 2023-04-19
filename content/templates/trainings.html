@@ -11,58 +11,161 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid" id="trainings_table">
+    <div class="modal fade" id="formTrainingModal" data-bs-backdrop="static" tabindex="-1">
+        <div class="modal-dialog text-dark modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-light">
+                    <h5 class="modal-title d-block" id="formAddTrainingLabel">{{ config.addTrainingHeader }}</h5>
+                    <h5 class="modal-title d-none" id="formEditTrainingLabel">{{ config.editTrainingHeader }}</h5>
+                    <button type="button" id="button_cancel_training_x" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                    <div class="d-flex align-items-start team_form">
+                        <form method="POST" action="" name="add_training" id="training_form">
+                            {% csrf_token %}
+                            {% include 'training_form.html' %}
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                    <button type="submit" name="submit_training" value="Submit" id="button_add_training" form="training_form" class="btn btn-primary btn_icon shadow d-block">
+                        <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                            <div class="pe-2">
+                                <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="add_team" class="p-0">
+                            </div>
+                            <p class="m-0 ps-2 lead">{{ config.submitAddTraining }}</p>
+                        </div>
+                    </button>
+                    <button type="submit" name="submit_training" value="Submit" id="button_edit_training" form="training_form" class="btn btn-primary btn_icon shadow d-none">
+                        <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                            <div class="pe-2">
+                                <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="edit_training" class="p-0">
+                            </div>
+                            <p class="m-0 ps-2 lead">{{ config.submitEditTraining }}</p>
+                        </div>
+                    </button>
+                    <button type="button" name="cancel_training" value="Submit" id="button_cancel_training" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal" formnovalidate>
+                        <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                            <div>
+                                <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_training" class="p-0">
+                            </div>
+                            <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                        </div>
+                    </button>
+                    <div class="spinner-border text-primary d-none me-auto" role="status" id="wait"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteTrainingModal" data-bs-backdrop="static" tabindex="-1">
+        <div class="modal-dialog text-dark">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-light">
+                    <h5 class="modal-title" id="deleteTrainingLabel">{{ config.deleteTraining }}</h5>
+                    <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                    <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                    <div class="container">
+                        <p>
+                            <span>{{ config.headerTraining }}: </span>
+                            <span class="fw-bold" id="del_training_team"></span>
+                        <br>
+                            <span>{{ config.skipper }}: </span>
+                            <span class="fw-bold" id="del_training_skipper"></span>
+                        </p>
+                        <p>{{ config.warningDeleteTraining | linebreaks }}</p>
+                    </div>
+                </div>
+                <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                    <button type="button" name="delete_training" id="button_delete_training" value="" class="btn btn-primary btn_icon shadow" data-bs-dismiss="modal">
+                        <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                            <div class="pe-2">
+                                <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_training" class="p-0">
+                            </div>
+                            <p class="m-0 ps-2 lead">{{ config.deleteTraining }}</p>
+                        </div>
+                    </button>
+                    <button type="button" name="cancel_delete_training" id="cancel_delete_training" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
+                        <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                            <div>
+                                <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelDeleteTraining" class="p-0">
+                            </div>
+                            <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                        </div>
+                    </button>
+                    <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_delete"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" id="training_table">
         <h2 class="mt-2 mb-2 display-6">{{ config.trainingsTableHeader }}</h2>
         {% if content.trainingsList %}
             <div class="progress mb-4 bg-light">
                 {% if content.countTrainings %}
-                    <div class="progress-bar px-2 me-2 trainings_stats bg-light border-bottom border-success border-5 text-success" role="progressbar" style="width: calc(100% / 3.0)">
+                    <div class="progress-bar px-2 me-2 trainings_stats bg-light border-bottom border-success border-5 text-success" role="progressbar" style="width: calc(100% * {{ content.trainingsList.upcoming | length }} / {{ content.countTrainings }})">
                         <div class="flex-row text-start">
-                            <span class="display-3 fw-bold">{{ content.countTrainings }}</span>
-                            <span class="lead">{{ config.trainingsCountTrainings }}</span>
+                            <span class="display-3 fw-bold">{{ content.trainingsList.upcoming | length }}</span>
+                            <span class="lead">{{ config.trainingsCountUpcoming }}</span>
                         </div>
                     </div>
                 {% endif %}
                 {% if content.countTeams %}
-                    <div class="progress-bar px-2 me-2 trainings_stats bg-light border-bottom border-primary border-5 text-primary" role="progressbar" style="width: calc(100%  / 3.0)">
+                    <div class="progress-bar px-2 me-2 trainings_stats bg-light border-bottom border-warning border-5 text-warning" role="progressbar" style="width: calc(100% * {{ content.trainingsList.past | length }} / {{ content.countTrainings }})">
                         <div class="flex-row text-start">
-                            <span class="display-3 fw-bold">{{ content.countTeams }}</span>
-                            <span class="lead">{{ config.trainingsCountTeams }}</span>
+                            <span class="display-3 fw-bold">{{ content.trainingsList.past | length }}</span>
+                            <span class="lead">{{ config.trainingsCountPast }}</span>
                         </div>
                     </div>
                 {% endif %}
                 {% if content.countSkippers %}
-                    <div class="progress-bar px-2 trainings_stats bg-light border-bottom border-secondary border-5 text-secondary" role="progressbar" style="width: calc(100%  / 3.0)">
+                    <div class="progress-bar px-2 trainings_stats bg-light border-bottom border-secondary border-5 text-secondary" role="progressbar" style="width: calc(100% * {{ content.trainingsList.inactive | length }} / {{ content.countTrainings }})">
                         <div class="flex-row text-start">
-                            <span class="display-3 fw-bold">{{ content.countSkippers }}</span>
-                            <span class="lead">{{ config.trainingsCountSkipper }}</span>
+                            <span class="display-3 fw-bold">{{ content.trainingsList.inactive | length }}</span>
+                            <span class="lead">{{ config.trainingsCountInactive }}</span>
                         </div>
                     </div>
                 {% endif %}
             </div>
         {% endif %}
         <div class="container-fluid m-0 p-0">
-            <div class="card mb-3 shadow">
-                <div class="card-header fs-4 py-0">
-                    <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ config.trainingsTitle }}" aria-expanded="true">
-                        <div class="col">{{ config.trainingsTitle }}</div>
-                        <div class="col-auto my-auto px-2 text-secondary fs-6">
-                            <i class="bi bi-chevron-compact-up icon_expanded"></i>
-                            <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+            {% for training_type, training_table in content.trainingsList.items %}
+                <div class="card mb-3 shadow">
+                    <div class="card-header fs-4 py-0">
+                        <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ config.trainingsTitle }}_{{ training_type }}" aria-expanded="true">
+                            <div class="col">
+                                {% if training_type == 'upcoming' %}
+                                    {{ config.trainingsTitleUpcoming }}
+                                {% elif training_type == 'past' %}
+                                    {{ config.trainingsTitlePast }}
+                                {% elif training_type == 'inactive' %}
+                                    {{ config.trainingsTitleInactive }}
+                                {% else %}
+                                    {{ config.trainingsTitle }}
+                                {% endif %}
+                            </div>
+                            <div class="col-auto my-auto px-2 text-secondary fs-6">
+                                <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                                <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                            </div>
                         </div>
                     </div>
+                    <div class="card-body p-0 collapse show" id="{{ config.trainingsTitle }}_{{ training_type }}">
+                        {% include 'trainings_table_header.html' %}
+                        {% for training in training_table %}
+                            {% include 'trainings_table_row.html' %}
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="card-body p-0 collapse show" id="{{ config.trainingsTitle }}">
-                    {% include 'trainings_table_header.html' %}
-                    {% for training in content.trainingsList %}
-                        {% include 'trainings_table_row.html' %}
-                    {% endfor %}
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
+
     <div class="container-fluid mb-3 pt-3">
-        <button type="button" name="show_trainings_form" value="Add" class="btn btn-primary btn_icon btn_lg shadow" data-bs-toggle="modal" data-bs-target="#formTrainingsModal">
+        <button type="button" name="show_trainings_form" value="Add" class="btn btn-primary btn_icon btn_lg shadow" data-bs-toggle="modal" data-bs-target="#formTrainingModal">
             <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                 <div class="pe-2">
                     <img src="{% static 'images/' %}{{ config.addTeamIcon }}" alt="add_training">

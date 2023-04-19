@@ -28,6 +28,10 @@ input[type=number]::-webkit-inner-spin-button {
     height: 100%;
 }
 
+input[type=date]::-webkit-calendar-picker-indicator {
+    padding-left: 0.5rem;
+}
+
 .form-switch input[type=checkbox] {
     margin-left: 0;
     margin-top: 0;
