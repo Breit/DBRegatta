@@ -10,6 +10,7 @@ class TeamForm(ModelForm):
         fields = (
             'active',
             'wait',
+            'position',
             'date',
             'name',
             'company',
@@ -21,6 +22,7 @@ class TeamForm(ModelForm):
         labels = {
             'active': '',
             'wait': '',
+            'position': '',
             'date': '',
             'name': '',
             'company': '',
@@ -40,6 +42,14 @@ class TeamForm(ModelForm):
                 attrs = {
                     'class': 'form-check-input',
                     'placeholder': config.placeholderTeamWaitlist
+                }
+            ),
+            'position': forms.NumberInput(
+                attrs = {
+                    'class': 'form-control text-end pe-4',
+                    'placeholder': config.placeholderTeamPosition,
+                    'inc': 1,
+                    'type': 'number'
                 }
             ),
             'date': forms.DateInput(

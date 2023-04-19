@@ -144,11 +144,18 @@ $(document).ready(function()
                         $('#skipper_' + edit_id).removeClass('skipper_edit');
                     }
                 }
+                else
+                {
+                    if (edit_skipper)
+                    {
+                        $("#skipper_form").attr('name', 'mod_skipper');
+                    }
+                }
             }
         );
     });
 
-    $('#button_cancel_skipper').click(function()
+    $('#button_cancel_skipper, #button_cancel_skipper_x').click(function()
     {
         var edit_skipper = false;
         var edit_id = null;

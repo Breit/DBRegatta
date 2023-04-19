@@ -4,7 +4,7 @@
     <div class="row">
         {% for f in content.form %}
             {% if f.field.widget.input_type == 'checkbox' %}
-            <div class="col-12 col-sm-6 col-lg-4 mb-3">
+            <div class="col-12 col-sm-6 col-lg-3 mb-3">
                 <div class="input-group shadow-sm">
                     <div class="input-group-text form-switch px-1 {% if f.errors %}input-error{% endif %}">
                         {{ f }}
@@ -12,8 +12,15 @@
                     <input type="text" class="form-control bg-light" value="{{ f.field.widget.attrs.placeholder }}" disabled>
                 </div>
             </div>
+            {% elif f.html_name == 'position' %}
+                <div class="col-12 col-sm-6 col-lg-3 mb-3">
+                    <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
+                        <span class="input-group-text{% if f.field.required %} text-primary{% endif %}"><i class="bi bi-sort-numeric-down"></i></span>
+                        {{ f }}
+                    </div>
+                </div>
             {% elif f.html_name == 'date' %}
-                <div class="col-12 col-sm-6 col-lg-4 mb-3">
+                <div class="col-12 col-sm-6 col-lg-3 mb-3">
                     <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
                         <span class="input-group-text{% if f.field.required %} text-primary{% endif %}"><i class="bi bi-calendar3-event"></i></span>
                         {{ f }}

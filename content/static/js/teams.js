@@ -144,11 +144,18 @@ $(document).ready(function()
                         $('#team_' + edit_id).removeClass('team_edit');
                     }
                 }
+                else
+                {
+                    if (edit_team)
+                    {
+                        $("#team_form").attr('name', 'mod_team');
+                    }
+                }
             }
         );
     });
 
-    $('#button_cancel_team').click(function()
+    $('#button_cancel_team, #button_cancel_team_x').click(function()
     {
         var edit_team = false;
         var edit_id = null;

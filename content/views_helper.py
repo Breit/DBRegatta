@@ -13,6 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.contrib.auth import authenticate, login, logout
 from django.forms.models import model_to_dict
 from django.conf import settings as dj_settings
+from django.db.models import F
 
 from .models import Race, RaceAssign, Team, RaceDrawMode, Post, Skipper, Training
 from .forms import TeamForm, PostForm, SkipperForm, TrainingForm
@@ -52,15 +53,15 @@ def toggleFoldMenu(request):
 def getTeamContent():
     content = { 'teams': [] }
 
-    activeTeams = Team.objects.filter(active=True, wait=False)
+    activeTeams = Team.objects.filter(active=True, wait=False).order_by(F('position').asc(nulls_last=True))
     for team in activeTeams:
         content['teams'].append(model_to_dict(team))
 
-    waitingTeams = Team.objects.filter(active=True, wait=True)
+    waitingTeams = Team.objects.filter(active=True, wait=True).order_by(F('position').asc(nulls_last=True))
     for team in waitingTeams:
         content['teams'].append(model_to_dict(team))
 
-    inactiveTeams = Team.objects.filter(active=False)
+    inactiveTeams = Team.objects.filter(active=False).order_by(F('position').asc(nulls_last=True))
     for team in inactiveTeams:
         content['teams'].append(model_to_dict(team))
 
