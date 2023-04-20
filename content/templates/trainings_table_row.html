@@ -1,0 +1,42 @@
+{% load static %}
+
+{% block trainings_table_row %}
+    <div class="row align-items-center flex-nowrap trainings_list m-0 py-1{% if not forloop.last %} border-bottom{% else %} rounded-bottom{% endif %}{% if content.trainingForm_id and training.id == content.trainingsForm_id %} border border-primary training_edit{% endif %}" id="training_{{ training.id }}">
+        <div class="col-1 id_col fw-bold text-primary">{{ forloop.counter }}</div>
+        <div class="col col-lg-2 d-none d-sm-block text-nowrap">
+            <span class="text-secondary fw-bold">{{ training.date | date:'d.m.Y' }}</span>
+            <br>
+            <span class="small">{{ training.time | date:'H:i' }}</span>
+        </div>
+        <div class="col col-lg-2 text-nowrap">
+            <span class="fw-bold text-success">{{ training.team.name }}</span>
+            <br>
+            <span class="small">{{ training.team.company }}</span>
+        </div>
+        <div class="col col-lg-2 d-none d-sm-block text-nowrap">
+            <span>{{ training.team.contact }}</span>
+            <br>
+            <a href= "mailto:{{ training.team.email }}" class="small">{{ training.team.email }}</a>
+        </div>
+        <div class="col col-lg-2 d-none d-sm-block text-nowrap">
+            <span>{{ training.skipper.name }}</span>
+            <br>
+            <a href= "mailto:{{ training.skipper.email }}" class="small">{{ training.skipper.email }}</a>
+        </div>
+        <div class="col d-none d-lg-block">{{ training.notes | linebreaks }}</div>
+        <div class="col-1 icon_col text-center px-2 icon_col">
+            <div class="row m-0 flex-nowrap">
+                <div class="col-6 m-0 p-0 trainings_table_button">
+                    <button type="button" name="edit_training" value="{{ training.id }}" class="btn btn_trainings_table_icon p-0" onclick="button_mod_training({{ training.id }})">
+                        <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_training">
+                    </button>
+                </div>
+                <div class="col-6 m-0 p-0 trainings_table_button">
+                    <button type="button" class="btn btn_trainings_table_icon p-0 ps-1" onclick="request_delete_training({{ training.id }})">
+                        <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_training">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

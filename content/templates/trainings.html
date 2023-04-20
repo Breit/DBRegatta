@@ -1,22 +1,75 @@
 {% extends 'main.html' %}
 {% load static %}
+{% load filter_tags %}
+
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{% static 'css/' %}{{ config.trainingsPageCSS }}">
+{% endblock %}
 
 {% block additionalJS %}
-    <script type="text/javascript" src="{% static 'js/' %}trainings.js"></script>
+    <script language="JavaScript" src="{% static 'js/' %}{{config.trainingsPageJS}}" type="text/javascript"></script>
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid bg-light sticky-top">
-        <div class="pb-3 pt-1 border-bottom border-3 collapse show" id="collapseControls">
-            <h2 class="mt-2 mb-3 display-6">{{ config.trainingsTitle }}</h2>
+    <div class="container-fluid" id="trainings_table">
+        <h2 class="mt-2 mb-2 display-6">{{ config.trainingsTableHeader }}</h2>
+        {% if content.trainingsList %}
+            <div class="progress mb-4 bg-light">
+                {% if content.countTrainings %}
+                    <div class="progress-bar px-2 me-2 trainings_stats bg-light border-bottom border-success border-5 text-success" role="progressbar" style="width: calc(100% / 3.0)">
+                        <div class="flex-row text-start">
+                            <span class="display-3 fw-bold">{{ content.countTrainings }}</span>
+                            <span class="lead">{{ config.trainingsCountTrainings }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if content.countTeams %}
+                    <div class="progress-bar px-2 me-2 trainings_stats bg-light border-bottom border-primary border-5 text-primary" role="progressbar" style="width: calc(100%  / 3.0)">
+                        <div class="flex-row text-start">
+                            <span class="display-3 fw-bold">{{ content.countTeams }}</span>
+                            <span class="lead">{{ config.trainingsCountTeams }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if content.countSkippers %}
+                    <div class="progress-bar px-2 trainings_stats bg-light border-bottom border-secondary border-5 text-secondary" role="progressbar" style="width: calc(100%  / 3.0)">
+                        <div class="flex-row text-start">
+                            <span class="display-3 fw-bold">{{ content.countSkippers }}</span>
+                            <span class="lead">{{ config.trainingsCountSkipper }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+        <div class="container-fluid m-0 p-0">
+            <div class="card mb-3 shadow">
+                <div class="card-header fs-4 py-0">
+                    <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ config.trainingsTitle }}" aria-expanded="true">
+                        <div class="col">{{ config.trainingsTitle }}</div>
+                        <div class="col-auto my-auto px-2 text-secondary fs-6">
+                            <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                            <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0 collapse show" id="{{ config.trainingsTitle }}">
+                    {% include 'trainings_table_header.html' %}
+                    {% for training in content.trainingsList %}
+                        {% include 'trainings_table_row.html' %}
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-        <button type="submit" name="refreshTimes" value="Refresh" class="btn hdr_collapse float-end mt-1 border-0 text-secondary" data-bs-toggle="collapse" data-bs-target="#collapseControls"  aria-expanded="true">
-            <i class="bi bi-chevron-compact-up icon_expanded"></i>
-            <i class="bi bi-chevron-compact-down icon_collapsed"></i>
-        </button>
     </div>
-    <div class="container-fluid">
-
+    <div class="container-fluid mb-3 pt-3">
+        <button type="button" name="show_trainings_form" value="Add" class="btn btn-primary btn_icon btn_lg shadow" data-bs-toggle="modal" data-bs-target="#formTrainingsModal">
+            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                <div class="pe-2">
+                    <img src="{% static 'images/' %}{{ config.addTeamIcon }}" alt="add_training">
+                </div>
+                <p class="m-0 ps-2 lead">{{ config.addTraining }}</p>
+            </div>
+        </button>
     </div>
     <div class="container-fluid overscroll"></div>
 {% endblock %}

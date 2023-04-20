@@ -13,9 +13,10 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.contrib.auth import authenticate, login, logout
 from django.forms.models import model_to_dict
 from django.conf import settings as dj_settings
+from django.db.models import F
 
-from .models import Race, RaceAssign, Team, RaceDrawMode, Post, Skipper
-from .forms import TeamForm, PostForm, SkipperForm
+from .models import Race, RaceAssign, Team, RaceDrawMode, Post, Skipper, Training
+from .forms import TeamForm, PostForm, SkipperForm, TrainingForm
 
 def loginUser(request, site: str = ''):
     if request.method == "POST":
@@ -52,15 +53,15 @@ def toggleFoldMenu(request):
 def getTeamContent():
     content = { 'teams': [] }
 
-    activeTeams = Team.objects.filter(active=True, wait=False)
+    activeTeams = Team.objects.filter(active=True, wait=False).order_by(F('position').asc(nulls_last=True))
     for team in activeTeams:
         content['teams'].append(model_to_dict(team))
 
-    waitingTeams = Team.objects.filter(active=True, wait=True)
+    waitingTeams = Team.objects.filter(active=True, wait=True).order_by(F('position').asc(nulls_last=True))
     for team in waitingTeams:
         content['teams'].append(model_to_dict(team))
 
-    inactiveTeams = Team.objects.filter(active=False)
+    inactiveTeams = Team.objects.filter(active=False).order_by(F('position').asc(nulls_last=True))
     for team in inactiveTeams:
         content['teams'].append(model_to_dict(team))
 
@@ -75,6 +76,34 @@ def getSkipperList():
     content = []
     for skipper in Skipper.objects.all():
         content.append(model_to_dict(skipper))
+    return content
+
+def getTrainingsList():
+    content = []
+    for training in Training.objects.all():
+        entry = {}
+        entry['id'] = training.pk
+        entry['date'] = training.date
+        entry['time'] = training.time
+        entry['note'] = training.notes
+
+        team = Team.objects.get(id=training.team_id)
+        entry['team'] = {}
+        entry['team']['id'] = training.team_id
+        entry['team']['name'] = team.name
+        entry['team']['company'] = team.company
+        entry['team']['contact'] = team.contact
+        entry['team']['email'] = team.email
+
+        skipper = Skipper.objects.get(id=training.skipper_id)
+        entry['skipper'] = {}
+        entry['skipper']['id'] = training.skipper_id
+        entry['skipper']['name'] = skipper.name
+        entry['skipper']['fname'] = skipper.fname
+        entry['skipper']['lname'] = skipper.lname
+        entry['skipper']['email'] = skipper.email
+
+        content.append(entry)
     return content
 
 def combineTimeOffset(t: time, offset: timedelta):

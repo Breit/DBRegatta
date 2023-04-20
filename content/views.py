@@ -124,7 +124,13 @@ def trainings(request):
         return redirect('/trainings')
 
     siteData = getSiteData('trainings', request.user)
-    siteData['content'] = {}
+    siteData['content'] = {
+        'trainingsList': getTrainingsList(),
+        'countTrainings': Training.objects.filter().count(),
+        'countTeams': Training.objects.filter().count(),
+        'countSkippers': Training.objects.filter().count(),
+        'trainingForm': TrainingForm()
+    }
     return render(request, 'trainings.html', siteData)
 
 def skippers(request):

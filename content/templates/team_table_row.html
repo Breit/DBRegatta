@@ -15,7 +15,8 @@
         </div>
         <div class="col d-none d-xxl-block small">{{ t.address|linebreaks }}</div>
         <div class="col-2 d-none d-xl-block small">{{ t.phone }}</div>
-        <div class="col-1 d-none d-lg-block text-nowrap team_table_date text-center">{{ t.date|date:'d.m.Y' }}</div>
+        <div class="col-1 d-none d-lg-block text-nowrap text-center small">{{ t.position|default_if_none:'' }}</div>
+        <div class="col-1 d-none d-xl-block text-nowrap team_table_date text-center">{{ t.date|date:'d.m.Y' }}</div>
         <div class="col-1 px-2 text-center text-nowrap team_table_buttons">
             <div class="row m-0 flex-nowrap">
                 <div class="col-3 m-0 p-0 team_table_button">

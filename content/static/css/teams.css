@@ -20,9 +20,25 @@
     margin-top: 0;
 }
 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: inner-spin-button !important;
+    width: 25px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+}
+
 .input-group.input-error {
     outline: 0;
-    box-shadow: 0 0 0 .25rem rgba(255, 0, 0, .25);
+    box-shadow: 0 0 0 .25rem rgba(255, 0, 0, .25) !important;
 }
 
 .progress {

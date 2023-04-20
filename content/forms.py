@@ -2,7 +2,7 @@ from constance import config
 from django import forms
 from django.forms import ModelForm
 
-from .models import Team, Post, Skipper
+from .models import Team, Post, Skipper, Training
 
 class TeamForm(ModelForm):
     class Meta:
@@ -10,6 +10,7 @@ class TeamForm(ModelForm):
         fields = (
             'active',
             'wait',
+            'position',
             'date',
             'name',
             'company',
@@ -21,6 +22,7 @@ class TeamForm(ModelForm):
         labels = {
             'active': '',
             'wait': '',
+            'position': '',
             'date': '',
             'name': '',
             'company': '',
@@ -40,6 +42,14 @@ class TeamForm(ModelForm):
                 attrs = {
                     'class': 'form-check-input',
                     'placeholder': config.placeholderTeamWaitlist
+                }
+            ),
+            'position': forms.NumberInput(
+                attrs = {
+                    'class': 'form-control text-end pe-4',
+                    'placeholder': config.placeholderTeamPosition,
+                    'inc': 1,
+                    'type': 'number'
                 }
             ),
             'date': forms.DateInput(
@@ -175,6 +185,62 @@ class SkipperForm(forms.ModelForm):
                 attrs = {
                     'class': 'form-check-input m-0',
                     'placeholder': config.placeholderSkipperActive
+                }
+            )
+        }
+
+class TrainingForm(forms.ModelForm):
+    class Meta:
+        model = Training
+
+        fields = (
+            'date',
+            'time',
+            'team_id',
+            'skipper_id',
+            'notes'
+        )
+
+        labels = {
+            'date': '',
+            'time': '',
+            'team_id': '',
+            'skipper_id': '',
+            'notes': ''
+        }
+
+        widgets = {
+            'date': forms.DateInput(   # SplitDateTimeWidget?
+                attrs = {
+                    'class': 'form-control text-end px-1',
+                    'placeholder': config.placeholderTrainingDate,
+                    'type': 'date'
+                }
+            ),
+            'time': forms.TimeInput(
+                attrs={
+                    'class': 'form-control text-end px-1',
+                    'placeholder': config.placeholderTrainingTime,
+                    'type': 'time'
+                }
+            ),
+            'team_id': forms.Select(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': config.placeholderTeamName
+                }
+            ),
+            'skipper_id': forms.Select(
+                attrs = {
+                    'class': 'form-control',
+                    'placeholder': config.placeholderSkipperName
+                }
+            ),
+            'notes': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 12,
+                    'placeholder': config.placeholderTrainingNotes
                 }
             )
         }
