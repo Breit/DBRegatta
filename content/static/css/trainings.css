@@ -1,3 +1,7 @@
+hr {
+    margin: 0 0.75rem;
+}
+
 .id_col {
     min-width: 3rem !important;
     max-width: 3rem !important;
@@ -8,9 +12,39 @@
     max-width: 6.5rem !important;
 }
 
+.bg-none {
+    background: rgba(0,0,0,0);
+}
+
 .progress {
     height: 4rem;
     border-radius: 0;
+}
+
+.progress.team_trainings {
+    height: 3rem;
+}
+
+.stat_value {
+    /* float: right; */
+    position: relative;
+    /* right: 0; */
+    top: 50%;
+    line-height: 3rem;
+    width: fit-content;
+    transform: translateY(-50%);
+    overflow: hidden;
+}
+
+.stat_name {
+    float: left;
+    line-height: 3rem;
+    position: relative;
+    left: 0;
+    top: 50%;
+    /* width: fit-content; */
+    transform: translateY(-50%);
+    overflow: hidden;
 }
 
 .trainings_stats {

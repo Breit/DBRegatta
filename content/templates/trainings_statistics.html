@@ -1,0 +1,65 @@
+{% load static %}
+
+{% block trainings_statistic %}
+    <div class="card mb-3 shadow">
+        <div class="card-header fs-4 py-0">
+            <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ statsSet.type }}_training_stats" aria-expanded="true">
+                <div class="col">{{ statsSet.header }}</div>
+                <div class="col-auto my-auto px-2 text-secondary fs-6">
+                    <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                    <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0 collapse show" id="{{ statsSet.type }}_training_stats">
+            <div class="row border-bottom flex-nowrap small text-muted m-0 mt-2 text-nowrap">
+                <div class="col-1 id_col text-center d-none d-md-block">{{ statsSet.table_header.id }}</div>
+                <div class="col-1 id_col text-center d-none d-sm-block">{{ statsSet.table_header.total | safe }}</div>
+                <div class="col col-md-3 col-lg-2">{{ statsSet.table_header.name }}</div>
+                <div class="col">{{ statsSet.table_header.stat }}</div>
+            </div>
+            {% for entry in statsSet.stats %}
+                {% if entry.totalTrainings %}
+                    <div class="row align-items-center flex-nowrap trainings_list m-0 py-1{% if not forloop.last %} border-bottom{% else %} rounded-bottom{% endif %}" id="training_{{ entry.id }}">
+                        <div class="col-1 id_col fw-bold text-primary text-center d-none d-md-block">{{ forloop.counter }}</div>
+                        <div class="col-1 id_col text-center d-none d-sm-block">{{ entry.totalTrainings }}</div>
+                        <div class="col col-md-3 col-lg-2">
+                            <span class="fw-bold text-primary">{{ entry.name }}</span>
+                            <br>
+                            {% if '@' in entry.subname %}
+                                <a href= "mailto:{{ entry.subname }}" class="small">{{ entry.subname }}</a>
+                            {% else %}
+                                <span class="small">{{ entry.subname }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="col">
+                            <div class="progress team_trainings bg-none rounded" style="width: calc(100% * {{ entry.totalTrainings }} / {{ statsSet.maxTrainings }})">
+                                {% if entry.upcomingTrainings > 0 %}
+                                <div class="progress-bar px-2 bg-warning text-light" role="progressbar" style="width: calc(100% * {{ entry.upcomingTrainings }} / {{ entry.totalTrainings }})">
+                                    <div class="flex-row text-end d-none d-md-block">
+                                        <span class="display-6 fw-bold ">{{ entry.upcomingTrainings }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if entry.pastTrainings > 0 %}
+                                    <div class="progress-bar px-2 bg-success text-light" role="progressbar" style="width: calc(100% * {{ entry.pastTrainings }} / {{ entry.totalTrainings }})">
+                                        <div class="flex-row text-end d-none d-md-block">
+                                            <span class="display-6 fw-bold">{{ entry.pastTrainings }}</span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if entry.inactiveTrainings > 0 %}
+                                    <div class="progress-bar px-2 bg-secondary text-light" role="progressbar" style="width: calc(100% * {{ entry.inactiveTrainings }} / {{ entry.totalTrainings }})">
+                                        <div class="flex-row text-end d-none d-md-block">
+                                            <span class="display-6 fw-bold">{{ entry.inactiveTrainings }}</span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

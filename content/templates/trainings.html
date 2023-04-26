@@ -105,21 +105,21 @@
         <h2 class="mt-2 mb-2 display-6">{{ config.trainingsTableHeader }}</h2>
         {% if content.trainingsList %}
             <div class="progress mb-4 bg-light">
-                <div class="progress-bar px-2 me-2 trainings_stats bg-light border-bottom border-success border-5 text-success" role="progressbar" style="width: calc(100% * {{ content.trainingsList.upcoming | length }} / {{ content.countTrainings }})">
+                <div class="progress-bar px-2 me-2 trainings_stats bg-light border-bottom border-warning border-5 text-warning" role="progressbar" style="width: calc(100% * {{ content.trainingsList.upcoming | length }} / {{ content.countTrainings }})">
                     <div class="flex-row text-start">
                         <span class="display-3 fw-bold">{{ content.trainingsList.upcoming | length }}</span>
                         <span class="lead">{{ config.trainingsCountUpcoming }}</span>
                     </div>
                 </div>
-                {% if content.trainingsCountPast %}
-                    <div class="progress-bar px-2 me-2 trainings_stats bg-light border-bottom border-warning border-5 text-warning" role="progressbar" style="width: calc(100% * {{ content.trainingsList.past | length }} / {{ content.countTrainings }})">
+                {% if content.trainingsList.past %}
+                    <div class="progress-bar px-2 me-2 trainings_stats bg-light border-bottom border-success border-5 text-success" role="progressbar" style="width: calc(100% * {{ content.trainingsList.past | length }} / {{ content.countTrainings }})">
                         <div class="flex-row text-start">
                             <span class="display-3 fw-bold">{{ content.trainingsList.past | length }}</span>
                             <span class="lead">{{ config.trainingsCountPast }}</span>
                         </div>
                     </div>
                 {% endif %}
-                {% if content.trainingsCountInactive %}
+                {% if content.trainingsList.inactive %}
                     <div class="progress-bar px-2 trainings_stats bg-light border-bottom border-secondary border-5 text-secondary" role="progressbar" style="width: calc(100% * {{ content.trainingsList.inactive | length }} / {{ content.countTrainings }})">
                         <div class="flex-row text-start">
                             <span class="display-3 fw-bold">{{ content.trainingsList.inactive | length }}</span>
@@ -172,5 +172,17 @@
             </div>
         </button>
     </div>
+
+    <hr>
+
+    <div class="container-fluid mb-3 pt-3" id="training_statistics">
+        <h2 class="mt-2 mb-4 display-6">{{ config.trainingsStatsTableHeader }}</h2>
+        {% if content.trainingsStats %}
+            {% for statsSet in content.trainingsStats %}
+                {% include 'trainings_statistics.html' %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
     <div class="container-fluid overscroll"></div>
 {% endblock %}
