@@ -656,7 +656,7 @@ def getSiteData(id: str = None, user = None):
             }
         )
     trainings_past = len(getTrainingsList(pastOnly=True))
-    if menu_trainings:
+    if trainings_past:
         menu_trainings['notifications'].append(
             {
                 'level': 'warning',
