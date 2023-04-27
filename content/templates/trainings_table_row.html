@@ -2,28 +2,32 @@
 
 {% block trainings_table_row %}
     <div class="row align-items-center flex-nowrap trainings_list m-0 py-1{% if not forloop.last %} border-bottom{% else %} rounded-bottom{% endif %}{% if content.trainingForm_id and training.id == content.trainingsForm_id %} border border-primary training_edit{% endif %}" id="training_{{ training.id }}">
-        <div class="col-1 id_col fw-bold text-primary">{{ forloop.counter }}</div>
-        <div class="col col-lg-2 d-none d-sm-block text-nowrap">
-            <span class="text-secondary fw-bold">{{ training.date | date:'d.m.Y' }}</span>
+        <div class="col-1 id_col fw-bold text-primary text-center">{{ forloop.counter }}</div>
+        <div class="col col-md-2 d-none d-sm-block text-nowrap">
+            <span class="fw-bold {% if training_type == 'upcoming' %}text-success{% elif training_type == 'past' %}text-warning{% elif training_type == 'inactive' %}text-secondary{% endif %}">
+                {{ training.date | date:'d. F Y' }}
+            </span>
             <br>
-            <span class="small">{{ training.time | date:'H:i' }}</span>
+            <span class="small">{{ training.time | date:'H:i' }}&nbsp;{{ config.timeSuffix }}</span>
         </div>
-        <div class="col col-lg-2 text-nowrap">
-            <span class="fw-bold text-success">{{ training.team.name }}</span>
+        <div class="col col-md-3 col-lg-2">
+            <span class="fw-bold text-primary">{{ training.team.name }}</span>
             <br>
             <span class="small">{{ training.team.company }}</span>
         </div>
-        <div class="col col-lg-2 d-none d-sm-block text-nowrap">
+        <div class="col col-lg-2 d-none d-xxl-block">
             <span>{{ training.team.contact }}</span>
             <br>
             <a href= "mailto:{{ training.team.email }}" class="small">{{ training.team.email }}</a>
         </div>
-        <div class="col col-lg-2 d-none d-sm-block text-nowrap">
-            <span>{{ training.skipper.name }}</span>
+        <div class="col col-lg-3 col-xxl-2 d-none d-md-block">
+            <span class="fw-bold">{{ training.skipper.name }}</span>
             <br>
             <a href= "mailto:{{ training.skipper.email }}" class="small">{{ training.skipper.email }}</a>
         </div>
-        <div class="col d-none d-lg-block">{{ training.notes | linebreaks }}</div>
+        <div class="col d-none d-lg-block">
+            <span>{{ training.notes | linebreaks }}</span>
+        </div>
         <div class="col-1 icon_col text-center px-2 icon_col">
             <div class="row m-0 flex-nowrap">
                 <div class="col-6 m-0 p-0 trainings_table_button">
@@ -32,7 +36,7 @@
                     </button>
                 </div>
                 <div class="col-6 m-0 p-0 trainings_table_button">
-                    <button type="button" class="btn btn_trainings_table_icon p-0 ps-1" onclick="request_delete_training({{ training.id }})">
+                    <button type="button" class="btn btn_trainings_table_icon p-0 ps-1" onclick="request_delete_training({{ training.id }}, '{{ training.team.name }}', '{{ training.skipper.name }}')">
                         <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_training">
                     </button>
                 </div>

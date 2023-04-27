@@ -47,7 +47,7 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .team_progress {
-    min-width: 8rem;
+    min-width: fit-content;
 }
 
 .error {
@@ -63,8 +63,8 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .id_col {
-    min-width: 2rem !important;
-    max-width: 2rem !important;
+    min-width: 3rem !important;
+    max-width: 3rem !important;
 }
 
 .team_table_date {
@@ -87,4 +87,8 @@ input[type=number]::-webkit-inner-spin-button {
 .team_edit {
     background-color: var(--bs-primary-100) !important;
     outline: 1px solid var(--bs-primary) !important;
+}
+
+input[type=date]::-webkit-calendar-picker-indicator {
+    padding-left: 0.5rem;
 }

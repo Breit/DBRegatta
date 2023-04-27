@@ -124,13 +124,55 @@ def trainings(request):
         return redirect('/trainings')
 
     siteData = getSiteData('trainings', request.user)
-    siteData['content'] = {
-        'trainingsList': getTrainingsList(),
-        'countTrainings': Training.objects.filter().count(),
-        'countTeams': Training.objects.filter().count(),
-        'countSkippers': Training.objects.filter().count(),
-        'trainingForm': TrainingForm()
-    }
+    siteData['content'] = getTrainingsContent()
+
+    if request.method == 'POST':
+        # submit a new training
+        if 'add_training' in request.POST:
+            newTrainingForm = TrainingForm(request.POST)
+            if newTrainingForm.is_valid():
+                newTrainingForm.save()
+                return redirect('/trainings')
+
+        # show edit training form
+        elif 'edit_training' in request.POST:
+            try:
+                modTraining = Training.objects.get(id = request.POST['edit_training'])
+            except:
+                modTraining = None
+            if modTraining:
+                siteData['content']['form'] = TrainingForm(instance = modTraining)
+                print(modTraining)
+                siteData['content']['selectedHour'] = None
+                siteData['content']['selectedMinute'] = None
+
+        # submit_mod_training
+        elif 'mod_training' in request.POST:
+            try:
+                modTraining = Training.objects.get(id = request.POST['mod_training'])
+            except:
+                modTraining = None
+            if modTraining:
+                modTrainingForm = TrainingForm(
+                    request.POST,
+                    instance = modTraining
+                )
+                if modTrainingForm.is_valid():
+                    modTrainingForm.save()
+                    return redirect('/trainings')
+                else:
+                    siteData['content']['form'] = modTrainingForm
+
+        # delete training from database
+        elif 'delete_training' in request.POST:
+            try:
+                delTraining = Training.objects.get(id = request.POST['delete_training'])
+            except:
+                delTraining = None
+            if delTraining:
+                delTraining.delete()
+            return redirect('/trainings')
+
     return render(request, 'trainings.html', siteData)
 
 def skippers(request):
@@ -145,12 +187,7 @@ def skippers(request):
         return redirect('/skippers')
 
     siteData = getSiteData('skippers', request.user)
-    siteData['content'] = {
-        'skipperList': getSkipperList(),
-        'activeSkippers': Skipper.objects.filter(active = True).count(),
-        'inactiveSkippers': Skipper.objects.filter(active = False).count(),
-        'skipperForm': SkipperForm()
-    }
+    siteData['content'] = getSkipperContent()
 
     if request.method == 'POST':
         if 'add_skipper' in request.POST:
@@ -425,6 +462,12 @@ def settings(request):
             config.intervalHeat = timedelta(minutes=int(request.POST['intervalHeat']))
         elif 'intervalFinal' in request.POST:
             config.intervalFinal = timedelta(minutes=int(request.POST['intervalFinal']))
+        elif 'intervalTrainingBegin' in request.POST:
+            config.intervalTrainingBegin = timedelta(minutes=int(request.POST['intervalTrainingBegin']))
+        elif 'firstTrainingTime' in request.POST:
+            config.firstTrainingTime = time.fromisoformat(request.POST['firstTrainingTime'])
+        elif 'lastTrainingTime' in request.POST:
+            config.lastTrainingTime = time.fromisoformat(request.POST['lastTrainingTime'])
         elif 'refreshTimes' in request.POST:
             updateTimeTable()
         elif 'resetFinals' in request.POST:

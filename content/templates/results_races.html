@@ -16,29 +16,29 @@
         </div>
         <div class="card-body p-0 collapse show" id="{{ entry.desc|uid }}">
             <div class="row border-bottom small text-muted mt-2 mx-0">
-                <div class="col-1 text-center">{{ config.timetableHeaderName }}</div>
+                <div class="col-1 text-center text-nowrap">{{ config.timetableHeaderName }}</div>
                 <div class="col-11">
                     <div class="row">
-                        <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
-                        <div class="col">{{ config.timetableHeaderTeam }}</div>
-                        <div class="col-{% if entry.type == 'finale' %}5{% else %}6{% endif %} d-none d-xl-block">{{ config.timetableHeaderCompany }}</div>
+                        <div class="col-1 text-center text-nowrap">{{ config.timetableHeaderLane }}</div>
+                        <div class="col text-nowrap">{{ config.timetableHeaderTeam }}</div>
+                        <div class="col-{% if entry.type == 'finale' %}4{% else %}5{% endif %} d-none d-xl-block text-nowrap">{{ config.timetableHeaderCompany }}</div>
                         {% if entry.type == 'finale' %}
-                            <div class="col-1 text-center">{{ config.timesHeaderRank }}</div>
+                            <div class="col-1 text-center text-nowrap">{{ config.timesHeaderRank }}</div>
                         {% endif %}
-                        <div class="col-1 text-center">{{ config.timesHeaderPlace }}</div>
-                        <div class="col-1 text-center times_column">{{ config.timesHeaderTime }}</div>
+                        <div class="col-1 text-center text-nowrap">{{ config.timesHeaderPlace }}</div>
+                        <div class="col-1 text-center times_column text-nowrap">{{ config.timesHeaderTime }}</div>
                     </div>
                 </div>
             </div>
             {% for race in entry.races %}
                 <div class="row border-bottom mx-0 timetable_race{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}{% if forloop.last %} rounded-bottom{% endif %}">
-                    <div class="col-1 text-center align-self-center">{{ race.desc }}</div>
+                    <div class="col-1 text-center align-self-center fw-bold text-primary text-nowrap">{{ race.desc }}</div>
                     <div class="col-11">
                         {% for lane in race.lanes %}
                             <div class="row timetable_lane{% if forloop.last and forloop.parentloop.last %} rounded-bottom-right{% endif %}">
                                 <div class="col-1 text-center">{{ lane.lane }}</div>
                                 <div class="col col_team{% if lane.draw %} text-muted{% else %} fw-bold{% endif %}">{{ lane.team }}</div>
-                                <div class="col-{% if entry.type == 'finale' %}5{% else %}6{% endif %} d-none d-xl-block">{{ lane.company }}</div>
+                                <div class="col-{% if entry.type == 'finale' %}4{% else %}5{% endif %} d-none d-xl-block">{{ lane.company }}</div>
                                 {% if entry.type == 'finale' %}
                                     <div class="col-1 text-center text-primary fw-bold">{{ lane.rank }}</div>
                                 {% endif %}

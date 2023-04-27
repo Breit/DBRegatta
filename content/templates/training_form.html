@@ -1,0 +1,74 @@
+{% load static %}
+
+{% block training_form %}
+    <div class="row">
+        {% for f in content.form %}
+            {% if f.field.widget.input_type == 'checkbox' %}
+            <div class="col-12 col-sm-6 mb-3">
+                <div class="input-group shadow-sm">
+                    <div class="input-group-text form-switch px-1 {% if f.errors %}input-error{% endif %}">
+                        {{ f }}
+                    </div>
+                    <input type="text" class="form-control bg-light" value="{{ f.field.widget.attrs.placeholder }}" disabled>
+                </div>
+            </div>
+            {% elif f.html_name == 'date' %}
+                <div class="col-12 col-sm-6 mb-3">
+                    <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
+                        <span class="input-group-text{% if f.field.required %} text-primary{% endif %}" data-toggle="tooltip" title="{{ f.field.widget.attrs.placeholder }}">
+                            <i class="bi bi-{{ f.field.widget.attrs.icon }}"></i>
+                        </span>
+                        {{ f }}
+                        {% for f_time in content.form %}
+                            {% if f_time.html_name == 'time' %}
+                                {{ f_time }}
+                                <datalist id="training_time_select">
+                                    {% for suggestion in content.timeSuggestions %}
+                                        <option value="{{ suggestion }}">
+                                    {% endfor %}
+                                </datalist>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% elif f.html_name == 'time' %}
+                {# Skip this TimeInput here, because we already included it together with the DateInput above! #}
+            {% elif f.html_name == 'team_id' %}
+                <div class="col-12 col-sm-6 mb-3">
+                    <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
+                        <span class="input-group-text text-primary" data-toggle="tooltip" title="{{ f.field.widget.attrs.placeholder }}">
+                            <i class="bi bi-{{ f.field.widget.attrs.icon }}"></i>
+                        </span>
+                        <select name="team_id" class="form-select" placeholder="{{ f.field.widget.attrs.placeholder }}" id="id_team_id">
+                            {% for team in content.availableTeams %}
+                                <option value="{{ team.id }}"{% if f.value == team.id %} selected{% endif %}>{{ team.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            {% elif f.html_name == 'skipper_id' %}
+                <div class="col-12 col-sm-6 mb-3">
+                    <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
+                        <span class="input-group-text text-primary" data-toggle="tooltip" title="{{ f.field.widget.attrs.placeholder }}">
+                            <i class="bi bi-{{ f.field.widget.attrs.icon }}"></i>
+                        </span>
+                        <select name="skipper_id" class="form-select" placeholder="{{ f.field.widget.attrs.placeholder }}" id="id_skipper_id">
+                            {% for skipper in content.availableSkippers %}
+                                <option value="{{ skipper.id }}"{% if f.value == skipper.id %} selected{% endif %}>{{ skipper.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 mb-0">
+                    <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
+                        <span class="input-group-text{% if f.field.required %} text-primary{% endif %}" data-toggle="tooltip" title="{{ f.field.widget.attrs.placeholder }}">
+                            <i class="bi bi-{{ f.field.widget.attrs.icon }}"></i>
+                        </span>
+                        {{ f }}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

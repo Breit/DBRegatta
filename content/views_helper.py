@@ -13,7 +13,9 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.contrib.auth import authenticate, login, logout
 from django.forms.models import model_to_dict
 from django.conf import settings as dj_settings
-from django.db.models import F
+from django.db.models import F, Q, ExpressionWrapper, DateTimeField, Value
+from django.db.models.functions import Cast, Concat
+from django.utils import timezone
 
 from .models import Race, RaceAssign, Team, RaceDrawMode, Post, Skipper, Training
 from .forms import TeamForm, PostForm, SkipperForm, TrainingForm
@@ -78,14 +80,38 @@ def getSkipperList():
         content.append(model_to_dict(skipper))
     return content
 
-def getTrainingsList():
+def getSkipperContent():
+    content = {
+        'skipperList': getSkipperList(),
+        'activeSkippers': Skipper.objects.filter(active = True).count(),
+        'inactiveSkippers': Skipper.objects.filter(active = False).count(),
+        'skipperForm': SkipperForm()
+    }
+
+    return content
+
+def getTrainingsList(active=True, upcomingOnly=False, pastOnly=False):
     content = []
-    for training in Training.objects.all():
+    now = datetime.now()
+    date_now = now.date()
+    time_now = now.time()
+    if upcomingOnly:
+        trainings = Training.objects.filter(active=active).filter(
+            Q(date__gt=date_now) | Q(date=date_now, time__gt=time_now)
+        ).order_by('date', 'time')
+    elif pastOnly:
+        trainings = Training.objects.filter(active=active).filter(
+            Q(date__lt=date_now) | Q(date=date_now, time__lt=time_now)
+        ).order_by('date', 'time')
+    else:
+        trainings = Training.objects.filter(active=active)
+
+    for training in trainings:
         entry = {}
         entry['id'] = training.pk
         entry['date'] = training.date
         entry['time'] = training.time
-        entry['note'] = training.notes
+        entry['notes'] = training.notes
 
         team = Team.objects.get(id=training.team_id)
         entry['team'] = {}
@@ -104,6 +130,33 @@ def getTrainingsList():
         entry['skipper']['email'] = skipper.email
 
         content.append(entry)
+    return content
+
+def getTrainingsContent():
+    availableSkippers = Skipper.objects.filter(active=True)
+    availableTeams = Team.objects.filter(active=True, wait=False)
+
+    content = {
+        'trainingsList': {
+            'upcoming': getTrainingsList(upcomingOnly=True),
+            'past': getTrainingsList(pastOnly=True),
+            'inactive': getTrainingsList(active=False)
+        },
+        'countTrainings': Training.objects.filter().count(),
+        'countTeams': availableTeams.count(),
+        'countSkippers': availableSkippers.count(),
+        'availableTeams': [model_to_dict(team) for team in availableTeams],
+        'availableSkippers': [model_to_dict(skipper) for skipper in availableSkippers],
+        'timeSuggestions': [],
+        'form': TrainingForm()
+    }
+
+    # Gennerate training possible start times
+    startTime = config.firstTrainingTime
+    while startTime <= config.lastTrainingTime:
+        content['timeSuggestions'].append(startTime.strftime("%H:%M"))
+        startTime = (datetime.combine(date.today(), startTime) + config.intervalTrainingBegin).time()
+
     return content
 
 def combineTimeOffset(t: time, offset: timedelta):
@@ -592,13 +645,32 @@ def getSiteData(id: str = None, user = None):
         'url': 'trainings',
         'thumb': config.trainingsIcon,
         'active': True if id == 'trainings' else False,
-        'notifications': [
-            {
-                'level': 'danger',
-                'count': 'TODO'
-            }
-        ]
+        'notifications': []
     }
+    trainings_upcoming = len(getTrainingsList(upcomingOnly=True))
+    if trainings_upcoming:
+        menu_trainings['notifications'].append(
+            {
+                'level': 'success',
+                'count': trainings_upcoming
+            }
+        )
+    trainings_past = len(getTrainingsList(pastOnly=True))
+    if menu_trainings:
+        menu_trainings['notifications'].append(
+            {
+                'level': 'warning',
+                'count': trainings_past
+            }
+        )
+    trainings_inactive = len(getTrainingsList(active=False))
+    if trainings_inactive:
+        menu_trainings['notifications'].append(
+            {
+                'level': 'secondary',
+                'count': trainings_inactive
+            }
+        )
 
     menu_skippers = {
         'id': 'skippers',
@@ -1142,6 +1214,32 @@ def getMainSettings():
                     'name': config.refreshTimetableText,
                     'type': 'button',
                     'icon': config.refreshTimetableIcon
+                }
+            ]
+        },
+        {
+            'title': config.settingsTrainings,
+            'controls': [
+                {
+                    'id': 'intervalTrainingBegin',
+                    'name': config.intervalTrainingBeginLabel,
+                    'type': 'number',
+                    'value': config.intervalTrainingBegin.seconds // 60,
+                    'icon': 'clock-history'
+                },
+                {
+                    'id': 'firstTrainingTime',
+                    'name': config.firstTrainingTimeLabel,
+                    'type': 'time',
+                    'value': config.firstTrainingTime,
+                    'icon': 'clock'
+                },
+                {
+                    'id': 'lastTrainingTime',
+                    'name': config.lastTrainingTimeLabel,
+                    'type': 'time',
+                    'value': config.lastTrainingTime,
+                    'icon': 'clock'
                 }
             ]
         },

@@ -1,11 +1,11 @@
 .id_col {
-    min-width: 2rem;
-    max-width: 2rem;
+    min-width: 3rem !important;
+    max-width: 3rem !important;
 }
 
 .icon_col {
-    min-width: 6.5rem;
-    max-width: 6.5rem;
+    min-width: 6.5rem !important;
+    max-width: 6.5rem !important;
 }
 
 .progress {
@@ -14,7 +14,7 @@
 }
 
 .skipper_progress {
-    min-width: 8rem;
+    min-width: fit-content;
 }
 
 .skipper_list:nth-child(even) {
