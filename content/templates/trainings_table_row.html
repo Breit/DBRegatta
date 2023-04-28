@@ -4,7 +4,7 @@
     <div class="row align-items-center flex-nowrap trainings_list m-0 py-1{% if not forloop.last %} border-bottom{% else %} rounded-bottom{% endif %}{% if content.trainingForm_id and training.id == content.trainingsForm_id %} border border-primary training_edit{% endif %}" id="training_{{ training.id }}">
         <div class="col-1 id_col fw-bold text-primary text-center">{{ forloop.counter }}</div>
         <div class="col col-md-2 d-none d-sm-block text-nowrap">
-            <span class="fw-bold {% if training_type == 'upcoming' %}text-success{% elif training_type == 'past' %}text-warning{% elif training_type == 'inactive' %}text-secondary{% endif %}">
+            <span class="fw-bold {% if training_type == 'upcoming' %}text-warning{% elif training_type == 'past' %}text-success{% elif training_type == 'inactive' %}text-secondary{% endif %}">
                 {{ training.date | date:'d. F Y' }}
             </span>
             <br>

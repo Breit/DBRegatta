@@ -142,7 +142,6 @@ def trainings(request):
                 modTraining = None
             if modTraining:
                 siteData['content']['form'] = TrainingForm(instance = modTraining)
-                print(modTraining)
                 siteData['content']['selectedHour'] = None
                 siteData['content']['selectedMinute'] = None
 

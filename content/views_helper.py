@@ -148,10 +148,84 @@ def getTrainingsContent():
         'availableTeams': [model_to_dict(team) for team in availableTeams],
         'availableSkippers': [model_to_dict(skipper) for skipper in availableSkippers],
         'timeSuggestions': [],
+        'trainingsStats': [],
         'form': TrainingForm()
     }
 
-    # Gennerate training possible start times
+    # Generate team stats
+    now = datetime.now()
+    date_now = now.date()
+    time_now = now.time()
+
+    teamStats = {
+        'type': 'team',
+        'header': config.statsTrainingsPerTeam,
+        'table_header': {
+            'id': config.trainingsTableHeaderID,
+            'name': config.teamTableHeaderTeam + ' / ' + config.teamTableHeaderCompany,
+            'stat': config.trainingsTrainings,
+            'total': config.trainingsCountTrainings
+        },
+        'stats': [],
+        'maxTrainings': 0
+    }
+    for team in availableTeams:
+        trainings = Training.objects.filter(team_id=team.id).count()
+        if trainings > 0:
+            team_dict = model_to_dict(team)
+            team_dict['subname'] = team_dict.pop('company')
+            team_dict['totalTrainings'] = trainings
+            team_dict['upcomingTrainings'] = Training.objects \
+                .filter(team_id=team.id, active=True) \
+                .filter(Q(date__gt=date_now) | Q(date=date_now, time__gt=time_now)) \
+                .count()
+            team_dict['pastTrainings'] = Training.objects \
+                .filter(team_id=team.id, active=True) \
+                .filter(Q(date__lt=date_now) | Q(date=date_now, time__lt=time_now)) \
+                .count()
+            team_dict['inactiveTrainings'] = Training.objects \
+                .filter(team_id=team.id, active=False) \
+                .count()
+            teamStats['stats'].append(team_dict)
+            teamStats['maxTrainings'] = max(teamStats['maxTrainings'], team_dict['totalTrainings'])
+    teamStats['stats'] = sorted(teamStats['stats'], key=lambda d: d['totalTrainings'], reverse=True)      # sort
+    content['trainingsStats'].append(teamStats)
+
+    skipperStats = {
+        'type': 'skipper',
+        'header': config.statsTrainingsPerSkipper,
+        'table_header': {
+            'id': config.trainingsTableHeaderID,
+            'name': config.skipper,
+            'stat': config.trainingsTrainings,
+            'total': config.trainingsCountTrainings
+        },
+        'stats': [],
+        'maxTrainings': 0
+    }
+    for skipper in availableSkippers:
+        trainings = Training.objects.filter(skipper_id=skipper.id).count()
+        if trainings > 0:
+            skipper_dict = model_to_dict(skipper)
+            skipper_dict['subname'] = skipper_dict.pop('email')
+            skipper_dict['totalTrainings'] = trainings
+            skipper_dict['upcomingTrainings'] = Training.objects \
+                .filter(skipper_id=skipper.id, active=True) \
+                .filter(Q(date__gt=date_now) | Q(date=date_now, time__gt=time_now)) \
+                .count()
+            skipper_dict['pastTrainings'] = Training.objects \
+                .filter(skipper_id=skipper.id, active=True) \
+                .filter(Q(date__lt=date_now) | Q(date=date_now, time__lt=time_now)) \
+                .count()
+            skipper_dict['inactiveTrainings'] = Training.objects \
+                .filter(skipper_id=skipper.id, active=False) \
+                .count()
+            skipperStats['stats'].append(skipper_dict)
+            skipperStats['maxTrainings'] = max(skipperStats['maxTrainings'], skipper_dict['totalTrainings'])
+    skipperStats['stats'] = sorted(skipperStats['stats'], key=lambda d: d['totalTrainings'], reverse=True)      # sort
+    content['trainingsStats'].append(skipperStats)
+
+    # Generate training possible start times
     startTime = config.firstTrainingTime
     while startTime <= config.lastTrainingTime:
         content['timeSuggestions'].append(startTime.strftime("%H:%M"))
