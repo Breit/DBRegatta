@@ -155,7 +155,7 @@ CONSTANCE_CONFIG = {
     'trainingsTableHeader':         ('Liste Trainings',                             'Header Label for Trainings Page'),
     'trainingsStatsTableHeader':    ('Statistik Trainings',                         'Header Label for Trainings Statistics Page'),
     'trainingsTrainings':           ('Trainings',                                   'Header Label for Trainings Page - Trainings'),
-    'trainingsCountTrainings':      ('&sum',                                        'Header Label for Trainings Page - Trainings Count'),
+    'trainingsCountTrainings':      ('&sum;',                                       'Header Label for Trainings Page - Trainings Count'),
     'trainingsCountTeams':          ('Teams',                                       'Header Label for Trainings Page - Teams Count'),
     'trainingsCountUpcoming':       ('Anstehend',                                   'Header Label for Trainings Page - Upcoming Trainings Count'),
     'trainingsCountPast':           ('Abgeschlossen',                               'Header Label for Trainings Page - Past Trainings Count'),
