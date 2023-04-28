@@ -184,6 +184,12 @@ CONSTANCE_CONFIG = {
     'statsTrainingsPerSkipper':     ('Trainings pro Steuermann',                    'Section Headline for Trainings Statistics: Trainings per Skipper'),
     'warningDeleteTraining':        ('Training endgültig löschen?',                 'Safety Warning Message for deleting a Traininng'),
 
+    # Calendar Settings
+    'calendarPageCSS':              ('calendar.css',                                'CSS File for Site-specific Styling'),
+    'calendarPageJS':               ('calendar.js',                                 'JS File for Site-specific Data Handling'),
+    'calendarTitle':                ('Trainingskalender',                           'Menu Title for Calendar Page'),
+    'calendarIcon':                 ('calendar.svg',                                'Menu Icon for Calendar Page'),
+
     # Skippers Settings
     'skippersPageCSS':              ('skippers.css',                                'CSS File for Site-specific Styling'),
     'skippersPageJS':               ('skippers.js',                                 'JS File for Site-specific Data Handling'),
@@ -489,6 +495,15 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'statsTrainingsPerTeam',
             'statsTrainingsPerSkipper',
             'warningDeleteTraining',
+        ),
+        'collapse': True
+    },
+    'Calendar Settings': {
+        'fields': (
+            'calendarPageCSS',
+            'calendarPageJS',
+            'calendarTitle',
+            'calendarIcon',
         ),
         'collapse': True
     },

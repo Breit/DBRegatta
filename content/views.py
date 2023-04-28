@@ -174,6 +174,21 @@ def trainings(request):
 
     return render(request, 'trainings.html', siteData)
 
+def calendar(request):
+    # handle login/logout
+    loginUser(request)
+
+    if not request.user.is_authenticated:
+        return redirect('/')
+
+    # handle menu folding
+    if toggleFoldMenu(request):
+        return redirect('/calendar')
+
+    siteData = getSiteData('calendar', request.user)
+
+    return render(request, 'calendar.html', siteData)
+
 def skippers(request):
     # handle login/logout
     loginUser(request)

@@ -746,6 +746,15 @@ def getSiteData(id: str = None, user = None):
             }
         )
 
+    menu_calendar = {
+        'id': 'calendar',
+        'title': config.calendarTitle,
+        'url': 'calendar',
+        'thumb': config.calendarIcon,
+        'active': True if id == 'calendar' else False,
+        'notifications': []
+    }
+
     menu_skippers = {
         'id': 'skippers',
         'title': config.skippersTitle,
@@ -864,6 +873,7 @@ def getSiteData(id: str = None, user = None):
         siteData['menu'].append(menu_teams)
         siteData['menu'].append(menu_skippers)
         siteData['menu'].append(menu_trainings)
+        siteData['menu'].append(menu_calendar)
 
     siteData['menu'].append(menu_timetable)
 
@@ -878,7 +888,7 @@ def getSiteData(id: str = None, user = None):
 
     siteData['menu'].append(menu_toggle)
 
-    if user and user.is_authenticated:
+    if user and user.is_authenticated and user.is_staff:
         siteData['menu'].append(menu_settings)
 
     if user and user.is_authenticated and user.is_superuser:
