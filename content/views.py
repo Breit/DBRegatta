@@ -186,6 +186,25 @@ def calendar(request):
         return redirect('/calendar')
 
     siteData = getSiteData('calendar', request.user)
+    siteData['content'] = {
+        'events': getCalendarData(),
+        'meta': {
+            'buttonText': {
+                'year': config.calendarButtonYear,
+                'month': config.calendarButtonMonth,
+                'week': config.calendarButtonWeek,
+                'day': config.calendarButtonDay,
+                'today': config.calendarButtonToday
+            },
+            'locale': config.calendarLocale,
+            'firstDay': config.calendarFirstDayOfWeek,
+            'initialView': 'dayGridMonth',
+            'weekNumbers': config.calendarWeekNumbers,
+            'weekText': config.calendarWeekNumbersPrefix,
+            'trainingStart': config.firstTrainingTime.strftime('%H:%M'),
+            'trainingEnd': (datetime.combine(date.today(), config.lastTrainingTime) + config.intervalTrainingLength).time().strftime('%H:%M')
+        }
+    }
 
     return render(request, 'calendar.html', siteData)
 
@@ -434,6 +453,8 @@ def settings(request):
             config.siteName = request.POST['eventTitle']
         elif 'eventDate' in request.POST:
             config.eventDate = date.fromisoformat(request.POST['eventDate'])
+        elif 'registrationDate' in request.POST:
+            config.registrationDate = date.fromisoformat(request.POST['registrationDate'])
         elif 'durationMonitorSlide' in request.POST:
             config.displayInterval = int(float(request.POST['durationMonitorSlide']) * 1e3)
         elif 'displayDataRefresh' in request.POST:
@@ -482,6 +503,8 @@ def settings(request):
             config.firstTrainingTime = time.fromisoformat(request.POST['firstTrainingTime'])
         elif 'lastTrainingTime' in request.POST:
             config.lastTrainingTime = time.fromisoformat(request.POST['lastTrainingTime'])
+        elif 'lengthTraining' in request.POST:
+            config.intervalTrainingLength = timedelta(minutes=int(request.POST['lengthTraining']))
         elif 'refreshTimes' in request.POST:
             updateTimeTable()
         elif 'resetFinals' in request.POST:

@@ -228,8 +228,64 @@ def getTrainingsContent():
     # Generate training possible start times
     startTime = config.firstTrainingTime
     while startTime <= config.lastTrainingTime:
-        content['timeSuggestions'].append(startTime.strftime("%H:%M"))
+        content['timeSuggestions'].append(startTime.strftime('%H:%M'))
         startTime = (datetime.combine(date.today(), startTime) + config.intervalTrainingBegin).time()
+
+    return content
+
+def getCalendarData():
+    content = []
+
+    noEvents = {
+        'events': [
+            {
+                'start' : config.registrationDate.strftime('%Y-%m-%d'),
+                'end' : (config.eventDate + timedelta(days=1)).strftime('%Y-%m-%d'),
+                'allDay' : True,
+                'display' : 'inverse-background',
+                'className' : 'bg-danger no-activity'
+            }
+        ],
+        'className' : 'text-light no-events'
+    }
+    content.append(noEvents)
+
+    raceday = {
+        'events': [
+            {
+                'title' : config.siteName,
+                'start' : config.eventDate.strftime('%Y-%m-%d'),
+                'allDay' : True,
+                'display' : 'background',
+                'className' : 'bg-danger raceday'
+            },
+            {
+                'title' : config.registrationDateDesc,
+                'start' : config.registrationDate.strftime('%Y-%m-%d'),
+                'allDay' : True,
+                'display' : 'background',
+                'className' : 'bg-success raceday'
+            }
+        ],
+        'className' : 'text-light no-activity'
+    }
+    content.append(raceday)
+
+    trainingEvents = {
+        'events': [],
+        'className' : 'bg-primary text-light'
+    }
+    trainings = Training.objects.all()
+    for training in trainings:
+        team = Team.objects.get(id=training.team_id)
+        event = {
+            'title': team.name if team else 'N/A',
+            'start': datetime.combine(training.date, training.time).strftime('%Y-%m-%dT%H:%M'),
+            'end': (datetime.combine(training.date, training.time) + config.intervalTrainingLength).strftime('%Y-%m-%dT%H:%M'),
+            'className': 'training'
+        }
+        trainingEvents['events'].append(event)
+    content.append(trainingEvents)
 
     return content
 
@@ -1208,6 +1264,13 @@ def getMainSettings():
                     'type': 'date',
                     'value': config.eventDate,
                     'icon': 'calendar3-event'
+                },
+                {
+                    'id': 'registrationDate',
+                    'name': config.registrationDateDesc,
+                    'type': 'date',
+                    'value': config.registrationDate,
+                    'icon': 'calendar3-event'
                 }
             ]
         },
@@ -1324,6 +1387,13 @@ def getMainSettings():
                     'type': 'time',
                     'value': config.lastTrainingTime,
                     'icon': 'clock'
+                },
+                {
+                    'id': 'lengthTraining',
+                    'name': config.intervalTrainingLengthLabel,
+                    'type': 'number',
+                    'value': config.intervalTrainingLength.seconds // 60,
+                    'icon': 'clock-history'
                 }
             ]
         },

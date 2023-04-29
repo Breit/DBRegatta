@@ -7,14 +7,19 @@
 {% endblock %}
 
 {% block additionalJS %}
-    <script language="JavaScript" src="{% static 'js/' %}{{config.calendaarPageJS}}" type="text/javascript"></script>
+    <script language="JavaScript" src="{% static 'fullcalendar/dist/' %}index.global.min.js" integrity="sha384-ls6XEDoNosgdfFfcQMf/sZbXZHuWBCIXPV/lxwjlR7aUbooYZRAOwtuLufn3a4xy" crossorigin="anonymous"></script>
+    <script language="JavaScript" src="{% static 'fullcalendar/packages/bootstrap5/' %}index.global.min.js" integrity="sha384-+8RA3XmEfisyL9yeAMcPoOT+GZUN3Ec0/nWvKZAzLwc+IOZjB90PXfjKgeMJ6LEi" crossorigin="anonymous"></script>
+    <!-- <script language="JavaScript" src="{% static 'fullcalendar/packages/timegrid/' %}index.global.min.js" integrity="sha384-WWDHfJ37Gk1+WKoi1//ND3X3FUecZuaBeFfp6Iu0cBy1WKetrAIjA8OmJnCP4nyd" crossorigin="anonymous"></script> -->
+    <!-- <script language="JavaScript" src="{% static 'fullcalendar/packages/daygrid/' %}index.global.min.js" integrity="sha384-61SN3YavMxgSpYxsgFhEuiep7KVIkzezg/oV02uKBhveB6glReMdf2zuL2H6ZF4r" crossorigin="anonymous"></script> -->
+    <script language="JavaScript" src="{% static 'js/' %}{{config.calendarPageJS}}" type="text/javascript"></script>
+    {{ content | json_script:"calendar-data" }}
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid" id="calendar_table">
-        <h2 class="mt-2 mb-2 display-6">{{ config.calendarTitle }}</h2>
-        <div class="container-fluid m-0 p-0">
-
+    <div class="container-fluid" id="calendar_page">
+        <h2 class="mt-2 mb-3 display-6">{{ config.calendarTitle }}</h2>
+        <div class="container-fluid m-0 p-0 h-100">
+            <div id='full-calendar'></div>
         </div>
     </div>
 
