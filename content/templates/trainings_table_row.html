@@ -28,19 +28,21 @@
         <div class="col d-none d-lg-block">
             <span>{{ training.notes | linebreaks }}</span>
         </div>
-        <div class="col-1 icon_col text-center px-2 icon_col">
-            <div class="row m-0 flex-nowrap">
-                <div class="col-6 m-0 p-0 trainings_table_button">
-                    <button type="button" name="edit_training" value="{{ training.id }}" class="btn btn_trainings_table_icon p-0" onclick="button_mod_training({{ training.id }})">
-                        <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_training">
-                    </button>
-                </div>
-                <div class="col-6 m-0 p-0 trainings_table_button">
-                    <button type="button" class="btn btn_trainings_table_icon p-0 ps-1" onclick="request_delete_training({{ training.id }}, '{{ training.team.name }}', '{{ training.skipper.name }}')">
-                        <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_training">
-                    </button>
+        {% if user.is_staff %}
+            <div class="col-1 icon_col text-center px-2 icon_col">
+                <div class="row m-0 flex-nowrap">
+                    <div class="col-6 m-0 p-0 trainings_table_button">
+                        <button type="button" name="edit_training" value="{{ training.id }}" class="btn btn_trainings_table_icon p-0" onclick="button_mod_training({{ training.id }})">
+                            <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_training">
+                        </button>
+                    </div>
+                    <div class="col-6 m-0 p-0 trainings_table_button">
+                        <button type="button" class="btn btn_trainings_table_icon p-0 ps-1" onclick="request_delete_training({{ training.id }}, '{{ training.team.name }}', '{{ training.skipper.name }}')">
+                            <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_training">
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 {% endblock %}

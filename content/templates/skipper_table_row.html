@@ -7,28 +7,30 @@
         <div class="col col-lg-2 d-none d-sm-block{% if not skipper.active %} text-muted{% endif %}">{{ skipper.fname }}</div>
         <div class="col col-lg-2 d-none d-sm-block{% if not skipper.active %} text-muted{% endif %}">{{ skipper.lname }}</div>
         <div class="col d-none d-lg-block{% if not skipper.active %} text-muted{% endif %}"><a href= "mailto:{{ skipper.email }}">{{ skipper.email }}</a></div>
-        <div class="col-1 icon_col text-center px-2 icon_col">
-            <div class="row m-0 flex-nowrap">
-                <div class="col-4 m-0 p-0 skipper_table_button">
-                    <button type="button" name="edit_skipper" value="{{ skipper.id }}" class="btn btn_skipper_table_icon p-0" onclick="button_mod_skipper({{ skipper.id }})">
-                        <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_skipper">
-                    </button>
-                </div>
-                <div class="col-4 m-0 p-0 skipper_table_button">
-                    <button type="button" name="activate_skipper" value="{{ skipper.id }}" class="btn btn_skipper_table_icon p-0 ps-1" onclick="button_toggle_skipper('activate_skipper', {{ skipper.id }})">
-                        {% if skipper.active %}
-                            <img src="{% static 'images/' %}{{ config.activeTeamIcon }}" alt="active_skipper">
-                        {% else %}
-                            <img src="{% static 'images/' %}{{ config.inactiveTeamIcon }}" alt="inactive_skipper">
-                        {% endif %}
-                    </button>
-                </div>
-                <div class="col-4 m-0 p-0 skipper_table_button">
-                    <button type="button" class="btn btn_skipper_table_icon p-0 ps-1" onclick="request_delete_skipper('{{ skipper.name }}', {{ skipper.id }})">
-                        <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_skipper">
-                    </button>
+        {% if user.is_staff %}
+            <div class="col-1 icon_col text-center px-2 icon_col">
+                <div class="row m-0 flex-nowrap">
+                    <div class="col-4 m-0 p-0 skipper_table_button">
+                        <button type="button" name="edit_skipper" value="{{ skipper.id }}" class="btn btn_skipper_table_icon p-0" onclick="button_mod_skipper({{ skipper.id }})">
+                            <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_skipper">
+                        </button>
+                    </div>
+                    <div class="col-4 m-0 p-0 skipper_table_button">
+                        <button type="button" name="activate_skipper" value="{{ skipper.id }}" class="btn btn_skipper_table_icon p-0 ps-1" onclick="button_toggle_skipper('activate_skipper', {{ skipper.id }})">
+                            {% if skipper.active %}
+                                <img src="{% static 'images/' %}{{ config.activeTeamIcon }}" alt="active_skipper">
+                            {% else %}
+                                <img src="{% static 'images/' %}{{ config.inactiveTeamIcon }}" alt="inactive_skipper">
+                            {% endif %}
+                        </button>
+                    </div>
+                    <div class="col-4 m-0 p-0 skipper_table_button">
+                        <button type="button" class="btn btn_skipper_table_icon p-0 ps-1" onclick="request_delete_skipper('{{ skipper.name }}', {{ skipper.id }})">
+                            <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_skipper">
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 {% endblock %}

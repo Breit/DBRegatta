@@ -178,7 +178,7 @@ def calendar(request):
     # handle login/logout
     loginUser(request)
 
-    if not request.user.is_authenticated:
+    if not (config.activateCalendar or request.user.is_authenticated):
         return redirect('/')
 
     # handle menu folding
@@ -187,7 +187,7 @@ def calendar(request):
 
     siteData = getSiteData('calendar', request.user)
     siteData['content'] = {
-        'events': getCalendarData(),
+        'events': getCalendarData(request.user.is_authenticated),
         'meta': {
             'buttonText': {
                 'year': config.calendarButtonYear,
@@ -278,7 +278,7 @@ def timetable(request):
     siteData = getSiteData('timetable', request.user)
     siteData['timetable'] = getTimeTableContent()
 
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         siteData['controls'] = getTimeTableSettings()
 
         if request.method == 'POST':
@@ -312,7 +312,7 @@ def times(request):
     # handle login/logout
     loginUser(request)
 
-    if not request.user.is_authenticated:
+    if not (request.user.is_authenticated and request.user.is_staff):
         return redirect('/')
 
     # handle menu folding
@@ -437,7 +437,7 @@ def settings(request):
     # handle login/logout
     loginUser(request)
 
-    if not request.user.is_authenticated:
+    if not (request.user.is_authenticated and request.user.is_staff):
         return redirect('/')
 
     # handle menu folding
@@ -465,6 +465,8 @@ def settings(request):
             config.activateResults = request.POST['activateResults'] == 'on'
         elif 'anonymousMonitor' in request.POST:
             config.anonymousMonitor = request.POST['anonymousMonitor'] == 'on'
+        elif 'activateCalendar' in request.POST:
+            config.activateCalendar = request.POST['activateCalendar'] == 'on'
         elif 'ownerName' in request.POST:
             config.ownerName = request.POST['ownerName']
         elif 'sponsorName' in request.POST:
@@ -530,7 +532,7 @@ def djadmin(request):
     # handle login/logout
     loginUser(request)
 
-    if not request.user.is_authenticated and not request.user.is_superuser:
+    if not (request.user.is_authenticated or request.user.is_superuser):
         return redirect('/')
 
     # handle menu folding

@@ -11,95 +11,97 @@
 {% endblock %}
 
 {% block content %}
-    <div class="modal fade" id="formTrainingModal" data-bs-backdrop="static" tabindex="-1">
-        <div class="modal-dialog text-dark modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-light">
-                    <h5 class="modal-title d-block" id="formAddTrainingLabel">{{ config.addTrainingHeader }}</h5>
-                    <h5 class="modal-title d-none" id="formEditTrainingLabel">{{ config.editTrainingHeader }}</h5>
-                    <button type="button" id="button_cancel_training_x" class="btn-close text-light" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body d-flex flex-nowrap text-start align-items-center">
-                    <div class="d-flex align-items-start team_form">
-                        <form method="POST" action="" name="add_training" id="training_form">
-                            {% csrf_token %}
-                            {% include 'training_form.html' %}
-                        </form>
+    {% if user.is_staff %}
+        <div class="modal fade" id="formTrainingModal" data-bs-backdrop="static" tabindex="-1">
+            <div class="modal-dialog text-dark modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-light">
+                        <h5 class="modal-title d-block" id="formAddTrainingLabel">{{ config.addTrainingHeader }}</h5>
+                        <h5 class="modal-title d-none" id="formEditTrainingLabel">{{ config.editTrainingHeader }}</h5>
+                        <button type="button" id="button_cancel_training_x" class="btn-close text-light" data-bs-dismiss="modal"></button>
                     </div>
-                </div>
-                <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
-                    <button type="submit" name="submit_training" value="Submit" id="button_add_training" form="training_form" class="btn btn-primary btn_icon shadow d-block">
-                        <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                            <div class="pe-2">
-                                <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="add_team" class="p-0">
-                            </div>
-                            <p class="m-0 ps-2 lead">{{ config.submitAddTraining }}</p>
+                    <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                        <div class="d-flex align-items-start team_form">
+                            <form method="POST" action="" name="add_training" id="training_form">
+                                {% csrf_token %}
+                                {% include 'training_form.html' %}
+                            </form>
                         </div>
-                    </button>
-                    <button type="submit" name="submit_training" value="Submit" id="button_edit_training" form="training_form" class="btn btn-primary btn_icon shadow d-none">
-                        <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                            <div class="pe-2">
-                                <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="edit_training" class="p-0">
+                    </div>
+                    <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                        <button type="submit" name="submit_training" value="Submit" id="button_add_training" form="training_form" class="btn btn-primary btn_icon shadow d-block">
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div class="pe-2">
+                                    <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="add_team" class="p-0">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.submitAddTraining }}</p>
                             </div>
-                            <p class="m-0 ps-2 lead">{{ config.submitEditTraining }}</p>
-                        </div>
-                    </button>
-                    <button type="button" name="cancel_training" value="Submit" id="button_cancel_training" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal" formnovalidate>
-                        <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                            <div>
-                                <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_training" class="p-0">
+                        </button>
+                        <button type="submit" name="submit_training" value="Submit" id="button_edit_training" form="training_form" class="btn btn-primary btn_icon shadow d-none">
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div class="pe-2">
+                                    <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="edit_training" class="p-0">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.submitEditTraining }}</p>
                             </div>
-                            <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
-                        </div>
-                    </button>
-                    <div class="spinner-border text-primary d-none me-auto" role="status" id="wait"></div>
+                        </button>
+                        <button type="button" name="cancel_training" value="Submit" id="button_cancel_training" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal" formnovalidate>
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div>
+                                    <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_training" class="p-0">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                            </div>
+                        </button>
+                        <div class="spinner-border text-primary d-none me-auto" role="status" id="wait"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal fade" id="deleteTrainingModal" data-bs-backdrop="static" tabindex="-1">
-        <div class="modal-dialog text-dark">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-light">
-                    <h5 class="modal-title" id="deleteTrainingLabel">{{ config.deleteTraining }}</h5>
-                    <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body d-flex flex-nowrap text-start align-items-center">
-                    <img src="{% static 'images/' %}{{ config.questionIcon }}">
-                    <div class="container">
-                        <p>
-                            <span>{{ config.headerTraining }}: </span>
-                            <span class="fw-bold" id="del_training_team"></span>
-                        <br>
-                            <span>{{ config.skipper }}: </span>
-                            <span class="fw-bold" id="del_training_skipper"></span>
-                        </p>
-                        <p>{{ config.warningDeleteTraining | linebreaks }}</p>
+        <div class="modal fade" id="deleteTrainingModal" data-bs-backdrop="static" tabindex="-1">
+            <div class="modal-dialog text-dark">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-light">
+                        <h5 class="modal-title" id="deleteTrainingLabel">{{ config.deleteTraining }}</h5>
+                        <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
                     </div>
-                </div>
-                <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
-                    <button type="button" name="delete_training" id="button_delete_training" value="" class="btn btn-primary btn_icon shadow" data-bs-dismiss="modal">
-                        <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                            <div class="pe-2">
-                                <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_training" class="p-0">
-                            </div>
-                            <p class="m-0 ps-2 lead">{{ config.deleteTraining }}</p>
+                    <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                        <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                        <div class="container">
+                            <p>
+                                <span>{{ config.headerTraining }}: </span>
+                                <span class="fw-bold" id="del_training_team"></span>
+                            <br>
+                                <span>{{ config.skipper }}: </span>
+                                <span class="fw-bold" id="del_training_skipper"></span>
+                            </p>
+                            <p>{{ config.warningDeleteTraining | linebreaks }}</p>
                         </div>
-                    </button>
-                    <button type="button" name="cancel_delete_training" id="cancel_delete_training" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
-                        <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                            <div>
-                                <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelDeleteTraining" class="p-0">
+                    </div>
+                    <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                        <button type="button" name="delete_training" id="button_delete_training" value="" class="btn btn-primary btn_icon shadow" data-bs-dismiss="modal">
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div class="pe-2">
+                                    <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_training" class="p-0">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.deleteTraining }}</p>
                             </div>
-                            <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
-                        </div>
-                    </button>
-                    <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_delete"></div>
+                        </button>
+                        <button type="button" name="cancel_delete_training" id="cancel_delete_training" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div>
+                                    <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelDeleteTraining" class="p-0">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                            </div>
+                        </button>
+                        <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_delete"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
     <div class="container-fluid" id="training_table">
         <h2 class="mt-2 mb-2 display-6">{{ config.trainingsTableHeader }}</h2>
@@ -164,16 +166,18 @@
         </div>
     </div>
 
-    <div class="container-fluid mb-3 pt-3">
-        <button type="button" name="show_trainings_form" value="Add" class="btn btn-primary btn_icon btn_lg shadow" data-bs-toggle="modal" data-bs-target="#formTrainingModal">
-            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                <div class="pe-2">
-                    <img src="{% static 'images/' %}{{ config.addTeamIcon }}" alt="add_training">
+    {% if user.is_staff %}
+        <div class="container-fluid mb-3 pt-3">
+            <button type="button" name="show_trainings_form" value="Add" class="btn btn-primary btn_icon btn_lg shadow" data-bs-toggle="modal" data-bs-target="#formTrainingModal">
+                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                    <div class="pe-2">
+                        <img src="{% static 'images/' %}{{ config.addTeamIcon }}" alt="add_training">
+                    </div>
+                    <p class="m-0 ps-2 lead">{{ config.addTraining }}</p>
                 </div>
-                <p class="m-0 ps-2 lead">{{ config.addTraining }}</p>
-            </div>
-        </button>
-    </div>
+            </button>
+        </div>
+    {% endif %}
 
     <hr>
 

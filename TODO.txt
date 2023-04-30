@@ -1,7 +1,7 @@
 TODO: DBRegatta
 - Landing page with registration button for teams
 - Open/Close registration button
-- Trainings Page
 - PDF Export
 - Reset Button for Team Registration (Position and Date)
-- Training Statistics
+- Menu scrollable
+- Training form with training duration

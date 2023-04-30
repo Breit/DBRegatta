@@ -41,5 +41,10 @@ document.addEventListener(
       }
     );
     calendar.render();
+
+    document.querySelector(".menu")
+        .addEventListener("click", function() {
+          calendar.updateSize();
+    });
   }
 );
