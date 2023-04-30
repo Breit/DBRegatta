@@ -233,7 +233,7 @@ def getTrainingsContent():
 
     return content
 
-def getCalendarData():
+def getCalendarData(authenticated: bool = False):
     content = []
 
     noEvents = {
@@ -277,9 +277,14 @@ def getCalendarData():
     }
     trainings = Training.objects.all()
     for training in trainings:
-        team = Team.objects.get(id=training.team_id)
+        name = config.appointmentPlaceholder
+        if authenticated:
+            team = Team.objects.get(id=training.team_id)
+            if team:
+                name = team.name
+
         event = {
-            'title': team.name if team else 'N/A',
+            'title': name,
             'start': datetime.combine(training.date, training.time).strftime('%Y-%m-%dT%H:%M'),
             'end': (datetime.combine(training.date, training.time) + config.intervalTrainingLength).strftime('%Y-%m-%dT%H:%M'),
             'className': 'training'
@@ -929,11 +934,13 @@ def getSiteData(id: str = None, user = None):
         siteData['menu'].append(menu_teams)
         siteData['menu'].append(menu_skippers)
         siteData['menu'].append(menu_trainings)
-        siteData['menu'].append(menu_calendar)
 
     siteData['menu'].append(menu_timetable)
 
-    if user and user.is_authenticated:
+    if config.activateCalendar or user.is_authenticated:
+        siteData['menu'].append(menu_calendar)
+
+    if user and user.is_authenticated and user.is_staff:
         siteData['menu'].append(menu_times)
 
     if config.activateResults or user.is_authenticated:
@@ -1282,14 +1289,21 @@ def getMainSettings():
                     'name': config.activateResultsDesc,
                     'type': 'checkbox',
                     'value': config.activateResults,
-                    'icon': 'clock-history'
+                    'icon': 'check-square'
                 },
                 {
                     'id': 'anonymousMonitor',
                     'name': config.anonymousMonitorDesc,
                     'type': 'checkbox',
                     'value': config.anonymousMonitor,
-                    'icon': 'clock-history'
+                    'icon': 'check-square'
+                },
+                {
+                    'id': 'activateCalendar',
+                    'name': config.activateCalendarDesc,
+                    'type': 'checkbox',
+                    'value': config.activateCalendar,
+                    'icon': 'calendar-check'
                 }
             ]
         },

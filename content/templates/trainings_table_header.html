@@ -8,6 +8,8 @@
         <div class="col col-lg-2 d-none d-xxl-block">{{ config.teamTableHeaderCaptain }}</div>
         <div class="col col-lg-3 col-xxl-2 d-none d-md-block">{{ config.skipper }}</div>
         <div class="col d-none d-lg-block">{{ config.placeholderTrainingNotes }}</div>
-        <div class="col-1 text-center icon_col">{{ config.trainingsTableHeaderEdit }}</div>
+        {% if user.is_staff %}
+            <div class="col-1 text-center icon_col">{{ config.trainingsTableHeaderEdit }}</div>
+        {% endif %}
     </div>
 {% endblock %}
