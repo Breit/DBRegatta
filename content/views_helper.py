@@ -13,9 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.contrib.auth import authenticate, login, logout
 from django.forms.models import model_to_dict
 from django.conf import settings as dj_settings
-from django.db.models import F, Q, ExpressionWrapper, DateTimeField, Value
-from django.db.models.functions import Cast, Concat
-from django.utils import timezone
+from django.db.models import F, Q
 
 from .models import Race, RaceAssign, Team, RaceDrawMode, Post, Skipper, Training
 from .forms import TeamForm, PostForm, SkipperForm, TrainingForm
@@ -110,7 +108,8 @@ def getTrainingsList(active=True, upcomingOnly=False, pastOnly=False):
         entry = {}
         entry['id'] = training.pk
         entry['date'] = training.date
-        entry['time'] = training.time
+        entry['time_start'] = training.time
+        entry['time_end'] = (datetime.combine(date.today(), training.time) + training.duration).time()
         entry['notes'] = training.notes
 
         team = Team.objects.get(id=training.team_id)
@@ -286,7 +285,7 @@ def getCalendarData(authenticated: bool = False):
         event = {
             'title': name,
             'start': datetime.combine(training.date, training.time).strftime('%Y-%m-%dT%H:%M'),
-            'end': (datetime.combine(training.date, training.time) + config.intervalTrainingLength).strftime('%Y-%m-%dT%H:%M'),
+            'end': (datetime.combine(training.date, training.time) + training.duration).strftime('%Y-%m-%dT%H:%M'),
             'className': 'training'
         }
         trainingEvents['events'].append(event)

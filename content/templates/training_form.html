@@ -4,7 +4,7 @@
     <div class="row">
         {% for f in content.form %}
             {% if f.field.widget.input_type == 'checkbox' %}
-            <div class="col-12 col-sm-6 mb-3">
+            <div class="col-12 col-lg-4 mb-3">
                 <div class="input-group shadow-sm">
                     <div class="input-group-text form-switch px-1 {% if f.errors %}input-error{% endif %}">
                         {{ f }}
@@ -13,7 +13,7 @@
                 </div>
             </div>
             {% elif f.html_name == 'date' %}
-                <div class="col-12 col-sm-6 mb-3">
+                <div class="col-12 col-lg-5 mb-3">
                     <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
                         <span class="input-group-text{% if f.field.required %} text-primary{% endif %}" data-toggle="tooltip" title="{{ f.field.widget.attrs.placeholder }}">
                             <i class="bi bi-{{ f.field.widget.attrs.icon }}"></i>
@@ -33,8 +33,17 @@
                 </div>
             {% elif f.html_name == 'time' %}
                 {# Skip this TimeInput here, because we already included it together with the DateInput above! #}
+            {% elif f.html_name == 'duration' %}
+                <div class="col-12 col-lg-3 mb-3">
+                    <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
+                        <span class="input-group-text{% if f.field.required %} text-primary{% endif %}" data-toggle="tooltip" title="{{ f.field.widget.attrs.placeholder }}">
+                            <i class="bi bi-{{ f.field.widget.attrs.icon }}"></i>
+                        </span>
+                        {{ f }}
+                    </div>
+                </div>
             {% elif f.html_name == 'team_id' %}
-                <div class="col-12 col-sm-6 mb-3">
+                <div class="col-12 col-sm-8 mb-3">
                     <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
                         <span class="input-group-text text-primary" data-toggle="tooltip" title="{{ f.field.widget.attrs.placeholder }}">
                             <i class="bi bi-{{ f.field.widget.attrs.icon }}"></i>
@@ -47,7 +56,7 @@
                     </div>
                 </div>
             {% elif f.html_name == 'skipper_id' %}
-                <div class="col-12 col-sm-6 mb-3">
+                <div class="col-12 col-sm-4 mb-3">
                     <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
                         <span class="input-group-text text-primary" data-toggle="tooltip" title="{{ f.field.widget.attrs.placeholder }}">
                             <i class="bi bi-{{ f.field.widget.attrs.icon }}"></i>

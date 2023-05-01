@@ -26,9 +26,7 @@ hr {
 }
 
 .stat_value {
-    /* float: right; */
     position: relative;
-    /* right: 0; */
     top: 50%;
     line-height: 3rem;
     width: fit-content;
@@ -42,7 +40,6 @@ hr {
     position: relative;
     left: 0;
     top: 50%;
-    /* width: fit-content; */
     transform: translateY(-50%);
     overflow: hidden;
 }

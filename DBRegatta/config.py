@@ -277,7 +277,7 @@ CONSTANCE_CONFIG = {
     'settingsAdvancedHeader':       ('Entwickleroptionen',                          'Header for Advanced Settings'),
     'placeholderPostContent':       ('Mitteilung',                                  'Placeholder Text for Post Content Control'),
     'devOptionsTimetable':          ('Zeitplan / Zeiteingabe',                      'Header for Advanced Settings Timetable'),
-    'devOptionsData':               ('Teams / Steuerleute',                         'Header for Advanced Settings Data'),
+    'devOptionsData':               ('Teams / Steuerleute / Trainings',             'Header for Advanced Settings Data'),
     'resetFinals':                  ('Finale zurücksetzen',                         'Button Text for Reset Finals Button'),
     'resetFinalsIcon':              ('deleteTable.svg',                             'Button Icon for Reset Finals Button'),
     'resetHeats':                   ('Vorrunde zurücksetzen',                       'Button Text for Reset Heats Button'),

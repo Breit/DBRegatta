@@ -197,8 +197,9 @@ class TrainingForm(forms.ModelForm):
             'active',
             'date',
             'time',
-            'team_id',
+            'duration',
             'skipper_id',
+            'team_id',
             'notes'
         )
 
@@ -206,8 +207,9 @@ class TrainingForm(forms.ModelForm):
             'active': '',
             'date': '',
             'time': '',
-            'team_id': '',
+            'duration': '',
             'skipper_id': '',
+            'team_id': '',
             'notes': ''
         }
 
@@ -229,18 +231,21 @@ class TrainingForm(forms.ModelForm):
             'time': forms.TimeInput(
                 format=('%H:%M'),
                 attrs = {
-                    'class': 'form-control text-end px-1',
+                    'class': 'form-control text-end rounded-end px-1',
                     'placeholder': config.placeholderTrainingDateTime,
                     'type': 'time',
                     'list': 'training_time_select',
                     'icon': 'clock'
                 }
             ),
-            'team_id': forms.NumberInput(
+            'duration': forms.TimeInput(
+                format=('%H:%M'),
                 attrs={
                     'class': 'form-control',
-                    'placeholder': config.placeholderTeamName,
-                    'icon': 'tag'
+                    'placeholder': config.intervalTrainingLengthLabel,
+                    'icon': 'clock-history',
+                    'class': 'form-control text-end px-1',
+                    'type': 'time'
                 }
             ),
             'skipper_id': forms.NumberInput(
@@ -248,6 +253,13 @@ class TrainingForm(forms.ModelForm):
                     'class': 'form-control',
                     'placeholder': config.skipper,
                     'icon': 'person'
+                }
+            ),
+            'team_id': forms.NumberInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': config.placeholderTeamName,
+                    'icon': 'tag'
                 }
             ),
             'notes': forms.Textarea(
