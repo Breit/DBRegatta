@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load filter_tags %}
+
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{% static 'css/' %}{{ config.calendarPageCSS }}">
+{% endblock %}
+
+{% block additionalJS %}
+    <script language="JavaScript" src="{% static 'fullcalendar/dist/' %}index.global.min.js" integrity="sha384-ls6XEDoNosgdfFfcQMf/sZbXZHuWBCIXPV/lxwjlR7aUbooYZRAOwtuLufn3a4xy" crossorigin="anonymous"></script>
+    <script language="JavaScript" src="{% static 'fullcalendar/packages/bootstrap5/' %}index.global.min.js" integrity="sha384-+8RA3XmEfisyL9yeAMcPoOT+GZUN3Ec0/nWvKZAzLwc+IOZjB90PXfjKgeMJ6LEi" crossorigin="anonymous"></script>
+    <script language="JavaScript" src="{% static 'js/' %}{{config.calendarPageJS}}" type="text/javascript"></script>
+    {{ content | json_script:"calendar-data" }}
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid" id="calendar_page">
+        <h2 class="mt-2 mb-3 display-6">{{ config.calendarTitle }}</h2>
+        <div class="container-fluid m-0 p-0 h-100">
+            <div id='full-calendar'></div>
+        </div>
+    </div>
+
+    <div class="container-fluid overscroll"></div>
+{% endblock %}

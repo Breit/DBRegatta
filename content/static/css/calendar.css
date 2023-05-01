@@ -1,0 +1,17 @@
+#calendar_page {
+    /* height: calc(100%); */
+    height: calc(100% - 5.25rem);
+}
+
+.no-events {
+    opacity: 0.1 !important;
+}
+
+.raceday {
+    opacity: 1.0 !important;
+}
+
+.raceday > .fc-event-title {
+    font-style: normal !important;
+    font-weight: bold;
+}

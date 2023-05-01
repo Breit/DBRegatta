@@ -94,6 +94,7 @@ $(document).ready(function()
                 {
                     $('.menu').html($(data).find('.menu').html());
                     $('#training_table').html($(data).find('#training_table').html());
+                    $('#training_statistics').html($(data).find('#training_statistics').html());
 
                     const form_content = $(data).find('#training_form');
                     $('#training_form').html(form_content.html());
@@ -193,6 +194,7 @@ $(document).ready(function()
                 {
                     $('.menu').html($(data).find('.menu').html());
                     $('#training_table').html($(data).find('#training_table').html());
+                    $('#training_statistics').html($(data).find('#training_statistics').html());
                 }
             }
         );

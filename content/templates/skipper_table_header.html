@@ -7,6 +7,8 @@
         <div class="col col-lg-2 d-none d-sm-block">{{ config.placeholderSkipperFName }}</div>
         <div class="col col-lg-2 d-none d-sm-block">{{ config.placeholderSkipperLName }}</div>
         <div class="col d-none d-lg-block">{{ config.placeholderSkipperEmail }}</div>
-        <div class="col-1 text-center icon_col">{{ config.skipperTableHeaderOptions }}</div>
+        {% if user.is_staff %}
+            <div class="col-1 text-center icon_col">{{ config.skipperTableHeaderOptions }}</div>
+        {% endif %}
     </div>
 {% endblock %}

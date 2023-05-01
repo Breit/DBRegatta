@@ -174,6 +174,40 @@ def trainings(request):
 
     return render(request, 'trainings.html', siteData)
 
+def calendar(request):
+    # handle login/logout
+    loginUser(request)
+
+    if not (config.activateCalendar or request.user.is_authenticated):
+        return redirect('/')
+
+    # handle menu folding
+    if toggleFoldMenu(request):
+        return redirect('/calendar')
+
+    siteData = getSiteData('calendar', request.user)
+    siteData['content'] = {
+        'events': getCalendarData(request.user.is_authenticated),
+        'meta': {
+            'buttonText': {
+                'year': config.calendarButtonYear,
+                'month': config.calendarButtonMonth,
+                'week': config.calendarButtonWeek,
+                'day': config.calendarButtonDay,
+                'today': config.calendarButtonToday
+            },
+            'locale': config.calendarLocale,
+            'firstDay': config.calendarFirstDayOfWeek,
+            'initialView': 'dayGridMonth',
+            'weekNumbers': config.calendarWeekNumbers,
+            'weekText': config.calendarWeekNumbersPrefix,
+            'trainingStart': config.firstTrainingTime.strftime('%H:%M'),
+            'trainingEnd': (datetime.combine(date.today(), config.lastTrainingTime) + config.intervalTrainingLength).time().strftime('%H:%M')
+        }
+    }
+
+    return render(request, 'calendar.html', siteData)
+
 def skippers(request):
     # handle login/logout
     loginUser(request)
@@ -244,7 +278,7 @@ def timetable(request):
     siteData = getSiteData('timetable', request.user)
     siteData['timetable'] = getTimeTableContent()
 
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_staff:
         siteData['controls'] = getTimeTableSettings()
 
         if request.method == 'POST':
@@ -278,7 +312,7 @@ def times(request):
     # handle login/logout
     loginUser(request)
 
-    if not request.user.is_authenticated:
+    if not (request.user.is_authenticated and request.user.is_staff):
         return redirect('/')
 
     # handle menu folding
@@ -403,7 +437,7 @@ def settings(request):
     # handle login/logout
     loginUser(request)
 
-    if not request.user.is_authenticated:
+    if not (request.user.is_authenticated and request.user.is_staff):
         return redirect('/')
 
     # handle menu folding
@@ -419,6 +453,8 @@ def settings(request):
             config.siteName = request.POST['eventTitle']
         elif 'eventDate' in request.POST:
             config.eventDate = date.fromisoformat(request.POST['eventDate'])
+        elif 'registrationDate' in request.POST:
+            config.registrationDate = date.fromisoformat(request.POST['registrationDate'])
         elif 'durationMonitorSlide' in request.POST:
             config.displayInterval = int(float(request.POST['durationMonitorSlide']) * 1e3)
         elif 'displayDataRefresh' in request.POST:
@@ -429,6 +465,8 @@ def settings(request):
             config.activateResults = request.POST['activateResults'] == 'on'
         elif 'anonymousMonitor' in request.POST:
             config.anonymousMonitor = request.POST['anonymousMonitor'] == 'on'
+        elif 'activateCalendar' in request.POST:
+            config.activateCalendar = request.POST['activateCalendar'] == 'on'
         elif 'ownerName' in request.POST:
             config.ownerName = request.POST['ownerName']
         elif 'sponsorName' in request.POST:
@@ -467,6 +505,8 @@ def settings(request):
             config.firstTrainingTime = time.fromisoformat(request.POST['firstTrainingTime'])
         elif 'lastTrainingTime' in request.POST:
             config.lastTrainingTime = time.fromisoformat(request.POST['lastTrainingTime'])
+        elif 'lengthTraining' in request.POST:
+            config.intervalTrainingLength = timedelta(minutes=int(request.POST['lengthTraining']))
         elif 'refreshTimes' in request.POST:
             updateTimeTable()
         elif 'resetFinals' in request.POST:
@@ -492,7 +532,7 @@ def djadmin(request):
     # handle login/logout
     loginUser(request)
 
-    if not request.user.is_authenticated and not request.user.is_superuser:
+    if not (request.user.is_authenticated or request.user.is_superuser):
         return redirect('/')
 
     # handle menu folding
