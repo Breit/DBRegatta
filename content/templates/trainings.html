@@ -167,7 +167,7 @@
     </div>
 
     {% if user.is_staff %}
-        <div class="container-fluid mb-3 pt-3">
+        <div class="container-fluid mb-0 pt-3">
             <button type="button" name="show_trainings_form" value="Add" class="btn btn-primary btn_icon btn_lg shadow" data-bs-toggle="modal" data-bs-target="#formTrainingModal">
                 <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                     <div class="pe-2">
@@ -179,14 +179,15 @@
         </div>
     {% endif %}
 
-    <hr>
-
     <div class="container-fluid mb-3 pt-3" id="training_statistics">
-        <h2 class="mt-2 mb-4 display-6">{{ config.trainingsStatsTableHeader }}</h2>
-        {% if content.trainingsStats %}
-            {% for statsSet in content.trainingsStats %}
-                {% include 'trainings_statistics.html' %}
-            {% endfor %}
+        {% if content.countTrainings %}
+            <hr>
+            <h2 class="my-4 display-6">{{ config.trainingsStatsTableHeader }}</h2>
+            {% if content.trainingsStats %}
+                {% for statsSet in content.trainingsStats %}
+                    {% include 'trainings_statistics.html' %}
+                {% endfor %}
+            {% endif %}
         {% endif %}
     </div>
 

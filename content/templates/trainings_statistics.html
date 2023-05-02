@@ -13,16 +13,16 @@
         </div>
         <div class="card-body p-0 collapse show" id="{{ statsSet.type }}_training_stats">
             <div class="row border-bottom flex-nowrap small text-muted m-0 mt-2 text-nowrap">
-                <div class="col-1 id_col text-center d-none d-md-block">{{ statsSet.table_header.id }}</div>
-                <div class="col-1 id_col text-center d-none d-sm-block">{{ statsSet.table_header.total | safe }}</div>
+                <div class="col-1 id_col text-center d-none d-sm-block">{{ statsSet.table_header.id }}</div>
+                <div class="col-1 id_col text-center">{{ statsSet.table_header.total | safe }}</div>
                 <div class="col col-sm-4 col-lg-3">{{ statsSet.table_header.name }}</div>
-                <div class="col">{{ statsSet.table_header.stat }}</div>
+                <div class="col d-none d-md-block">{{ statsSet.table_header.stat }}</div>
             </div>
             {% for entry in statsSet.stats %}
                 {% if entry.totalTrainings %}
                     <div class="row align-items-center flex-nowrap trainings_list m-0 py-1{% if not forloop.last %} border-bottom{% else %} rounded-bottom{% endif %}" id="training_{{ entry.id }}">
-                        <div class="col-1 id_col fw-bold text-primary text-center d-none d-md-block">{{ forloop.counter }}</div>
-                        <div class="col-1 id_col text-center d-none d-sm-block">{{ entry.totalTrainings }}</div>
+                        <div class="col-1 id_col fw-bold text-primary text-center d-none d-sm-block">{{ forloop.counter }}</div>
+                        <div class="col-1 id_col text-center">{{ entry.totalTrainings }}</div>
                         <div class="col col-sm-4 col-lg-3">
                             <span class="fw-bold text-primary">{{ entry.name }}</span>
                             <br>
@@ -32,7 +32,7 @@
                                 <span class="small">{{ entry.subname }}</span>
                             {% endif %}
                         </div>
-                        <div class="col">
+                        <div class="col d-none d-md-block">
                             <div class="progress team_trainings bg-none rounded" style="width: calc(100% * {{ entry.totalTrainings }} / {{ statsSet.maxTrainings }})">
                                 {% if entry.upcomingTrainings > 0 %}
                                 <div class="progress-bar px-2 bg-warning text-light" role="progressbar" style="width: calc(100% * {{ entry.upcomingTrainings }} / {{ entry.totalTrainings }})">

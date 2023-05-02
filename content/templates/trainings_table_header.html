@@ -3,10 +3,10 @@
 {% block trainings_table_header %}
     <div class="row border-bottom flex-nowrap small text-muted m-0 mt-2 text-nowrap">
         <div class="col-1 id_col text-center">{{ config.trainingsTableHeaderID }}</div>
-        <div class="col col-md-2">{{ config.placeholderTrainingDateTime }}</div>
-        <div class="col col-md-3 col-lg-2">{{ config.teamTableHeaderTeam }} / {{ config.teamTableHeaderCompany }}</div>
+        <div class="col col-sm-4 col-md-3 col-lg-2">{{ config.placeholderTrainingDateTime }}</div>
+        <div class="col col-lg-3 col-xxl-2">{{ config.teamTableHeaderTeam }} / {{ config.teamTableHeaderCompany }}</div>
         <div class="col col-lg-2 d-none d-xxl-block">{{ config.teamTableHeaderCaptain }}</div>
-        <div class="col col-lg-3 col-xxl-2 d-none d-md-block">{{ config.skipper }}</div>
+        <div class="col col-lg-3 col-xxl-2 d-none d-lg-block">{{ config.skipper }}</div>
         <div class="col d-none d-lg-block">{{ config.placeholderTrainingNotes }}</div>
         {% if user.is_staff %}
             <div class="col-1 text-center icon_col">{{ config.trainingsTableHeaderEdit }}</div>

@@ -3,13 +3,14 @@ from constance import config
 from django.db import models
 from django.core.validators import MaxLengthValidator
 from django.utils import timezone
+from datetime import timedelta
 
 # for list of teams
 class Team(models.Model):
     active = models.BooleanField(default=False)
     wait = models.BooleanField(default=False)
     position = models.PositiveSmallIntegerField(blank=False, unique=True, null=True)
-    date = models.DateField(blank=False)
+    date = models.DateField(blank=False, null=True)
     name = models.CharField(max_length=200, unique=True, blank=False)
     company = models.CharField(max_length=200, blank=False)
     contact = models.CharField(max_length=200, blank=True)
@@ -77,6 +78,7 @@ class Training(models.Model):
     active = models.BooleanField(default=True)
     date = models.DateField(blank=False, default=timezone.localtime)
     time = models.TimeField(blank=False, default=now_round)
+    duration = models.DurationField(blank=False, default=config.intervalTrainingLength)
     skipper_id = models.BigIntegerField(blank=False, null=True)
     team_id = models.BigIntegerField(blank=False, null=True)
     notes = models.TextField(blank=True, null=True)

@@ -13,9 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.contrib.auth import authenticate, login, logout
 from django.forms.models import model_to_dict
 from django.conf import settings as dj_settings
-from django.db.models import F, Q, ExpressionWrapper, DateTimeField, Value
-from django.db.models.functions import Cast, Concat
-from django.utils import timezone
+from django.db.models import F, Q
 
 from .models import Race, RaceAssign, Team, RaceDrawMode, Post, Skipper, Training
 from .forms import TeamForm, PostForm, SkipperForm, TrainingForm
@@ -110,7 +108,8 @@ def getTrainingsList(active=True, upcomingOnly=False, pastOnly=False):
         entry = {}
         entry['id'] = training.pk
         entry['date'] = training.date
-        entry['time'] = training.time
+        entry['time_start'] = training.time
+        entry['time_end'] = (datetime.combine(date.today(), training.time) + training.duration).time()
         entry['notes'] = training.notes
 
         team = Team.objects.get(id=training.team_id)
@@ -286,7 +285,7 @@ def getCalendarData(authenticated: bool = False):
         event = {
             'title': name,
             'start': datetime.combine(training.date, training.time).strftime('%Y-%m-%dT%H:%M'),
-            'end': (datetime.combine(training.date, training.time) + config.intervalTrainingLength).strftime('%Y-%m-%dT%H:%M'),
+            'end': (datetime.combine(training.date, training.time) + training.duration).strftime('%Y-%m-%dT%H:%M'),
             'className': 'training'
         }
         trainingEvents['events'].append(event)
@@ -1496,14 +1495,371 @@ def getMainSettings():
                     'name': config.ownerLogoDesc,
                     'type': 'image',
                     'value': config.ownerLogo,
-                    'icon': 'image'
+                    'icon': 'image',
+                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))]
                 },
                 {
                     'id': 'sponsorLogo',
                     'name': config.sponsorLogoDesc,
                     'type': 'image',
                     'value': config.sponsorLogo,
-                    'icon': 'image'
+                    'icon': 'image',
+                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))]
+                }
+            ]
+        }
+    ]
+
+    return settings
+
+# Get content for the advanced settings section
+def getAdvancedSettings():
+    settings = [
+        {
+            'title': config.devOptionsTimetable,
+            'folded': True,
+            'buttons': [
+                {
+                    'id': 'resetFinals',
+                    'value': 'ResetFinals',
+                    'icon': config.resetFinalsIcon,
+                    'icon_alt': 'reset_finals',
+                    'text': config.resetFinals,
+                    'classes': 'btn-warning btn_icon btn_lg',
+                    'modal': {
+                        'id': 'resetFinalsModal',
+                        'classes': 'text-dark',
+                        'header': {
+                            'id': 'resetFinalsLabel',
+                            'title': config.resetFinals,
+                            'classes': 'bg-warning text-dark'
+                        },
+                        'body': {
+                            'icon': config.questionIcon,
+                            'text': config.warningResetFinals
+                        },
+                        'footer': {
+                            'buttons': [
+                                {
+                                    'id': 'resetFinalsSubmit',
+                                    'value': 'ResetFinals',
+                                    'classes': 'btn-warning btn_icon',
+                                    'action': "update_setting('resetFinals')",
+                                    'icon': config.resetFinalsIcon,
+                                    'icon_alt': 'reset_finals',
+                                    'icon_class': '',
+                                    'text': config.resetFinals
+                                },
+                                {
+                                    'id': 'resetFinalsCancel',
+                                    'value': 'resetFinalsCancel',
+                                    'classes': 'btn-secondary btn_icon',
+                                    'icon': config.cancelTeamIcon,
+                                    'icon_alt': 'cancelResetFinals',
+                                    'icon_class': 'p-0',
+                                    'text': config.submitAbort
+                                }
+                            ],
+                            'spinner': {
+                                'id': 'wait_resetFinals',
+                                'classes': 'text-primary'
+                            }
+                        }
+                    },
+                },
+                {
+                    'id': 'resetHeats',
+                    'value': 'ResetHeats',
+                    'icon': config.resetHeatsIcon,
+                    'icon_alt': 'reset_heats',
+                    'text': config.resetHeats,
+                    'classes': 'btn-warning btn_icon btn_lg',
+                    'modal': {
+                        'id': 'resetHeatsModal',
+                        'classes': 'text-dark',
+                        'header': {
+                            'id': 'resetHeatsLabel',
+                            'title': config.resetHeats,
+                            'classes': 'bg-warning text-dark'
+                        },
+                        'body': {
+                            'icon': config.questionIcon,
+                            'text': config.warningResetHeats
+                        },
+                        'footer': {
+                            'buttons': [
+                                {
+                                    'id': 'resetHeatsSubmit',
+                                    'value': 'ResetHeats',
+                                    'classes': 'btn-warning btn_icon',
+                                    'action': "update_setting('resetHeats')",
+                                    'icon': config.resetHeatsIcon,
+                                    'icon_alt': 'reset_heats',
+                                    'icon_class': '',
+                                    'text': config.resetHeats
+                                },
+                                {
+                                    'id': 'resetHeatsCancel',
+                                    'value': 'resetHeatsCancel',
+                                    'classes': 'btn-secondary btn_icon',
+                                    'icon': config.cancelTeamIcon,
+                                    'icon_alt': 'cancelResetHeats',
+                                    'icon_class': 'p-0',
+                                    'text': config.submitAbort
+                                }
+                            ],
+                            'spinner': {
+                                'id': 'wait_resetHeats',
+                                'classes': 'text-primary'
+                            }
+                        }
+                    },
+                },
+                {
+                    'id': 'resetTimetable',
+                    'value': 'ResetTimetable',
+                    'icon': config.resetTimetableIcon,
+                    'icon_alt': 'reset_timetable',
+                    'text': config.resetTimetable,
+                    'classes': 'btn-danger btn_icon btn_lg',
+                    'modal': {
+                        'id': 'resetTimetableModal',
+                        'classes': 'text-dark',
+                        'header': {
+                            'id': 'resetTimetableLabel',
+                            'title': config.resetTimetable,
+                            'classes': 'bg-danger text-light'
+                        },
+                        'body': {
+                            'icon': config.questionIcon,
+                            'text': config.warningResetTimetable
+                        },
+                        'footer': {
+                            'buttons': [
+                                {
+                                    'id': 'resetTimetableSubmit',
+                                    'value': 'ResetTimetable',
+                                    'classes': 'btn-danger btn_icon',
+                                    'action': "update_setting('resetTimetable')",
+                                    'icon': config.resetTimetableIcon,
+                                    'icon_alt': 'reset_timetable',
+                                    'icon_class': '',
+                                    'text': config.resetTimetable
+                                },
+                                {
+                                    'id': 'resetTimetableCancel',
+                                    'value': 'resetTimetableCancel',
+                                    'classes': 'btn-secondary btn_icon',
+                                    'icon': config.cancelTeamIcon,
+                                    'icon_alt': 'cancelResetTimetable',
+                                    'icon_class': 'p-0',
+                                    'text': config.submitAbort
+                                }
+                            ],
+                            'spinner': {
+                                'id': 'wait_resetTimetable',
+                                'classes': 'text-primary'
+                            }
+                        }
+                    },
+                }
+            ]
+        },
+        {
+            'title': config.devOptionsData,
+            'folded': True,
+            'buttons': [
+                {
+                    'id': 'resetSkippers',
+                    'value': 'ResetSkippers',
+                    'icon': config.resetSkippersIcon,
+                    'icon_alt': 'reset_skippers',
+                    'text': config.resetSkippers,
+                    'classes': 'btn-primary btn_icon btn_lg',
+                    'modal': {
+                        'id': 'resetSkippersModal',
+                        'classes': 'text-dark',
+                        'header': {
+                            'id': 'resetSkippersLabel',
+                            'title': config.resetSkippers,
+                            'classes': 'bg-warning text-dark'
+                        },
+                        'body': {
+                            'icon': config.questionIcon,
+                            'text': config.warningResetSkippers
+                        },
+                        'footer': {
+                            'buttons': [
+                                {
+                                    'id': 'resetSkippersSubmit',
+                                    'value': 'ResetSkippers',
+                                    'classes': 'btn-primary btn_icon',
+                                    'action': "update_setting('resetSkippers')",
+                                    'icon': config.resetSkippersIcon,
+                                    'icon_alt': 'reset_skippers',
+                                    'icon_class': '',
+                                    'text': config.resetSkippers
+                                },
+                                {
+                                    'id': 'resetSkippersCancel',
+                                    'value': 'resetSkippersCancel',
+                                    'classes': 'btn-secondary btn_icon',
+                                    'icon': config.cancelTeamIcon,
+                                    'icon_alt': 'cancelResetSkippers',
+                                    'icon_class': 'p-0',
+                                    'text': config.submitAbort
+                                }
+                            ],
+                            'spinner': {
+                                'id': 'wait_resetSkippers',
+                                'classes': 'text-primary'
+                            }
+                        }
+                    },
+                },
+                {
+                    'id': 'resetTraining',
+                    'value': 'ResetTraining',
+                    'icon': config.resetTrainingIcon,
+                    'icon_alt': 'reset_training',
+                    'text': config.resetTraining,
+                    'classes': 'btn-primary btn_icon btn_lg',
+                    'modal': {
+                        'id': 'resetTrainingModal',
+                        'classes': 'text-dark',
+                        'header': {
+                            'id': 'resetTrainingLabel',
+                            'title': config.resetTraining,
+                            'classes': 'bg-warning text-dark'
+                        },
+                        'body': {
+                            'icon': config.questionIcon,
+                            'text': config.warningResetTraining
+                        },
+                        'footer': {
+                            'buttons': [
+                                {
+                                    'id': 'resetTrainingSubmit',
+                                    'value': 'ResetTraining',
+                                    'classes': 'btn-primary btn_icon',
+                                    'action': "update_setting('resetTraining')",
+                                    'icon': config.resetTrainingIcon,
+                                    'icon_alt': 'reset_training',
+                                    'icon_class': '',
+                                    'text': config.resetTraining
+                                },
+                                {
+                                    'id': 'resetTrainingCancel',
+                                    'value': 'resetTrainingCancel',
+                                    'classes': 'btn-secondary btn_icon',
+                                    'icon': config.cancelTeamIcon,
+                                    'icon_alt': 'cancelResetTraining',
+                                    'icon_class': 'p-0',
+                                    'text': config.submitAbort
+                                }
+                            ],
+                            'spinner': {
+                                'id': 'wait_resetTraining',
+                                'classes': 'text-primary'
+                            }
+                        }
+                    },
+                },
+                {
+                    'id': 'resetTeams',
+                    'value': 'ResetTeams',
+                    'icon': config.resetTeamsIcon,
+                    'icon_alt': 'reset_teams',
+                    'text': config.resetTeams,
+                    'classes': 'btn-danger btn_icon btn_lg',
+                    'modal': {
+                        'id': 'resetTeamsModal',
+                        'classes': 'text-dark',
+                        'header': {
+                            'id': 'resetTeamsLabel',
+                            'title': config.resetTeams,
+                            'classes': 'bg-danger text-light'
+                        },
+                        'body': {
+                            'icon': config.questionIcon,
+                            'text': config.warningResetTeams
+                        },
+                        'footer': {
+                            'buttons': [
+                                {
+                                    'id': 'resetTeamsSubmit',
+                                    'value': 'ResetTeams',
+                                    'classes': 'btn-danger btn_icon',
+                                    'action': "update_setting('resetTeams')",
+                                    'icon': config.resetTeamsIcon,
+                                    'icon_alt': 'reset_teams',
+                                    'icon_class': '',
+                                    'text': config.resetTeams
+                                },
+                                {
+                                    'id': 'resetTeamsCancel',
+                                    'value': 'resetTeamsCancel',
+                                    'classes': 'btn-secondary btn_icon',
+                                    'icon': config.cancelTeamIcon,
+                                    'icon_alt': 'cancelResetTeams',
+                                    'icon_class': 'p-0',
+                                    'text': config.submitAbort
+                                }
+                            ],
+                            'spinner': {
+                                'id': 'wait_resetTeams',
+                                'classes': 'text-primary'
+                            }
+                        }
+                    },
+                },
+                {
+                    'id': 'resetTeamSignups',
+                    'value': 'ResetTeamSignups',
+                    'icon': config.resetTeamSignupsIcon,
+                    'icon_alt': 'reset_team_signups',
+                    'text': config.resetTeamSignups,
+                    'classes': 'btn-primary btn_icon btn_lg',
+                    'modal': {
+                        'id': 'resetTeamSignupsModal',
+                        'classes': 'text-dark',
+                        'header': {
+                            'id': 'resetTeamSignupsLabel',
+                            'title': config.resetTeamSignups,
+                            'classes': 'bg-primary text-light'
+                        },
+                        'body': {
+                            'icon': config.questionIcon,
+                            'text': config.warningResetTeamSignups
+                        },
+                        'footer': {
+                            'buttons': [
+                                {
+                                    'id': 'resetTeamSignupsSubmit',
+                                    'value': 'ResetTeamSignups',
+                                    'classes': 'btn-primary btn_icon',
+                                    'action': "update_setting('resetTeamSignups')",
+                                    'icon': config.resetTeamSignupsIcon,
+                                    'icon_alt': 'reset_team_signups',
+                                    'icon_class': '',
+                                    'text': config.resetTeamSignups
+                                },
+                                {
+                                    'id': 'resetTeamSignupsCancel',
+                                    'value': 'resetTeamSignupsCancel',
+                                    'classes': 'btn-secondary btn_icon',
+                                    'icon': config.cancelTeamIcon,
+                                    'icon_alt': 'cancelResetTeamSignups',
+                                    'icon_class': 'p-0',
+                                    'text': config.submitAbort
+                                }
+                            ],
+                            'spinner': {
+                                'id': 'wait_resetTeamSignups',
+                                'classes': 'text-primary'
+                            }
+                        }
+                    },
                 }
             ]
         }
@@ -1591,7 +1947,7 @@ def clearFinals():
     # delete all finale assignments
     RaceAssign.objects.filter(race_id__in=race_ids).delete()
 
-# remove all heats including racing times from the DB including finals and race assignments
+# Remove all heats including racing times from the DB including finals and race assignments
 def clearRaces():
     # delete all race assignments for the heats
     RaceAssign.objects.all().delete()
@@ -1602,7 +1958,7 @@ def clearRaces():
     # remove all races
     Race.objects.all().delete()
 
-# remove all heat racing times from the DB and clear all finals
+# Remove all heat racing times from the DB and clear all finals
 def clearHeatTimes():
     clearFinals()
     races = Race.objects.filter(name__startswith = config.heatPrefix)
@@ -1614,6 +1970,18 @@ def clearHeatTimes():
             attendee.skipper_id = None
             attendee.save()
 
+# Gather data for the impressum
+def getImpressumData():
+    impressum = None
+    try:
+        with open(os.path.join(dj_settings.STATIC_ROOT, 'data', 'impressum.json'), encoding='utf-8') as impressum_json:
+            impressum = json.load(impressum_json)
+    except:
+        pass
+    return impressum
+
+# Make a copy of the database
+# TODO: This needs to be reworked, just filecopy is a bad hack!
 def backupDataBase():
     try:
         db_fname = '{}_{}'.format(
@@ -1630,6 +1998,7 @@ def backupDataBase():
         success = False
     return success
 
+# Get last backup timestamp
 def getLastDataBaseBackup():
     base_name = os.path.basename(dj_settings.DATABASES['default']['NAME'])
     backups = glob(os.path.join(dj_settings.DATABASE_BACKUP_DIR, '*_' + base_name))
@@ -1642,28 +2011,35 @@ def getLastDataBaseBackup():
             pass
     return None
 
-def getImpressumData():
-    impressum = None
-    try:
-        with open(os.path.join(dj_settings.STATIC_ROOT, 'data', 'impressum.json'), encoding='utf-8') as impressum_json:
-            impressum = json.load(impressum_json)
-    except:
-        pass
-    return impressum
-
+# Removce all skippers from the database
 def clearSkippers():
-    # clear all skippers from race assignments
+    # Clear all skippers from race assignments
     assignments = RaceAssign.objects.all()
     for assignment in assignments:
         assignment.skipper_id = None
         assignment.save()
 
-    # empty skipper DB
+    # Empty Skipper DB
     Skipper.objects.all().delete()
 
+# Remove all teams from the database
 def clearTeams():
-    # clear all heats and finals including race assignments
+    # Clear all heats and finals including race assignments
     clearRaces()
 
-    # empty team DB
+    # Empty Team DB
     Team.objects.all().delete()
+
+# Remove all trainings from the database
+def clearTrainings():
+    # Empty Training DB
+    Training.objects.all().delete()
+
+# reset all signup data for the teams and make all teams inactive
+def resetTeamSignups():
+    for team in Team.objects.all():
+        team.active = False
+        team.wait = False
+        team.position = None
+        team.date = None
+        team.save()

@@ -48,7 +48,11 @@
                                         <label class="form-label small">{{ c.name }}</label>
                                         <div class="input-group shadow-sm rounded">
                                             <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
-                                            <input type="text" id="{{ c.id }}" name="{{ c.id }}" class="form-control text-start" value="{{ c.value }}" onchange="update_setting('{{ c.id }}')">
+                                            <select id="{{ c.id }}" name="{{ c.id }}" class="form-select text-start" value="{{ c.value }}" onchange="update_setting('{{ c.id }}')">
+                                                {% for option in c.options %}
+                                                    <option value="{{ option }}"{% if option == c.value %} selected{% endif %}>{{ option }}</option>
+                                                {% endfor %}
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 col-lg-3 mb-3 mt-auto">
@@ -103,241 +107,14 @@
         {% if user.is_superuser %}
             <h2 class="my-3 display-6">{{ config.settingsAdvancedHeader }}</h2>
             <div class="row g-3">
-                <div class="col-12">
-                    <div class="card p-0 shadow">
-                        <div class="card-header bg-purple-100 fs-4 py-0 card-header-collapsed">
-                            <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ config.devOptionsTimetable|uid }}" aria-expanded="false">
-                                <div class="col">{{ config.devOptionsTimetable }}</div>
-                                <div class="col-auto my-auto px-2 text-secondary fs-6">
-                                    <i class="bi bi-chevron-compact-up icon_expanded"></i>
-                                    <i class="bi bi-chevron-compact-down icon_collapsed"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body p-3 pb-0 collapse" id="{{ config.devOptionsTimetable|uid }}">
-                            <button type="button" name="resetFinals" value="ResetFinals" class="btn btn-warning btn_icon btn_lg shadow me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetFinalsModal">
-                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                    <div class="pe-2">
-                                        <img src="{% static 'images/' %}{{ config.resetFinalsIcon }}" alt="reset_finals">
-                                    </div>
-                                    <p class="m-0 ps-2 lead">{{ config.resetFinals }}</p>
-                                </div>
-                            </button>
-                            <div class="modal fade" id="resetFinalsModal" data-bs-backdrop="static" tabindex="-1">
-                                <div class="modal-dialog text-dark">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-warning text-dark">
-                                            <h5 class="modal-title" id="resetFinalsLabel">{{ config.resetFinals }}</h5>
-                                            <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body d-flex flex-nowrap text-start align-items-center">
-                                            <img src="{% static 'images/' %}{{ config.questionIcon }}">
-                                            <div class="container">{{ config.warningResetFinals|linebreaks }}</div>
-                                        </div>
-                                        <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
-                                            <button type="button" id="resetFinalsSubmit" value="ResetFinals" class="btn btn-warning btn_icon" onclick="update_setting('resetFinals')">
-                                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                                    <div class="pe-2">
-                                                        <img src="{% static 'images/' %}{{ config.resetFinalsIcon }}" alt="reset_finals">
-                                                    </div>
-                                                    <p class="m-0 ps-2 lead">{{ config.resetFinals }}</p>
-                                                </div>
-                                            </button>
-                                            <button type="button" name="resetFinalsCancel" id="resetFinalsCancel" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
-                                                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                                    <div>
-                                                        <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelResetFinals" class="p-0">
-                                                    </div>
-                                                    <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
-                                                </div>
-                                            </button>
-                                            <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_resetFinals"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" id="resetHeats" class="btn btn-warning btn_icon btn_lg shadow me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetHeatsModal">
-                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                    <div class="pe-2">
-                                        <img src="{% static 'images/' %}{{ config.resetHeatsIcon }}" alt="reset_heats">
-                                    </div>
-                                    <p class="m-0 ps-2 lead">{{ config.resetHeats }}</p>
-                                </div>
-                            </button>
-                            <div class="modal fade" id="resetHeatsModal" data-bs-backdrop="static" tabindex="-1">
-                                <div class="modal-dialog text-dark">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-danger text-light">
-                                            <h5 class="modal-title" id="resetHeatsLabel">{{ config.resetHeats }}</h5>
-                                            <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body d-flex flex-nowrap text-start align-items-center">
-                                            <img src="{% static 'images/' %}{{ config.questionIcon }}">
-                                            <div class="container">{{ config.warningResetHeats|linebreaks }}</div>
-                                        </div>
-                                        <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
-                                            <button type="button" id="resetHeatsSubmit" value="ResetHeats" class="btn btn-danger btn_icon" onclick="update_setting('resetHeats')">
-                                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                                    <div class="pe-2">
-                                                        <img src="{% static 'images/' %}{{ config.resetHeatsIcon }}" alt="reset_heats">
-                                                    </div>
-                                                    <p class="m-0 ps-2 lead">{{ config.resetHeats }}</p>
-                                                </div>
-                                            </button>
-                                            <button type="button" name="resetHeatsCancel" id="resetHeatsCancel" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
-                                                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                                    <div>
-                                                        <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelResetHeats" class="p-0">
-                                                    </div>
-                                                    <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
-                                                </div>
-                                            </button>
-                                            <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_resetHeats"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" id="resetTimetable" class="btn btn-danger btn_icon btn_lg shadow mb-3" data-bs-toggle="modal" data-bs-target="#resetTimetableModal">
-                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                    <div class="pe-2">
-                                        <img src="{% static 'images/' %}{{ config.resetTimetableIcon }}" alt="reset_timetable">
-                                    </div>
-                                    <p class="m-0 ps-2 lead">{{ config.resetTimetable }}</p>
-                                </div>
-                            </button>
-                            <div class="modal fade" id="resetTimetableModal" data-bs-backdrop="static" tabindex="-1">
-                                <div class="modal-dialog text-dark">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-danger text-light">
-                                            <h5 class="modal-title" id="resetTimetableLabel">{{ config.resetTimetable }}</h5>
-                                            <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body d-flex flex-nowrap text-start align-items-center">
-                                            <img src="{% static 'images/' %}{{ config.questionIcon }}">
-                                            <div class="container">{{ config.warningResetTimetable|linebreaks }}</div>
-                                        </div>
-                                        <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
-                                            <button type="button" id="resetTimetableSubmit" value="ResetTimetable" class="btn btn-danger btn_icon" onclick="update_setting('resetTimetable')">
-                                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                                    <div class="pe-2">
-                                                        <img src="{% static 'images/' %}{{ config.resetTimetableIcon }}" alt="reset_timetable">
-                                                    </div>
-                                                    <p class="m-0 ps-2 lead">{{ config.resetTimetable }}</p>
-                                                </div>
-                                            </button>
-                                            <button type="button" name="resetTimetableCancel" id="resetTimetableCancel" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
-                                                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                                    <div>
-                                                        <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelResetTimetable" class="p-0">
-                                                    </div>
-                                                    <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
-                                                </div>
-                                            </button>
-                                            <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_resetTimetable"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                {% for card in advanced %}
+                    <div class="col-12">
+                        {% block settings_advanced %}
+                            {% include 'settings_advanced.html' %}
+                        {% endblock %}
                     </div>
-                </div>
-                <div class="col-12">
-                    <div class="card p-0 shadow">
-                        <div class="card-header bg-purple-100 fs-4 py-0 card-header-collapsed">
-                            <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ config.devOptionsData|uid }}" aria-expanded="false">
-                                <div class="col">{{ config.devOptionsData }}</div>
-                                <div class="col-auto my-auto px-2 text-secondary fs-6">
-                                    <i class="bi bi-chevron-compact-up icon_expanded"></i>
-                                    <i class="bi bi-chevron-compact-down icon_collapsed"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body p-3 pb-0 collapse" id="{{ config.devOptionsData|uid }}">
-                            <button type="button" name="resetSkippers" value="ResetSkippers" class="btn btn-warning btn_icon btn_lg shadow me-3 mb-3" data-bs-toggle="modal" data-bs-target="#resetSkippersModal">
-                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                    <div class="pe-2">
-                                        <img src="{% static 'images/' %}{{ config.resetSkippersIcon }}" alt="reset_skippers">
-                                    </div>
-                                    <p class="m-0 ps-2 lead">{{ config.resetSkippers }}</p>
-                                </div>
-                            </button>
-                            <div class="modal fade" id="resetSkippersModal" data-bs-backdrop="static" tabindex="-1">
-                                <div class="modal-dialog text-dark">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-warning text-light">
-                                            <h5 class="modal-title" id="resetSkippersLabel">{{ config.resetSkippers }}</h5>
-                                            <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body d-flex flex-nowrap text-start align-items-center">
-                                            <img src="{% static 'images/' %}{{ config.questionIcon }}">
-                                            <div class="container">{{ config.warningResetSkippers|linebreaks }}</div>
-                                        </div>
-                                        <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
-                                            <button type="button" id="resetSkippersSubmit" value="ResetSkippers" class="btn btn-warning btn_icon" onclick="update_setting('resetSkippers')">
-                                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                                    <div class="pe-2">
-                                                        <img src="{% static 'images/' %}{{ config.resetSkippersIcon }}" alt="reset_skippers">
-                                                    </div>
-                                                    <p class="m-0 ps-2 lead">{{ config.resetSkippers }}</p>
-                                                </div>
-                                            </button>
-                                            <button type="button" name="resetSkippersCancel" id="resetSkippersCancel" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
-                                                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                                    <div>
-                                                        <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelResetSkippers" class="p-0">
-                                                    </div>
-                                                    <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
-                                                </div>
-                                            </button>
-                                            <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_resetSkippers"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" id="resetTeams" class="btn btn-danger btn_icon btn_lg shadow mb-3" data-bs-toggle="modal" data-bs-target="#resetTeamsModal">
-                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                    <div class="pe-2">
-                                        <img src="{% static 'images/' %}{{ config.resetTeamsIcon }}" alt="reset_teams">
-                                    </div>
-                                    <p class="m-0 ps-2 lead">{{ config.resetTeams }}</p>
-                                </div>
-                            </button>
-                            <div class="modal fade" id="resetTeamsModal" data-bs-backdrop="static" tabindex="-1">
-                                <div class="modal-dialog text-dark">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-danger text-light">
-                                            <h5 class="modal-title" id="resetTeamsLabel">{{ config.resetTeams }}</h5>
-                                            <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body d-flex flex-nowrap text-start align-items-center">
-                                            <img src="{% static 'images/' %}{{ config.questionIcon }}">
-                                            <div class="container">{{ config.warningResetTeams|linebreaks }}</div>
-                                        </div>
-                                        <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
-                                            <button type="button" id="resetTeamsSubmit" value="ResetTeams" class="btn btn-danger btn_icon" onclick="update_setting('resetTeams')">
-                                                <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                                    <div class="pe-2">
-                                                        <img src="{% static 'images/' %}{{ config.resetTeamsIcon }}" alt="reset_teams">
-                                                    </div>
-                                                    <p class="m-0 ps-2 lead">{{ config.resetTeams }}</p>
-                                                </div>
-                                            </button>
-                                            <button type="button" name="resetTeamsCancel" id="resetTeamsCancel" class="btn btn-secondary btn_icon" data-bs-dismiss="modal">
-                                                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                                    <div>
-                                                        <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelResetTeams" class="p-0">
-                                                    </div>
-                                                    <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
-                                                </div>
-                                            </button>
-                                            <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_resetTeams"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
+
                 <div class="col-12 mb-2">
                     <div class="card p-0 shadow">
                         <div class="card-header bg-purple-100 fs-4 py-0">

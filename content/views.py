@@ -127,10 +127,27 @@ def trainings(request):
     siteData['content'] = getTrainingsContent()
 
     if request.method == 'POST':
+        def validate_duration(duration: str):
+            if duration.count(':') < 2:
+                duration += ':00'
+            if not duration.endswith(':00') and len(duration) > 3:
+                duration = duration[:-3] + ':00'
+            return duration
+
         # submit a new training
         if 'add_training' in request.POST:
-            newTrainingForm = TrainingForm(request.POST)
+            data = {}
+            for f in Training._meta.get_fields():
+                if f.name in request.POST:
+                    if f.name == 'duration':
+                        data[f.name] = validate_duration(request.POST[f.name])
+                    else:
+                        data[f.name] = request.POST[f.name]
+
+            newTrainingForm = TrainingForm(data)
             if newTrainingForm.is_valid():
+                if 'duration' in newTrainingForm.data:
+                    newTrainingForm.data['duration'] = validate_duration(newTrainingForm.data['duration'])
                 newTrainingForm.save()
                 return redirect('/trainings')
 
@@ -152,10 +169,19 @@ def trainings(request):
             except:
                 modTraining = None
             if modTraining:
+                data = {}
+                for f in modTraining._meta.get_fields():
+                    if f.name in request.POST:
+                        if f.name == 'duration':
+                            data[f.name] = validate_duration(request.POST[f.name])
+                        else:
+                            data[f.name] = request.POST[f.name]
+
                 modTrainingForm = TrainingForm(
-                    request.POST,
+                    data,
                     instance = modTraining
                 )
+
                 if modTrainingForm.is_valid():
                     modTrainingForm.save()
                     return redirect('/trainings')
@@ -446,6 +472,7 @@ def settings(request):
 
     siteData = getSiteData('settings', request.user)
     siteData['controls'] = getMainSettings()
+    siteData['advanced'] = getAdvancedSettings()
     siteData['lastBackup'] = getLastDataBaseBackup()
 
     if request.method == 'POST':
@@ -522,6 +549,10 @@ def settings(request):
             clearTeams()
         elif 'resetSkippers' in request.POST:
             clearSkippers()
+        elif 'resetTraining' in request.POST:
+            clearTrainings()
+        elif 'resetTeamSignups' in request.POST:
+            resetTeamSignups()
         elif 'displayOverscan' in request.POST:
             config.overscan = int(request.POST['displayOverscan'])
         return redirect('/settings')
