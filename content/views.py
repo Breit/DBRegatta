@@ -472,6 +472,7 @@ def settings(request):
 
     siteData = getSiteData('settings', request.user)
     siteData['controls'] = getMainSettings()
+    siteData['advanced'] = getAdvancedSettings()
     siteData['lastBackup'] = getLastDataBaseBackup()
 
     if request.method == 'POST':
@@ -548,6 +549,10 @@ def settings(request):
             clearTeams()
         elif 'resetSkippers' in request.POST:
             clearSkippers()
+        elif 'resetTraining' in request.POST:
+            clearTrainings()
+        elif 'resetTeamSignups' in request.POST:
+            resetTeamSignups()
         elif 'displayOverscan' in request.POST:
             config.overscan = int(request.POST['displayOverscan'])
         return redirect('/settings')
