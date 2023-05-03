@@ -260,3 +260,7 @@
         height: 15rem;
     }
 }
+
+.tooltip-text-left > .tooltip-inner {
+    text-align: start !important;
+}

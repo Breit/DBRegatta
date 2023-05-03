@@ -11,12 +11,12 @@
             <div class="col-1 icon_col text-center px-2 icon_col">
                 <div class="row m-0 flex-nowrap">
                     <div class="col-4 m-0 p-0 skipper_table_button">
-                        <button type="button" name="edit_skipper" value="{{ skipper.id }}" class="btn btn_skipper_table_icon p-0" onclick="button_mod_skipper({{ skipper.id }})">
+                        <button type="button" name="edit_skipper" value="{{ skipper.id }}" class="btn btn_skipper_table_icon p-0" onclick="button_mod_skipper({{ skipper.id }})" data-bs-tooltip title="{{ config.editSkipper }}">
                             <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_skipper">
                         </button>
                     </div>
                     <div class="col-4 m-0 p-0 skipper_table_button">
-                        <button type="button" name="activate_skipper" value="{{ skipper.id }}" class="btn btn_skipper_table_icon p-0 ps-1" onclick="button_toggle_skipper('activate_skipper', {{ skipper.id }})">
+                        <button type="button" name="activate_skipper" value="{{ skipper.id }}" class="btn btn_skipper_table_icon p-0 ps-1" onclick="button_toggle_skipper('activate_skipper', {{ skipper.id }})" data-bs-tooltip title="{% if skipper.active %}{{ config.activeSkipperTitle }}{% else %}{{ config.inactiveSkipperTitle }}{% endif %}">
                             {% if skipper.active %}
                                 <img src="{% static 'images/' %}{{ config.activeTeamIcon }}" alt="active_skipper">
                             {% else %}
@@ -25,7 +25,7 @@
                         </button>
                     </div>
                     <div class="col-4 m-0 p-0 skipper_table_button">
-                        <button type="button" class="btn btn_skipper_table_icon p-0 ps-1" onclick="request_delete_skipper('{{ skipper.name }}', {{ skipper.id }})">
+                        <button type="button" class="btn btn_skipper_table_icon p-0 ps-1" onclick="request_delete_skipper('{{ skipper.name }}', {{ skipper.id }})" data-bs-tooltip title="{{ config.deleteSkipper }}">
                             <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_skipper">
                         </button>
                     </div>

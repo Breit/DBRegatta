@@ -48,6 +48,8 @@ class TeamForm(ModelForm):
                 attrs = {
                     'class': 'form-control text-end pe-4',
                     'placeholder': config.placeholderTeamPosition,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderTeamPosition,
                     'inc': 1,
                     'type': 'number'
                 }
@@ -56,37 +58,49 @@ class TeamForm(ModelForm):
                 attrs = {
                     'class': 'form-control text-end px-1',
                     'placeholder': config.placeholderTeamSignupDate,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderTeamSignupDate,
                     'type': 'date'
                 }
             ),
             'name': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderTeamName
+                    'placeholder': config.placeholderTeamName,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderTeamName
                 }
             ),
             'company': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderTeamCompany
+                    'placeholder': config.placeholderTeamCompany,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderTeamCompany
                 }
             ),
             'contact': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderTeamCaptain
+                    'placeholder': config.placeholderTeamCaptain,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderTeamCaptain
                 }
             ),
             'email': forms.EmailInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderTeamEmail
+                    'placeholder': config.placeholderTeamEmail,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderTeamEmail
                 }
             ),
             'phone': forms.TextInput(
                 attrs={
                     'class': 'form-control',
-                    'placeholder': config.placeholderTeamPhone
+                    'placeholder': config.placeholderTeamPhone,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderTeamPhone
                 }
             )
             ,
@@ -94,7 +108,9 @@ class TeamForm(ModelForm):
                 attrs={
                     'class': 'form-control',
                     'rows': 4,
-                    'placeholder': config.placeholderTeamAddress
+                    'placeholder': config.placeholderTeamAddress,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderTeamAddress
                 }
             )
         }
@@ -131,7 +147,9 @@ class PostForm(forms.ModelForm):
                 attrs={
                     'class': 'form-control',
                     'rows': 12,
-                    'placeholder': config.placeholderPostContent
+                    'placeholder': config.placeholderPostContent,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderPostContent
                 }
             )
         }
@@ -142,49 +160,59 @@ class SkipperForm(forms.ModelForm):
 
         fields = (
             'name',
+            'active',
             'fname',
             'lname',
-            'email',
-            'active'
+            'email'
         )
 
         labels = {
             'name': '',
+            'active': '',
             'fname': '',
             'lname': '',
-            'email': '',
-            'active': ''
+            'email': ''
         }
 
         widgets = {
             'name': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderSkipperName
-                }
-            ),
-            'fname': forms.TextInput(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': config.placeholderSkipperFName
-                }
-            ),
-            'lname': forms.TextInput(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': config.placeholderSkipperLName
-                }
-            ),
-            'email': forms.EmailInput(
-                attrs = {
-                    'class': 'form-control',
-                    'placeholder': config.placeholderSkipperEmail
+                    'placeholder': config.placeholderSkipperName,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderSkipperName
                 }
             ),
             'active': forms.CheckboxInput(
                 attrs = {
                     'class': 'form-check-input m-0',
-                    'placeholder': config.placeholderSkipperActive
+                    'placeholder': config.placeholderSkipperActive,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderSkipperActive
+                }
+            ),
+            'fname': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': config.placeholderSkipperFName,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderSkipperFName
+                }
+            ),
+            'lname': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': config.placeholderSkipperLName,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderSkipperLName
+                }
+            ),
+            'email': forms.EmailInput(
+                attrs = {
+                    'class': 'form-control',
+                    'placeholder': config.placeholderSkipperEmail,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderSkipperEmail
                 }
             )
         }
@@ -224,6 +252,8 @@ class TrainingForm(forms.ModelForm):
                 attrs = {
                     'class': 'form-control text-end px-1',
                     'placeholder': config.placeholderTrainingDateTime,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderTrainingDateTime,
                     'type': 'date',
                     'icon': 'calendar-event'
                 }
@@ -233,6 +263,8 @@ class TrainingForm(forms.ModelForm):
                 attrs = {
                     'class': 'form-control text-end rounded-end px-1',
                     'placeholder': config.placeholderTrainingDateTime,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderTrainingDateTime,
                     'type': 'time',
                     'list': 'training_time_select',
                     'icon': 'clock'
@@ -243,6 +275,8 @@ class TrainingForm(forms.ModelForm):
                 attrs={
                     'class': 'form-control',
                     'placeholder': config.intervalTrainingLengthLabel,
+                    'data-bs-tooltip': '',
+                    'title': config.intervalTrainingLengthLabel,
                     'icon': 'clock-history',
                     'class': 'form-control text-end px-1',
                     'type': 'time'
@@ -267,6 +301,8 @@ class TrainingForm(forms.ModelForm):
                     'class': 'form-control',
                     'rows': 8,
                     'placeholder': config.placeholderTrainingNotes,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderTrainingNotes,
                     'icon': 'house'
                 }
             )

@@ -14,7 +14,7 @@
         </div>
         <div class="card-body p-3 pb-0 collapse{% if card.folded %} hide{% else %} show{% endif %}" id="{{ card.title|uid }}">
             {% for button in card.buttons %}
-                <button type="button" id="{{ button.id }}" value="{{ button.value }}" class="btn {{ button.classes }} shadow me-3 mb-3" data-bs-toggle="modal" data-bs-target="#{{ button.modal.id }}">
+                <button type="button" id="{{ button.id }}" value="{{ button.value }}" class="btn {{ button.classes }} shadow me-3 mb-3" data-bs-toggle="modal" data-bs-target="#{{ button.modal.id }}" data-bs-tooltip-ex title="{{ button.modal.body.text|linebreaks }}">
                     <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                         <div class="pe-2">
                             <img src="{% static 'images/' %}{{ button.icon }}" alt="{{ button.icon_alt }}">

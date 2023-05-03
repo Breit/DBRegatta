@@ -37,6 +37,43 @@ document.addEventListener(
           daysOfWeek: [ 1, 2, 3, 4, 5 ],
           startTime: calendarData.meta.trainingStart,
           endTime: calendarData.meta.trainingEnd
+        },
+        eventDidMount: function(info) {
+          let tooltip_text = '<p>';
+          tooltip_text += '<span class="lead">' + info.event.title + '</span>';
+          tooltip_text += '<br>';
+          if ('extendedProps' in info.event) {
+            if ('company' in info.event.extendedProps && info.event.extendedProps.company) {
+              tooltip_text += info.event.extendedProps.company;
+            }
+            tooltip_text += '</p><p>';
+            if ('timeslot' in info.event.extendedProps && info.event.extendedProps.timeslot) {
+              tooltip_text += info.event.start.toLocaleDateString();
+              tooltip_text += '<br>';
+              tooltip_text += '<i>' + info.event.extendedProps.timeslot + '</i>';
+            }
+            if ('skipper' in info.event.extendedProps && info.event.extendedProps.skipper) {
+              tooltip_text += '</p><p><b>' + info.event.extendedProps.skipper + '</b>';
+            }
+            if ('note' in info.event.extendedProps && info.event.extendedProps.note) {
+              tooltip_text += '</p><p>' + info.event.extendedProps.note;
+            }
+          }
+          else {
+            tooltip_text += info.event.start.toLocaleDateString();
+            tooltip_text += '<br>';
+            tooltip_text += '<i>' + info.event.start.toLocaleTimeString() + '</i>';
+          }
+          tooltip_text += '</p>';
+
+          var tooltip = new bootstrap.Tooltip(info.el, {
+            title: tooltip_text,
+            placement: 'top',
+            trigger: 'hover',
+            container: 'body',
+            html: true,
+            customClass: 'tooltip-text-left'
+          });
         }
       }
     );
