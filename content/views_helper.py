@@ -277,16 +277,38 @@ def getCalendarData(authenticated: bool = False):
     trainings = Training.objects.all()
     for training in trainings:
         name = config.appointmentPlaceholder
+        skipper = None
+        company = None
+        note = None
         if authenticated:
-            team = Team.objects.get(id=training.team_id)
-            if team:
-                name = team.name
+            team_obj = Team.objects.get(id=training.team_id)
+            if team_obj:
+                name = team_obj.name
+                company = team_obj.company
+            note = training.notes
+
+        skipper_obj = Skipper.objects.get(id=training.skipper_id)
+        if skipper_obj:
+            skipper = skipper_obj.name
 
         event = {
             'title': name,
             'start': datetime.combine(training.date, training.time).strftime('%Y-%m-%dT%H:%M'),
             'end': (datetime.combine(training.date, training.time) + training.duration).strftime('%Y-%m-%dT%H:%M'),
-            'className': 'training'
+            'className': 'training',
+            'extendedProps': {
+                'skipper': skipper,
+                'company': company,
+                'note': note,
+                'timeslot':
+                    datetime.combine(training.date, training.time).strftime('%H:%M') +
+                    ' ' +
+                    config.timeSuffix +
+                    ' - ' +
+                    (datetime.combine(training.date, training.time) + training.duration).strftime('%H:%M') +
+                    ' ' +
+                    config.timeSuffix
+            }
         }
         trainingEvents['events'].append(event)
     content.append(trainingEvents)

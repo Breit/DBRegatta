@@ -54,8 +54,25 @@ function toggleFoldMenu()
     }
 }
 
+function registerTooltips() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-tooltip]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+
+    var tooltipExTriggerList = [].slice.call(document.querySelectorAll('[data-bs-tooltip-ex]'))
+    var tooltipExList = tooltipExTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+            html: true,
+            customClass: 'tooltip-text-left'
+        })
+    });
+}
+
 $(document).ready(function()
 {
+    registerTooltips();
+
     $('.card-body.collapse').on('show.bs.collapse', function () {
         $(this).siblings('.card-header').removeClass('card-header-collapsed');
     });

@@ -102,7 +102,7 @@
                     {{ post|markdownify|safe }}
                 </div>
                 {% if controls %}
-                    <div class="position-absolute bottom-0 end-0 edit_icon"{% if controls %} data-bs-toggle="modal" data-bs-target="#editPostModal"{% endif %}>
+                    <div class="position-absolute bottom-0 end-0 edit_icon"{% if controls %} data-bs-toggle="modal" data-bs-target="#editPostModal"{% endif %} data-bs-tooltip title="{{ config.placeholderTimetablePostDesc }}">
                         <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_team">
                     </div>
                 {% endif %}

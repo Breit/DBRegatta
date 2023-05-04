@@ -5,7 +5,7 @@
         {% for f in content.form %}
             {% if f.field.widget.input_type == 'checkbox' %}
             <div class="col-12 col-sm-6 col-lg-3 mb-3">
-                <div class="input-group shadow-sm">
+                <div class="input-group shadow-sm" data-bs-tooltip title="{{ f.field.widget.attrs.placeholder }}">
                     <div class="input-group-text form-switch px-1 {% if f.errors %}input-error{% endif %}">
                         {{ f }}
                     </div>

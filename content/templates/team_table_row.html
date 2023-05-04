@@ -21,12 +21,12 @@
             <div class="col-1 px-2 text-center text-nowrap team_table_buttons">
                 <div class="row m-0 flex-nowrap">
                     <div class="col-3 m-0 p-0 team_table_button">
-                        <button type="button" name="edit_team" value="{{ t.id }}" class="btn btn_team_table_icon p-0 ps-1" onclick="button_mod_team({{ t.id }})">
+                        <button type="button" name="edit_team" value="{{ t.id }}" class="btn btn_team_table_icon p-0 ps-1" onclick="button_mod_team({{ t.id }})" data-bs-tooltip title="{{ config.editTeamHeader }}">
                             <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_team">
                         </button>
                     </div>
                     <div class="col-3 m-0 p-0 team_table_button">
-                        <button type="button" name="activate_team" value="{{ t.id }}" class="btn btn_team_table_icon p-0 ps-1" onclick="button_toggle_team('activate_team', {{ t.id }})">
+                        <button type="button" name="activate_team" value="{{ t.id }}" class="btn btn_team_table_icon p-0 ps-1" onclick="button_toggle_team('activate_team', {{ t.id }})" data-bs-tooltip title="{% if t.active %}{{ config.activeTeams }}{% else %}{{ config.inactiveTeams }}{% endif %}">
                             {% if t.active %}
                                 <img src="{% static 'images/' %}{{ config.activeTeamIcon }}" alt="active_team">
                             {% else %}
@@ -35,7 +35,7 @@
                         </button>
                     </div>
                     <div class="col-3 m-0 p-0 team_table_button">
-                        <button type="button" name="waitlist_team" value="{{ t.id }}" class="btn btn_team_table_icon p-0 ps-1" onclick="button_toggle_team('waitlist_team', {{ t.id }})">
+                        <button type="button" name="waitlist_team" value="{{ t.id }}" class="btn btn_team_table_icon p-0 ps-1" onclick="button_toggle_team('waitlist_team', {{ t.id }})" data-bs-tooltip title="{{ config.placeholderTeamWaitlist }}">
                             {% if t.wait %}
                                 <img src="{% static 'images/' %}{{ config.waitTeamIcon }}" alt="wait_team">
                             {% else %}
@@ -44,7 +44,7 @@
                         </button>
                     </div>
                     <div class="col-3 m-0 p-0 team_table_button">
-                        <button type="button" class="btn btn_team_table_icon p-0 ps-1" onclick="request_delete_team('{{ t.name }}', {{ t.id }})">
+                        <button type="button" class="btn btn_team_table_icon p-0 ps-1" onclick="request_delete_team('{{ t.name }}', {{ t.id }})" data-bs-tooltip title="{{ config.deleteTeam }}">
                             <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_team">
                         </button>
                     </div>
