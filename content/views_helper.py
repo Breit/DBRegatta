@@ -458,7 +458,8 @@ def getTimeTableContent():
                 ),
                 'desc': config.finaleTitle,
                 'races': finale_races,
-                'type': 'finale'
+                'type': 'finale',
+                'fold': getCurrentRaceBlock() != config.finalPrefix
             }
         )
 
