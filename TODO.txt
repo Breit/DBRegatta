@@ -5,3 +5,5 @@ TODO: DBRegatta
 - Reset Button for Team Registration (Position and Date)
 - Menu scrollable
 - Training form with training duration
+- Implement/transition to class-based views
+- Code refactoring (especially reusable template code)

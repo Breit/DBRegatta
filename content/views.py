@@ -93,7 +93,7 @@ def teams(request):
             if modTeam:
                 siteData['content']['form'] = TeamForm(instance = modTeam)
 
-        # submit_mod_team
+        # submit mod_team
         elif 'mod_team' in request.POST:
             try:
                 modTeam = Team.objects.get(id = request.POST['mod_team'])
@@ -109,6 +109,10 @@ def teams(request):
                     return redirect('/teams')
                 else:
                     siteData['content']['form'] = modTeamForm
+
+        # submit team_pdf
+        elif 'team_pdf' in request.POST:
+            print(request.POST)
 
     return render(request, 'teams.html', siteData)
 
@@ -478,6 +482,8 @@ def settings(request):
     if request.method == 'POST':
         if 'eventTitle' in request.POST:
             config.siteName = request.POST['eventTitle']
+        elif 'eventAbbreviation' in request.POST:
+            config.siteAbbr = request.POST['eventAbbreviation']
         elif 'eventDate' in request.POST:
             config.eventDate = date.fromisoformat(request.POST['eventDate'])
         elif 'registrationDate' in request.POST:

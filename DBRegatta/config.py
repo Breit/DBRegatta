@@ -7,6 +7,8 @@ CONSTANCE_CONFIG = {
     # Global Settings
     'siteName':                     ('DBRegatta',                                   'Page Title'),
     'siteNameDesc':                 ('Regatta Name',                                'Page Title Description'),
+    'siteAbbr':                     ('DBRegatta',                                   'Page Title'),
+    'siteAbbrDesc':                 ('Kürzel',                                      'Page Abbreviation Description'),
     'eventDate':                    (date(2022, 1, 1),                              'Date for the DBRegatta Event'),
     'eventDateDesc':                ('Regatta Datum',                               'Date for the DBRegatta Event Description'),
     'registrationDate':             (date(2022, 1, 1),                              'Date for the DBRegatta Registration Start'),
@@ -330,6 +332,8 @@ CONSTANCE_CONFIG_FIELDSETS = {
         'fields': (
             'siteName',
             'siteNameDesc',
+            'siteAbbr',
+            'siteAbbrDesc',
             'eventDate',
             'eventDateDesc',
             'registrationDate',

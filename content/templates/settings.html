@@ -28,7 +28,7 @@
                         <div class="row pt-0 mx-0 rounded-bottom">
                             {% for c in section.controls %}
                                 {% if c.type == 'date' %}
-                                    <div class="col-12 col-xxl-2 col-lg-3 col-md-6 mb-3">
+                                    <div class="{% if c.classes %}{{ c.classes }}{% else %}col-auto{% endif %} mb-3">
                                         <label class="form-label small">{{ c.name }}</label>
                                         <div class="input-group rounded shadow-sm fixed_input" data-bs-tooltip title="{{ c.name }}">
                                             <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
@@ -36,7 +36,7 @@
                                         </div>
                                     </div>
                                 {% elif c.type == 'time' %}
-                                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2 mb-3">
+                                    <div class="{% if c.classes %}{{ c.classes }}{% else %}col-auto{% endif %} mb-3">
                                         <label class="form-label small">{{ c.name }}</label>
                                         <div class="input-group rounded" data-bs-tooltip title="{{ c.name }}">
                                             <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
@@ -44,7 +44,7 @@
                                         </div>
                                     </div>
                                 {% elif c.type == 'image' %}
-                                    <div class="col-12 col-md-6 col-lg-3 mb-3">
+                                    <div class="{% if c.classes %}{{ c.classes }}{% else %}col-auto{% endif %} mb-3">
                                         <label class="form-label small">{{ c.name }}</label>
                                         <div class="input-group shadow-sm rounded" data-bs-tooltip title="{{ c.name }}">
                                             <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
@@ -55,13 +55,13 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-6 col-lg-3 mb-3 mt-auto">
+                                    <div class="{% if c.classes %}{{ c.classes }}{% else %}col-auto{% endif %} mb-3 mt-auto">
                                         <div class="logo border bg-dark p-2 border-secondary border-1 text-center shadow-sm">
                                             <img src="{{ MEDIA_URL }}images/{{ c.value }}" alt="{{ c.id }}">
                                         </div>
                                     </div>
                                 {% elif c.type == 'checkbox' %}
-                                    <div class="col-auto mb-3">
+                                    <div class="{% if c.classes %}{{ c.classes }}{% else %}col-auto{% endif %} mb-3">
                                         <label class="form-label small">{{ c.name }}</label>
                                         <div class="input-group shadow-sm rounded fixed_input" data-bs-tooltip title="{{ c.name }}">
                                             <div class="input-group-text form-switch px-1 {% if f.errors %}input-error{% endif %}">
@@ -72,7 +72,7 @@
                                         </div>
                                     </div>
                                 {% elif c.type == 'number' %}
-                                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2 mb-3">
+                                    <div class="{% if c.classes %}{{ c.classes }}{% else %}col-auto{% endif %} mb-3">
                                         <label class="form-label small">{{ c.name }}</label>
                                         <div class="input-group shadow-sm rounded fixed_input" data-bs-tooltip title="{{ c.name }}">
                                             <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
@@ -80,7 +80,7 @@
                                         </div>
                                     </div>
                                 {% elif c.type == 'button' %}
-                                    <div class="col-auto mb-3 ms-auto mt-auto">
+                                    <div class="{% if c.classes %}{{ c.classes }}{% else %}col-auto{% endif %} mb-3 ms-auto mt-auto">
                                         <button type="button" id="{{ c.id }}" value="Refresh" class="btn btn-primary btn_icon shadow" onclick="update_setting('{{ c.id }}')">
                                             <div class="btn_team_icon container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                                 <div class="pe-2">
@@ -91,7 +91,7 @@
                                         </button>
                                     </div>
                                 {% else %}
-                                    <div class="{% if c.id == 'eventTitle' %}col-12 col-xxl-8 col-lg-6{% else %}col-12 col-lg-6{% endif %} mb-3">
+                                    <div class="{% if c.classes %}{{ c.classes }}{% else %}col-12 col-lg-6{% endif %} mb-3">
                                         <label class="form-label small">{{ c.name }}</label>
                                         <div class="input-group shadow-sm rounded" data-bs-tooltip title="{{ c.name }}">
                                             <span class="input-group-text"><i class="bi bi-{{c.icon}}"></i></span>
