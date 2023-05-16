@@ -160,6 +160,10 @@
     width: 17rem;
 }
 
+.btn_fit {
+    width: fit-content;
+}
+
 .btn_lg {
     width: 19rem !important;
 }

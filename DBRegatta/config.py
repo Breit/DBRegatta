@@ -34,6 +34,7 @@ CONSTANCE_CONFIG = {
     'overscanMax':                  (5,                                             'Maximum Overscan Margin for TV Displays'),
     'domain':                       ('',                                            'Domain Name of the Site'),
     'timeSuffix':                   ('Uhr',                                         'Suffix for Time of Day Strings'),
+    'pdfIcon':                      ('pdf.svg',                                     'Icon for the PDF Button'),
 
     # Teams Settings
     'teamsPageCSS':                 ('teams.css',                                   'CSS File for Site-specific Styling'),
@@ -356,6 +357,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'overscanMax',
             'domain',
             'timeSuffix',
+            'pdfIcon',
         ),
         'collapse': True
     },
