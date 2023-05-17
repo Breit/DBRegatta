@@ -1557,7 +1557,8 @@ def getMainSettings():
                     'value': config.ownerLogo,
                     'icon': 'image',
                     'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
-                    'classes': 'col-12 col-md-6 col-lg-3'
+                    'classes': 'col-12 col-md-6 col-lg-3',
+                    'bg_class': 'bg-dark'
                 },
                 {
                     'id': 'sponsorLogo',
@@ -1566,7 +1567,28 @@ def getMainSettings():
                     'value': config.sponsorLogo,
                     'icon': 'image',
                     'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
-                    'classes': 'col-12 col-md-6 col-lg-3'
+                    'classes': 'col-12 col-md-6 col-lg-3',
+                    'bg_class': 'bg-dark'
+                },
+                {
+                    'id': 'ownerLogoReport',
+                    'name': config.ownerLogoReportDesc,
+                    'type': 'image',
+                    'value': config.ownerLogoReport,
+                    'icon': 'image',
+                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'classes': 'col-12 col-md-6 col-lg-3',
+                    'bg_class': 'bg-light'
+                },
+                {
+                    'id': 'sponsorLogoReport',
+                    'name': config.sponsorLogoReportDesc,
+                    'type': 'image',
+                    'value': config.sponsorLogoReport,
+                    'icon': 'image',
+                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'classes': 'col-12 col-md-6 col-lg-3',
+                    'bg_class': 'bg-light'
                 }
             ]
         }

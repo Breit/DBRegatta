@@ -219,20 +219,8 @@ $(document).ready(function()
         );
     });
 
-    $('#team_form_pdf').click(function()
+    $('#teams_pdf').click(function()
     {
-        const csrftoken = getCookie('csrftoken');
-        $.post(
-            {
-                url: window.location.href,
-                data: { team_pdf: $('#team_form_pdf').prop('value') },
-                headers: { 'X-CSRFToken': csrftoken }
-            },
-            function(data, status){
-                if (status === 'success')
-                {
-                }
-            }
-        );
+        window.open(window.location.href + '/pdf');
     });
 });

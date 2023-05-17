@@ -2,3 +2,4 @@ django
 django-constance
 django-markdownify
 django-picklefield
+reportlab

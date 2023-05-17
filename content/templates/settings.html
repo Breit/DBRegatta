@@ -56,7 +56,7 @@
                                         </div>
                                     </div>
                                     <div class="{% if c.classes %}{{ c.classes }}{% else %}col-auto{% endif %} mb-3 mt-auto">
-                                        <div class="logo border bg-dark p-2 border-secondary border-1 text-center shadow-sm">
+                                        <div class="logo border {% if c.bg_class %}{{ c.bg_class }}{% else %}bg-dark{% endif %} p-2 border-secondary border-1 text-center shadow-sm">
                                             <img src="{{ MEDIA_URL }}images/{{ c.value }}" alt="{{ c.id }}">
                                         </div>
                                     </div>

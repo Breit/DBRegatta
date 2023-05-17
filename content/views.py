@@ -110,10 +110,6 @@ def teams(request):
                 else:
                     siteData['content']['form'] = modTeamForm
 
-        # submit team_pdf
-        elif 'team_pdf' in request.POST:
-            print(request.POST)
-
     return render(request, 'teams.html', siteData)
 
 def trainings(request):
@@ -510,8 +506,12 @@ def settings(request):
             config.sponsorUrl = request.POST['sponsorUrl']
         elif 'ownerLogo' in request.POST:
             config.ownerLogo = request.POST['ownerLogo']
+        elif 'ownerLogoReport' in request.POST:
+            config.ownerLogoReport = request.POST['ownerLogoReport']
         elif 'sponsorLogo' in request.POST:
             config.sponsorLogo = request.POST['sponsorLogo']
+        elif 'sponsorLogoReport' in request.POST:
+            config.sponsorLogoReport = request.POST['sponsorLogoReport']
         elif 'siteDomain' in request.POST:
             config.domain = request.POST['siteDomain']
         elif 'liveResultsHint' in request.POST:

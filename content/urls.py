@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from . import views, views_pdf
 
 #URLConf
 urlpatterns = [
@@ -15,5 +15,7 @@ urlpatterns = [
     path('calendar',  views.calendar),
     path('skippers',  views.skippers),
     path('djadmin',   views.djadmin),
-    path('impressum', views.impressum)
+    path('impressum', views.impressum),
+
+    path('teams/pdf', views_pdf.teams),
 ]
