@@ -157,4 +157,9 @@ $(document).ready(function()
     {
         focus_team(this);
     });
+
+    $('#timetable_pdf').click(function()
+    {
+        window.open(window.location.href + '/pdf');
+    });
 });

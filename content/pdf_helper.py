@@ -6,18 +6,21 @@ pages for the DBRegatta site and not necessarily universally usable
 """
 
 import os
+import re
 
 from constance import config
 from django.conf import settings
 
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
-from reportlab.lib.fonts import tt2ps
+from reportlab.lib.fonts import tt2ps, addMapping
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import StyleSheet1, ParagraphStyle
+
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Flowable
 
 class PageNumCanvas(canvas.Canvas):
     """
@@ -53,11 +56,12 @@ class PageNumCanvas(canvas.Canvas):
         """
         Add event and date to the header
         """
-        event = "{event}".format(event=config.siteName)
-        date = "{date}".format(date=config.eventDate.strftime('%d. %B %Y'))
-        self.setFont("Helvetica", 10)
-        self.drawString(15*mm, A4[1] - 8*mm, event)
-        self.drawRightString(A4[0] - 15*mm, A4[1] - 8*mm, date)
+        if self._pageNumber > 1:
+            event = "{event}".format(event=config.siteName)
+            date = "{date}".format(date=config.eventDate.strftime('%d. %B %Y'))
+            self.setFont("Helvetica", 10)
+            self.drawString(15*mm, A4[1] - 8*mm, event)
+            self.drawRightString(A4[0] - 15*mm, A4[1] - 8*mm, date)
 
     def draw_footer_page_number(self, page_count):
         """
@@ -88,6 +92,43 @@ class PageNumCanvas(canvas.Canvas):
             height = 10*mm
             width = height * aspect
             self.drawImage(img, A4[0] - 15*mm - width, 8*mm, width=width, height=height, mask='auto')
+
+def markdownStory(mdown):
+    def match_heading(line, story, style):
+        for i in range(0, 6):
+            m = re.search(r'^\#{' + str(i + 1) + '}\s(.*)', line)
+            if m is not None and len(m.groups()):
+                story.append(Paragraph(m.group(1), style['Heading' + str(i + 1)]))
+                return True
+        return False
+
+    def match_bullets(line, story, style):
+        bullets = [
+            u'\u25cf',      # disk
+            u'\u25a0',      # square
+            u'\u25c6',      # diamond
+            u'\u27a4',      # arrowhead
+            u'\u2605',      # star
+        ]
+        # bullets = ['\u2022', '\u25E6', '\u25A0', '\u25A1']
+        for i in range(len(bullets)):
+            m = re.search(r'^\s{' + str(4 * i) + '}\*\s(.*)', line)
+            if m is not None and len(m.groups()):
+                story.append(Paragraph(m.group(1), style['Bullet' + (str(i + 1) if i > 0 else '')], bulletText=bullets[i]))
+                return True
+        return False
+
+    style = pdfStyleSheet()
+    story = []
+    for line in mdown.splitlines():
+        line = re.sub(r'(.*)[\*_]{2}(.*)[\*_]{2}(.*)', r'\1<b>\2</b>\3', line)      # replace bold
+        line = re.sub(r'(.*)[\*_]{1}(.*)[\*_]{1}(.*)', r'\1<i>\2</i>\3', line)      # replace italic
+        if match_heading(line, story, style):
+            continue
+        if match_bullets(line, story, style):
+            continue
+        story.append(Paragraph(line, style['BodyText']))
+    return story
 
 def pdfStyleSheet():
     """Returns a stylesheet object"""
@@ -139,9 +180,17 @@ def pdfStyleSheet():
         ParagraphStyle(
             name='TableHeader',
             fontName=tt2ps('Helvetica', 0, 0),
-            fontSize=12,
-            leading=14,
+            fontSize=14,
+            leading=16,
             textColor=colors.black
+        )
+    )
+
+    stylesheet.add(
+        ParagraphStyle(
+            name='TableHeaderC',
+            parent=stylesheet['TableHeader'],
+            alignment=TA_CENTER
         )
     )
 
@@ -168,22 +217,36 @@ def pdfStyleSheet():
             name='Title',
             parent=stylesheet['Normal'],
             fontName = tt2ps('Helvetica', 1, 0),
-            fontSize=18,
-            leading=22,
+            fontSize=24,
+            leading=30,
             alignment=TA_CENTER,
-            spaceAfter=6
+            spaceBefore=30,
+            spaceAfter=20
             ),
         alias='title'
     )
 
     stylesheet.add(
         ParagraphStyle(
+            name='SubTitle',
+            parent=stylesheet['Normal'],
+            fontName = tt2ps('Helvetica', 1, 0),
+            fontSize=18,
+            leading=22,
+            alignment=TA_CENTER,
+            spaceAfter=12
+            ),
+        alias='subtitle'
+    )
+
+    stylesheet.add(
+        ParagraphStyle(
             name='Heading1',
             parent=stylesheet['Normal'],
-            fontName = tt2ps('Helvetica', 0, 0),
-            fontSize=16,
-            fontWeight=300,
-            leading=20,
+            fontName = tt2ps('Helvetica', 1, 0),
+            fontSize=18,
+            leading=22,
+            spaceBefore=12,
             spaceAfter=6
         ),
         alias='h1'
@@ -194,7 +257,7 @@ def pdfStyleSheet():
             name='Heading2',
             parent=stylesheet['Normal'],
             fontName = tt2ps('Helvetica', 0, 0),
-            fontSize=14,
+            fontSize=16,
             leading=18,
             spaceBefore=12,
             spaceAfter=6
@@ -206,9 +269,9 @@ def pdfStyleSheet():
         ParagraphStyle(
             name='Heading3',
             parent=stylesheet['Normal'],
-            fontName = tt2ps('Helvetica', 1, 1),
-            fontSize=12,
-            leading=14,
+            fontName = tt2ps('Helvetica', 1, 0),
+            fontSize=14,
+            leading=16,
             spaceBefore=12,
             spaceAfter=6
         ),
@@ -219,13 +282,83 @@ def pdfStyleSheet():
         ParagraphStyle(
             name='Heading4',
             parent=stylesheet['Normal'],
-            fontName = tt2ps('Helvetica', 1, 1),
-            fontSize=10,
-            leading=12,
+            fontName = tt2ps('Helvetica', 1, 0),
+            fontSize=12,
+            leading=14,
             spaceBefore=10,
             spaceAfter=4
         ),
         alias='h4'
+    )
+
+    stylesheet.add(
+        ParagraphStyle(
+            name='Heading5',
+            parent=stylesheet['Normal'],
+            fontName = tt2ps('Helvetica', 1, 1),
+            fontSize=10,
+            leading=12,
+            spaceBefore=8,
+            spaceAfter=4
+        ),
+        alias='h5'
+    )
+
+    stylesheet.add(
+        ParagraphStyle(
+            name='BodyText',
+            fontName=tt2ps('Helvetica', 0, 0),
+            fontSize=12,
+            leading=14,
+            spaceBefore=6
+        )
+    )
+
+    stylesheet.add(
+        ParagraphStyle(
+            name='Bullet',
+            parent=stylesheet['BodyText'],
+            fontName=tt2ps('Helvetica', 0, 0),
+            bulletFontSize=10,
+            firstLineIndent=0,
+            leftIndent=25,
+            bulletIndent=10,
+            spaceBefore=3
+        ),
+    )
+
+    stylesheet.add(
+        ParagraphStyle(
+            name='Bullet1',
+            parent=stylesheet['Bullet']
+        )
+    )
+
+    stylesheet.add(
+        ParagraphStyle(
+            name='Bullet2',
+            parent=stylesheet['Bullet'],
+            leftIndent=40,
+            bulletIndent=25,
+        )
+    )
+
+    stylesheet.add(
+        ParagraphStyle(
+            name='Bullet3',
+            parent=stylesheet['Bullet'],
+            leftIndent=55,
+            bulletIndent=40
+        )
+    )
+
+    stylesheet.add(
+        ParagraphStyle(
+            name='Bullet4',
+            parent=stylesheet['Bullet'],
+            leftIndent=70,
+            bulletIndent=55
+        )
     )
 
     return stylesheet
