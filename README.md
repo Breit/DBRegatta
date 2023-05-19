@@ -7,7 +7,7 @@ Management software for a Dragon Boat regatta written in Python with Django
 
 To install all the additional dependencies used by Django, run:
 ```
-pip -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Getting started

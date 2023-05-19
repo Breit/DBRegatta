@@ -110,9 +110,8 @@ def markdownStory(mdown):
             u'\u27a4',      # arrowhead
             u'\u2605',      # star
         ]
-        # bullets = ['\u2022', '\u25E6', '\u25A0', '\u25A1']
         for i in range(len(bullets)):
-            m = re.search(r'^\s{' + str(4 * i) + '}\*\s(.*)', line)
+            m = re.search(r'^\s{' + str(max(0, 4 * (i - 1) - 1)) + ',' + str(4 * (i + 1) - 1) + '}\*\s(.*)', line)
             if m is not None and len(m.groups()):
                 story.append(Paragraph(m.group(1), style['Bullet' + (str(i + 1) if i > 0 else '')], bulletText=bullets[i]))
                 return True
@@ -121,8 +120,15 @@ def markdownStory(mdown):
     style = pdfStyleSheet()
     story = []
     for line in mdown.splitlines():
-        line = re.sub(r'(.*)[\*_]{2}(.*)[\*_]{2}(.*)', r'\1<b>\2</b>\3', line)      # replace bold
-        line = re.sub(r'(.*)[\*_]{1}(.*)[\*_]{1}(.*)', r'\1<i>\2</i>\3', line)      # replace italic
+        line = re.sub(r'(.*)\*{2}(.*)\*{2}(.*)', r'\1<b>\2</b>\3', line)    # replace bold (*)
+        line = re.sub(r'(.*)\_{2}(.*)\_{2}(.*)', r'\1<b>\2</b>\3', line)    # replace bold (_)
+        line = re.sub(r'(.*)\*{1}(.*)\*{1}(.*)', r'\1<i>\2</i>\3', line)    # replace italic (*)
+        line = re.sub(r'(.*)\_{1}(.*)\_{1}(.*)', r'\1<i>\2</i>\3', line)    # replace italic (_)
+        line = re.sub(                                                      # replace links
+            r'\[(.*)\]\s*\((.*)\)',
+            r'<link href="\2"><font color="#3a6af7">\1</font></link>',
+            line
+        )
         if match_heading(line, story, style):
             continue
         if match_bullets(line, story, style):
