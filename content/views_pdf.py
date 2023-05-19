@@ -186,7 +186,7 @@ def teams(request):
 
     # FileResponse sets the Content-Disposition header (as_attachment=True)
     # so that browsers present the option to save the file
-    return FileResponse(pdf_buffer, as_attachment=False, filename=filename)
+    return FileResponse(pdf_buffer, as_attachment=True, filename=filename)
 
 def timetable(request):
     # handle login/logout
@@ -267,7 +267,8 @@ def timetable(request):
         story.append(
             TopPadder(
                 Table(
-                    postFrameData
+                    postFrameData,
+                    colWidths=(180*mm)
                 )
             )
         )
@@ -358,7 +359,7 @@ def timetable(request):
 
     # FileResponse sets the Content-Disposition header (as_attachment=True)
     # so that browsers present the option to save the file
-    return FileResponse(pdf_buffer, as_attachment=False, filename=filename)
+    return FileResponse(pdf_buffer, as_attachment=True, filename=filename)
 
 def results(request):
     # handle login/logout
@@ -652,4 +653,4 @@ def results(request):
 
     # FileResponse sets the Content-Disposition header (as_attachment=True)
     # so that browsers present the option to save the file
-    return FileResponse(pdf_buffer, as_attachment=False, filename=filename)
+    return FileResponse(pdf_buffer, as_attachment=True, filename=filename)
