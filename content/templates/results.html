@@ -32,5 +32,14 @@
             {% endif %}
         {% endfor %}
     </div>
+    <div class="container-fluid mb-3 pt-3 float-start">
+        <button type="button" name="results_pdf" value="ResultsPdf" id="results_pdf" class="btn btn-light btn_icon btn_fit shadow border float-end">
+            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                <div class="pe-2">
+                    <img src="{% static 'images/' %}{{ config.pdfIcon }}" alt="results_pdf">
+                </div>
+            </div>
+        </button>
+    </div>
     <div class="container-fluid overscroll"></div>
 {% endblock %}

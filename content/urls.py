@@ -18,5 +18,6 @@ urlpatterns = [
     path('impressum',       views.impressum),
 
     path('teams/pdf',       views_pdf.teams),
-    path('timetable/pdf',   views_pdf.timetable)
+    path('timetable/pdf',   views_pdf.timetable),
+    path('results/pdf',     views_pdf.results)
 ]

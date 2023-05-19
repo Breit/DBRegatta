@@ -142,12 +142,60 @@ def pdfStyleSheet():
             leading=12
         )
     )
-
+    stylesheet.add(
+        ParagraphStyle(
+            name='NormalB',
+            parent=stylesheet['Normal'],
+            fontName=tt2ps('Helvetica', 1, 0),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='NormalI',
+            parent=stylesheet['Normal'],
+            fontName=tt2ps('Helvetica', 0, 1),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='NormalBI',
+            parent=stylesheet['Normal'],
+            fontName=tt2ps('Helvetica', 1, 1),
+        )
+    )
     stylesheet.add(
         ParagraphStyle(
             name='NormalC',
             parent=stylesheet['Normal'],
             alignment=TA_CENTER
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='NormalBC',
+            parent=stylesheet['NormalC'],
+            fontName=tt2ps('Helvetica', 1, 0),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='NormalIC',
+            parent=stylesheet['NormalC'],
+            fontName=tt2ps('Helvetica', 0, 1),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='NormalBIC',
+            parent=stylesheet['NormalC'],
+            fontName=tt2ps('Helvetica', 1, 1),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='NormalBCLink',
+            parent=stylesheet['NormalBC'],
+            textColor=colors.HexColor('#3a6af7')
         )
     )
 
@@ -159,7 +207,6 @@ def pdfStyleSheet():
             leading=10
         )
     )
-
     stylesheet.add(
         ParagraphStyle(
             name='SecondaryC',
@@ -167,12 +214,69 @@ def pdfStyleSheet():
             alignment=TA_CENTER
         )
     )
-
     stylesheet.add(
         ParagraphStyle(
             name='SecondaryLink',
             parent=stylesheet['Secondary'],
             textColor=colors.HexColor('#3a6af7')
+        )
+    )
+
+    stylesheet.add(
+        ParagraphStyle(
+            name='Monospace',
+            fontName=tt2ps('Courier', 0, 0),
+            fontSize=10,
+            leading=12
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='MonospaceB',
+            parent=stylesheet['Monospace'],
+            fontName=tt2ps('Courier', 1, 0),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='MonospaceI',
+            parent=stylesheet['Monospace'],
+            fontName=tt2ps('Courier', 0, 1),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='MonospaceBI',
+            parent=stylesheet['Monospace'],
+            fontName=tt2ps('Courier', 1, 1),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='MonospaceC',
+            parent=stylesheet['Monospace'],
+            alignment=TA_CENTER
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='MonospaceBC',
+            parent=stylesheet['MonospaceC'],
+            fontName=tt2ps('Courier', 1, 0),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='MonospaceIC',
+            parent=stylesheet['MonospaceC'],
+            fontName=tt2ps('Courier', 0, 1),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='MonospaceBIC',
+            parent=stylesheet['MonospaceC'],
+            fontName=tt2ps('Courier', 1, 1),
         )
     )
 
@@ -185,12 +289,53 @@ def pdfStyleSheet():
             textColor=colors.black
         )
     )
-
+    stylesheet.add(
+        ParagraphStyle(
+            name='TableHeaderB',
+            parent=stylesheet['TableHeader'],
+            fontName=tt2ps('Helvetica', 1, 0),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='TableHeaderI',
+            parent=stylesheet['TableHeader'],
+            fontName=tt2ps('Helvetica', 0, 1),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='TableHeaderBI',
+            parent=stylesheet['TableHeader'],
+            fontName=tt2ps('Helvetica', 1, 1),
+        )
+    )
     stylesheet.add(
         ParagraphStyle(
             name='TableHeaderC',
             parent=stylesheet['TableHeader'],
             alignment=TA_CENTER
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='TableHeaderBC',
+            parent=stylesheet['TableHeaderC'],
+            fontName=tt2ps('Helvetica', 1, 0),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='TableHeaderIC',
+            parent=stylesheet['TableHeaderC'],
+            fontName=tt2ps('Helvetica', 0, 1),
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='TableHeaderBIC',
+            parent=stylesheet['TableHeaderC'],
+            fontName=tt2ps('Helvetica', 1, 1),
         )
     )
 
@@ -203,7 +348,6 @@ def pdfStyleSheet():
             textColor=colors.dimgray
         )
     )
-
     stylesheet.add(
         ParagraphStyle(
             name='ColumnHeaderC',
@@ -319,7 +463,8 @@ def pdfStyleSheet():
             name='Bullet',
             parent=stylesheet['BodyText'],
             fontName=tt2ps('Helvetica', 0, 0),
-            bulletFontSize=10,
+            bulletFontSize=6,
+            bulletOffsetY=2,
             firstLineIndent=0,
             leftIndent=25,
             bulletIndent=10,
