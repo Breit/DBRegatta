@@ -7,5 +7,3 @@ TODO: DBRegatta
 - Training form with training duration
 - Implement/transition to class-based views
 - Code refactoring (especially reusable template code)
-- PDF font with support for bullets
-- PDF: Bullet list levels
