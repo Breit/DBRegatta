@@ -111,7 +111,7 @@
         {% for entry in timetable %}
             <div class="card mb-3 shadow">
                 <div class="card-header fs-4 py-0{% if not entry.races %} card-header-collapsed{% endif %}">
-                    <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ entry.desc|uid }}" aria-expanded="true">
+                    <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ entry.desc|uid }}" aria-expanded="{% if entry.fold %}false{% else %}true{% endif %}">
                         <div class="col-auto text-center">{{ entry.time|time:'H:i'}}</div>
                         <div class="col">{{ entry.desc }}</div>
                         {% if entry.races %}
@@ -123,7 +123,7 @@
                     </div>
                 </div>
                 {% if entry.races %}
-                    <div class="card-body p-0 collapse show" id="{{ entry.desc|uid }}">
+                    <div class="card-body p-0 collapse{% if not entry.fold %} show{% endif %}" id="{{ entry.desc|uid }}">
                         <div class="row small border-bottom text-muted mx-0 mt-2">
                             <div class="col-1 text-center text-nowrap">{{ config.timetableHeaderTime }}</div>
                             <div class="col-1 text-center text-nowrap">{{ config.timetableHeaderName }}</div>
@@ -158,13 +158,20 @@
         {% endfor %}
     </div>
     {% if controls %}
-        <div class="container-fluid mb-3 pt-3">
+        <div class="container-fluid mb-3 pt-3 float-start">
             <button type="button" id="createTimetableButton" class="btn btn-warning btn_icon shadow" data-bs-toggle="modal" data-bs-target="#createTimetableModal">
                 <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                     <div>
                         <img src="{% static 'images/' %}{{ config.createTimetableIcon }}" alt="createTimetable">
                     </div>
                     <p class="m-0 ps-2 lead">{{ config.createTimetableText }}</p>
+                </div>
+            </button>
+            <button type="button" name="timetable_pdf" value="TimetablePdf" id="timetable_pdf" class="btn btn-light btn_icon btn_fit shadow border float-end">
+                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                    <div class="pe-2">
+                        <img src="{% static 'images/' %}{{ config.pdfIcon }}" alt="timetable_pdf">
+                    </div>
                 </div>
             </button>
         </div>

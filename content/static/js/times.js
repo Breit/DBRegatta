@@ -82,6 +82,7 @@ function submit(race_id)
                 if (status === 'success')
                 {
                     $('.content_panel').html($(data).find('.content_panel').html());
+                    $('.menu').html($(data).find('.menu').html());
                     prep();
                 }
                 else

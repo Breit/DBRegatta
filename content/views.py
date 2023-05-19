@@ -93,7 +93,7 @@ def teams(request):
             if modTeam:
                 siteData['content']['form'] = TeamForm(instance = modTeam)
 
-        # submit_mod_team
+        # submit mod_team
         elif 'mod_team' in request.POST:
             try:
                 modTeam = Team.objects.get(id = request.POST['mod_team'])
@@ -478,6 +478,8 @@ def settings(request):
     if request.method == 'POST':
         if 'eventTitle' in request.POST:
             config.siteName = request.POST['eventTitle']
+        elif 'eventAbbreviation' in request.POST:
+            config.siteAbbr = request.POST['eventAbbreviation']
         elif 'eventDate' in request.POST:
             config.eventDate = date.fromisoformat(request.POST['eventDate'])
         elif 'registrationDate' in request.POST:
@@ -504,8 +506,12 @@ def settings(request):
             config.sponsorUrl = request.POST['sponsorUrl']
         elif 'ownerLogo' in request.POST:
             config.ownerLogo = request.POST['ownerLogo']
+        elif 'ownerLogoReport' in request.POST:
+            config.ownerLogoReport = request.POST['ownerLogoReport']
         elif 'sponsorLogo' in request.POST:
             config.sponsorLogo = request.POST['sponsorLogo']
+        elif 'sponsorLogoReport' in request.POST:
+            config.sponsorLogoReport = request.POST['sponsorLogoReport']
         elif 'siteDomain' in request.POST:
             config.domain = request.POST['siteDomain']
         elif 'liveResultsHint' in request.POST:

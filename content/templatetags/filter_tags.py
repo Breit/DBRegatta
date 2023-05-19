@@ -50,9 +50,9 @@ def asTime(value):
         value = float(value)
         minutes = math.floor(value / 60.0)
         seconds = math.floor(value - minutes * 60.0)
-        hundedth = math.floor(round(1e2 * (value - math.floor(value))))
+        hundredth = math.floor(round(1e2 * (value - math.floor(value))))
 
-        return '{:02d}:{:02d}.{:02d}'.format(minutes, seconds, hundedth)
+        return '{:02d}:{:02d}.{:02d}'.format(minutes, seconds, hundredth)
     except:
         pass
 

@@ -458,7 +458,8 @@ def getTimeTableContent():
                 ),
                 'desc': config.finaleTitle,
                 'races': finale_races,
-                'type': 'finale'
+                'type': 'finale',
+                'fold': getCurrentRaceBlock() != config.finalPrefix
             }
         )
 
@@ -1284,21 +1285,32 @@ def getMainSettings():
                     'name': config.siteNameDesc,
                     'type': 'text',
                     'value': config.siteName,
-                    'icon': 'tag'
+                    'icon': 'signpost',
+                    'classes': 'col-12 col-xxl-6 col-lg-9'
+                },
+                {
+                    'id': 'eventAbbreviation',
+                    'name': config.siteAbbrDesc,
+                    'type': 'text',
+                    'value': config.siteAbbr,
+                    'icon': 'tag',
+                    'classes': 'col-12 col-xxl-2 col-lg-3'
                 },
                 {
                     'id': 'eventDate',
                     'name': config.eventDateDesc,
                     'type': 'date',
                     'value': config.eventDate,
-                    'icon': 'calendar3-event'
+                    'icon': 'calendar3-event',
+                    'classes': 'col-12 col-xxl-2 col-xl-3 col-md-6'
                 },
                 {
                     'id': 'registrationDate',
                     'name': config.registrationDateDesc,
                     'type': 'date',
                     'value': config.registrationDate,
-                    'icon': 'calendar3-event'
+                    'icon': 'calendar3-event',
+                    'classes': 'col-12 col-xxl-2 col-xl-3 col-md-6'
                 }
             ]
         },
@@ -1310,21 +1322,24 @@ def getMainSettings():
                     'name': config.activateResultsDesc,
                     'type': 'checkbox',
                     'value': config.activateResults,
-                    'icon': 'check-square'
+                    'icon': 'check-square',
+                    'classes': 'col-auto'
                 },
                 {
                     'id': 'anonymousMonitor',
                     'name': config.anonymousMonitorDesc,
                     'type': 'checkbox',
                     'value': config.anonymousMonitor,
-                    'icon': 'check-square'
+                    'icon': 'check-square',
+                    'classes': 'col-auto'
                 },
                 {
                     'id': 'activateCalendar',
                     'name': config.activateCalendarDesc,
                     'type': 'checkbox',
                     'value': config.activateCalendar,
-                    'icon': 'calendar-check'
+                    'icon': 'calendar-check',
+                    'classes': 'col-auto'
                 }
             ]
         },
@@ -1336,28 +1351,32 @@ def getMainSettings():
                     'name': config.timeBeginDesc,
                     'type': 'time',
                     'value': config.timeBegin,
-                    'icon': 'clock'
+                    'icon': 'clock',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'offsetHeat',
                     'name': config.offsetHeatDesc,
                     'type': 'number',
                     'value': config.offsetHeat.seconds // 60,
-                    'icon': 'clock-history'
+                    'icon': 'clock-history',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'offsetFinale',
                     'name': config.offsetFinaleDesc,
                     'type': 'number',
                     'value': config.offsetFinale.seconds // 60,
-                    'icon': 'clock-history'
+                    'icon': 'clock-history',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'offsetCeremony',
                     'name': config.offsetCeremonyDesc,
                     'type': 'number',
                     'value': config.offsetCeremony.seconds // 60,
-                    'icon': 'clock-history'
+                    'icon': 'clock-history',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'lanesPerRace',
@@ -1366,7 +1385,8 @@ def getMainSettings():
                     'value': config.lanesPerRace,
                     'min': config.lanesPerRaceMin,
                     'max': config.lanesPerRaceMax,
-                    'icon': 'layout-three-columns'
+                    'icon': 'layout-three-columns',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'heatCount',
@@ -1375,27 +1395,31 @@ def getMainSettings():
                     'value': config.heatCount,
                     'min': config.heatCountMin,
                     'max': config.heatCountMax,
-                    'icon': 'repeat'
+                    'icon': 'repeat',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'intervalHeat',
                     'name': config.intervalHeatDesc,
                     'type': 'number',
                     'value': config.intervalHeat.seconds // 60,
-                    'icon': 'distribute-horizontal'
+                    'icon': 'distribute-horizontal',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'intervalFinal',
                     'name': config.intervalFinalDesc,
                     'type': 'number',
                     'value': config.intervalFinal.seconds // 60,
-                    'icon': 'distribute-horizontal'
+                    'icon': 'distribute-horizontal',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'refreshTimes',
                     'name': config.refreshTimetableText,
                     'type': 'button',
-                    'icon': config.refreshTimetableIcon
+                    'icon': config.refreshTimetableIcon,
+                    'classes': 'col-auto'
                 }
             ]
         },
@@ -1407,28 +1431,32 @@ def getMainSettings():
                     'name': config.intervalTrainingBeginLabel,
                     'type': 'number',
                     'value': config.intervalTrainingBegin.seconds // 60,
-                    'icon': 'clock-history'
+                    'icon': 'clock-history',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'firstTrainingTime',
                     'name': config.firstTrainingTimeLabel,
                     'type': 'time',
                     'value': config.firstTrainingTime,
-                    'icon': 'clock'
+                    'icon': 'clock',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'lastTrainingTime',
                     'name': config.lastTrainingTimeLabel,
                     'type': 'time',
                     'value': config.lastTrainingTime,
-                    'icon': 'clock'
+                    'icon': 'clock',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'lengthTraining',
                     'name': config.intervalTrainingLengthLabel,
                     'type': 'number',
                     'value': config.intervalTrainingLength.seconds // 60,
-                    'icon': 'clock-history'
+                    'icon': 'clock-history',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 }
             ]
         },
@@ -1442,42 +1470,48 @@ def getMainSettings():
                     'value': config.overscan,
                     'icon': 'aspect-ratio',
                     'min': 0,
-                    'max': config.overscanMax
+                    'max': config.overscanMax,
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'durationMonitorSlide',
                     'name': config.displayIntervalDesc,
                     'type': 'number',
                     'value': int(config.displayInterval / 1e3),
-                    'icon': 'clock-history'
+                    'icon': 'clock-history',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'displayDataRefresh',
                     'name': config.displayDataRefreshDesc,
                     'type': 'number',
                     'value': int(config.displayDataRefresh / 1e3),
-                    'icon': 'clock-history'
+                    'icon': 'clock-history',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'maxRacesPerPage',
                     'name': config.maxRacesPerPageDesc,
                     'type': 'number',
                     'value': config.maxRacesPerPage,
-                    'icon': 'file-ruled'
+                    'icon': 'file-ruled',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
                     'id': 'liveResultsHint',
                     'name': config.liveResultsHintDesc,
                     'type': 'text',
                     'value': config.liveResultsHint,
-                    'icon': 'info-square'
+                    'icon': 'info-square',
+                    'classes': 'col-12 col-lg-6'
                 },
                 {
                     'id': 'siteDomain',
                     'name': config.liveResultsDomainDesc,
                     'type': 'text',
                     'value': config.domain,
-                    'icon': 'link'
+                    'icon': 'link',
+                    'classes': 'col-12 col-lg-6'
                 }
             ]
         },
@@ -1489,28 +1523,32 @@ def getMainSettings():
                     'name': config.ownerNameDesc,
                     'type': 'text',
                     'value': config.ownerName,
-                    'icon': 'person-circle'
+                    'icon': 'person-circle',
+                    'classes': 'col-12 col-lg-6'
                 },
                 {
                     'id': 'sponsorName',
                     'name': config.sponsorNameDesc,
                     'type': 'text',
                     'value': config.sponsorName,
-                    'icon': 'building'
+                    'icon': 'building',
+                    'classes': 'col-12 col-lg-6'
                 },
                 {
                     'id': 'ownerUrl',
                     'name': config.ownerUrlDesc,
                     'type': 'url',
                     'value': config.ownerUrl,
-                    'icon': 'link-45deg'
+                    'icon': 'link-45deg',
+                    'classes': 'col-12 col-lg-6'
                 },
                 {
                     'id': 'sponsorUrl',
                     'name': config.sponsorUrlDesc,
                     'type': 'url',
                     'value': config.sponsorUrl,
-                    'icon': 'link-45deg'
+                    'icon': 'link-45deg',
+                    'classes': 'col-12 col-lg-6'
                 },
                 {
                     'id': 'ownerLogo',
@@ -1518,7 +1556,9 @@ def getMainSettings():
                     'type': 'image',
                     'value': config.ownerLogo,
                     'icon': 'image',
-                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))]
+                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'classes': 'col-12 col-md-6 col-lg-3',
+                    'bg_class': 'bg-dark'
                 },
                 {
                     'id': 'sponsorLogo',
@@ -1526,7 +1566,29 @@ def getMainSettings():
                     'type': 'image',
                     'value': config.sponsorLogo,
                     'icon': 'image',
-                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))]
+                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'classes': 'col-12 col-md-6 col-lg-3',
+                    'bg_class': 'bg-dark'
+                },
+                {
+                    'id': 'ownerLogoReport',
+                    'name': config.ownerLogoReportDesc,
+                    'type': 'image',
+                    'value': config.ownerLogoReport,
+                    'icon': 'image',
+                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'classes': 'col-12 col-md-6 col-lg-3',
+                    'bg_class': 'bg-light'
+                },
+                {
+                    'id': 'sponsorLogoReport',
+                    'name': config.sponsorLogoReportDesc,
+                    'type': 'image',
+                    'value': config.sponsorLogoReport,
+                    'icon': 'image',
+                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'classes': 'col-12 col-md-6 col-lg-3',
+                    'bg_class': 'bg-light'
                 }
             ]
         }

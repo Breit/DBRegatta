@@ -83,4 +83,9 @@ $(document).ready(function()
     {
         focus_team(this);
     });
+
+    $('#results_pdf').click(function()
+    {
+        window.open(window.location.href + '/pdf');
+    });
 });

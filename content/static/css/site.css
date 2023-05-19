@@ -104,6 +104,20 @@
     background-color: var(--bs-gray-950) !important;
 }
 
+.menu > .nav {
+    max-height: 100%;
+    overflow-y: auto;
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.menu > .nav::-webkit-scrollbar {
+    display: none;
+}
+
 .menu li:hover {
     background-color: var(--bs-gray-800) !important;
     /* border-radius: var(--bs-nav-pills-border-radius) !important; */
@@ -158,6 +172,10 @@
 
 .btn_icon {
     width: 17rem;
+}
+
+.btn_fit {
+    width: fit-content;
 }
 
 .btn_lg {
