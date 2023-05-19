@@ -808,7 +808,7 @@ def getSiteData(id: str = None, user = None):
     if trainings_upcoming:
         menu_trainings['notifications'].append(
             {
-                'level': 'success',
+                'level': 'warning',
                 'count': trainings_upcoming
             }
         )
@@ -816,7 +816,7 @@ def getSiteData(id: str = None, user = None):
     if trainings_past:
         menu_trainings['notifications'].append(
             {
-                'level': 'warning',
+                'level': 'success',
                 'count': trainings_past
             }
         )
