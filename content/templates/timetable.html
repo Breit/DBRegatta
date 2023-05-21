@@ -157,8 +157,8 @@
             </div>
         {% endfor %}
     </div>
-    {% if controls %}
-        <div class="container-fluid mb-3 pt-3 float-start">
+    <div class="container-fluid mb-3 pt-3 float-start">
+        {% if controls %}
             <button type="button" id="createTimetableButton" class="btn btn-warning btn_icon shadow" data-bs-toggle="modal" data-bs-target="#createTimetableModal">
                 <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                     <div>
@@ -167,14 +167,14 @@
                     <p class="m-0 ps-2 lead">{{ config.createTimetableText }}</p>
                 </div>
             </button>
-            <button type="button" name="timetable_pdf" value="TimetablePdf" id="timetable_pdf" class="btn btn-light btn_icon btn_fit shadow border float-end">
-                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                    <div class="pe-2">
-                        <img src="{% static 'images/' %}{{ config.pdfIcon }}" alt="timetable_pdf">
-                    </div>
+        {% endif %}
+        <button type="button" name="timetable_pdf" value="TimetablePdf" id="timetable_pdf" class="btn btn-light btn_icon btn_fit shadow border float-end">
+            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                <div class="pe-2">
+                    <img src="{% static 'images/' %}{{ config.pdfIcon }}" alt="timetable_pdf">
                 </div>
-            </button>
-        </div>
-    {% endif %}
+            </div>
+        </button>
+    </div>
     <div class="container-fluid overscroll"></div>
 {% endblock %}
