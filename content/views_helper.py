@@ -119,6 +119,7 @@ def getTrainingsList(active=True, upcomingOnly=False, pastOnly=False):
         entry['team']['company'] = team.company
         entry['team']['contact'] = team.contact
         entry['team']['email'] = team.email
+        entry['team']['phone'] = team.phone
 
         skipper = Skipper.objects.get(id=training.skipper_id)
         entry['skipper'] = {}

@@ -1,6 +1,6 @@
 import io
 from constance import config
-from datetime import datetime, time
+from datetime import datetime
 
 from django.http import FileResponse
 from django.shortcuts import redirect
@@ -8,9 +8,8 @@ from django.db.models import F
 
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, LongTable, TableStyle, PageBreak, Spacer, TopPadder
 
-from .views_helper import loginUser, getTimeTableContent, getRaceResultsTableContent, raceBlockStarted, getCurrentRaceBlock
+from .views_helper import *
 from .pdf_helper import *
-from .models import Team, Post
 from .templatetags.filter_tags import asTime
 
 def teams(request):
@@ -91,7 +90,7 @@ def teams(request):
         statTableData.append(
             [
             teamTable['header'],
-            Paragraph('<b>{count}</b>'.format(count=len(teamTable['data'])), styles['TableHeaderC']),
+            Paragraph('{count}'.format(count=len(teamTable['data'])), styles['TableHeaderBC']),
         ]
     )
 
@@ -127,13 +126,13 @@ def teams(request):
             )
             teamRow.append(
                 [
-                    Paragraph('<b>{name}</b>'.format(name=team.name), styles['Normal']),
+                    Paragraph('{name}'.format(name=team.name), styles['NormalB']),
                     Paragraph('{company}'.format(company=team.company), styles['Secondary'])
                 ]
             )
             teamRow.append(
                 [
-                    Paragraph('<b>{contact}</b>'.format(contact=team.contact), styles['Normal']),
+                    Paragraph('{contact}'.format(contact=team.contact), styles['NormalB']),
                     Paragraph('<a href="mailto:{email}">{email}</a>'.format(email=team.email), styles['SecondaryLink']),
                     Paragraph('{phone}'.format(phone=team.phone), styles['Secondary'])
                 ]
@@ -654,3 +653,188 @@ def results(request):
     # FileResponse sets the Content-Disposition header (as_attachment=True)
     # so that browsers present the option to save the file
     return FileResponse(pdf_buffer, as_attachment=True, filename=filename)
+
+def trainings(request):
+    # handle login/logout
+    loginUser(request)
+
+    if not request.user.is_authenticated:
+        return redirect('/')
+
+    # Provide a filename for the PDF
+    filename = '{at}_{abbr}_teams.pdf'.format(
+        at=datetime.now().strftime("%Y%m%d-%H%M%S"),
+        abbr=config.siteAbbr
+    )
+
+    # Define styling
+    styles = pdfStyleSheet()
+    mainTableStyle = TableStyle([
+        ('BOX',             (0,  0), (-1, -1), 0.25, colors.lightgrey),                             # border for whole table
+        ('LINEABOVE',       (0,  0), (-1, -1), 0.25, colors.lightgrey),                             # top border for each row
+        ('LINEBELOW',       (0,  0), (-1, -1), 0.25, colors.lightgrey),                             # bottom border for each row
+        ('LINEBELOW',       (0,  1), (-1,  1), 0.5 , colors.grey),                                  # line under colum header row
+        ('SPAN',            (0,  0), (-1,  0)),                                                     # span title row (1st row)
+        ('VALIGN',          (0,  2), ( 0, -1), 'MIDDLE'),                                           # id middle-aligned
+        ('VALIGN',          (1,  2), (-1, -1), 'TOP'),                                              # everything else is top-aligned
+        ('ROWBACKGROUNDS',  (0,  0), (-1, -1), (colors.HexColor('#f1f1f2'), colors.transparent)),   # alternate row coloring
+    ])
+    statTableStyle = TableStyle([
+        ('BOX',             (0,  0), (-1, -1), 0.25, colors.lightgrey),
+        ('GRID',            (0,  0), (-1, -1), 0.25, colors.lightgrey),
+        ('BOTTOMPADDING',   (0,  0), (-1, -1), 6),
+        ('TOPPADDING',      (0,  0), (-1, -1), 6),
+    ])
+
+    # Gather data
+    trainingsTableData = [
+        {
+            # Upcoming Trainings
+            'header': Paragraph('{trainingsStatus}'.format(trainingsStatus=config.trainingsTitleUpcoming), styles['TableHeader']),
+            'data': getTrainingsList(upcomingOnly=True)
+        },
+        {
+            # Past Trainings
+            'header': Paragraph('{trainingsStatus}'.format(trainingsStatus=config.trainingsTitlePast), styles['TableHeader']),
+            'data': getTrainingsList(pastOnly=True)
+        },
+        {
+            # Inactive Trainings
+            'header': Paragraph('{trainingsStatus}'.format(trainingsStatus=config.trainingsTitleInactive), styles['TableHeader']),
+            'data': getTrainingsList(active=False)
+        }
+    ]
+
+    # Start story with front page
+    story = [
+        Spacer(width=0, height=20*mm),
+        Paragraph('{event}'.format(event=config.siteName), styles['Title']),
+        Paragraph('{date}'.format(date=config.eventDate.strftime('%d. %B %Y')), styles['SubTitle']),
+        Spacer(width=0, height=20*mm),
+        Paragraph('{title}'.format(title=config.trainingsTrainings), styles['Title'])
+    ]
+
+    # Frontpage statistics section
+    statTableData = [
+        [
+            Paragraph('{trainingsStatus}'.format(trainingsStatus=config.trainingsTitleTotal), styles['TableHeaderBLink']),
+            Paragraph('{count}'.format(count=Training.objects.all().count()), styles['TableHeaderBCLink'])
+        ]
+    ]
+    for trainingsTable in trainingsTableData:
+        statTableData.append(
+            [
+                trainingsTable['header'],
+                Paragraph('{count}'.format(count=len(trainingsTable['data'])), styles['TableHeaderBC']),
+            ]
+        )
+
+    statTable = Table(
+        statTableData,
+        style=statTableStyle,
+        colWidths=(130*mm, 50*mm)
+    )
+    story.append(
+        TopPadder(
+            Table(
+                [
+                    [statTable],
+                    [Spacer(width=0, height=10*mm)]
+                ]
+            )
+        )
+    )
+    story.append(PageBreak())
+
+    # Layout trainings content: Individual trainings
+    tableColumnHeader = [
+        Paragraph('{id}'.format(id=config.trainingsTableHeaderID), styles['ColumnHeaderC']),
+        Paragraph('{date}'.format(date=config.placeholderTrainingDateTime), styles['ColumnHeader']),
+        Paragraph('{team} / {company}'.format(team=config.teamTableHeaderTeam, company=config.teamTableHeaderCompany), styles['ColumnHeader']),
+        Paragraph('{contact}'.format(contact=config.placeholderTeamCaptain), styles['ColumnHeader']),
+        Paragraph('{skipper}'.format(skipper=config.skipper), styles['ColumnHeader']),
+        Paragraph('{note}'.format(note=config.placeholderTrainingNotes), styles['ColumnHeader'])
+    ]
+    tableColumnWidth=(10*mm, 25*mm, 35*mm, 45*mm, 45*mm, 20*mm)
+    for i, trainingsTable in enumerate(trainingsTableData):
+        if len(trainingsTable['data']) <= 0:
+                continue
+        tableData = [
+            [
+                trainingsTable['header']
+            ],
+            tableColumnHeader
+        ]
+        for n, training in enumerate(trainingsTable['data']):
+            trainingRow = []
+            trainingRow.append(
+                Paragraph('{id}'.format(id=(n + 1)), styles['NormalC'])
+            )
+            trainingRow.append(
+                [
+                    Paragraph('{date}'.format(date=training['date'].strftime('%d.%m.%Y')), styles['NormalB']),
+                    Paragraph('{start} - {end}'.format(start=training['time_start'].strftime('%H:%M'), end=training['time_end'].strftime('%H:%M')), styles['Secondary'])
+                ]
+            )
+            trainingRow.append(
+                [
+                    Paragraph('{name}'.format(name=training['team']['name']), styles['NormalB']),
+                    Paragraph('{company}'.format(company=training['team']['company']), styles['Secondary'])
+                ]
+            )
+            trainingRow.append(
+                [
+                    Paragraph('{contact}'.format(contact=training['team']['contact']), styles['NormalB']),
+                    Paragraph('<a href="mailto:{email}">{email}</a>'.format(email=training['team']['email']), styles['SecondaryLink']),
+                    Paragraph('{phone}'.format(phone=training['team']['phone']), styles['Secondary'])
+                ]
+            )
+            trainingRow.append(
+                [
+                    Paragraph('{skipper}'.format(skipper=training['skipper']['name'] if training['skipper']['name'] is not None else ''), styles['Normal']),
+                    Paragraph('<a href="mailto:{email}">{email}</a>'.format(email=training['skipper']['email'] if training['skipper']['name'] is not None else ''), styles['SecondaryLink'])
+                ]
+            )
+            trainingRow.append(
+                Paragraph('{note}'.format(note=training['notes'] if training['notes'] is not None else ''), styles['Normal'])
+            )
+            tableData.append(trainingRow)
+
+        # Insert a page break for new tables
+        if i > 0:
+            story.append(PageBreak())
+
+        story.append(
+            LongTable(
+                tableData,
+                style=mainTableStyle,
+                repeatRows=2,
+                colWidths=tableColumnWidth
+            )
+        )
+
+    # Create a file-like buffer to receive PDF data
+    pdf_buffer = io.BytesIO()
+
+    # Create document
+    doc = SimpleDocTemplate(
+        pdf_buffer,
+        pagesize=A4,
+        leftMargin=15*mm,
+        rightMargin=15*mm,
+        topMargin=15*mm,
+        bottomMargin=20*mm
+    )
+    doc.title = filename
+    doc.creator = config.ownerName
+    doc.author = config.ownerName
+    doc.subject = config.siteName
+    doc.keywords = [config.siteAbbr, config.trainingsTableHeader]
+
+    doc.build(story, canvasmaker=PageNumCanvas)
+
+    pdf_buffer.seek(0)
+
+    # FileResponse sets the Content-Disposition header (as_attachment=True)
+    # so that browsers present the option to save the file
+    return FileResponse(pdf_buffer, as_attachment=False, filename=filename)

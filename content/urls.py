@@ -19,5 +19,6 @@ urlpatterns = [
 
     path('teams/pdf',       views_pdf.teams),
     path('timetable/pdf',   views_pdf.timetable),
-    path('results/pdf',     views_pdf.results)
+    path('results/pdf',     views_pdf.results),
+    path('trainings/pdf',   views_pdf.trainings)
 ]

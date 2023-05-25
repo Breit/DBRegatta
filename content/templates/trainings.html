@@ -104,7 +104,7 @@
     {% endif %}
 
     <div class="container-fluid" id="training_table">
-        <h2 class="mt-2 mb-2 display-6">{{ config.trainingsTableHeader }}</h2>
+        <h2 class="my-2 display-6">{{ config.trainingsTableHeader }}</h2>
         {% if content.trainingsList %}
             <div class="progress mb-4 bg-light">
                 <div class="progress-bar px-2 me-2 trainings_stats bg-light border-bottom border-warning border-5 text-warning" role="progressbar" style="width: calc(100% * {{ content.trainingsList.upcoming | length }} / {{ content.countTrainings }})">
@@ -166,8 +166,19 @@
         </div>
     </div>
 
-    {% if user.is_staff %}
-        <div class="container-fluid mb-0 pt-3">
+    <div class="container-fluid mb-3 pt-3" id="training_statistics">
+        {% if content.countTrainings %}
+            <h2 class="mt-2 mb-3 display-6">{{ config.trainingsStatsTableHeader }}</h2>
+            {% if content.trainingsStats %}
+                {% for statsSet in content.trainingsStats %}
+                    {% include 'trainings_statistics.html' %}
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="container-fluid mb-3 pt-3 float-start">
+        {% if user.is_staff %}
             <button type="button" name="show_trainings_form" value="Add" class="btn btn-primary btn_icon btn_lg shadow" data-bs-toggle="modal" data-bs-target="#formTrainingModal">
                 <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                     <div class="pe-2">
@@ -176,19 +187,14 @@
                     <p class="m-0 ps-2 lead">{{ config.addTraining }}</p>
                 </div>
             </button>
-        </div>
-    {% endif %}
-
-    <div class="container-fluid mb-3 pt-3" id="training_statistics">
-        {% if content.countTrainings %}
-            <hr>
-            <h2 class="my-4 display-6">{{ config.trainingsStatsTableHeader }}</h2>
-            {% if content.trainingsStats %}
-                {% for statsSet in content.trainingsStats %}
-                    {% include 'trainings_statistics.html' %}
-                {% endfor %}
-            {% endif %}
         {% endif %}
+        <button type="button" name="trainings_pdf" value="TrainingsPdf" id="trainings_pdf" class="btn btn-light btn_icon btn_fit shadow border float-end">
+            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                <div class="pe-2">
+                    <img src="{% static 'images/' %}{{ config.pdfIcon }}" alt="trainings_pdf">
+                </div>
+            </div>
+        </button>
     </div>
 
     <div class="container-fluid overscroll"></div>

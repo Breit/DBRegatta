@@ -152,21 +152,21 @@ def pdfStyleSheet():
         ParagraphStyle(
             name='NormalB',
             parent=stylesheet['Normal'],
-            fontName=tt2ps('Helvetica', 1, 0),
+            fontName=tt2ps('Helvetica', 1, 0)
         )
     )
     stylesheet.add(
         ParagraphStyle(
             name='NormalI',
             parent=stylesheet['Normal'],
-            fontName=tt2ps('Helvetica', 0, 1),
+            fontName=tt2ps('Helvetica', 0, 1)
         )
     )
     stylesheet.add(
         ParagraphStyle(
             name='NormalBI',
             parent=stylesheet['Normal'],
-            fontName=tt2ps('Helvetica', 1, 1),
+            fontName=tt2ps('Helvetica', 1, 1)
         )
     )
     stylesheet.add(
@@ -180,21 +180,21 @@ def pdfStyleSheet():
         ParagraphStyle(
             name='NormalBC',
             parent=stylesheet['NormalC'],
-            fontName=tt2ps('Helvetica', 1, 0),
+            fontName=tt2ps('Helvetica', 1, 0)
         )
     )
     stylesheet.add(
         ParagraphStyle(
             name='NormalIC',
             parent=stylesheet['NormalC'],
-            fontName=tt2ps('Helvetica', 0, 1),
+            fontName=tt2ps('Helvetica', 0, 1)
         )
     )
     stylesheet.add(
         ParagraphStyle(
             name='NormalBIC',
             parent=stylesheet['NormalC'],
-            fontName=tt2ps('Helvetica', 1, 1),
+            fontName=tt2ps('Helvetica', 1, 1)
         )
     )
     stylesheet.add(
@@ -240,21 +240,21 @@ def pdfStyleSheet():
         ParagraphStyle(
             name='MonospaceB',
             parent=stylesheet['Monospace'],
-            fontName=tt2ps('Courier', 1, 0),
+            fontName=tt2ps('Courier', 1, 0)
         )
     )
     stylesheet.add(
         ParagraphStyle(
             name='MonospaceI',
             parent=stylesheet['Monospace'],
-            fontName=tt2ps('Courier', 0, 1),
+            fontName=tt2ps('Courier', 0, 1)
         )
     )
     stylesheet.add(
         ParagraphStyle(
             name='MonospaceBI',
             parent=stylesheet['Monospace'],
-            fontName=tt2ps('Courier', 1, 1),
+            fontName=tt2ps('Courier', 1, 1)
         )
     )
     stylesheet.add(
@@ -268,21 +268,21 @@ def pdfStyleSheet():
         ParagraphStyle(
             name='MonospaceBC',
             parent=stylesheet['MonospaceC'],
-            fontName=tt2ps('Courier', 1, 0),
+            fontName=tt2ps('Courier', 1, 0)
         )
     )
     stylesheet.add(
         ParagraphStyle(
             name='MonospaceIC',
             parent=stylesheet['MonospaceC'],
-            fontName=tt2ps('Courier', 0, 1),
+            fontName=tt2ps('Courier', 0, 1)
         )
     )
     stylesheet.add(
         ParagraphStyle(
             name='MonospaceBIC',
             parent=stylesheet['MonospaceC'],
-            fontName=tt2ps('Courier', 1, 1),
+            fontName=tt2ps('Courier', 1, 1)
         )
     )
 
@@ -299,21 +299,21 @@ def pdfStyleSheet():
         ParagraphStyle(
             name='TableHeaderB',
             parent=stylesheet['TableHeader'],
-            fontName=tt2ps('Helvetica', 1, 0),
+            fontName=tt2ps('Helvetica', 1, 0)
         )
     )
     stylesheet.add(
         ParagraphStyle(
             name='TableHeaderI',
             parent=stylesheet['TableHeader'],
-            fontName=tt2ps('Helvetica', 0, 1),
+            fontName=tt2ps('Helvetica', 0, 1)
         )
     )
     stylesheet.add(
         ParagraphStyle(
             name='TableHeaderBI',
             parent=stylesheet['TableHeader'],
-            fontName=tt2ps('Helvetica', 1, 1),
+            fontName=tt2ps('Helvetica', 1, 1)
         )
     )
     stylesheet.add(
@@ -327,21 +327,35 @@ def pdfStyleSheet():
         ParagraphStyle(
             name='TableHeaderBC',
             parent=stylesheet['TableHeaderC'],
-            fontName=tt2ps('Helvetica', 1, 0),
+            fontName=tt2ps('Helvetica', 1, 0)
         )
     )
     stylesheet.add(
         ParagraphStyle(
             name='TableHeaderIC',
             parent=stylesheet['TableHeaderC'],
-            fontName=tt2ps('Helvetica', 0, 1),
+            fontName=tt2ps('Helvetica', 0, 1)
         )
     )
     stylesheet.add(
         ParagraphStyle(
             name='TableHeaderBIC',
             parent=stylesheet['TableHeaderC'],
-            fontName=tt2ps('Helvetica', 1, 1),
+            fontName=tt2ps('Helvetica', 1, 1)
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='TableHeaderBLink',
+            parent=stylesheet['TableHeaderB'],
+            textColor=colors.HexColor('#3a6af7')
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='TableHeaderBCLink',
+            parent=stylesheet['TableHeaderBC'],
+            textColor=colors.HexColor('#3a6af7')
         )
     )
 
