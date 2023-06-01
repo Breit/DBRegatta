@@ -68,7 +68,11 @@
                                                 <input type="hidden" name="{{ c.id }}" value="off">
                                                 <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-check-input text-end pe-4" onchange="update_setting('{{ c.id }}')" {% if c.value %}checked{% endif %}>
                                             </div>
-                                            <input type="text" class="form-control bg-light" value="{% if c.value %}{{ config.activeResultsDesc }}{% else %}{{ config.inactiveResultsDesc }}{% endif %}" disabled>
+                                            {% if 'active' in c and 'inactive' in c %}
+                                                <input type="text" class="form-control bg-light" value="{% if c.value %}{{ c.active }}{% else %}{{ c.inactive }}{% endif %}" disabled>
+                                            {% else %}
+                                                <input type="text" class="form-control bg-light" value="{% if c.value %}{{ config.activeResultsDesc }}{% else %}{{ config.inactiveResultsDesc }}{% endif %}" disabled>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 {% elif c.type == 'number' %}

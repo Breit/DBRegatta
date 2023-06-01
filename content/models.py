@@ -8,6 +8,7 @@ from datetime import timedelta
 # for list of teams
 class Team(models.Model):
     active = models.BooleanField(default=False)
+    nofee = models.BooleanField(default=False)
     wait = models.BooleanField(default=False)
     position = models.PositiveSmallIntegerField(blank=False, unique=True, null=True)
     date = models.DateField(blank=False, null=True)

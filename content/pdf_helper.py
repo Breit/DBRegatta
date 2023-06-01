@@ -14,7 +14,7 @@ from django.conf import settings
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from reportlab.lib.fonts import tt2ps, addMapping
-from reportlab.lib.enums import TA_CENTER
+from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
 from reportlab.lib.pagesizes import A4
@@ -178,6 +178,20 @@ def pdfStyleSheet():
     )
     stylesheet.add(
         ParagraphStyle(
+            name='NormalR',
+            parent=stylesheet['Normal'],
+            alignment=TA_RIGHT
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='NormalBR',
+            parent=stylesheet['NormalB'],
+            alignment=TA_RIGHT
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
             name='NormalBC',
             parent=stylesheet['NormalC'],
             fontName=tt2ps('Helvetica', 1, 0)
@@ -201,6 +215,20 @@ def pdfStyleSheet():
         ParagraphStyle(
             name='NormalBCLink',
             parent=stylesheet['NormalBC'],
+            textColor=colors.HexColor('#3a6af7')
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='NormalBLink',
+            parent=stylesheet['NormalB'],
+            textColor=colors.HexColor('#3a6af7')
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='NormalBRLink',
+            parent=stylesheet['NormalBR'],
             textColor=colors.HexColor('#3a6af7')
         )
     )
@@ -297,6 +325,13 @@ def pdfStyleSheet():
     )
     stylesheet.add(
         ParagraphStyle(
+            name='TableHeaderR',
+            parent=stylesheet['TableHeader'],
+            alignment=TA_RIGHT
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
             name='TableHeaderB',
             parent=stylesheet['TableHeader'],
             fontName=tt2ps('Helvetica', 1, 0)
@@ -373,6 +408,13 @@ def pdfStyleSheet():
             name='ColumnHeaderC',
             parent=stylesheet['ColumnHeader'],
             alignment=TA_CENTER
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='ColumnHeaderR',
+            parent=stylesheet['ColumnHeader'],
+            alignment=TA_RIGHT
         )
     )
 
@@ -523,6 +565,28 @@ def pdfStyleSheet():
             parent=stylesheet['Bullet'],
             leftIndent=70,
             bulletIndent=55
+        )
+    )
+
+    stylesheet.add(
+        ParagraphStyle(
+            name='MarkerBRLink',
+            fontName = tt2ps('Helvetica', 1, 0),
+            fontSize=20,
+            leading=24,
+            alignment=TA_RIGHT,
+            textColor=colors.HexColor('#3a6af7')
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
+            name='MarkerBRSmallWhite',
+            parent=stylesheet['MarkerBRLink'],
+            fontSize=18,
+            leading=23,
+            spaceBefore=0,
+            spaceAfter=0,
+            textColor=colors.HexColor('#ffffff')
         )
     )
 

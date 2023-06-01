@@ -1,0 +1,34 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load filter_tags %}
+
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{% static 'css/' %}{{ config.billingPageCSS }}">
+{% endblock %}
+
+{% block additionalJS %}
+    <script language="JavaScript" src="{% static 'js/' %}{{config.billingPageJS}}" type="text/javascript"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid" id="billing_table">
+        <h2 class="mt-2 mb-3 display-6">{{ config.billingTitle }}</h2>
+        <div class="container-fluid m-0 p-0">
+            {% block card_table %}
+                {% include 'card_table.html' %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <div class="container-fluid mb-3 pt-3 float-start">
+        <button type="button" name="billing_pdf" value="BillingPdf" id="billing_pdf" class="btn btn-light btn_icon btn_fit shadow border float-end">
+            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                <div class="pe-2">
+                    <img src="{% static 'images/' %}{{ config.pdfIcon }}" alt="billing_pdf">
+                </div>
+            </div>
+        </button>
+    </div>
+
+    <div class="container-fluid overscroll"></div>
+{% endblock %}

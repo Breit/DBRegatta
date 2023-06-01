@@ -1,9 +1,8 @@
 TODO: DBRegatta
 - Landing page with registration button for teams
 - Open/Close registration button
-- PDF Export
-- Reset Button for Team Registration (Position and Date)
-- Menu scrollable
-- Training form with training duration
+- PDF Export: Skippers
 - Implement/transition to class-based views
 - Code refactoring (especially reusable template code)
+- Tooltips for notifications
+- Billing page tables
