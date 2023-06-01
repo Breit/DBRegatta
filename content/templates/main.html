@@ -113,7 +113,7 @@
             <div class="content_panel flex-row">
                 {% block content %}{% endblock %}
             </div>
-            <footer class="footer py-3 px-4 navbar fixed-bottom navbar-dark text-bg-dark border-top m-{% if display and config.overscan %}{{ config.overscan }}{% else %}0{% endif %}">
+            <footer class="footer py-3 px-4 navbar fixed-bottom navbar-dark text-bg-dark border-top m-{% if display and config.overscan %}{{ config.overscan }}{% else %}0{% endif %} mt-0">
                 <div class="d-flex align-items-start">
                     {% if config.sponsorLogo %}
                         {% if config.sponsorUrl %}

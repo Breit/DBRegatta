@@ -426,7 +426,7 @@ def getBillingContent():
                         end=(datetime.combine(date.today(), training.time) + training.duration).time().strftime('%H:%M'),
                         timeSuffix=config.timeSuffix
                     ),
-                    'columnClasses': 'col time_col small',
+                    'columnClasses': 'col d-none d-lg-block time_col small',
                     'contentClasses': ''
                 },
                 {
@@ -435,14 +435,14 @@ def getBillingContent():
                         fname=skipper.fname,
                         lname=skipper.lname
                     ),
-                    'columnClasses': 'col col-md-3 col-lg-2 small',
-                    'contentClasses': 'fw-bold'
+                    'columnClasses': 'col col-xl-2 small',
+                    'contentClasses': 'fw-bold text-primary'
                 },
                 {
                     'type': 'email',
                     'name': config.placeholderSkipperEmail,
                     'data': skipper.email,
-                    'columnClasses': 'col d-none d-lg-block small',
+                    'columnClasses': 'col d-none d-xl-block small',
                     'contentClasses': ''
                 },
                 {
@@ -1797,7 +1797,7 @@ def getMainSettings():
             ]
         },
         {
-            'title': config.moneyTitle,
+            'title': config.billingTitle,
             'controls': [
                 {
                     'id': 'eventFee',

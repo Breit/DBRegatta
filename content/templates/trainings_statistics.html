@@ -3,7 +3,7 @@
 {% block trainings_statistic %}
     <div class="card mb-3 shadow">
         <div class="card-header fs-4 py-0">
-            <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ statsSet.type }}_training_stats" aria-expanded="true">
+            <div class="row flex-nowrap user-select-none hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ statsSet.type }}_training_stats" aria-expanded="true">
                 <div class="col">{{ statsSet.header }}</div>
                 <div class="col-auto my-auto px-2 text-secondary fs-6">
                     <i class="bi bi-chevron-compact-up icon_expanded"></i>
@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="card-body p-0 collapse show" id="{{ statsSet.type }}_training_stats">
-            <div class="row border-bottom flex-nowrap small text-muted m-0 mt-2 text-nowrap">
+            <div class="row border-bottom user-select-none flex-nowrap small text-muted m-0 mt-2 text-nowrap">
                 <div class="col-1 id_col text-center d-none d-sm-block">{{ statsSet.table_header.id }}</div>
                 <div class="col-1 id_col text-center">{{ statsSet.table_header.total | safe }}</div>
                 <div class="col col-sm-4 col-lg-3">{{ statsSet.table_header.name }}</div>
@@ -20,7 +20,7 @@
             </div>
             {% for entry in statsSet.stats %}
                 {% if entry.totalTrainings %}
-                    <div class="row align-items-center flex-nowrap trainings_list m-0 py-1{% if not forloop.last %} border-bottom{% else %} rounded-bottom{% endif %}" id="training_{{ entry.id }}">
+                    <div class="row align-items-center user-select-none flex-nowrap trainings_list m-0 py-1{% if not forloop.last %} border-bottom{% else %} rounded-bottom{% endif %}" id="training_{{ entry.id }}">
                         <div class="col-1 id_col fw-bold text-primary text-center d-none d-sm-block">{{ forloop.counter }}</div>
                         <div class="col-1 id_col text-center">{{ entry.totalTrainings }}</div>
                         <div class="col col-sm-4 col-lg-3">

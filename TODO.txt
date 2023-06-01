@@ -5,4 +5,3 @@ TODO: DBRegatta
 - Implement/transition to class-based views
 - Code refactoring (especially reusable template code)
 - Tooltips for notifications
-- Billing page tables

@@ -37,7 +37,7 @@ CONSTANCE_CONFIG = {
     'submitAbort':                  ('Abbrechen',                                   'Text for Cancel Button'),
     'overscan':                     (0,                                             'Overscan Margin for TV Displays'),
     'overscanDesc':                 ('Overscan Kompensation',                       'Label Text for Overscan Margin for TV Displays Control'),
-    'overscanMax':                  (5,                                             'Maximum Overscan Margin for TV Displays'),
+    'overscanMax':                  (11,                                            'Maximum Overscan Margin for TV Displays'),
     'domain':                       ('',                                            'Domain Name of the Site'),
     'timeSuffix':                   ('Uhr',                                         'Suffix for Time of Day Strings'),
     'pdfIcon':                      ('pdf.svg',                                     'Icon for the PDF Button'),

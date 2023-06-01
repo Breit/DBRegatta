@@ -111,7 +111,7 @@
         {% for entry in timetable %}
             <div class="card mb-3 shadow">
                 <div class="card-header fs-4 py-0{% if not entry.races %} card-header-collapsed{% endif %}">
-                    <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ entry.desc|uid }}" aria-expanded="{% if entry.fold %}false{% else %}true{% endif %}">
+                    <div class="row flex-nowrap user-select-none hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ entry.desc|uid }}" aria-expanded="{% if entry.fold %}false{% else %}true{% endif %}">
                         <div class="col-auto text-center">{{ entry.time|time:'H:i'}}</div>
                         <div class="col">{{ entry.desc }}</div>
                         {% if entry.races %}
@@ -124,7 +124,7 @@
                 </div>
                 {% if entry.races %}
                     <div class="card-body p-0 collapse{% if not entry.fold %} show{% endif %}" id="{{ entry.desc|uid }}">
-                        <div class="row small border-bottom text-muted mx-0 mt-2">
+                        <div class="row small user-select-none border-bottom text-muted mx-0 mt-2">
                             <div class="col-1 text-center text-nowrap">{{ config.timetableHeaderTime }}</div>
                             <div class="col-1 text-center text-nowrap">{{ config.timetableHeaderName }}</div>
                             <div class="col">
@@ -137,7 +137,7 @@
                             </div>
                         </div>
                         {% for race in entry.races %}
-                            <div class="row timetable_race mx-0{% if forloop.last %} rounded-bottom{% else %} border-bottom{% endif %}">
+                            <div class="row user-select-none timetable_race mx-0{% if forloop.last %} rounded-bottom{% else %} border-bottom{% endif %}">
                                 <div class="col-1 text-center align-self-center fw-bold text-nowrap">{{ race.time|time:'H:i' }}</div>
                                 <div class="col-1 text-center align-self-center text-nowrap">{{ race.desc }}</div>
                                 <div class="col">
