@@ -1096,7 +1096,8 @@ def getSiteData(id: str = None, user = None):
         menu_teams['notifications'].append(
             {
                 'level': 'success',
-                'count': teams_active
+                'count': teams_active,
+                'tooltip': '{title} {status}: {count}'.format(title=config.teamTableHeaderTeams, status=config.activeTeams, count=teams_active)
             }
         )
     teams_wait = Team.objects.filter(active=True, wait=True).count()
@@ -1104,7 +1105,8 @@ def getSiteData(id: str = None, user = None):
         menu_teams['notifications'].append(
             {
                 'level': 'warning',
-                'count': teams_wait
+                'count': teams_wait,
+                'tooltip': '{title} {status}: {count}'.format(title=config.teamTableHeaderTeams, status=config.waitlistTeams, count=teams_wait)
             }
         )
     teams_inactive = Team.objects.filter(active=False).count()
@@ -1112,7 +1114,8 @@ def getSiteData(id: str = None, user = None):
         menu_teams['notifications'].append(
             {
                 'level': 'secondary',
-                'count': teams_inactive
+                'count': teams_inactive,
+                'tooltip': '{title} {status}: {count}'.format(title=config.teamTableHeaderTeams, status=config.inactiveTeams, count=teams_inactive)
             }
         )
 
@@ -1129,7 +1132,8 @@ def getSiteData(id: str = None, user = None):
         menu_trainings['notifications'].append(
             {
                 'level': 'warning',
-                'count': trainings_upcoming
+                'count': trainings_upcoming,
+                'tooltip': '{title}: {count}'.format(title=config.trainingsTitleUpcoming, count=trainings_upcoming)
             }
         )
     trainings_past = len(getTrainingsList(pastOnly=True))
@@ -1137,7 +1141,8 @@ def getSiteData(id: str = None, user = None):
         menu_trainings['notifications'].append(
             {
                 'level': 'success',
-                'count': trainings_past
+                'count': trainings_past,
+                'tooltip': '{title}: {count}'.format(title=config.trainingsTitlePast, count=trainings_past)
             }
         )
     trainings_inactive = len(getTrainingsList(active=False))
@@ -1145,7 +1150,8 @@ def getSiteData(id: str = None, user = None):
         menu_trainings['notifications'].append(
             {
                 'level': 'secondary',
-                'count': trainings_inactive
+                'count': trainings_inactive,
+                'tooltip': '{title}: {count}'.format(title=config.trainingsTitleInactive, count=trainings_inactive)
             }
         )
 
@@ -1180,7 +1186,8 @@ def getSiteData(id: str = None, user = None):
         menu_skippers['notifications'].append(
             {
                 'level': 'success',
-                'count': skippers_active
+                'count': skippers_active,
+                'tooltip': '{title} {status}: {count}'.format(title=config.skippersTitle, status=config.activeSkipperTitle, count=skippers_active)
             }
         )
     skippers_inactive = Skipper.objects.filter(active=False).count()
@@ -1188,7 +1195,8 @@ def getSiteData(id: str = None, user = None):
         menu_skippers['notifications'].append(
             {
                 'level': 'secondary',
-                'count': skippers_inactive
+                'count': skippers_inactive,
+                'tooltip': '{title} {status}: {count}'.format(title=config.skippersTitle, status=config.inactiveSkipperTitle, count=skippers_inactive)
             }
         )
 
@@ -1214,21 +1222,24 @@ def getSiteData(id: str = None, user = None):
         menu_times['notifications'].append(
             {
                 'level': 'warning',
-                'count': started
+                'count': started,
+                'tooltip': '{title}: {status}'.format(title=config.raceCurrentTitle, status=started)
             }
         )
     elif last is not None:
         menu_times['notifications'].append(
             {
                 'level': 'success',
-                'count': last
+                'count': last,
+                'tooltip': '{title}: {status}'.format(title=config.raceLastTitle, status=last)
             }
         )
     if next is not None:
         menu_times['notifications'].append(
             {
                 'level': 'danger',
-                'count': next
+                'count': next,
+                'tooltip': '{title}: {status}'.format(title=config.raceNextTitle, status=next)
             }
         )
 
@@ -1254,7 +1265,8 @@ def getSiteData(id: str = None, user = None):
         menu_display['notifications'] = [
             {
                 'level': 'danger',
-                'count': getCurrentRaceBlock()
+                'count': current_race_block,
+                'tooltip': '{title}: {status}'.format(title=config.currentRaceBlockTitle, status=current_race_block)
             }
         ]
 

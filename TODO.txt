@@ -1,7 +1,5 @@
 TODO: DBRegatta
 - Landing page with registration button for teams
 - Open/Close registration button
-- PDF Export: Skippers
 - Implement/transition to class-based views
 - Code refactoring (especially reusable template code)
-- Tooltips for notifications

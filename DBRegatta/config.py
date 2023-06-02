@@ -195,6 +195,10 @@ CONSTANCE_CONFIG = {
     'refreshTimesText':             ('Zeiten eintragen',                            'Text for Refresh Times Button'),
     'resetTimesText':               ('Zurücksetzen',                                'Text for Reset Times Button'),
     'resetIcon':                    ('reload.svg',                                  'Button Icon for Reload Button'),
+    'raceCurrentTitle':             ('Aktuelles Rennen',                            'Text for Current Race Tooltip'),
+    'raceLastTitle':                ('Letztes Rennen',                              'Text for Last Race Tooltip'),
+    'raceNextTitle':                ('Nächstes Rennen',                             'Text for Next Race Tooltip'),
+    'currentRaceBlockTitle':        ('Aktueller Rennblock',                         'Text for Next Race Block Tooltip'),
 
     # Trainings Settings
     'trainingsPageCSS':             ('trainings.css',                               'CSS File for Site-specific Styling'),
@@ -582,6 +586,10 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'timesHeaderTime',
             'refreshTimesText',
             'resetTimesText',
+            'raceCurrentTitle',
+            'raceLastTitle',
+            'raceNextTitle',
+            'currentRaceBlockTitle',
             'resetIcon',
         ),
         'collapse': True

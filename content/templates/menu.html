@@ -14,11 +14,11 @@
                     </div>
                     <span class="item_title ps-2 pe-3 my-auto lead text-light w-100{% if request.session.fold_menu %} d-none{% endif %}">{{ m.title }}</span>
                     {% if m.notifications %}
-                    <div class="item_badges d-flex flex-column pe-1 align-self-center{% if request.session.fold_menu %} d-none{% endif %}">
-                        {% for n in m.notifications %}
-                            <span class="badge text-light text-bg-{{ n.level }}{% if not forloop.last%} mb-1{% endif %}">{{ n.count }}</span>
-                        {% endfor %}
-                    </div>
+                        <div class="item_badges d-flex flex-column pe-1 align-self-center{% if request.session.fold_menu %} d-none{% endif %}">
+                            {% for n in m.notifications %}
+                                <span class="badge text-light text-bg-{{ n.level }}{% if not forloop.last%} mb-1{% endif %}" data-bs-tooltip title="{{ n.tooltip }}">{{ n.count }}</span>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </a>
             </li>
