@@ -234,7 +234,11 @@ def getTrainingsContent():
     return content
 
 def getBillingContent():
-    content = []
+    content = {
+        'sumCompensations': 0,
+        'sumFees': 0,
+        'tables': []
+    }
 
     # Add billing data for skippers
     skippersContent = {
@@ -299,6 +303,7 @@ def getBillingContent():
             'header': config.headerIndividualEntries,
             'data': []
         }
+        content['sumCompensations'] += skipperTrainings.count() * config.skipperTrainingsCompensation
 
         for training in skipperTrainings:
             try:
@@ -364,7 +369,7 @@ def getBillingContent():
         skippersContent['data'].append(data)
 
     if len(skippersContent['data']) > 0:
-        content.append(skippersContent)
+        content['tables'].append(skippersContent)
 
     # Add billing data for teams
     teamsContent = {
@@ -546,9 +551,10 @@ def getBillingContent():
             ]
 
             teamsContent['data'].append(data)
+            content['sumFees'] += fee_sum
 
     if len(teamsContent['data']) > 0:
-        content.append(teamsContent)
+        content['tables'].append(teamsContent)
 
     return content
 

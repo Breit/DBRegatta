@@ -2,7 +2,7 @@
 {% load filter_tags %}
 
 {% block card_table %}
-    {% for tabledata in content %}
+    {% for tabledata in content.tables %}
         <div class="card mb-3 shadow">
             <div class="card-header fs-4 py-0">
                 <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ tabledata.id }}" aria-expanded="true">
