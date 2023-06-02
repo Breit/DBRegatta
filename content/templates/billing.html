@@ -13,6 +13,24 @@
 {% block content %}
     <div class="container-fluid" id="billing_table">
         <h2 class="mt-2 mb-3 display-6">{{ config.billingTitle }}</h2>
+        <div class="progress mb-4 bg-light">
+            {% if content.sumCompensations %}
+                <div class="progress-bar px-2 me-2 billing_progress bg-light border-bottom border-warning border-5 text-warning" role="progressbar" style="width: calc(100% * {{ content.sumCompensations }} / {{ content.sumFees|add:content.sumCompensations }})">
+                    <div class="flex-row text-end">
+                        <span class="lead">{{ config.headerCompensationSum }}</span>
+                        <span class="display-3 fw-bold">{{ content.sumCompensations }}{{ config.currency }}</span>
+                    </div>
+                </div>
+            {% endif %}
+            {% if content.sumFees %}
+                <div class="progress-bar px-2 billing_progress bg-light border-bottom border-success border-5 text-success" role="progressbar" style="width: calc(100% * {{ content.sumFees }} / {{ content.sumFees|add:content.sumCompensations }})">
+                    <div class="flex-row text-end">
+                        <span class="lead">{{ config.headerFeeSum }}</span>
+                        <span class="display-3 fw-bold">{{ content.sumFees }}{{ config.currency }}</span>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
         <div class="container-fluid m-0 p-0">
             {% block card_table %}
                 {% include 'card_table.html' %}

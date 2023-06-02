@@ -22,5 +22,6 @@ urlpatterns = [
     path('timetable/pdf',   views_pdf.timetable),
     path('results/pdf',     views_pdf.results),
     path('trainings/pdf',   views_pdf.trainings),
-    path('billing/pdf',     views_pdf.billing)
+    path('billing/pdf',     views_pdf.billing),
+    path('skippers/pdf',    views_pdf.skippers)
 ]

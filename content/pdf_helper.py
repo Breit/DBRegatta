@@ -240,6 +240,13 @@ def pdfStyleSheet():
     )
     stylesheet.add(
         ParagraphStyle(
+            name='NormalLink',
+            parent=stylesheet['Normal'],
+            textColor=colors.HexColor('#3a6af7')
+        )
+    )
+    stylesheet.add(
+        ParagraphStyle(
             name='NormalBLink',
             parent=stylesheet['NormalB'],
             textColor=colors.HexColor('#3a6af7')

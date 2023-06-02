@@ -29,6 +29,15 @@
     max-width: 10.0rem !important;
 }
 
+.progress {
+    height: 4rem;
+    border-radius: 0;
+}
+
+.billing_progress {
+    min-width: fit-content;
+}
+
 .smaller {
     font-size: .75em;
 }

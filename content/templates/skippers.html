@@ -164,8 +164,8 @@
             {% endif %}
         </div>
     </div>
-    {% if user.is_staff %}
-        <div class="container-fluid mb-3 pt-3">
+    <div class="container-fluid mb-3 pt-3">
+        {% if user.is_staff %}
             <button type="button" name="show_skipper_form" value="Add" class="btn btn-primary btn_icon btn_lg shadow" data-bs-toggle="modal" data-bs-target="#formSkipperModal">
                 <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                     <div class="pe-2">
@@ -174,7 +174,14 @@
                     <p class="m-0 ps-2 lead">{{ config.addSkipper }}</p>
                 </div>
             </button>
-        </div>
-    {% endif %}
+            {% endif %}
+        <button type="button" name="skipper_pdf" value="SkipperPdf" id="skipper_pdf" class="btn btn-light btn_icon btn_fit shadow border float-end">
+            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                <div class="pe-2">
+                    <img src="{% static 'images/' %}{{ config.pdfIcon }}" alt="skipper_pdf">
+                </div>
+            </div>
+        </button>
+    </div>
     <div class="container-fluid overscroll"></div>
 {% endblock %}
