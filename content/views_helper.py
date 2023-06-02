@@ -518,20 +518,20 @@ def getBillingContent():
                 {
                     'name': config.teamTableHeaderCompany,
                     'data': team.company,
-                    'columnClasses': 'col d-none d-xl-block small',
+                    'columnClasses': 'col d-none d-lg-block small',
                     'contentClasses': ''
                 },
                 {
                     'name': config.teamTableHeaderCaptain,
                     'data': team.contact,
-                    'columnClasses': 'col col-lg-2',
+                    'columnClasses': 'col col-xl-2',
                     'contentClasses': 'fw-bold'
                 },
                 {
                     'type': 'email',
                     'name': config.teamTableHeaderEmail,
                     'data': team.email,
-                    'columnClasses': 'col d-none d-lg-block',
+                    'columnClasses': 'col d-none d-xl-block',
                     'contentClasses': ''
                 },
                 {
@@ -1960,6 +1960,78 @@ def getMainSettings():
                     'name': config.sponsorLogoReportDesc,
                     'type': 'image',
                     'value': config.sponsorLogoReport,
+                    'icon': 'image',
+                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'classes': 'col-12 col-md-6 col-lg-3',
+                    'bg_class': 'bg-light'
+                },
+                {
+                    'id': 'ownerName2',
+                    'name': config.ownerName2Desc,
+                    'type': 'text',
+                    'value': config.ownerName2,
+                    'icon': 'person-circle',
+                    'classes': 'col-12 col-lg-6'
+                },
+                {
+                    'id': 'sponsorName2',
+                    'name': config.sponsorName2Desc,
+                    'type': 'text',
+                    'value': config.sponsorName2,
+                    'icon': 'building',
+                    'classes': 'col-12 col-lg-6'
+                },
+                {
+                    'id': 'ownerUrl2',
+                    'name': config.ownerUrl2Desc,
+                    'type': 'url',
+                    'value': config.ownerUrl2,
+                    'icon': 'link-45deg',
+                    'classes': 'col-12 col-lg-6'
+                },
+                {
+                    'id': 'sponsorUrl2',
+                    'name': config.sponsorUrl2Desc,
+                    'type': 'url',
+                    'value': config.sponsorUrl2,
+                    'icon': 'link-45deg',
+                    'classes': 'col-12 col-lg-6'
+                },
+                {
+                    'id': 'ownerLogo2',
+                    'name': config.ownerLogo2Desc,
+                    'type': 'image',
+                    'value': config.ownerLogo2,
+                    'icon': 'image',
+                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'classes': 'col-12 col-md-6 col-lg-3',
+                    'bg_class': 'bg-dark'
+                },
+                {
+                    'id': 'sponsorLogo2',
+                    'name': config.sponsorLogo2Desc,
+                    'type': 'image',
+                    'value': config.sponsorLogo2,
+                    'icon': 'image',
+                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'classes': 'col-12 col-md-6 col-lg-3',
+                    'bg_class': 'bg-dark'
+                },
+                {
+                    'id': 'ownerLogo2Report',
+                    'name': config.ownerLogo2ReportDesc,
+                    'type': 'image',
+                    'value': config.ownerLogo2Report,
+                    'icon': 'image',
+                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'classes': 'col-12 col-md-6 col-lg-3',
+                    'bg_class': 'bg-light'
+                },
+                {
+                    'id': 'sponsorLogo2Report',
+                    'name': config.sponsorLogo2ReportDesc,
+                    'type': 'image',
+                    'value': config.sponsorLogo2Report,
                     'icon': 'image',
                     'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
                     'classes': 'col-12 col-md-6 col-lg-3',

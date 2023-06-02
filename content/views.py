@@ -516,18 +516,34 @@ def settings(request):
             config.ownerName = request.POST['ownerName']
         elif 'sponsorName' in request.POST:
             config.sponsorName = request.POST['sponsorName']
+        elif 'ownerName2' in request.POST:
+            config.ownerName2 = request.POST['ownerName2']
+        elif 'sponsorName2' in request.POST:
+            config.sponsorName2 = request.POST['sponsorName2']
         elif 'ownerUrl' in request.POST:
             config.ownerUrl = request.POST['ownerUrl']
         elif 'sponsorUrl' in request.POST:
             config.sponsorUrl = request.POST['sponsorUrl']
+        elif 'ownerUrl2' in request.POST:
+            config.ownerUrl2 = request.POST['ownerUrl2']
+        elif 'sponsorUrl2' in request.POST:
+            config.sponsorUrl2 = request.POST['sponsorUrl2']
         elif 'ownerLogo' in request.POST:
             config.ownerLogo = request.POST['ownerLogo']
         elif 'ownerLogoReport' in request.POST:
             config.ownerLogoReport = request.POST['ownerLogoReport']
+        elif 'ownerLogo2' in request.POST:
+            config.ownerLogo2 = request.POST['ownerLogo2']
+        elif 'ownerLogo2Report' in request.POST:
+            config.ownerLogo2Report = request.POST['ownerLogo2Report']
         elif 'sponsorLogo' in request.POST:
             config.sponsorLogo = request.POST['sponsorLogo']
         elif 'sponsorLogoReport' in request.POST:
             config.sponsorLogoReport = request.POST['sponsorLogoReport']
+        elif 'sponsorLogo2' in request.POST:
+            config.sponsorLogo2 = request.POST['sponsorLogo2']
+        elif 'sponsorLogo2Report' in request.POST:
+            config.sponsorLogo2Report = request.POST['sponsorLogo2Report']
         elif 'siteDomain' in request.POST:
             config.domain = request.POST['siteDomain']
         elif 'liveResultsHint' in request.POST:
