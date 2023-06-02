@@ -16,7 +16,7 @@
             {% for section in controls %}
                 <div class="card mb-4 shadow">
                     <div class="card-header fs-4 py-0">
-                        <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ section.title|uid }}" aria-expanded="true">
+                        <div class="row user-select-none flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ section.title|uid }}" aria-expanded="true">
                             <div class="col">{{ section.title }}</div>
                             <div class="col-auto my-auto px-2 text-secondary fs-6">
                                 <i class="bi bi-chevron-compact-up icon_expanded"></i>
@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="card-body p-0 collapse show" id="{{ section.title|uid }}">
-                        <div class="row pt-0 mx-0 rounded-bottom">
+                        <div class="row user-select-none pt-0 mx-0 rounded-bottom">
                             {% for c in section.controls %}
                                 {% if c.type == 'date' %}
                                     <div class="{% if c.classes %}{{ c.classes }}{% else %}col-auto{% endif %} mb-3">
@@ -68,7 +68,11 @@
                                                 <input type="hidden" name="{{ c.id }}" value="off">
                                                 <input type="{{ c.type }}" id="{{ c.id }}" name="{{ c.id }}" class="form-check-input text-end pe-4" onchange="update_setting('{{ c.id }}')" {% if c.value %}checked{% endif %}>
                                             </div>
-                                            <input type="text" class="form-control bg-light" value="{% if c.value %}{{ config.activeResultsDesc }}{% else %}{{ config.inactiveResultsDesc }}{% endif %}" disabled>
+                                            {% if 'active' in c and 'inactive' in c %}
+                                                <input type="text" class="form-control bg-light" value="{% if c.value %}{{ c.active }}{% else %}{{ c.inactive }}{% endif %}" disabled>
+                                            {% else %}
+                                                <input type="text" class="form-control bg-light" value="{% if c.value %}{{ config.activeResultsDesc }}{% else %}{{ config.inactiveResultsDesc }}{% endif %}" disabled>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 {% elif c.type == 'number' %}
@@ -118,7 +122,7 @@
                 <div class="col-12 mb-2">
                     <div class="card p-0 shadow">
                         <div class="card-header bg-purple-100 fs-4 py-0">
-                            <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ config.devOptionsDatabase|uid }}" aria-expanded="true">
+                            <div class="row user-select-none flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ config.devOptionsDatabase|uid }}" aria-expanded="true">
                                 <div class="col">{{ config.devOptionsDatabase }}</div>
                                 <div class="col-auto my-auto px-2 text-secondary fs-6">
                                     <i class="bi bi-chevron-compact-up icon_expanded"></i>

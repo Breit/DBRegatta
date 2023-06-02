@@ -199,4 +199,9 @@ $(document).ready(function()
             }
         );
     });
+
+    $('#trainings_pdf').click(function()
+    {
+        window.open(window.location.href + '/pdf');
+    });
 });

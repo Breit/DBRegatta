@@ -1,0 +1,99 @@
+{% load static %}
+{% load filter_tags %}
+
+{% block card_table %}
+    {% for tabledata in content %}
+        <div class="card mb-3 shadow">
+            <div class="card-header fs-4 py-0">
+                <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ tabledata.id }}" aria-expanded="true">
+                    <div class="col">
+                        {{ tabledata.header }}
+                    </div>
+                    <div class="col-auto my-auto px-2 text-secondary fs-6">
+                        <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                        <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0 collapse show" id="{{ tabledata.id }}">
+                {% if tabledata.data|length > 0 %}
+                    <div class="row main_table_row_header border-bottom flex-nowrap small text-muted m-0 mt-2 text-nowrap">
+                        {% for column in tabledata.data.0.row %}
+                            <div class="{{ column.columnClasses }}">{{ column.name }}</div>
+                        {% endfor %}
+                    </div>
+                    {% for entry in tabledata.data %}
+                        <div class="row main_table_row card_table align-items-center user-select-none m-0 p-0{% if not forloop.last %} border-bottom{% else %} rounded-bottom{% endif %}">
+                            <div class="row main_table_row_data flex-nowrap m-0 px-0 py-1">
+                                {% for column in entry.row %}
+                                    <div class="{{ column.columnClasses }} {{ column.contentClasses }}">
+                                        {% if column.name == '#' %}
+                                            {{ forloop.parentloop.counter }}
+                                        {% else %}
+                                            {% for element in column.data_list %}
+                                                {% if element.type == 'email' %}
+                                                    <a href= "mailto:{{ element.data }}" class="{{ element.classes }}">{{ element.data }}</a>
+                                                {% else %}
+                                                    <span class="{{ element.classes }}">{{ element.data }}</span>
+                                                {% endif %}
+                                                {% if not forloop.last %}
+                                                    <br>
+                                                {% endif %}
+                                            {% empty %}
+                                                {% if 'type' in column and column.type == 'email' %}
+                                                    <a href= "mailto:{{ column.data }}">{{ column.data }}</a>
+                                                {% else %}
+                                                    {{ column.data }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% if 'subtable' in entry and entry.subtable.data|length > 0 %}
+                                <div class="row subtable_header_row bg-primary-100 border-bottom flex-nowrap text-nowrap m-0 px-0 py-1 d-none">
+                                    <div class="col display-6 fs-5">{{ config.headerIndividualEntries }}</div>
+                                </div>
+                                <div class="row subtable_header_row bg-white flex-nowrap border-bottom small text-muted text-nowrap m-0 p-0 pt-2 d-none">
+                                    {% for column in entry.subtable.data.0 %}
+                                        <div class="{{ column.columnClasses }}">{{ column.name }}</div>
+                                    {% endfor %}
+                                </div>
+                                {% for subentry in entry.subtable.data %}
+                                    <div class="row subtable_content_row card_table align-items-center m-0 px-0 py-1 d-none{% if not forloop.last %} border-bottom{% endif %}{% if forloop.parentloop.last and forloop.last %} rounded-bottom{% endif %}">
+                                        <div class="row flex-nowrap m-0 p-0">
+                                            {% for column in subentry %}
+                                                <div class="{{ column.columnClasses }} {{ column.contentClasses }}">
+                                                    {% if column.name == '#' and column.data|is_integer %}
+                                                        {{ forloop.parentloop.counter }}
+                                                    {% else %}
+                                                        {% for element in column.data_list %}
+                                                            {% if element.type == 'email' %}
+                                                                <a href= "mailto:{{ element.data }}" class="{{ element.classes }}">{{ element.data }}</a>
+                                                            {% else %}
+                                                                <span class="{{ element.classes }}">{{ element.data }}</span>
+                                                            {% endif %}
+                                                            {% if not forloop.last %}
+                                                                <br>
+                                                            {% endif %}
+                                                        {% empty %}
+                                                            {% if 'type' in column and column.type == 'email' %}
+                                                                <a href= "mailto:{{ column.data }}">{{ column.data }}</a>
+                                                            {% else %}
+                                                                {{ column.data }}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

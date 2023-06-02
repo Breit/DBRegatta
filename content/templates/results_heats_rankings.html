@@ -4,7 +4,7 @@
 {% block rankings_heats %}
     <div class="card mb-3 shadow">
         <div class="card-header bg-purple-300 text-light{% if display %} display-6 py-1{% else %} fs-4 py-0{% endif %}">
-            <div class="row flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ entry.desc|uid }}" aria-expanded="true">
+            <div class="row flex-nowrap user-select-none hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ entry.desc|uid }}" aria-expanded="true">
                 <div class="col">{{ entry.desc }}</div>
                 {% if not display %}
                     <div class="col-auto my-auto px-2 text-light fs-6">
@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="card-body p-0 collapse show" id="{{ entry.desc|uid }}">
-            <div class="row flex-nowrap border-bottom small text-muted mt-2 mx-0 px-0">
+            <div class="row flex-nowrap user-select-none border-bottom small text-muted mt-2 mx-0 px-0">
                 <div class="col-1 text-center rank_column">{{ config.displayRank }}</div>
                 <div class="col">{{ config.timetableHeaderTeam }}</div>
                 <div class="col-5 d-none d-xl-block">{{ config.timetableHeaderCompany }}</div>
@@ -26,7 +26,7 @@
             </div>
             {% for b in entry.brackets %}
                 {% for r in entry.ranks|ranks_bracket:b %}
-                    <div class="row flex-nowrap mx-0 p-0 rankings_table{% if not forloop.parentloop.first and forloop.first %} mt-4{% endif %}{% if forloop.last and not forloop.parentloop.last %} border-bottom{% endif %}{% if not forloop.first or not forloop.parentloop.first %} border-top{% endif %}{% if forloop.last %} rounded-bottom{% endif %}">
+                    <div class="row flex-nowrap mx-0 p-0 user-select-none rankings_table{% if not forloop.parentloop.first and forloop.first %} mt-4{% endif %}{% if forloop.last and not forloop.parentloop.last %} border-bottom{% endif %}{% if not forloop.first or not forloop.parentloop.first %} border-top{% endif %}{% if forloop.last %} rounded-bottom{% endif %}">
                         <div class="col-1 text-center text-primary fw-bold rank_column">{% if r.races > 0 %}{{ r.rank }}{% endif %}</div>
                         <div class="col col_team fw-bold test-success">{{ r.name }}</div>
                         <div class="col-5 d-none d-xl-block">{{ r.company }}</div>

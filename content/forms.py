@@ -13,6 +13,7 @@ class TeamForm(ModelForm):
             'position',
             'date',
             'name',
+            'nofee',
             'company',
             'contact',
             'email',
@@ -25,6 +26,7 @@ class TeamForm(ModelForm):
             'position': '',
             'date': '',
             'name': '',
+            'nofee': '',
             'company': '',
             'contact': '',
             'email': '',
@@ -69,6 +71,12 @@ class TeamForm(ModelForm):
                     'placeholder': config.placeholderTeamName,
                     'data-bs-tooltip': '',
                     'title': config.placeholderTeamName
+                }
+            ),
+            'nofee': forms.CheckboxInput(
+                attrs = {
+                    'class': 'form-check-input',
+                    'placeholder': config.placeholderTeamNoFee
                 }
             ),
             'company': forms.TextInput(

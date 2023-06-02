@@ -24,7 +24,7 @@
         </div>
         <div class="carousel-inner d-flex h-100">
             {% for entry in display %}
-                <div class="carousel-item d-flex flex-column {% if forloop.counter == 1 %} active{% endif %}" data-bs-interval="{{ config.displayInterval }}">
+                <div class="carousel-item d-flex flex-column{% if forloop.counter == 1 %} active{% endif %}" data-bs-interval="{{ config.displayInterval }}">
                     <div class="flex-grow-1"></div>
                     <div class="flex-column px-5">
                         {% if entry.type == 'timetable' %}
@@ -51,7 +51,10 @@
                             </div>
                         {% endif %}
                     </div>
-                    <div class="flex-grow-1 m-{{ config.overscan }}"></div>
+                    <div class="flex-grow-1"></div>
+                    <div class="flex-column bg-dark">
+                        <div class="m-{{ config.overscan }} mt-0"></div>
+                    </div>
                 </div>
             {% endfor %}
         </div>

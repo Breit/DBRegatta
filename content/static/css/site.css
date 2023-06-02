@@ -22,6 +22,14 @@
     --bs-table-lane-hover: #eaeaeb;
 }
 
+.bg-none {
+    background: rgba(0, 0, 0, 0);
+}
+
+.bg-white {
+    background-color: var(--bs-white) !important;
+}
+
 .bg-primary-100 {
     background-color: var(--bs-primary-100) !important;
 }
@@ -281,4 +289,16 @@
 
 .tooltip-text-left > .tooltip-inner {
     text-align: start !important;
+}
+
+.card_table:nth-child(even) {
+    background-color: var(--bs-gray-100) !important;
+}
+
+.card_table {
+    background-color: var(--bs-white) !important;
+}
+
+.card_table:hover {
+    background-color: var(--bs-table-row-hover) !important;
 }

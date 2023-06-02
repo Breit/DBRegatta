@@ -41,7 +41,7 @@
                     </div>
                 </div>
             {% elif f.html_name == 'name' %}
-                <div class="col-12 mb-3">
+                <div class="col-12 col-sm-6 col-lg-9 mb-3">
                     <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
                         <span class="input-group-text{% if f.field.required %} text-primary{% endif %}"><i class="bi bi-tag"></i></span>
                         {{ f }}

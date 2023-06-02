@@ -1,5 +1,4 @@
 import math
-#import base64
 import hashlib
 from django import template
 
@@ -109,3 +108,10 @@ def uid(value):
         pass
 
     return ''
+
+'''
+Simple is_integer() filter
+'''
+@register.filter()
+def is_integer(value):
+    return isinstance(value, int)

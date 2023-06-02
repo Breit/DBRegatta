@@ -1,3 +1,7 @@
+body {
+    overflow: hidden;
+}
+
 .menu {
     display: none !important;
 }
@@ -57,4 +61,32 @@
 
 #liveClock {
     min-width: 6.25rem;
+}
+
+.m-5 {
+    margin: 2.0rem !important;
+}
+
+.m-6 {
+    margin: 2.5rem;
+}
+
+.m-7 {
+    margin: 3.0rem;
+}
+
+.m-8 {
+    margin: 3.5rem;
+}
+
+.m-9 {
+    margin: 4.0rem;
+}
+
+.m-10 {
+    margin: 4.5rem;
+}
+
+.m-11 {
+    margin: 5.0rem;
 }

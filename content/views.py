@@ -200,6 +200,22 @@ def trainings(request):
 
     return render(request, 'trainings.html', siteData)
 
+def billing(request):
+    # handle login/logout
+    loginUser(request)
+
+    if not request.user.is_authenticated:
+        return redirect('/')
+
+    # handle menu folding
+    if toggleFoldMenu(request):
+        return redirect('/billing')
+
+    siteData = getSiteData('billing', request.user)
+    siteData['content'] = getBillingContent()
+
+    return render(request, 'billing.html', siteData)
+
 def calendar(request):
     # handle login/logout
     loginUser(request)
@@ -540,6 +556,14 @@ def settings(request):
             config.lastTrainingTime = time.fromisoformat(request.POST['lastTrainingTime'])
         elif 'lengthTraining' in request.POST:
             config.intervalTrainingLength = timedelta(minutes=int(request.POST['lengthTraining']))
+        elif 'eventFee' in request.POST:
+            config.eventFee = int(request.POST['eventFee'])
+        elif 'trainingsFee' in request.POST:
+            config.trainingsFee = int(request.POST['trainingsFee'])
+        elif 'skipperTrainingsCompensation' in request.POST:
+            config.skipperTrainingsCompensation = int(request.POST['skipperTrainingsCompensation'])
+        elif 'firstTrainingIsFree' in request.POST:
+            config.firstTrainingIsFree = request.POST['firstTrainingIsFree'] == 'on'
         elif 'refreshTimes' in request.POST:
             updateTimeTable()
         elif 'resetFinals' in request.POST:

@@ -1,0 +1,51 @@
+.id_col {
+    min-width: 2.5rem !important;
+    max-width: 2.5rem !important;
+    padding-left: 0.25rem !important;
+}
+
+.select > .main_table_row_data > .id_col {
+    min-width: 2.5rem !important;
+    max-width: 2.5rem !important;
+}
+
+.money_col {
+    min-width: 5.5rem !important;
+    max-width: 5.5rem !important;
+}
+
+.trainings_col {
+    min-width: 4.5rem !important;
+    max-width: 4.5rem !important;
+}
+
+.time_col {
+    min-width: 8.5rem !important;
+    max-width: 8.5rem !important;
+}
+
+.date_col {
+    min-width: 10.0rem !important;
+    max-width: 10.0rem !important;
+}
+
+.smaller {
+    font-size: .75em;
+}
+
+.selected {
+    outline: 1px solid var(--bs-primary) !important;
+}
+
+.marked {
+    border-left: 0.5rem solid var(--bs-primary-200) !important;
+}
+
+.main_table_row_header,
+.main_table_row_data {
+    border-left: 0.5rem solid transparent;
+}
+
+.main_table_row {
+    cursor: pointer;
+}

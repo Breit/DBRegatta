@@ -119,6 +119,7 @@ def getTrainingsList(active=True, upcomingOnly=False, pastOnly=False):
         entry['team']['company'] = team.company
         entry['team']['contact'] = team.contact
         entry['team']['email'] = team.email
+        entry['team']['phone'] = team.phone
 
         skipper = Skipper.objects.get(id=training.skipper_id)
         entry['skipper'] = {}
@@ -141,7 +142,7 @@ def getTrainingsContent():
             'past': getTrainingsList(pastOnly=True),
             'inactive': getTrainingsList(active=False)
         },
-        'countTrainings': Training.objects.filter().count(),
+        'countTrainings': Training.objects.all().count(),
         'countTeams': availableTeams.count(),
         'countSkippers': availableSkippers.count(),
         'availableTeams': [model_to_dict(team) for team in availableTeams],
@@ -229,6 +230,325 @@ def getTrainingsContent():
     while startTime <= config.lastTrainingTime:
         content['timeSuggestions'].append(startTime.strftime('%H:%M'))
         startTime = (datetime.combine(date.today(), startTime) + config.intervalTrainingBegin).time()
+
+    return content
+
+def getBillingContent():
+    content = []
+
+    # Add billing data for skippers
+    skippersContent = {
+        'type': 'skippers',
+        'header': config.skippersListHeading,
+        'id': 'billing_skipper',
+        'data': []
+    }
+    availableSkippers = Skipper.objects.all()
+    for skipper in availableSkippers:
+        try:
+            skipperTrainings = Training.objects.filter(skipper_id=skipper.id)
+        except:
+            continue
+
+        data = {}
+        data['row'] = [
+            {
+                'name': config.skipperTableHeaderID,
+                'data': skipper.id,
+                'columnClasses': 'col col-1 id_col text-center',
+                'contentClasses': 'fw-bold text-primary'
+            },
+            {
+                'name': config.placeholderSkipperFName,
+                'data': skipper.fname,
+                'columnClasses': 'col col-md-3 col-lg-2',
+                'contentClasses': 'fw-bold'
+            },
+            {
+                'name': config.placeholderSkipperLName,
+                'data': skipper.lname,
+                'columnClasses': 'col col-lg-2',
+                'contentClasses': 'fw-bold'
+            },
+            {
+                'type': 'email',
+                'name': config.placeholderSkipperEmail,
+                'data': skipper.email,
+                'columnClasses': 'col d-none d-lg-block',
+                'contentClasses': ''
+            },
+            {
+                'name': config.trainingsTrainings,
+                'data': skipperTrainings.count(),
+                'columnClasses': 'col col-1 trainings_col d-none d-md-block text-center',
+                'contentClasses': ''
+            },
+            {
+                'name': config.headerCompensation,
+                'data': '{value} {currency}'.format(
+                    value=skipperTrainings.count() * config.skipperTrainingsCompensation,
+                    currency=config.currency
+                ),
+                'columnClasses': 'col col-1 money_col text-end',
+                'contentClasses': 'fw-bold text-success'
+            }
+        ]
+        data['subtable'] = {
+            'id': skipper.id,
+            'type': 'training',
+            'header': config.headerIndividualEntries,
+            'data': []
+        }
+
+        for training in skipperTrainings:
+            try:
+                team = Team.objects.get(id=training.team_id)
+            except:
+                continue
+            entry = [
+                {
+                    'name': config.trainingsTableHeaderID,
+                    'data': training.id,
+                    'columnClasses': 'col col-1 id_col small text-center',
+                    'contentClasses': ''
+                },
+                {
+                    'name': config.placeholderTrainingDate,
+                    'data': training.date.strftime('%d. %B %Y'),
+                    'columnClasses': 'col date_col small',
+                    'contentClasses': 'fw-bold text-primary'
+                },
+                {
+                    'name': config.placeholderTrainingTime,
+                    'data': '{start} - {end} {timeSuffix}'.format(
+                        start=training.time.strftime('%H:%M'),
+                        end=(datetime.combine(date.today(), training.time) + training.duration).time().strftime('%H:%M'),
+                        timeSuffix=config.timeSuffix
+                    ),
+                    'columnClasses': 'col time_col small',
+                    'contentClasses': ''
+                },
+                {
+                    'name': config.teamTableHeaderTeam,
+                    'data': team.name,
+                    'columnClasses': 'col col-xl-2 small',
+                    'contentClasses': 'fw-bold text-primary'
+                },
+                {
+                    'name': config.teamTableHeaderCompany,
+                    'data': team.company,
+                    'columnClasses': 'col d-none d-xl-block small',
+                    'contentClasses': ''
+                },
+                {
+                    'name': config.placeholderTrainingNotes,
+                    'data': training.notes,
+                    'columnClasses': 'col d-none d-xxl-block small',
+                    'contentClasses': ''
+                },
+                {
+                    'name': config.headerCompensation,
+                    'data': '{value} {currency}'.format(
+                        value=config.skipperTrainingsCompensation,
+                        currency=config.currency
+                    ),
+                    'columnClasses': 'col col-1 money_col text-end small',
+                    'contentClasses': 'fw-bold text-success'
+                }
+            ]
+            data['subtable']['data'].append(entry)
+
+        if len(data['subtable']['data']) <= 0:
+            continue
+
+        skippersContent['data'].append(data)
+
+    if len(skippersContent['data']) > 0:
+        content.append(skippersContent)
+
+    # Add billing data for teams
+    teamsContent = {
+        'type': 'teams',
+        'header': config.teamListHeader,
+        'id': 'billing_teams',
+        'data': []
+    }
+    availableTeams = Team.objects.all()
+    for team in availableTeams:
+        teamTrainings = []
+        try:
+            teamTrainings = Training.objects.filter(team_id=team.id)
+        except:
+            pass
+
+        if len(teamTrainings) == 0 and not team.active and team.wait:
+            continue
+
+        # Add teams that participate in the event and/or had booked a training
+        fee_sum = 0
+        data = {}
+
+        data['subtable'] = {
+            'id': team.id,
+            'type': 'training',
+            'header': config.headerIndividualEntries,
+            'data': []
+        }
+
+        # Booked trainings
+        for n, training in enumerate(teamTrainings):
+            try:
+                skipper = Skipper.objects.get(id=training.skipper_id)
+            except:
+                continue
+
+            # First training is usually included in event fee, but only if the team participates in the event.
+            # In case the team is on the waitlist or inactive, it does not participate in the event and thus
+            # has to pay for all booked trainings.
+            fee = 0 if config.firstTrainingIsFree and n == 0 and team.active and not team.wait else config.trainingsFee
+            entry = [
+                {
+                    'name': config.trainingsTableHeaderID,
+                    'data': training.id,
+                    'columnClasses': 'col col-1 id_col small text-center',
+                    'contentClasses': ''
+                },
+                {
+                    'name': config.placeholderTrainingDate,
+                    'data': training.date.strftime('%d. %B %Y'),
+                    'columnClasses': 'col date_col small',
+                    'contentClasses': 'fw-bold text-primary'
+                },
+                {
+                    'name': config.placeholderTrainingTime,
+                    'data': '{start} - {end} {timeSuffix}'.format(
+                        start=training.time.strftime('%H:%M'),
+                        end=(datetime.combine(date.today(), training.time) + training.duration).time().strftime('%H:%M'),
+                        timeSuffix=config.timeSuffix
+                    ),
+                    'columnClasses': 'col d-none d-lg-block time_col small',
+                    'contentClasses': ''
+                },
+                {
+                    'name': config.skipper,
+                    'data': '{fname} {lname}'.format(
+                        fname=skipper.fname,
+                        lname=skipper.lname
+                    ),
+                    'columnClasses': 'col col-xl-2 small',
+                    'contentClasses': 'fw-bold text-primary'
+                },
+                {
+                    'type': 'email',
+                    'name': config.placeholderSkipperEmail,
+                    'data': skipper.email,
+                    'columnClasses': 'col d-none d-xl-block small',
+                    'contentClasses': ''
+                },
+                {
+                    'name': config.placeholderTrainingNotes,
+                    'data': training.notes,
+                    'columnClasses': 'col d-none d-xxl-block small',
+                    'contentClasses': ''
+                },
+                {
+                    'name': config.headerFee,
+                    'data': '{value} {currency}'.format(
+                        value=fee,
+                        currency=config.currency
+                    ),
+                    'columnClasses': 'col col-1 money_col text-end small',
+                    'contentClasses': 'fw-bold text-success'
+                }
+            ]
+            data['subtable']['data'].append(entry)
+            fee_sum += fee
+
+        # Event participation
+        if team.active and not team.wait:
+            # Sponsoring teams usually get the event for free
+            fee = 0 if team.nofee else config.eventFee
+            entry = [
+                {
+                    'name': config.trainingsTableHeaderID,
+                    'data': config.racedayTag,
+                    'columnClasses': 'col col-1 id_col small text-center',
+                    'contentClasses': ''
+                },
+                {
+                    'name': config.eventDateDesc,
+                    'data': config.eventDate.strftime('%d. %B %Y'),
+                    'columnClasses': 'col date_col small',
+                    'contentClasses': 'fw-bold text-primary'
+                },
+                {
+                    'name': config.siteNameDesc,
+                    'data': config.siteName,
+                    'columnClasses': 'col small',
+                    'contentClasses': 'fw-bold text-danger'
+                },
+                {
+                    'name': config.headerFee,
+                    'data': '{value} {currency}'.format(
+                        value=fee,
+                        currency=config.currency
+                    ),
+                    'columnClasses': 'col col-1 money_col text-end small',
+                    'contentClasses': 'fw-bold text-success'
+                }
+            ]
+            data['subtable']['data'].append(entry)
+            fee_sum += fee
+
+        # Main row definition for each participating team
+        if len(data['subtable']['data']) > 0:
+            data['row'] = [
+                {
+                    'name': config.teamTableHeaderID,
+                    'data': team.id,
+                    'columnClasses': 'col col-1 id_col text-center',
+                    'contentClasses': 'fw-bold text-primary'
+                },
+                {
+                    'name': config.teamTableHeaderTeam,
+                    'data': team.name,
+                    'columnClasses': 'col col-md-3 col-lg-2',
+                    'contentClasses': 'fw-bold'
+                },
+                {
+                    'name': config.teamTableHeaderCompany,
+                    'data': team.company,
+                    'columnClasses': 'col d-none d-xl-block small',
+                    'contentClasses': ''
+                },
+                {
+                    'name': config.teamTableHeaderCaptain,
+                    'data': team.contact,
+                    'columnClasses': 'col col-lg-2',
+                    'contentClasses': 'fw-bold'
+                },
+                {
+                    'type': 'email',
+                    'name': config.teamTableHeaderEmail,
+                    'data': team.email,
+                    'columnClasses': 'col d-none d-lg-block',
+                    'contentClasses': ''
+                },
+                {
+                    'name': config.headerFee,
+                    'data': '{value} {currency}'.format(
+                        value=fee_sum,
+                        currency=config.currency
+                    ),
+                    'columnClasses': 'col col-1 money_col text-end',
+                    'contentClasses': 'fw-bold text-success'
+                }
+            ]
+
+            teamsContent['data'].append(data)
+
+    if len(teamsContent['data']) > 0:
+        content.append(teamsContent)
 
     return content
 
@@ -829,6 +1149,15 @@ def getSiteData(id: str = None, user = None):
             }
         )
 
+    menu_billing = {
+        'id': 'billing',
+        'title': config.billingTitle,
+        'url': 'billing',
+        'thumb': config.billingIcon,
+        'active': True if id == 'billing' else False,
+        'notifications': []
+    }
+
     menu_calendar = {
         'id': 'calendar',
         'title': config.calendarTitle,
@@ -956,6 +1285,7 @@ def getSiteData(id: str = None, user = None):
         siteData['menu'].append(menu_teams)
         siteData['menu'].append(menu_skippers)
         siteData['menu'].append(menu_trainings)
+        siteData['menu'].append(menu_billing)
 
     siteData['menu'].append(menu_timetable)
 
@@ -1323,7 +1653,9 @@ def getMainSettings():
                     'type': 'checkbox',
                     'value': config.activateResults,
                     'icon': 'check-square',
-                    'classes': 'col-auto'
+                    'classes': 'col-auto',
+                    'active': config.activeResultsDesc,
+                    'inactive': config.inactiveResultsDesc
                 },
                 {
                     'id': 'anonymousMonitor',
@@ -1331,7 +1663,9 @@ def getMainSettings():
                     'type': 'checkbox',
                     'value': config.anonymousMonitor,
                     'icon': 'check-square',
-                    'classes': 'col-auto'
+                    'classes': 'col-auto',
+                    'active': config.activeResultsDesc,
+                    'inactive': config.inactiveResultsDesc
                 },
                 {
                     'id': 'activateCalendar',
@@ -1339,7 +1673,9 @@ def getMainSettings():
                     'type': 'checkbox',
                     'value': config.activateCalendar,
                     'icon': 'calendar-check',
-                    'classes': 'col-auto'
+                    'classes': 'col-auto',
+                    'active': config.activeResultsDesc,
+                    'inactive': config.inactiveResultsDesc
                 }
             ]
         },
@@ -1457,6 +1793,45 @@ def getMainSettings():
                     'value': config.intervalTrainingLength.seconds // 60,
                     'icon': 'clock-history',
                     'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
+                }
+            ]
+        },
+        {
+            'title': config.billingTitle,
+            'controls': [
+                {
+                    'id': 'eventFee',
+                    'name': config.eventFeeLabel,
+                    'type': 'number',
+                    'value': config.eventFee,
+                    'icon': 'currency-euro',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
+                },
+                {
+                    'id': 'trainingsFee',
+                    'name': config.trainingsFeeLabel,
+                    'type': 'number',
+                    'value': config.trainingsFee,
+                    'icon': 'currency-euro',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
+                },
+                {
+                    'id': 'skipperTrainingsCompensation',
+                    'name': config.skipperTrainingsCompLabel,
+                    'type': 'number',
+                    'value': config.skipperTrainingsCompensation,
+                    'icon': 'currency-euro',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
+                },
+                {
+                    'id': 'firstTrainingIsFree',
+                    'name': config.firstTrainingIsFreeLabel,
+                    'type': 'checkbox',
+                    'value': config.firstTrainingIsFree,
+                    'icon': 'check-square',
+                    'classes': 'col-auto',
+                    'active': config.firstTrainingIsFreeActive,
+                    'inactive': config.firstTrainingIsFreeInactive
                 }
             ]
         },
