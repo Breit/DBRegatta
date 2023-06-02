@@ -111,18 +111,18 @@ def teams(request):
     )
     story.append(PageBreak())
 
-    # Overview tables for trainings
-    for i, teamTable in enumerate(teamTableData):
+    # Main tables
+    for teamTable in teamTableData:
         tableData = [
             [
                 teamTable['header']
             ],
             tableColumnHeader
         ]
-        for team in teamTable['data']:
+        for i, team in enumerate(teamTable['data']):
             teamRow = []
             teamRow.append(
-                Paragraph('{id}'.format(id=team.id), styles['NormalC'])
+                Paragraph('{id}'.format(id=(i + 1)), styles['NormalC'])
             )
             teamRow.append(
                 [
@@ -1216,6 +1216,161 @@ def billing(request):
     doc.author = config.ownerName
     doc.subject = config.siteName
     doc.keywords = [config.siteAbbr, config.billingTitle]
+
+    doc.build(story, canvasmaker=PageNumCanvas)
+
+    pdf_buffer.seek(0)
+
+    # FileResponse sets the Content-Disposition header (as_attachment=True)
+    # so that browsers present the option to save the file
+    return FileResponse(pdf_buffer, as_attachment=True, filename=filename)
+
+def skippers(request):
+    # handle login/logout
+    loginUser(request)
+
+    if not request.user.is_authenticated:
+        return redirect('/')
+
+    # Provide a filename for the PDF
+    filename = '{at}_{abbr}_skippers.pdf'.format(
+        at=datetime.now().strftime("%Y%m%d-%H%M%S"),
+        abbr=config.siteAbbr
+    )
+
+    # Define styling
+    styles = pdfStyleSheet()
+    mainTableStyle = TableStyle([
+        ('BOX',             (0,  0), (-1, -1), 0.25, colors.lightgrey),                     # border for whole table
+        ('LINEABOVE',       (0,  0), (-1, -1), 0.25, colors.lightgrey),                     # top border for each row
+        ('LINEBELOW',       (0,  0), (-1, -1), 0.25, colors.lightgrey),                     # bottom border for each row
+        ('LINEBELOW',       (0,  1), (-1,  1), 0.5 , colors.grey),                          # line under colum header row
+        ('SPAN',            (0,  0), (-1,  0)),                                             # span title row (1st row)
+        ('VALIGN',          (0,  2), (-1, -1), 'MIDDLE'),                                   # columns middle-aligned
+        ('ROWBACKGROUNDS',  (0,  0), (-1, -1), (colors.whitesmoke, colors.transparent)),    # alternate row coloring
+    ])
+    statTableStyle = TableStyle([
+        ('BOX',             (0,  0), (-1, -1), 0.25, colors.lightgrey),
+        ('GRID',            (0,  0), (-1, -1), 0.25, colors.lightgrey),
+        ('BOTTOMPADDING',   (0,  0), (-1, -1), 6),
+        ('TOPPADDING',      (0,  0), (-1, -1), 6),
+    ])
+
+    # Gather data
+    skipperTableData = [
+        {
+            # Active Skippers
+            'header': Paragraph('{skipperListHeader} {skipperStatus}'.format(skipperListHeader=config.skippersTitle, skipperStatus=config.activeSkipperTitle), styles['TableHeader']),
+            'data': Skipper.objects.filter(active=True).order_by(F('name').asc(nulls_last=True))
+        },
+        {
+            # Inactive Skippers
+            'header': Paragraph('{skipperListHeader} {skipperStatus}'.format(skipperListHeader=config.skippersTitle, skipperStatus=config.inactiveSkipperTitle), styles['TableHeader']),
+            'data': Skipper.objects.filter(active=False).order_by(F('name').asc(nulls_last=True))
+        }
+    ]
+
+    # Table column header is the same for all tables
+    tableColumnHeader = [
+        Paragraph('{id}'.format(id=config.skipperTableHeaderID), styles['ColumnHeaderC']),
+        Paragraph('{name}'.format(name=config.placeholderSkipperName), styles['ColumnHeader']),
+        Paragraph('{fname}'.format(fname=config.placeholderSkipperFName), styles['ColumnHeader']),
+        Paragraph('{lname}'.format(lname=config.placeholderSkipperLName), styles['ColumnHeader']),
+        Paragraph('{email}'.format(email=config.placeholderSkipperEmail), styles['ColumnHeader'])
+    ]
+
+    # Start story with front page
+    story = [
+        Spacer(width=0, height=20*mm),
+        Paragraph('{event}'.format(event=config.siteName), styles['Title']),
+        Paragraph('{date}'.format(date=config.eventDate.strftime('%d. %B %Y')), styles['SubTitle']),
+        Spacer(width=0, height=20*mm),
+        Paragraph('{skipperList}'.format(skipperList=config.skippersListHeading), styles['Title'])
+    ]
+
+    # Statistics section
+    statTableData = []
+    for skipperTable in skipperTableData:
+        statTableData.append(
+            [
+                skipperTable['header'],
+                Paragraph('{count}'.format(count=len(skipperTable['data'])), styles['TableHeaderBC']),
+            ]
+        )
+
+    statTable = Table(
+        statTableData,
+        style=statTableStyle,
+        colWidths=(130*mm, 50*mm)
+    )
+    story.append(
+        TopPadder(
+            Table(
+                [
+                    [statTable],
+                    [Spacer(width=0, height=10*mm)]
+                ]
+            )
+        )
+    )
+    story.append(PageBreak())
+
+    # Main Tables
+    for skipperTable in skipperTableData:
+        tableData = [
+            [
+                skipperTable['header']
+            ],
+            tableColumnHeader
+        ]
+        for i, skipper in enumerate(skipperTable['data']):
+            skipperRow = []
+            skipperRow.append(
+                Paragraph('{id}'.format(id=(i + 1)), styles['NormalC'])
+            )
+            skipperRow.append(
+                Paragraph('{name}'.format(name=skipper.name), styles['NormalB'])
+            )
+            skipperRow.append(
+                Paragraph('{fname}'.format(fname=skipper.fname), styles['Normal'])
+            )
+            skipperRow.append(
+                Paragraph('{lname}'.format(lname=skipper.lname), styles['Normal'])
+            )
+            skipperRow.append(
+                Paragraph('<a href="mailto:{email}">{email}</a>'.format(email=skipper.email), styles['NormalLink'])
+            )
+            tableData.append(skipperRow)
+
+        story.append(
+            LongTable(
+                tableData,
+                style=mainTableStyle,
+                repeatRows=2,
+                colWidths=(10*mm, 32*mm, 32*mm, 32*mm, 74*mm)
+            )
+        )
+
+        # Insert a spacer between new tables
+        story.append(Spacer(width=0, height=10*mm))
+
+    # Create a file-like buffer to receive PDF data
+    pdf_buffer = io.BytesIO()
+
+    # Create document
+    doc = SimpleDocTemplate(
+        pdf_buffer,
+        pagesize=A4,
+        leftMargin=15*mm,
+        rightMargin=15*mm,
+        topMargin=15*mm,
+        bottomMargin=20*mm
+    )
+    doc.title = filename
+    doc.creator = config.ownerName
+    doc.author = config.ownerName
+    doc.subject = config.siteName
+    doc.keywords = [config.siteAbbr, config.skippersTitle]
 
     doc.build(story, canvasmaker=PageNumCanvas)
 

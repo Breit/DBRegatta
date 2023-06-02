@@ -218,4 +218,9 @@ $(document).ready(function()
             }
         );
     });
+
+    $('#skipper_pdf').click(function()
+    {
+        window.open(window.location.href + '/pdf');
+    });
 });
