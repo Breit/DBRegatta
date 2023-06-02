@@ -124,6 +124,15 @@
                             </a>
                         {% endif %}
                     {% endif %}
+                    {% if config.sponsorLogo2 %}
+                        {% if config.sponsorUrl2 %}
+                            <a href="{{ config.sponsorUrl2 }}">
+                        {% endif %}
+                        <img src="{{ MEDIA_URL }}images/{{ config.sponsorLogo2 }}" alt="{{ config.sponsorName2 }}">
+                        {% if config.sponsorUrl2 %}
+                            </a>
+                        {% endif %}
+                    {% endif %}
                 </div>
                 <div class="d-flex flex-column align-items-center mt-auto lead">
                     {% if display and config.domain %}
@@ -139,6 +148,15 @@
                     {% endif %}
                 </div>
                 <div class="d-flex align-items-end">
+                    {% if config.ownerLogo2 %}
+                        {% if config.ownerUrl2 %}
+                            <a href="{{ config.ownerUrl2 }}">
+                        {% endif %}
+                        <img class="me-3" src="{{ MEDIA_URL }}images/{{ config.ownerLogo2 }}" alt="{{ config.ownerName2 }}">
+                        {% if config.ownerUrl2 %}
+                            </a>
+                        {% endif %}
+                    {% endif %}
                     {% if config.ownerLogo %}
                         {% if config.ownerUrl %}
                             <a href="{{ config.ownerUrl }}">

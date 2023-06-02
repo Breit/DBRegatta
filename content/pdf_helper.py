@@ -20,7 +20,7 @@ from reportlab.lib.utils import ImageReader
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import StyleSheet1, ParagraphStyle
 
-from reportlab.platypus import Paragraph, SimpleDocTemplate, Flowable
+from reportlab.platypus import Paragraph
 
 class PageNumCanvas(canvas.Canvas):
     """
@@ -75,23 +75,43 @@ class PageNumCanvas(canvas.Canvas):
         """
         Add logos to the footer
         """
+        width_s = 0*mm
         sponsor_image = os.path.join(settings.MEDIA_ROOT, 'images', config.sponsorLogoReport)
         if os.path.isfile(sponsor_image):
             img = ImageReader(sponsor_image)
             iw, ih = img.getSize()
             aspect = iw / float(ih)
             height = 10*mm
-            width = height * aspect
-            self.drawImage(img, 15*mm, 8*mm, width=width, height=height, mask='auto')
+            width_s = height * aspect
+            self.drawImage(img, 15*mm, 8*mm, width=width_s, height=height, mask='auto')
 
+        sponsor_image_2 = os.path.join(settings.MEDIA_ROOT, 'images', config.sponsorLogo2Report)
+        if os.path.isfile(sponsor_image_2):
+            img = ImageReader(sponsor_image_2)
+            iw, ih = img.getSize()
+            aspect = iw / float(ih)
+            height = 10*mm
+            width = height * aspect
+            self.drawImage(img, 15*mm + width_s + 5*mm, 8*mm, width=width, height=height, mask='auto')
+
+        width_o = 0*mm
         owner_image = os.path.join(settings.MEDIA_ROOT, 'images', config.ownerLogoReport)
         if os.path.isfile(owner_image):
             img = ImageReader(owner_image)
             iw, ih = img.getSize()
             aspect = iw / float(ih)
             height = 10*mm
+            width_o = height * aspect
+            self.drawImage(img, A4[0] - 15*mm - width_o, 8*mm, width=width_o, height=height, mask='auto')
+
+        owner_image_2 = os.path.join(settings.MEDIA_ROOT, 'images', config.ownerLogo2Report)
+        if os.path.isfile(owner_image_2):
+            img = ImageReader(owner_image_2)
+            iw, ih = img.getSize()
+            aspect = iw / float(ih)
+            height = 10*mm
             width = height * aspect
-            self.drawImage(img, A4[0] - 15*mm - width, 8*mm, width=width, height=height, mask='auto')
+            self.drawImage(img, A4[0] - 15*mm - width_o - 5*mm - width, 8*mm, width=width, height=height, mask='auto')
 
 def markdownStory(mdown):
     def match_heading(line, story, style):
