@@ -3,3 +3,6 @@ TODO: DBRegatta
 - Open/Close registration button
 - Implement/transition to class-based views
 - Code refactoring (especially reusable template code)
+- Check/Reload tooltips on dynamic site changes
+- Impressum editor
+- Race mode switch and linear race mode for finale

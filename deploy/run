@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+PORT=11768
 USER=www
+VENV=dbregatta
 
 # check if server is running and start it if not
-pgrep -f runserver > /dev/null || su -m $USER -c "$SCRIPT_DIR/venv/dbsprint/bin/python $SCRIPT_DIR/src/manage.py runserver 127.0.0.1:11768 &"
+pgrep -f "runserver 127.0.0.1:$PORT" > /dev/null || su -m $USER -c "$SCRIPT_DIR/venv/$VENV/bin/python $SCRIPT_DIR/src/manage.py runserver 127.0.0.1:$PORT &"
