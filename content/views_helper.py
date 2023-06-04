@@ -489,7 +489,7 @@ def getBillingContent():
                 {
                     'name': config.siteNameDesc,
                     'data': config.siteName,
-                    'columnClasses': 'col small',
+                    'columnClasses': 'col small text-center',
                     'contentClasses': 'fw-bold text-danger'
                 },
                 {
