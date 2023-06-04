@@ -1949,7 +1949,7 @@ def getMainSettings():
                     'type': 'image',
                     'value': config.ownerLogo,
                     'icon': 'image',
-                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'options': getLogoSelection(),
                     'classes': 'col-12 col-md-6 col-lg-3',
                     'bg_class': 'bg-dark'
                 },
@@ -1959,7 +1959,7 @@ def getMainSettings():
                     'type': 'image',
                     'value': config.sponsorLogo,
                     'icon': 'image',
-                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'options': getLogoSelection(),
                     'classes': 'col-12 col-md-6 col-lg-3',
                     'bg_class': 'bg-dark'
                 },
@@ -1969,7 +1969,7 @@ def getMainSettings():
                     'type': 'image',
                     'value': config.ownerLogoReport,
                     'icon': 'image',
-                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'options': getLogoSelection(),
                     'classes': 'col-12 col-md-6 col-lg-3',
                     'bg_class': 'bg-light'
                 },
@@ -1979,7 +1979,7 @@ def getMainSettings():
                     'type': 'image',
                     'value': config.sponsorLogoReport,
                     'icon': 'image',
-                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'options': getLogoSelection(),
                     'classes': 'col-12 col-md-6 col-lg-3',
                     'bg_class': 'bg-light'
                 },
@@ -2021,7 +2021,7 @@ def getMainSettings():
                     'type': 'image',
                     'value': config.ownerLogo2,
                     'icon': 'image',
-                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'options': getLogoSelection(),
                     'classes': 'col-12 col-md-6 col-lg-3',
                     'bg_class': 'bg-dark'
                 },
@@ -2031,7 +2031,7 @@ def getMainSettings():
                     'type': 'image',
                     'value': config.sponsorLogo2,
                     'icon': 'image',
-                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'options': getLogoSelection(),
                     'classes': 'col-12 col-md-6 col-lg-3',
                     'bg_class': 'bg-dark'
                 },
@@ -2041,7 +2041,7 @@ def getMainSettings():
                     'type': 'image',
                     'value': config.ownerLogo2Report,
                     'icon': 'image',
-                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'options': getLogoSelection(),
                     'classes': 'col-12 col-md-6 col-lg-3',
                     'bg_class': 'bg-light'
                 },
@@ -2051,7 +2051,7 @@ def getMainSettings():
                     'type': 'image',
                     'value': config.sponsorLogo2Report,
                     'icon': 'image',
-                    'options': [os.path.basename(f) for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png'))],
+                    'options': getLogoSelection(),
                     'classes': 'col-12 col-md-6 col-lg-3',
                     'bg_class': 'bg-light'
                 }
@@ -2592,3 +2592,10 @@ def resetTeamSignups():
         team.position = None
         team.date = None
         team.save()
+
+def getLogoSelection():
+    logo_list = ['']    # add empty selection
+    for f in glob(os.path.join(dj_settings.MEDIA_ROOT, 'images/*.png')):
+        logo_list.append(os.path.basename(f))
+
+    return logo_list
