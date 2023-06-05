@@ -36,4 +36,4 @@ sed -i "" "s/\(SECRET_KEY = '\).*\('\)/\1$ESCAPED_KEY\2/" $SCRIPT_DIR/$TARGET_DI
 sed -i "" "s/\(DEBUG = '\).*\('\)/\1False\2/" $SCRIPT_DIR/$TARGET_DIR/DBRegatta/settings.py
 
 # add CSRF trusted origin
-sed -i "" "s/\(CSRF_TRUSTED_ORIGINS = \['\).*\(\]'\)/\1$SITE_URL\2/" $SCRIPT_DIR/$TARGET_DIR/DBRegatta/settings.py
+sed -i "" "s#\(CSRF_TRUSTED_ORIGINS = \['\).*\('\]\)#\1$SITE_URL\2#" $SCRIPT_DIR/$TARGET_DIR/DBRegatta/settings.py

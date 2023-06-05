@@ -552,6 +552,8 @@ def settings(request):
             config.timeBegin = time.fromisoformat(request.POST['timeBegin'])
         elif 'offsetHeat' in request.POST:
             config.offsetHeat = timedelta(minutes=int(request.POST['offsetHeat']))
+        elif 'intermissionHeat' in request.POST:
+            config.intermissionHeat = timedelta(minutes=int(request.POST['intermissionHeat']))
         elif 'offsetFinale' in request.POST:
             config.offsetFinale = timedelta(minutes=int(request.POST['offsetFinale']))
         elif 'offsetCeremony' in request.POST:
