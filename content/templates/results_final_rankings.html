@@ -18,16 +18,22 @@
                 <div class="col-1 text-center rank_column">{{ config.displayRank }}</div>
                 <div class="col">{{ config.timetableHeaderTeam }}</div>
                 <div class="col-4 d-none d-xl-block">{{ config.timetableHeaderCompany }}</div>
-                <div class="col-auto d-none d-md-block">
-                    <div class="row flex-nowrap mb-n1 times_double_column">
-                        <div class="col-12 text-center">{{ config.displayBestTime }}</div>
-                    </div>
-                    <div class="row flex-nowrap times_double_column">
-                        <div class="col-6 text-center d-none d-md-block times_column">{{ config.heatsTitle }}</div>
-                        <div class="col-6 text-center d-none d-sm-block times_column">{{ config.finaleTitle }}</div>
-                    </div>
+                <div class="col col-xxl-2 d-none d-md-block text-center text-nowrap">
+                    {% if config.raceToTopFinal %}
+                        <div class="row flex-nowrap mb-n1 times_double_column">
+                            <div class="col-12 text-center">{{ config.displayBestTime }}</div>
+                        </div>
+                        <div class="row flex-nowrap times_double_column">
+                            <div class="col-6 text-center d-none d-md-block times_column">{{ config.heatsTitle }}</div>
+                            <div class="col-6 text-center d-none d-sm-block times_column">{{ config.finaleTitle }}</div>
+                        </div>
+                    {% else %}
+                        {{ config.displayBestTime }} {{ config.heatsTitle }}
+                    {% endif %}
                 </div>
-                <div class="col-auto text-center d-none d-lg-block times_column">{{ config.displayRaces }}</div>
+                {% if config.raceToTopFinal %}
+                    <div class="col-auto text-center d-none d-lg-block times_column">{{ config.displayRaces }}</div>
+                {% endif %}
                 <div class="col-auto text-center times_column">{{ config.displayFinalTime }}</div>
             </div>
             {% for r in entry.ranks %}
@@ -35,13 +41,19 @@
                     <div class="col-1 text-center text-primary fw-bold rank_column">{{ r.rank }}</div>
                     <div class="col col_team fw-bold text-success">{{ r.team }}</div>
                     <div class="col-4 d-none d-xl-block">{{ r.company }}</div>
-                    <div class="col-auto">
-                        <div class="row flex-nowrap times_double_column">
+                    <div class="col col-xxl-2 d-none d-md-block text-center text-nowrap">
+                        {% if config.raceToTopFinal %}
+                        <div class="row flex-nowrap times_double_column text-center">
                             <div class="col-6 text-center small d-none d-md-block times_column">{{ r.bt_heats|asTime }}</div>
                             <div class="col-6 text-center small d-none d-sm-block times_column">{{ r.bt_finale|asTime }}</div>
                         </div>
+                        {% else %}
+                            {{ r.bt_heats|asTime }}
+                        {% endif %}
                     </div>
-                    <div class="col-auto text-center d-none d-lg-block times_column">{{ r.races }}</div>
+                    {% if config.raceToTopFinal %}
+                        <div class="col-auto text-center d-none d-lg-block times_column">{{ r.races }}</div>
+                    {% endif %}
                     <div class="col-auto text-center fw-bold text-success times_column">{{ r.finale_time|asTime }}</div>
                 </div>
             {% endfor %}

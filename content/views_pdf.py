@@ -468,8 +468,11 @@ def results(request):
                 Table([subTableColumnHeader], colWidths=subTableColumns, style=subTableHeaderStyle)
             ]
         elif result['type'] == 'rankingFinals':
-            bestTimeTableColumns=(16*mm, 16*mm)
-            mainTableColumns = (12*mm, 50*mm, 44*mm, sum(bestTimeTableColumns), 20*mm, 22*mm)
+            if config.raceToTopFinal:
+                bestTimeTableColumns=(16*mm, 16*mm)
+                mainTableColumns = (12*mm, 50*mm, 44*mm, sum(bestTimeTableColumns), 20*mm, 22*mm)
+            else:
+                mainTableColumns = (12*mm, 50*mm, 54*mm, 42*mm, 22*mm)
 
             # Add dummy cells to header based on column count
             headerRow += [None] * (len(mainTableColumns) - len(headerRow))
@@ -478,29 +481,32 @@ def results(request):
             tableColumnHeader.append(Paragraph('{rank}'.format(rank=config.timesHeaderRank), styles['ColumnHeaderC']))
             tableColumnHeader.append(Paragraph('{team}'.format(team=config.timetableHeaderTeam), styles['ColumnHeader']))
             tableColumnHeader.append(Paragraph('{company}'.format(company=config.timetableHeaderCompany), styles['ColumnHeader']))
-            tableColumnHeader.append(
-                Table(
-                    [
+            if config.raceToTopFinal:
+                tableColumnHeader.append(
+                    Table(
                         [
-                            Paragraph('{bt}'.format(bt=config.displayBestTime), styles['ColumnHeaderC']),
-                            None
+                            [
+                                Paragraph('{bt}'.format(bt=config.displayBestTime), styles['ColumnHeaderC']),
+                                None
+                            ],
+                            [
+                                Paragraph('{btheats}'.format(btheats=config.heatsTitle), styles['ColumnHeaderC']),
+                                Paragraph('{btfinals}'.format(btfinals=config.finaleTitle), styles['ColumnHeaderC'])
+                            ]
                         ],
-                        [
-                            Paragraph('{btheats}'.format(btheats=config.heatsTitle), styles['ColumnHeaderC']),
-                            Paragraph('{btfinals}'.format(btfinals=config.finaleTitle), styles['ColumnHeaderC'])
-                        ]
-                    ],
-                    spaceBefore=0,
-                    spaceAfter=0,
-                    style=TableStyle([
-                        ('BOTTOMPADDING',   (0, 0), (-1, -1), 0),
-                        ('TOPPADDING',      (0, 0), (-1, -1), 0),
-                        ('SPAN',            (0, 0), (-1,  0))
-                    ]),
-                    colWidths=bestTimeTableColumns
+                        spaceBefore=0,
+                        spaceAfter=0,
+                        style=TableStyle([
+                            ('BOTTOMPADDING',   (0, 0), (-1, -1), 0),
+                            ('TOPPADDING',      (0, 0), (-1, -1), 0),
+                            ('SPAN',            (0, 0), (-1,  0))
+                        ]),
+                        colWidths=bestTimeTableColumns
+                    )
                 )
-            )
-            tableColumnHeader.append(Paragraph('{races}'.format(races=config.displayRaces), styles['ColumnHeaderC']))
+                tableColumnHeader.append(Paragraph('{races}'.format(races=config.displayRaces), styles['ColumnHeaderC']))
+            else:
+                tableColumnHeader.append(Paragraph('{bt} {btheats}'.format(bt=config.displayBestTime, btheats=config.heatsTitle), styles['ColumnHeaderC']))
             tableColumnHeader.append(Paragraph('{time}'.format(time=config.displayFinalTime), styles['ColumnHeaderC']))
         else:
             skipResults = True
@@ -594,21 +600,24 @@ def results(request):
                     rankRow.append(Paragraph('{rank}'.format(rank=team['rank']), styles['NormalBCLink']))
                     rankRow.append(Paragraph('{team}'.format(team=team['team']), styles['NormalB']))
                     rankRow.append(Paragraph('{company}'.format(company=team['company']), styles['Secondary']))
-                    rankRow.append(
-                        Table(
-                            [
+                    if config.raceToTopFinal:
+                        rankRow.append(
+                            Table(
                                 [
-                                    Paragraph('{bthtime}'.format(bthtime=asTime(team['bt_heats'])), styles['SecondaryC']),
-                                    Paragraph('{btftime}'.format(btftime=asTime(team['bt_finale'])), styles['SecondaryC'])
-                                ]
-                            ],
-                            spaceBefore=0,
-                            spaceAfter=0,
-                            style=subTableHeaderStyle,
-                            colWidths=bestTimeTableColumns
+                                    [
+                                        Paragraph('{bthtime}'.format(bthtime=asTime(team['bt_heats'])), styles['SecondaryC']),
+                                        Paragraph('{btftime}'.format(btftime=asTime(team['bt_finale'])), styles['SecondaryC'])
+                                    ]
+                                ],
+                                spaceBefore=0,
+                                spaceAfter=0,
+                                style=subTableHeaderStyle,
+                                colWidths=bestTimeTableColumns
+                            )
                         )
-                    )
-                    rankRow.append(Paragraph('{races}'.format(races=team['races']), styles['NormalC']))
+                        rankRow.append(Paragraph('{races}'.format(races=team['races']), styles['NormalC']))
+                    else:
+                        rankRow.append(Paragraph('{bthtime}'.format(bthtime=asTime(team['bt_heats'])), styles['NormalBC']))
                     rankRow.append(Paragraph('{ftime}'.format(ftime=asTime(team['finale_time'])), styles['NormalBC']))
                     tableData.append(rankRow)
 
