@@ -871,7 +871,12 @@ def createTimeTable():
         elif teams.count() == 1:
             races = 1
         else:
-            races = math.ceil((teams.count() - 1) / max(1, (config.lanesPerRace - 1)))
+            if config.raceToTopFinal:
+                # if race-to-top race mode is active, leave lane free for victor from previous race, except in the first race
+                races = math.ceil((teams.count() - 1) / max(1, (config.lanesPerRace - 1)))
+            else:
+                # fully populate all races
+                races = math.ceil(teams.count() / max(1, config.lanesPerRace))
         for rnum in range(races):
             race = Race()
             race.time = start
@@ -880,14 +885,20 @@ def createTimeTable():
 
             # create finale draw assignments
             if rnum == 0:
-                lanes = teams.count() - (races - 1) * (config.lanesPerRace - 1)
+                # lane count for first race might not match number of available lanes
+                if config.raceToTopFinal:
+                    # if race-to-top race mode is active, leave lane free for victor from previous race
+                    lanes = teams.count() - (races - 1) * (config.lanesPerRace - 1)
+                else:
+                    # populate all races
+                    lanes = teams.count() - (races - 1) * config.lanesPerRace
             else:
-                lanes = config.lanesPerRace
+                lanes = config.lanesPerRace                                         # last race is always full if possible
             for lnum in range(lanes):
                 rdm = RaceDrawMode()
                 rdm.race_id = race.id
-                rdm.lane = lnum + 1
-                if rnum == 0 or lnum != 0:
+                rdm.lane = lnum + 1                                                 # start lane number at 1
+                if rnum == 0 or lnum != 0 or not config.raceToTopFinal:
                     rdm.desc = config.finaleTemplate1.format(pnum)
                     pnum -= 1
                 else:
@@ -900,7 +911,10 @@ def createTimeTable():
 def updateTimeTable():
     # update all heats at once
     start = combineTimeOffset(config.timeBegin, config.offsetHeat)
-    start = updateRaces(config.heatPrefix, start, config.intervalHeat)
+    for hnum in range(config.heatCount):
+        if hnum > 0:
+            start = combineTimeOffset(start, config.intermissionHeat)
+        start = updateRaces('{pre}{num}'.format(pre=config.heatPrefix, num=(hnum + 1)), start, config.intervalHeat)
 
     # update finals
     start = combineTimeOffset(start, config.offsetFinale)
@@ -1371,7 +1385,7 @@ def getRaceTimes(raceType: str):
                 attendee = RaceAssign.objects.get(race_id=race.id, lane=(lnum + 1))
                 team = Team.objects.get(id=attendee.team_id)
             except MultipleObjectsReturned:
-                attendee = RaceAssign.objects.filter(race_id=race.id, lane=(lnum + 1))[0]
+                attendee = RaceAssign.objects.filter(race_id=race.id, lane=(lnum + 1))[0]       # For now take only the first returned
             except ObjectDoesNotExist:
                 attendee = None
                 team = None
@@ -1422,10 +1436,10 @@ def getRaceTimes(raceType: str):
             if len([lane for lane in entry['lanes'] if lane['finished']]) == lanesInRace:
                 last_race = race.name == races_sorted[-1].name
                 for lane in entry['lanes']:
-                    if not last_race and lane['place'] == 1:
+                    if not last_race and config.raceToTopFinal and lane['place'] == 1:
                         continue
                     lane['rank'] = rank_finale - (lanesInRace - lane['place'])
-                rank_finale -= lanesInRace if last_race else lanesInRace - 1
+                rank_finale -= lanesInRace if last_race or not config.raceToTopFinal else lanesInRace - 1
 
         if all(item['finished'] for item in entry['lanes']):
             entry['status'] = 'finished'
@@ -1492,7 +1506,8 @@ def getFinalRankings():
         if len([lane for lane in entry['lanes'] if lane['finished']]) == lanesInRace:
             last_race = race.name == races_sorted[-1].name
             for lane in entry['lanes']:
-                if not last_race and lane['place'] == 1:
+                # only skip rank assignment if race-to-top race mode is active
+                if not last_race and config.raceToTopFinal and lane['place'] == 1:
                     continue
 
                 assignments_finals = RaceAssign.objects.filter(
@@ -1517,7 +1532,7 @@ def getFinalRankings():
                         'races': assignments_finals.count(),
                     }
                 )
-            rank_finale -= lanesInRace if last_race else lanesInRace - 1
+            rank_finale -= lanesInRace if last_race or not config.raceToTopFinal else lanesInRace - 1
 
         # sort rankings
         rankingTable['ranks'].sort(key=lambda r: r['rank'])
@@ -1779,6 +1794,16 @@ def getMainSettings():
                     'value': config.intervalFinal.seconds // 60,
                     'icon': 'distribute-horizontal',
                     'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
+                },
+                {
+                    'id': 'raceToTopFinal',
+                    'name': config.raceToTopFinalDesc,
+                    'type': 'checkbox',
+                    'value': config.raceToTopFinal,
+                    'icon': 'calendar-check',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2',
+                    'active': config.active,
+                    'inactive': config.inactive
                 },
                 {
                     'id': 'refreshTimes',
@@ -2429,6 +2454,8 @@ def getAdvancedSettings():
     return settings
 
 # check if all heats are finished and if so, create rankings and fill finals
+# TODO: Does not change race count for finals. This means switching race mode does
+# result in an invalid finale timetable (teams/races missing from finale).
 def populateFinals(race_assignment: RaceAssign = None):
     if getCurrentRaceBlock() == config.finalPrefix:
         # get all final races and sort after race names in reverse order, but obey number ordering
@@ -2438,7 +2465,7 @@ def populateFinals(race_assignment: RaceAssign = None):
         race_ids = [race[0] for race in races_sorted]
 
         # for already running finals, decide if a winner from a particular final race can ascend one race
-        if race_assignment:
+        if race_assignment and config.raceToTopFinal:
             assignee_race = Race.objects.get(id = race_assignment.race_id)
             if assignee_race.name.startswith(config.finalPrefix):
                 attendees = RaceAssign.objects.filter(race_id=assignee_race.id).order_by('time')
@@ -2488,9 +2515,11 @@ def populateFinals(race_assignment: RaceAssign = None):
                     for lane in reversed(range(config.lanesPerRace)):
                         if rank_id >= len(rankings):
                             break
-                        if race_id != race_ids[-1] and lane == 0 or lane + 1 > len(rankings) - rank_id:
-                            # leave lane free for winner from previous race
+
+                        # leave lane free for winner from previous race if race-to-top race mode is active
+                        if config.raceToTopFinal and (race_id != race_ids[-1] and lane == 0 or lane + 1 > len(rankings) - rank_id):
                             continue
+
                         ra = RaceAssign()
                         ra.race_id = race_id
                         ra.lane = lane + 1

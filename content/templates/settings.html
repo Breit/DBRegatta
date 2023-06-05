@@ -73,7 +73,7 @@
                                             {% if 'active' in c and 'inactive' in c %}
                                                 <input type="text" class="form-control bg-light" value="{% if c.value %}{{ c.active }}{% else %}{{ c.inactive }}{% endif %}" disabled>
                                             {% else %}
-                                                <input type="text" class="form-control bg-light" value="{% if c.value %}{{ config.activeResultsDesc }}{% else %}{{ config.inactiveResultsDesc }}{% endif %}" disabled>
+                                                <input type="text" class="form-control bg-light" value="{% if c.value %}{{ config.active }}{% else %}{{ config.inactive }}{% endif %}" disabled>
                                             {% endif %}
                                         </div>
                                     </div>

@@ -57,6 +57,8 @@ CONSTANCE_CONFIG = {
     'domain':                       ('',                                            'Domain Name of the Site'),
     'timeSuffix':                   ('Uhr',                                         'Suffix for Time of Day Strings'),
     'pdfIcon':                      ('pdf.svg',                                     'Icon for the PDF Button'),
+    'active':                       ('aktiv',                                       'Text for active toggle state'),
+    'inactive':                     ('nicht aktiv',                                 'Text for inactive toggle state'),
 
     # Billing
     'billingPageCSS':               ('billing.css',                                 'CSS File for Site-specific Styling'),
@@ -166,6 +168,8 @@ CONSTANCE_CONFIG = {
     'offsetFinaleDesc':             ('Pause vor Finale',                            'Description for Timeoffset between last Race from Heats to the Start of the Finale'),
     'offsetCeremony':               (timedelta(minutes=30),                         'Timeoffset between last Race and Victory Ceremony'),
     'offsetCeremonyDesc':           ('Pause vor Siegerehrung',                      'Description for Timeoffset between last Race and Victory Ceremony'),
+    'raceToTopFinal':               (True,                                          'Race mode: Possibility to ascend to the top in finale'),
+    'raceToTopFinalDesc':           ('Aufstieg im Finale',                          'Description for race mode: Possibility to ascend to the top in finale'),
     'timetablePostDesc':            ('Mitteilungen zum Rennplan',                   'Description for Post on Timetable Control'),
     'placeholderTimetablePostDesc': ('Mitteilungen zum Rennplan bearbeiten',        'Description for Post Edit Button on Timetable Control'),
     'heatPrefix':                   ('V',                                           'Prefix for Heat Race Names'),
@@ -441,6 +445,8 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'pdfIcon',
             'currency',
             'sumFees',
+            'active',
+            'inactive',
         ),
         'collapse': True
     },
@@ -562,6 +568,8 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'offsetCeremonyDesc',
             'timetablePostDesc',
             'placeholderTimetablePostDesc',
+            'raceToTopFinal',
+            'raceToTopFinalDesc',
             'heatPrefix',
             'finalPrefix',
             'timetableHeaderTime',
