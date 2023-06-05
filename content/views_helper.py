@@ -821,6 +821,10 @@ def createTimeTable():
         rnum = 0
         random.shuffle(teams_idx)
 
+        # add heat intermission
+        if hnum > 0:
+            start = combineTimeOffset(start, config.intermissionHeat)
+
         # assure that attendees of last race from previous heat are not in the first race from this heat
         if len(lastHeat) > 0 and len(teams_idx) > config.lanesPerRace:
             while True:
@@ -1713,6 +1717,14 @@ def getMainSettings():
                     'name': config.offsetHeatDesc,
                     'type': 'number',
                     'value': config.offsetHeat.seconds // 60,
+                    'icon': 'clock-history',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
+                },
+                {
+                    'id': 'intermissionHeat',
+                    'name': config.intermissionHeatDesc,
+                    'type': 'number',
+                    'value': config.intermissionHeat.seconds // 60,
                     'icon': 'clock-history',
                     'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },

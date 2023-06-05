@@ -6,3 +6,7 @@ TODO: DBRegatta
 - Check/Reload tooltips on dynamic site changes
 - Impressum editor
 - Race mode switch and linear race mode for finale
+- intermission between heats
+- add free agenda topics
+- race classes
+- add individual fees for teams
