@@ -564,6 +564,8 @@ def settings(request):
             config.heatCount = int(request.POST['heatCount'])
         elif 'lanesPerRace' in request.POST:
             config.lanesPerRace = int(request.POST['lanesPerRace'])
+        elif 'boardingTime' in request.POST:
+            config.boardingTime = timedelta(minutes=int(request.POST['boardingTime']))
         elif 'intervalHeat' in request.POST:
             config.intervalHeat = timedelta(minutes=int(request.POST['intervalHeat']))
         elif 'intervalFinal' in request.POST:

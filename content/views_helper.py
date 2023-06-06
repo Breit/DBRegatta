@@ -680,6 +680,7 @@ def getRaces(raceType: str):
     races = []
     for race in Race.objects.filter(name__startswith = raceType):
         entry = {
+            'boarding': combineTimeOffset(race.time, -config.boardingTime),
             'time': race.time,
             'desc': race.name,
             'lanes': []
@@ -1793,6 +1794,14 @@ def getMainSettings():
                     'type': 'number',
                     'value': config.intervalFinal.seconds // 60,
                     'icon': 'distribute-horizontal',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
+                },
+                {
+                    'id': 'boardingTime',
+                    'name': config.boardingTimeDesc,
+                    'type': 'number',
+                    'value': config.boardingTime.seconds // 60,
+                    'icon': 'clock-history',
                     'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {

@@ -201,8 +201,8 @@ def timetable(request):
     # Define styling
     styles = pdfStyleSheet()
     mainTableStyle = TableStyle([
+        ('SPAN',            (1,  0), (-1,  0)),                                             # span header row for each table
         ('BOX',             (0,  0), (-1, -1), 0.25, colors.lightgrey),                     # border for whole table
-        ('SPAN',            (1,  0), (-1,  0)),                                             # span table headers
         ('LINEABOVE',       (0,  0), (-1, -1), 0.25, colors.lightgrey),                     # top border for each row
         ('LINEBELOW',       (0,  0), (-1, -1), 0.25, colors.lightgrey),                     # bottom border for each row
         ('VALIGN',          (0,  0), (-1, -1), 'MIDDLE'),                                   # all cells middle-aligned
@@ -222,24 +222,30 @@ def timetable(request):
         ('TOPPADDING',      (0,  0), (-1, -1), 3 if finaleRunning else 0),
         ('VALIGN',          (0,  0), (-1, -1), 'MIDDLE')
     ])
-    subTableColumns = (12*mm, 50*mm, 62*mm, 23*mm)
-    mainTableColumns = (18*mm, 15*mm, sum(subTableColumns))
+    if (config.boardingTime.seconds > 0):
+        subTableColumns = (12*mm, 52*mm, 65*mm)
+        mainTableColumns = (18*mm, 18*mm, 15*mm, sum(subTableColumns))
+    else:
+        subTableColumns = (12*mm, 50*mm, 62*mm, 23*mm)
+        mainTableColumns = (18*mm, 15*mm, sum(subTableColumns))
 
     # Gather data
     timetableData = getTimeTableContent()
 
     # Table column header is the same for all tables
-    subTableColumnHeader = [
-        Paragraph('{lane}'.format(lane=config.timetableHeaderLane), styles['ColumnHeaderC']),
-        Paragraph('{team}'.format(team=config.timetableHeaderTeam), styles['ColumnHeader']),
-        Paragraph('{company}'.format(company=config.timetableHeaderCompany), styles['ColumnHeader']),
-        Paragraph('{skipper}'.format(skipper=config.timetableHeaderSkipper), styles['ColumnHeader'])
-    ]
-    tableColumnHeader = [
-        Paragraph('{time}'.format(time=config.timetableHeaderTime), styles['ColumnHeaderC']),
-        Paragraph('{race}'.format(race=config.timetableHeaderName), styles['ColumnHeaderC']),
-        Table([subTableColumnHeader], colWidths=subTableColumns, style=subTableHeaderStyle)
-    ]
+    subTableColumnHeader = []
+    subTableColumnHeader.append(Paragraph('{lane}'.format(lane=config.timetableHeaderLane), styles['ColumnHeaderC']))
+    subTableColumnHeader.append(Paragraph('{team}'.format(team=config.timetableHeaderTeam), styles['ColumnHeader']))
+    subTableColumnHeader.append(Paragraph('{company}'.format(company=config.timetableHeaderCompany), styles['ColumnHeader']))
+    if (config.boardingTime.seconds <= 0):          # Hide skipper if boarding time is displayed
+        subTableColumnHeader.append(Paragraph('{skipper}'.format(skipper=config.timetableHeaderSkipper), styles['ColumnHeader']))
+
+    tableColumnHeader = []
+    if (config.boardingTime.seconds > 0):
+        tableColumnHeader.append(Paragraph('{btime}'.format(btime=config.boardingTimeHeader), styles['ColumnHeaderC']))
+    tableColumnHeader.append(Paragraph('{time}'.format(time=config.timetableHeaderTime), styles['ColumnHeaderC']))
+    tableColumnHeader.append(Paragraph('{race}'.format(race=config.timetableHeaderName), styles['ColumnHeaderC']))
+    tableColumnHeader.append(Table([subTableColumnHeader], colWidths=subTableColumns, style=subTableHeaderStyle))
 
     # Start story with front page
     story = [
@@ -272,20 +278,25 @@ def timetable(request):
         )
     story.append(PageBreak())
 
+
     # Get team content: active teams
     for event in timetableData:
         tableData = []
-        tableData.append(
-            [
-                Paragraph('{time}'.format(time=event['time'].strftime('%H:%M')), styles['TableHeaderBC']),
-                Paragraph('{agendum}'.format(agendum=event['desc']), styles['TableHeader']),
-                None          # Dummies to fill the columns
-            ]
-        )
+        tableData.append([])
+        tableData[-1].append(Paragraph('{time}'.format(time=event['time'].strftime('%H:%M')), styles['TableHeaderBC']))
+        tableData[-1].append(Paragraph('{agendum}'.format(agendum=event['desc']), styles['TableHeader']))
+        tableData[-1].append(None)
+        if (config.boardingTime.seconds > 0):
+            tableData[-1].append(None)
+
         if 'races' in event and len(event['races']) > 0:
             tableData.append(tableColumnHeader)
             for race in event['races']:
                 raceRow = []
+                if (config.boardingTime.seconds > 0):
+                    raceRow.append(
+                        Paragraph('{btime}'.format(btime=race['boarding'].strftime('%H:%M')), styles['NormalC'])
+                    )
                 raceRow.append(
                     Paragraph('{time}'.format(time=race['time'].strftime('%H:%M')), styles['NormalBC'])
                 )
@@ -311,9 +322,10 @@ def timetable(request):
                     laneRow.append(
                         Paragraph('{company}'.format(company=lane['company']), styles['Secondary'])
                     )
-                    laneRow.append(
-                        Paragraph('{skipper}'.format(skipper=lane['skipper']['name'] if 'name' in lane['skipper'] else '-'), styles['Normal'])
-                    )
+                    if (config.boardingTime.seconds <= 0):
+                        laneRow.append(
+                            Paragraph('{skipper}'.format(skipper=lane['skipper']['name'] if 'name' in lane['skipper'] else '-'), styles['Normal'])
+                        )
                     laneTable.append(laneRow)
                 raceRow.append(Table(laneTable, colWidths=subTableColumns, style=subTableStyleFinale if event['type'] == 'finale' else subTableStyle))
 
