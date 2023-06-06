@@ -96,7 +96,7 @@
     {% endif %}
     <div class="container-fluid">
         <h2 class="mt-2 mb-3 display-6" id="site_title">{{ config.timetableHeader }}</h2>
-        {% if post %}
+        {% if post or user.is_staff %}
             <div class="container mx-0 px-0 mb-4 position-relative" id="timetable_post">
                 <div class="container m-0 p-0{% if post_disabled %} text-muted{% endif %}">
                     {{ post|markdownify|safe }}
