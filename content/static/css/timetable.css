@@ -63,7 +63,3 @@ input[type=number]::-webkit-inner-spin-button {
     transform: scale(1.2);
     opacity: 1.0;
 }
-
-#timetable_post {
-    max-width: fit-content;
-}
