@@ -1,0 +1,33 @@
+{% load static %}
+
+{% block category_form %}
+    <div class="row">
+        {% for f in content.formCategory %}
+            {% if f.html_name == 'name' %}
+                <div class="col">
+                    <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
+                        <span class="input-group-text{% if f.field.required %} text-primary{% endif %}"><i class="bi bi-clipboard"></i></span>
+                        {{ f }}
+                    </div>
+                </div>
+            {% elif f.html_name == 'tag' %}
+                <div class="col-4 col-lg-2">
+                    <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
+                        <span class="input-group-text text-primary">
+                            <i class="bi bi-tag"></i>
+                        </span>
+                        <select name="tag" class="form-select" placeholder="{{ f.field.widget.attrs.placeholder }}" id="id_tag" data-bs-tooltip title="{{ f.field.widget.attrs.placeholder }}">
+                            {% for tag in f.field.widget.attrs.choices %}
+                                <option value="{{ tag }}"{% if f.value == tag %} selected{% endif %}>{{ tag }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col">
+                    {{ f }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

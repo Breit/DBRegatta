@@ -135,6 +135,16 @@ CONSTANCE_CONFIG = {
     'placeholderTeamAddress':       ('Adresse',                                     'Placeholder Text for Teams Form: Team Address'),
     'warningDeleteTeam':            ('Team endgültig löschen?\nAlle Rennauslosungen für dieses Team und alle Ergebnisse gehen dabei ebenfalls verloren.', 'Safety Warning Message for deleting a Team'),
 
+    # Race Category
+    'raceCategoryHeader':           ('Rennkategorien',                              'Header Text for Race Category List'),
+    'raceCategoryTableHeader':      ('Kategorie',                                   'Table Column Header for Race Category'),
+    'addRaceCategory':              ('Rennkategorie anlegen',                       'Text for New Race Category Button'),
+    'deleteRaceCategory':           ('Rennkategorie löschen',                       'Text for Delete Race Category Button/Modal'),
+    'editRaceCategory':             ('Rennkategorie bearbeiten',                    'Text for Edit Race Category Button/Modal'),
+    'placeholderCategoryName':      ('Rennkategorie',                               'Text for Race Category Form Field'),
+    'placeholderCategoryTag':       ('Kennbuchstabe',                               'Text for Race Category Tag Form Field'),
+    'warningDeleteCategory':        ('Rennkategorie endgültig löschen?\nAlle Rennauslosungen für diese Kategorie und alle Ergebnisse gehen dabei ebenfalls verloren. Alle Teams die dieser Rennkategorie zugeordnet waren, werden auch inaktiv gesetzt.', 'Safety warning message for deleting a race category'),
+
     # Timetable Settings
     'timetablePageCSS':             ('timetable.css',                               'CSS File for Site-specific Styling'),
     'timetablePageJS':              ('timetable.js',                                'JS File for Site-specific Data Handling'),
@@ -154,7 +164,7 @@ CONSTANCE_CONFIG = {
     'heatCountMin':                 (1,                                             'Minimum Rounds of Heats'),
     'heatCountMax':                 (5,                                             'Maximum Rounds of Heats'),
     'heatCountDesc':                ('Anzahl Vorrunden',                            'Description Rounds of Heats'),
-    'boardingTime':                 (timedelta(minutes=10),                         'Boarding time before the race start'),
+    'boardingTime':                 (timedelta(minutes=00),                         'Boarding time before the race start'),
     'boardingTimeDesc':             ('Boarding vor Rennen',                         'Description for boarding time before the race start'),
     'boardingTimeHeader':           ('Boarding',                                    'Text for boarding time before the race start column header'),
     'intervalHeat':                 (timedelta(minutes=15),                         'Interval between Races in the Heats'),
@@ -534,6 +544,22 @@ CONSTANCE_CONFIG_FIELDSETS = {
         ),
         'collapse': True
     },
+
+    'Race Category Settings': {
+        'fields': (
+            'raceCategoryHeader',
+            'raceCategoryTableHeader',
+            'addRaceCategory',
+            'deleteRaceCategory',
+            'editRaceCategory',
+            'placeholderCategoryName',
+            'placeholderCategoryTag',
+            'warningDeleteCategory',
+
+        ),
+        'collapse': True
+    },
+
     'Timetable Settings': {
         'fields': (
             'timetablePageCSS',

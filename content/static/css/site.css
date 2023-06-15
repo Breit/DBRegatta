@@ -93,6 +93,7 @@
 .header {
     border-color: var(--bs-gray-800) !important;
     z-index: var(--bs-header-zindex) !important;
+    max-height: 4.27rem;
 }
 
 .header img{
@@ -149,6 +150,7 @@
 .footer {
     border-color: var(--bs-gray-800) !important;
     bottom: 0;
+    max-height: 7rem;
 }
 
 .footer img {
