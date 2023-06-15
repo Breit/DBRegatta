@@ -49,6 +49,11 @@ def teams(request):
     # Gather data
     teamTableData = []
     categories = Category.objects.all()
+    if len(categories) == 0:
+        # Workaround for no categories
+        categories = [Category()]
+        categories[-1].name = ''
+        categories[-1].tag = ''
     for category in categories:
         teamTableData.append(
             {
