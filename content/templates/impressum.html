@@ -16,10 +16,21 @@
             {% if impressum.heading %}
                 <h2 class="mt-2">{{ impressum.heading }}</h2>
             {% endif %}
+            {% if impressum.content %}
+                <div class="container-fluid my-0 px-0 mt-2">
+                    {% for c in impressum.content %}
+                        {% if c|startswith:"$RAW$" %}
+                            {{ c|startswith:"$RAW$"|safe }}
+                        {% else %}
+                            {{ c|markdownify }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
             {% if impressum.paragraphs %}
                 {% for p in impressum.paragraphs %}
                     {% if p.heading %}
-                        <h4 class="mt-4 mb-2">{{ p.heading }}</h4>
+                        <h3 class="mt-4 mb-2">{{ p.heading }}</h3>
                     {% endif %}
                     {% if p.content %}
                         <div class="container-fluid my-0 px-0 mt-2">
@@ -31,6 +42,42 @@
                                 {% endif %}
                             {% endfor %}
                         </div>
+                    {% endif %}
+                    {% if p.paragraphs %}
+                        {% for p2 in p.paragraphs %}
+                            {% if p2.heading %}
+                                <h4 class="mt-4 mb-2">{{ p2.heading }}</h4>
+                            {% endif %}
+                            {% if p2.content %}
+                                <div class="container-fluid my-0 px-0 mt-2">
+                                    {% for c in p2.content %}
+                                        {% if c|startswith:"$RAW$" %}
+                                            {{ c|startswith:"$RAW$"|safe }}
+                                        {% else %}
+                                            {{ c|markdownify }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if p2.paragraphs %}
+                                {% for p3 in p2.paragraphs %}
+                                    {% if p3.heading %}
+                                        <h5 class="mt-4 mb-2">{{ p3.heading }}</h5>
+                                    {% endif %}
+                                    {% if p3.content %}
+                                        <div class="container-fluid my-0 px-0 mt-2">
+                                            {% for c in p3.content %}
+                                                {% if c|startswith:"$RAW$" %}
+                                                    {{ c|startswith:"$RAW$"|safe }}
+                                                {% else %}
+                                                    {{ c|markdownify }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
                     {% endif %}
                 {% endfor %}
             {% endif %}

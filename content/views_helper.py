@@ -1193,7 +1193,7 @@ def getSiteData(id: str = None, user = None):
             }
         )
     teams_wait = Team.objects.filter(active=True, wait=True).count()
-    if teams_active:
+    if teams_wait:
         menu_teams['notifications'].append(
             {
                 'level': 'warning',
@@ -1202,7 +1202,7 @@ def getSiteData(id: str = None, user = None):
             }
         )
     teams_inactive = Team.objects.filter(active=False).count()
-    if teams_active:
+    if teams_inactive:
         menu_teams['notifications'].append(
             {
                 'level': 'secondary',
