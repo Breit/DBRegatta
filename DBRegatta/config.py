@@ -197,7 +197,7 @@ CONSTANCE_CONFIG = {
     'victoryCeremonyTitle':         ('Siegerehrung',                                'Text for Victory Ceremony'),
     'heatsTitle':                   ('Vorrunde',                                    'Name for Heats'),
     'finaleTitle':                  ('Finale',                                      'Name for Finale'),
-    'finaleTemplate1':              ('Platz {} aus VR',                             'Template Placeholder 1 for Finale'),
+    'finaleTemplate1':              ('Platz {} aus Vorrunde',                       'Template Placeholder 1 for Finale'),
     'finaleTemplate2':              ('Erster aus {}',                               'Template Placeholder 2 for Finale'),
     'warningCreateTimetable':       ('Zeitplan komplett neu verlosen? Alle Ergebnisse und eingegebenen Zeiten werden damit verworfen!', 'Warning Message for Timetable Draw'),
 

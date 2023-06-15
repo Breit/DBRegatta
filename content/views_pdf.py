@@ -363,6 +363,7 @@ def timetable(request):
 
 
     # Get team content: active teams
+    finaleOnNewPage = True
     for event in timetableData:
         tableData = []
         tableData.append([])
@@ -414,6 +415,11 @@ def timetable(request):
 
                 tableData.append(raceRow)
 
+        # Insert a page break before the first finale table
+        if finaleOnNewPage and 'type' in event and event['type'] == 'finale':
+            story.append(PageBreak())
+            finaleOnNewPage = False
+
         story.append(
             LongTable(
                 tableData,
@@ -423,10 +429,6 @@ def timetable(request):
                 colWidths=mainTableColumns
             )
         )
-
-        # Insert a page break after each heat
-        if 'type' in event and event['type'] == 'heat':
-            story.append(PageBreak())
 
     # Create a file-like buffer to receive PDF data
     pdf_buffer = io.BytesIO()
