@@ -9,7 +9,7 @@ class Team(models.Model):
     active = models.BooleanField(default=False)
     nofee = models.BooleanField(default=False)
     wait = models.BooleanField(default=False)
-    category_id = models.BigIntegerField(blank=False, null=True)
+    category_id = models.BigIntegerField(blank=False, null=True, default=None)
     position = models.PositiveSmallIntegerField(blank=False, unique=True, null=True)
     date = models.DateField(blank=False, null=True)
     name = models.CharField(max_length=200, unique=True, blank=False)
