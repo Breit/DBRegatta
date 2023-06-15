@@ -45,6 +45,8 @@ def teams(request):
             elif newTeamForm.is_valid():
                 newTeamForm.save()
                 return redirect('/teams')
+            else:
+                siteData['content']['formTeam'] = newTeamForm
 
         # submit a new race category
         if 'add_category' in request.POST:
@@ -54,6 +56,8 @@ def teams(request):
             elif newCategoryForm.is_valid():
                 newCategoryForm.save()
                 return redirect('/teams')
+            else:
+                siteData['content']['formCategory'] = newCategoryForm
 
         # toggle team activation
         elif 'activate_team' in request.POST:
@@ -213,6 +217,8 @@ def trainings(request):
                     newTrainingForm.data['duration'] = validate_duration(newTrainingForm.data['duration'])
                 newTrainingForm.save()
                 return redirect('/trainings')
+            else:
+                siteData['content']['form'] = newTrainingForm
 
         # show edit training form
         elif 'edit_training' in request.POST:

@@ -283,7 +283,7 @@
         {% endif %}
 
         <div class="card mb-3 shadow">
-            <div class="card-header bg-purple-100 fs-4 py-0">
+            <div class="card-header bg-purple-100 fs-4 py-0{% if not content.categories %} border-0{% endif %}">
                 <div class="row user-select-none flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ config.raceCategoryHeader|uid }}" aria-expanded="true">
                     <div class="col">{{ config.raceCategoryHeader }}</div>
                     <div class="col-auto my-auto px-2 text-secondary fs-6">
