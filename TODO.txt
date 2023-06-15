@@ -10,3 +10,4 @@ TODO: DBRegatta
 - add free agenda topics
 - race classes
 - add individual fees for teams
+- simplify/refactor form handling code; remove doubled functions and unify

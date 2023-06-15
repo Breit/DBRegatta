@@ -47,23 +47,66 @@ def teams(request):
     ])
 
     # Gather data
-    teamTableData = [
-        {
-            # Active Teams
-            'header': Paragraph('{teamListHeader} {teamStatus}'.format(teamListHeader=config.teamTableHeaderTeams, teamStatus=config.activeTeams), styles['TableHeader']),
-            'data': Team.objects.filter(active=True, wait=False).order_by(F('position').asc(nulls_last=True))
-        },
-        {
-            # Waitlist Teams
-            'header': Paragraph('{teamListHeader} {teamStatus}'.format(teamListHeader=config.teamTableHeaderTeams, teamStatus=config.waitlistTeams), styles['TableHeader']),
-            'data': Team.objects.filter(active=True, wait=True).order_by(F('position').asc(nulls_last=True))
-        },
-        {
-            # Inactive Teams
-            'header': Paragraph('{teamListHeader} {teamStatus}'.format(teamListHeader=config.teamTableHeaderTeams, teamStatus=config.inactiveTeams), styles['TableHeader']),
-            'data': Team.objects.filter(active=False).order_by(F('position').asc(nulls_last=True))
-        }
-    ]
+    teamTableData = []
+    categories = Category.objects.all()
+    for category in categories:
+        teamTableData.append(
+            {
+                # Active Teams
+                'header': Paragraph(
+                    '{header} {status}{cat}'.format(
+                        header=config.teamTableHeaderTeams,
+                        status=config.activeTeams,
+                        cat=' - {}'.format(category.name) if len(categories) > 1 else ''
+                    ),
+                    styles['TableHeader']
+                ),
+                'data': Team.objects.filter(
+                    active=True,
+                    wait=False,
+                    category_id=category.id
+                ).order_by(
+                    F('position').asc(nulls_last=True)
+                )
+            }
+        )
+        teamTableData.append(
+            {
+                # Waitlist Teams
+                'header': Paragraph(
+                    '{header} {status}{cat}'.format(
+                        header=config.teamTableHeaderTeams,
+                        status=config.waitlistTeams,
+                        cat=' - {}'.format(category.name) if len(categories) > 1 else ''
+                    ), styles['TableHeader']
+                ),
+                'data': Team.objects.filter(
+                    active=True,
+                    wait=True,
+                    category_id=category.id
+                ).order_by(
+                    F('position').asc(nulls_last=True)
+                )
+            }
+        )
+        teamTableData.append(
+            {
+                # Inactive Teams
+                'header': Paragraph(
+                    '{header} {status}{cat}'.format(
+                        header=config.teamTableHeaderTeams,
+                        status=config.inactiveTeams,
+                        cat=' - {}'.format(category.name) if len(categories) > 1 else ''
+                    ), styles['TableHeader']
+                ),
+                'data': Team.objects.filter(
+                    active=False,
+                    category_id=category.id
+                ).order_by(
+                    F('position').asc(nulls_last=True)
+                )
+            }
+        )
 
     # Table column header is the same for all tables
     tableColumnHeader = [
@@ -86,18 +129,58 @@ def teams(request):
 
     # Statistics section
     statTableData = []
-    for teamTable in teamTableData:
+
+    if len(categories) > 1:
+        # Statistics for all race categories/classes
+        statTableCols = (90*mm, 30*mm, 30*mm, 30*mm)
         statTableData.append(
             [
-            teamTable['header'],
-            Paragraph('{count}'.format(count=len(teamTable['data'])), styles['TableHeaderBC']),
-        ]
-    )
+                None,
+                Paragraph('{type}'.format(type=config.activeTeams), styles['TableHeaderC']),
+                Paragraph('{type}'.format(type=config.waitlistTeams), styles['TableHeaderC']),
+                Paragraph('{type}'.format(type=config.inactiveTeams), styles['TableHeaderC'])
+            ]
+        )
+        cat_data = []
+        c = 0
+        for i in range(len(teamTableData)):
+            if len(cat_data) == 0:
+                cat_data.append(
+                    Paragraph(
+                        '{header}: {cat}'.format(
+                            header=config.placeholderCategoryName,
+                            cat=categories[c].name
+                        ),
+                        styles['TableHeader']
+                    )
+                )
+                c += 1
+            cat_data.append(
+                Paragraph(
+                    '{data}'.format(
+                        data=teamTableData[i]['data'].count()
+                    ),
+                    styles['TableHeaderBC']
+                )
+            )
+            if i > 0 and (i + 1) % 3 == 0:
+                statTableData.append(cat_data)
+                cat_data = []
+    else:
+        # Only global statistics, no categories/classes
+        statTableCols = (130*mm, 50*mm)
+        for teamTable in teamTableData:
+            statTableData.append(
+                [
+                    teamTable['header'],
+                    Paragraph('{count}'.format(count=len(teamTable['data'])), styles['TableHeaderBC']),
+                ]
+            )
 
     statTable = Table(
         statTableData,
         style=statTableStyle,
-        colWidths=(130*mm, 50*mm)
+        colWidths=statTableCols
     )
     story.append(
         TopPadder(
@@ -280,6 +363,7 @@ def timetable(request):
 
 
     # Get team content: active teams
+    finaleOnNewPage = True
     for event in timetableData:
         tableData = []
         tableData.append([])
@@ -331,6 +415,11 @@ def timetable(request):
 
                 tableData.append(raceRow)
 
+        # Insert a page break before the first finale table
+        if finaleOnNewPage and 'type' in event and event['type'] == 'finale':
+            story.append(PageBreak())
+            finaleOnNewPage = False
+
         story.append(
             LongTable(
                 tableData,
@@ -340,10 +429,6 @@ def timetable(request):
                 colWidths=mainTableColumns
             )
         )
-
-        # Insert a page break after each heat
-        if 'type' in event and event['type'] == 'heat':
-            story.append(PageBreak())
 
     # Create a file-like buffer to receive PDF data
     pdf_buffer = io.BytesIO()

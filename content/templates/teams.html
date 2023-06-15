@@ -60,6 +60,53 @@
             </div>
         </div>
 
+        <div class="modal fade" id="formCategoryModal" data-bs-backdrop="static" tabindex="-1">
+            <div class="modal-dialog text-dark modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-light">
+                        <h5 class="modal-title d-block" id="formAddCategoryLabel">{{ config.addRaceCategory }}</h5>
+                        <h5 class="modal-title d-none" id="formEditCategoryLabel">{{ config.editRaceCategory }}</h5>
+                        <button type="button" id="button_cancel_category_x" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                        <div class="d-flex align-items-start category_form w-100">
+                            <form method="POST" action="" class="w-100" name="add_category" id="category_form">
+                                {% csrf_token %}
+                                {% include 'category_form.html' %}
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                        <button type="submit" name="submit_category" value="Submit" id="button_add_category" form="category_form" class="btn btn-primary btn_icon shadow d-block">
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div class="pe-2">
+                                    <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="add_category" class="p-0">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.addRaceCategory }}</p>
+                            </div>
+                        </button>
+                        <button type="submit" name="submit_category" value="Submit" id="button_edit_category" form="category_form" class="btn btn-primary btn_icon shadow d-none">
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div class="pe-2">
+                                    <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="edit_category" class="p-0">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.editRaceCategory }}</p>
+                            </div>
+                        </button>
+                        <button type="button" name="cancel_category" value="Submit" id="button_cancel_category" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal" formnovalidate>
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div>
+                                    <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancel_category" class="p-0">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                            </div>
+                        </button>
+                        <div class="spinner-border text-primary d-none me-auto" role="status" id="wait"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="deleteTeamModal" data-bs-backdrop="static" tabindex="-1">
             <div class="modal-dialog text-dark">
                 <div class="modal-content">
@@ -94,7 +141,47 @@
                                 <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
                             </div>
                         </button>
-                        <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_delete"></div>
+                        <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_delete_team"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="deleteCategoryModal" data-bs-backdrop="static" tabindex="-1">
+            <div class="modal-dialog text-dark">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-light">
+                        <h5 class="modal-title" id="deleteCategoryLabel">{{ config.deleteRaceCategory }}</h5>
+                        <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                        <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                        <div class="container">
+                            <p>
+                                <span>{{ config.placeholderCategoryName }}: </span>
+                                <span class="fw-bold" id="del_category_warning"></span>
+                            </p>
+                            <p>{{ config.warningDeleteCategory|linebreaks }}</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                        <button type="button" name="delete_category" id="button_delete_category" value="" class="btn btn-primary btn_icon shadow" data-bs-dismiss="modal">
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div class="pe-2">
+                                    <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_category" class="p-0">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.deleteRaceCategory }}</p>
+                            </div>
+                        </button>
+                        <button type="button" name="cancel_delete_category" id="cancel_delete_category" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
+                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                <div>
+                                    <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelDeleteCategory" class="p-0">
+                                </div>
+                                <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                            </div>
+                        </button>
+                        <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_delete_category"></div>
                     </div>
                 </div>
             </div>
@@ -194,17 +281,77 @@
                 </div>
             </div>
         {% endif %}
-    </div>
 
+        <div class="card mb-3 shadow">
+            <div class="card-header bg-purple-100 fs-4 py-0">
+                <div class="row user-select-none flex-nowrap hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ config.raceCategoryHeader|uid }}" aria-expanded="true">
+                    <div class="col">{{ config.raceCategoryHeader }}</div>
+                    <div class="col-auto my-auto px-2 text-secondary fs-6">
+                        <i class="bi bi-chevron-compact-up icon_expanded"></i>
+                        <i class="bi bi-chevron-compact-down icon_collapsed"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0 collapse show" id="{{ config.raceCategoryHeader|uid }}">
+                {% if content.categories %}
+                    <div class="row user-select-none border-bottom small text-muted text-nowrap mt-2 mx-0">
+                        <div class="col-1 id_col text-center">{{ config.teamTableHeaderID }}</div>
+                        <div class="col">{{ config.raceCategoryTableHeader }}</div>
+                        <div class="col text-center d-none d-md-block category_tag_col">{{ config.placeholderCategoryTag }}</div>
+                        <div class="col text-center d-none d-lg-block category_team_count_col">{{ config.teamTableHeaderTeams }} {{ config.activeTeams }}</div>
+                        <div class="col text-center d-none d-xl-block category_team_count_col">{{ config.teamTableHeaderTeams }} {{ config.waitlistTeams }}</div>
+                        <div class="col text-center d-none d-xxl-block category_team_count_col">{{ config.teamTableHeaderTeams }} {{ config.inactiveTeams }}</div>
+                        {% if user.is_staff %}
+                            <div class="col-1 text-center team_table_buttons">{{ config.teamTableHeaderOptions }}</div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% for c in content.categories %}
+                    <div class="row user-select-none align-items-center mx-0 teams_list py-1{% if forloop.last %} rounded-bottom{% else %} border-bottom{% endif %}" id="category_{{ c.id }}">
+                        <div class="col-1 id_col fw-bold text-center text-nowrap text-primary">{{ forloop.counter }}</div>
+                        <div class="col fw-bold">{{ c.name }}</div>
+                        <div class="col text-center d-none d-md-block category_tag_col">{{ c.tag }}</div>
+                        <div class="col text-success text-center d-none d-lg-block category_team_count_col">{{ c.teams_active }}</div>
+                        <div class="col text-warning text-center d-none d-xl-block category_team_count_col">{{ c.teams_wait }}</div>
+                        <div class="col text-secondary text-center d-none d-xxl-block category_team_count_col">{{ c.teams_inactive }}</div>
+                        {% if user.is_staff %}
+                            <div class="col-1 px-2 text-center text-nowrap team_table_buttons">
+                                <div class="row m-0 flex-nowrap justify-content-center">
+                                    <div class="col-3 m-0 p-0 team_table_button">
+                                        <button type="button" name="edit_category" value="{{ c.id }}" class="btn btn_team_table_icon p-0 ps-1" onclick="button_mod_category({{ c.id }})" data-bs-tooltip title="{{ config.editRaceCategory }}">
+                                            <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_category">
+                                        </button>
+                                    </div>
+                                    <div class="col-3 m-0 p-0 team_table_button">
+                                        <button type="button" class="btn btn_team_table_icon p-0 ps-1" onclick="request_delete_category('{{ c.name }}', {{ c.id }})" data-bs-tooltip title="{{ config.deleteRaceCategory }}">
+                                            <img src="{% static 'images/' %}{{ config.removeTeamIcon }}" alt="remove_category">
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
     <div class="container-fluid mb-3 pt-3 float-start">
         {% if user.is_staff %}
-            <button type="button" name="show_team_form" value="AddTeam" class="btn btn-primary btn_icon btn_lg shadow" data-bs-toggle="modal" data-bs-target="#formTeamModal">
+            <button type="button" name="show_team_form" value="AddTeam" class="btn btn-primary btn_icon btn_lg shadow me-3" data-bs-toggle="modal" data-bs-target="#formTeamModal">
                 <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                     <div class="pe-2">
                         <img src="{% static 'images/' %}{{ config.addTeamIcon }}" alt="add_team">
                     </div>
                     <p class="m-0 ps-2 lead">{{ config.addTeam }}</p>
+                </div>
+            </button>
+            <button type="button" name="show_category_form" value="AddCategory" class="btn btn-warning btn_icon btn_lg shadow" data-bs-toggle="modal" data-bs-target="#formCategoryModal">
+                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                    <div class="pe-2">
+                        <img src="{% static 'images/' %}{{ config.addTeamIcon }}" alt="add_category">
+                    </div>
+                    <p class="m-0 ps-2 lead">{{ config.addRaceCategory }}</p>
                 </div>
             </button>
         {% endif %}
@@ -216,5 +363,6 @@
             </div>
         </button>
     </div>
+
     <div class="container-fluid overscroll"></div>
 {% endblock %}

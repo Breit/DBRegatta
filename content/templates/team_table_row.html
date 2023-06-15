@@ -2,23 +2,26 @@
 
 {% block team_table_row %}
     <div class="row user-select-none align-items-center mx-0 teams_list py-1{% if forloop.last %} rounded-bottom{% else %} border-bottom{% endif %}" id="team_{{ t.id }}">
-        <div class="col-1 id_col fw-bold text-center text-nowrap text-primary">{{ forloop.counter }}</div>
-        <div class="col col-lg-4 col-xl-3 col-xxl-2">
+        <div class="col col-1 id_col fw-bold text-center text-nowrap text-primary">{{ forloop.counter }}</div>
+        <div class="col">
             <span class="fw-bold{% if t.active and not t.wait %} text-success{% elif t.active and t.wait %} text-warning{% else %} text-muted{% endif %}">{{ t.name }}</span>
             <br>
             <span class="small">{{ t.company }}</span>
         </div>
-        <div class="col d-none d-lg-block">
+        <div class="col col-xl-3 col-xxl-2 d-none d-xl-block">
             <span>{{ t.contact }}</span>
             <br>
             <a href= "mailto:{{ t.email }}" class="small">{{ t.email }}</a>
         </div>
-        <div class="col d-none d-xxl-block small">{{ t.address|linebreaks }}</div>
-        <div class="col-2 d-none d-xl-block small">{{ t.phone }}</div>
-        <div class="col-1 d-none d-lg-block text-nowrap text-center small">{{ t.position|default_if_none:'' }}</div>
-        <div class="col-1 d-none d-xxl-block text-nowrap team_table_date text-center">{{ t.date|date:'d.m.Y' }}</div>
+        <div class="col col-xxl-2 d-none d-xxl-block small">
+            {% if t.address %}<span>{{ t.address|linebreaks }}</span>{% endif %}
+            <span class="small">{{ t.phone }}</span>
+        </div>
+        <div class="col col-lg-2 d-none d-lg-block fw-bold text-primary">{{ t.category }}</div>
+        <div class="col col-md-1 d-none d-md-block text-nowrap text-center small position_col">{{ t.position|default_if_none:'' }}</div>
+        <div class="col d-none d-xxl-block text-nowrap team_table_date text-center">{{ t.date|date:'d.m.Y' }}</div>
         {% if user.is_staff %}
-            <div class="col-1 px-2 text-center text-nowrap team_table_buttons">
+            <div class="col col-1 px-2 text-center text-nowrap team_table_buttons">
                 <div class="row m-0 flex-nowrap">
                     <div class="col-3 m-0 p-0 team_table_button">
                         <button type="button" name="edit_team" value="{{ t.id }}" class="btn btn_team_table_icon p-0 ps-1" onclick="button_mod_team({{ t.id }})" data-bs-tooltip title="{{ config.editTeamHeader }}">

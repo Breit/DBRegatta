@@ -1,8 +1,10 @@
+import string
+
 from constance import config
 from django import forms
 from django.forms import ModelForm
 
-from .models import Team, Post, Skipper, Training
+from .models import Team, Post, Skipper, Training, Category
 
 class TeamForm(ModelForm):
     class Meta:
@@ -15,6 +17,7 @@ class TeamForm(ModelForm):
             'name',
             'nofee',
             'company',
+            'category_id',
             'contact',
             'email',
             'phone',
@@ -28,6 +31,7 @@ class TeamForm(ModelForm):
             'name': '',
             'nofee': '',
             'company': '',
+            'category_id': '',
             'contact': '',
             'email': '',
             'phone': '',
@@ -87,6 +91,13 @@ class TeamForm(ModelForm):
                     'title': config.placeholderTeamCompany
                 }
             ),
+            'category_id': forms.NumberInput(
+                attrs = {
+                    'class': 'form-control',
+                    'placeholder': config.placeholderCategoryName,
+                    'icon': 'grid'
+                }
+            ),
             'contact': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
@@ -120,6 +131,37 @@ class TeamForm(ModelForm):
                     'data-bs-tooltip': '',
                     'title': config.placeholderTeamAddress
                 }
+            )
+        }
+
+class CategoryForm(ModelForm):
+    class Meta:
+        model = Category
+        fields = (
+            'name',
+            'tag',
+        )
+        labels = {
+            'name': '',
+            'tag': '',
+        }
+        widgets = {
+            'name': forms.TextInput(
+                attrs = {
+                    'class': 'form-control',
+                    'placeholder': config.placeholderCategoryName,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderCategoryName,
+                },
+            ),
+            'tag': forms.Select(
+                attrs = {
+                    'class': 'form-select',
+                    'placeholder': config.placeholderCategoryTag,
+                    'data-bs-tooltip': '',
+                    'title': config.placeholderCategoryTag,
+                    'choices': list(string.ascii_uppercase),
+                },
             )
         }
 

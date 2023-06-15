@@ -2,15 +2,15 @@
 
 {% block team_table_header %}
     <div class="row user-select-none border-bottom small text-muted text-nowrap mt-2 mx-0">
-        <div class="col-1 id_col text-center">{{ config.teamTableHeaderID }}</div>
-        <div class="col col-lg-4 col-xl-3 col-xxl-2">{{ config.teamTableHeaderTeam }} / {{ config.teamTableHeaderCompany }}</div>
-        <div class="col d-none d-lg-block">{{ config.teamTableHeaderCaptain }} / {{ config.teamTableHeaderEmail }}</div>
-        <div class="col d-none d-xxl-block">{{ config.teamTableHeaderAddress }}</div>
-        <div class="col-2 d-none d-xl-block">{{ config.teamTableHeaderPhone }}</div>
-        <div class="col-1 d-none d-lg-block text-center">{{ config.teamTableHeaderPosition }}</div>
-        <div class="col-1 d-none d-xxl-block team_table_date text-center">{{ config.teamTableHeaderDate }}</div>
+        <div class="col col-1 id_col text-center">{{ config.teamTableHeaderID }}</div>
+        <div class="col">{{ config.teamTableHeaderTeam }} / {{ config.teamTableHeaderCompany }}</div>
+        <div class="col col-xl-3 col-xxl-2 d-none d-xl-block">{{ config.teamTableHeaderCaptain }} / {{ config.teamTableHeaderEmail }}</div>
+        <div class="col col-xxl-2 d-none d-xxl-block">{{ config.teamTableHeaderAddress }} / {{ config.teamTableHeaderPhone }}</div>
+        <div class="col col-lg-2 d-none d-lg-block">{{ config.placeholderCategoryName }}</div>
+        <div class="col col-md-1 d-none d-md-block text-center position_col">{{ config.teamTableHeaderPosition }}</div>
+        <div class="col d-none d-xxl-block team_table_date text-center">{{ config.teamTableHeaderDate }}</div>
         {% if user.is_staff %}
-            <div class="col-1 text-center team_table_buttons">{{ config.teamTableHeaderOptions }}</div>
+            <div class="col col-1 text-center team_table_buttons">{{ config.teamTableHeaderOptions }}</div>
         {% endif %}
     </div>
 {% endblock %}

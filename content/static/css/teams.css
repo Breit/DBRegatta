@@ -67,9 +67,24 @@ input[type=number]::-webkit-inner-spin-button {
     max-width: 3rem !important;
 }
 
+.position_col {
+    min-width: 6rem !important;
+    max-width: 6rem !important;
+}
+
+.category_tag_col {
+    min-width: 7rem !important;
+    max-width: 7rem !important;
+}
+
 .team_table_date {
     min-width: 7rem !important;
     max-width: 7rem !important;
+}
+
+.category_team_count_col {
+    min-width: 8rem !important;
+    max-width: 8rem !important;
 }
 
 .teams_list {

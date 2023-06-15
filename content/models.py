@@ -3,13 +3,13 @@ from constance import config
 from django.db import models
 from django.core.validators import MaxLengthValidator
 from django.utils import timezone
-from datetime import timedelta
 
 # for list of teams
 class Team(models.Model):
     active = models.BooleanField(default=False)
     nofee = models.BooleanField(default=False)
     wait = models.BooleanField(default=False)
+    category_id = models.BigIntegerField(blank=False, null=True)
     position = models.PositiveSmallIntegerField(blank=False, unique=True, null=True)
     date = models.DateField(blank=False, null=True)
     name = models.CharField(max_length=200, unique=True, blank=False)
@@ -21,6 +21,14 @@ class Team(models.Model):
 
     def __str__(self):
         return self.company
+
+# for race categories
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True, blank=False)
+    tag = models.CharField(max_length=2, unique=True, blank=False)
+
+    def __str__(self):
+        return self.name
 
 # for list of races (heats and finals)
 class Race(models.Model):
