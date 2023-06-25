@@ -404,6 +404,20 @@ def timetable(request):
                 post.save()
             elif 'createTimetable' in request.POST:
                 createTimeTable()
+            elif 'editRace' in request.POST:
+                try:
+                    siteData['editRace'] = getDataForRaceEdit(request.POST['editRace'])
+                    return render(request, 'timetable.html', siteData)
+                except:
+                    pass
+            elif 'saveRace' in request.POST and 'assignments' in request.POST:
+                try:
+                    saveEditedRaceData(
+                        request.POST['saveRace'],
+                        json.loads(request.POST['assignments'])
+                    )
+                except:
+                    pass
             return redirect('/timetable')
 
     try:
@@ -658,6 +672,7 @@ def settings(request):
             updateTimeTable()
         elif 'resetFinals' in request.POST:
             clearFinals()
+            generateFinaleDrawModes()
             populateFinals()
         elif 'resetHeats' in request.POST:
             clearHeatTimes()

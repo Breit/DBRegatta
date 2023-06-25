@@ -63,3 +63,14 @@ input[type=number]::-webkit-inner-spin-button {
     transform: scale(1.2);
     opacity: 1.0;
 }
+
+.edit_race_icon img {
+    height: 1.5rem;
+    cursor: pointer;
+    opacity: 0.2;
+}
+
+.edit_race_icon:hover img {
+    transform: scale(1.2);
+    opacity: 1.0;
+}

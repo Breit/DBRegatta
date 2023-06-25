@@ -37,6 +37,100 @@ function button_save_post(edit_id)
     );
 }
 
+function button_edit_race(race_name)
+{
+    $('#wait_race').removeClass('d-none').addClass('d-block');
+
+    $('#editRace').prop('disabled', true);
+    $('#cancelEditRace').prop('disabled', true);
+
+    const csrftoken = getCookie('csrftoken');
+    $.post(
+        {
+            url: window.location.href,
+            data: {
+                'editRace': race_name
+            },
+            headers: { 'X-CSRFToken': csrftoken }
+        },
+        function(data, status){
+            if (status === 'success')
+            {
+                $('#editRaceModal').html($(data).find('#editRaceModal').html());
+            }
+
+            $('#wait_race').removeClass('d-block').addClass('d-none');
+
+            $('#editRace').prop('disabled', false);
+            $('#cancelEditRace').prop('disabled', false);
+
+            $('#editRaceModal').modal('toggle');
+        }
+    );
+}
+
+function button_save_race(race_name, lanes)
+{
+    $('#wait_race').removeClass('d-none').addClass('d-block');
+
+    $('#editRace').prop('disabled', true);
+    $('#cancelEditRace').prop('disabled', true);
+
+    let assignments = new Array()
+    for (let i = 1; i <= lanes; i++)
+    {
+        let team = $('#team_' + i.toString()).val();
+        if (team)
+        {
+            assignments.push(
+                {
+                    lane: i,
+                    team: +team
+                }
+            );
+        }
+    }
+
+    const csrftoken = getCookie('csrftoken');
+    $.post(
+        {
+            url: window.location.href,
+            data: {
+                saveRace: race_name,
+                assignments: JSON.stringify(assignments)
+            },
+            headers: { 'X-CSRFToken': csrftoken }
+        },
+        function(data, status){
+            if (status === 'success')
+            {
+                $('.menu').html($(data).find('.menu').html());
+                $('#timetable_content').html($(data).find('#timetable_content').html());
+            }
+
+            $('#wait_race').removeClass('d-block').addClass('d-none');
+
+            $('#editRace').prop('disabled', false);
+            $('#cancelEditRace').prop('disabled', false);
+
+            $('#editRaceModal').modal('toggle');
+        }
+    );
+}
+
+function team_changed(obj, options, id)
+{
+    if (obj)
+    {
+        console.log(obj);
+        index = obj.selectedIndex
+        if (options instanceof Array && index >= 0 && index < options.length)
+        {
+            $('#' + id).html(options[index].company);
+        }
+    }
+}
+
 function trigger(action)
 {
     const csrftoken = getCookie('csrftoken');
