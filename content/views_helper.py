@@ -1062,6 +1062,11 @@ def saveEditedRaceData(race_name, data):
     for d in data:
         assignments = RaceAssign.objects.filter(race_id__in=race_ids, team_id=d['team'])
         if len(assignments) > 0:
+            # Also remove race draw mode if the edited race is a final race
+            if race_name.startswith(config.finalPrefix):
+                rd = RaceDrawMode.objects.filter(race_id=assignments[0].race_id, lane=assignments[0].lane)
+                rd.delete()
+
             assignments[0].race_id = race.id
             assignments[0].lane = d['lane']
             assignments[0].save()
