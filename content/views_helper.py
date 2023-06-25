@@ -7,6 +7,7 @@ import random
 
 from glob import glob
 from itertools import chain
+from collections import Counter
 from datetime import datetime, date, time, timedelta
 
 from constance import config
@@ -702,10 +703,27 @@ def getLastRaceTime(raceType: str):
     race = Race.objects.filter(name__startswith = raceType).order_by('time').last()
     return race.time if race else config.timeBegin
 
-def getActiveTeams(category: Category):
-    races = Race.objects.filter(name__startswith = '{}{}'.format(config.heatPrefix, category.tag))
-    teams = set([ra.team_id for ra in RaceAssign.objects.filter(race_id__in=races)])
-    return len(teams)
+def getActiveTeams(category: Category, finale: bool = False):
+    if finale:
+        races = Race.objects.filter(name__startswith = '{}{}'.format(config.finalPrefix, category.tag))
+        count = len(
+            set(
+                [ra.team_id for ra in RaceAssign.objects.filter(race_id__in=races)]
+            )
+        )
+    else:
+        races = Race.objects.filter(name__startswith = '{}{}'.format(config.heatPrefix, category.tag))
+        teams = [ra.team_id for ra in RaceAssign.objects.filter(race_id__in=races)]
+
+        # Count only teams who have started in all the heats
+        teams_heat_races = Counter(teams)
+        count = len(
+            set(
+                [k for k in teams_heat_races.keys() if teams_heat_races[k] == config.heatCount]
+            )
+        )
+
+    return count
 
 def getRaces(raceType: str):
     races = []
@@ -863,7 +881,6 @@ def createTimeTable():
     clearRaces()
 
     # create race tables for heats
-    start = combineTimeOffset(config.timeBegin, config.offsetHeat)
     categories = Category.objects.all()
 
     lastHeat = []
@@ -916,63 +933,169 @@ def createTimeTable():
 
     # create race tables for finals
     if 'race' in locals():
-        # add heat for each category
-        for category in categories:
-            teams = Team.objects.filter(active=True, wait=False, category_id=category.id)
-            if teams.count() == 0:
-                continue
-
-            pnum = teams.count()
-            rname = ''
-            if teams.count() == 0:
-                races = 0
-            elif teams.count() == 1:
-                races = 1
-            else:
-                if config.raceToTopFinal:
-                    # if race-to-top race mode is active, leave lane free for victor from previous race, except in the first race
-                    races = math.ceil((teams.count() - 1) / max(1, (config.lanesPerRace - 1)))
-                else:
-                    # fully populate all races
-                    races = math.ceil(teams.count() / max(1, config.lanesPerRace))
-            for rnum in range(races):
-                race = Race()
-                race.time = config.timeBegin        # update time later
-                race.name = '{}{}-{}'.format(config.finalPrefix, category.tag, rnum + 1)
-                race.save()
-
-                # create finale draw assignments
-                if rnum == 0:
-                    borrow = False
-                    # lane count for first race might not match number of available lanes
-                    if config.raceToTopFinal:
-                        # if race-to-top race mode is active, leave lane free for victor from previous race
-                        lanes = teams.count() - (races - 1) * (config.lanesPerRace - 1)
-                    else:
-                        # populate all races
-                        lanes = teams.count() - (races - 1) * config.lanesPerRace
-                        if lanes == 1:
-                            borrow = True   # don't create the first race with only one participent, borrow one from the next race
-                            lanes = 2
-                else:
-                    lanes = config.lanesPerRace                                         # last race is always full if possible
-                    if borrow:
-                        lanes -= 1
-                        borrow = False
-                for lnum in range(lanes):
-                    rdm = RaceDrawMode()
-                    rdm.race_id = race.id
-                    rdm.lane = lnum + 1                                                 # start lane number at 1
-                    if rnum == 0 or lnum != 0 or not config.raceToTopFinal:
-                        rdm.desc = config.finaleTemplate1.format(pnum)
-                        pnum -= 1
-                    else:
-                        rdm.desc = config.finaleTemplate2.format(rname)
-                    rdm.save()
-
-                rname = race.name
+        generateFinaleDrawModes()
 
     # now update all times
+    updateTimeTable()
+
+def generateFinaleDrawModes():
+    # create race tables for finals
+    for category in Category.objects.all():
+        team_count = getActiveTeams(category, False)
+
+        pnum = team_count
+        rname = ''
+        if team_count == 0:
+            races = 0
+        elif team_count == 1:
+            races = 1
+        else:
+            if config.raceToTopFinal:
+                # if race-to-top race mode is active, leave lane free for victor from previous race, except in the first race
+                races = math.ceil((team_count - 1) / max(1, (config.lanesPerRace - 1)))
+            else:
+                # fully populate all races
+                races = math.ceil(team_count / max(1, config.lanesPerRace))
+        for rnum in range(races):
+            race = None
+            race_name = '{}{}-{}'.format(config.finalPrefix, category.tag, rnum + 1)
+            try:
+                race = Race.objects.get(name__startswith=race_name)
+            except:
+                pass
+            if race is None:
+                race = Race()
+                race.name = race_name
+            race.time = config.timeBegin        # update time later
+            race.save()
+
+            # create finale draw assignments
+            if rnum == 0:
+                borrow = False
+                # lane count for first race might not match number of available lanes
+                if config.raceToTopFinal:
+                    # if race-to-top race mode is active, leave lane free for victor from previous race
+                    lanes = team_count - (races - 1) * (config.lanesPerRace - 1)
+                else:
+                    # populate all races
+                    lanes = team_count - (races - 1) * config.lanesPerRace
+                    if lanes == 1:
+                        borrow = True   # don't create the first race with only one participent, borrow one from the next race
+                        lanes = 2
+            else:
+                lanes = config.lanesPerRace                                         # last race is always full if possible
+                if borrow:
+                    lanes -= 1
+                    borrow = False
+            for lnum in range(lanes):
+                rdm = RaceDrawMode()
+                rdm.race_id = race.id
+                rdm.lane = lnum + 1                                                 # start lane number at 1
+                if rnum == 0 or lnum != 0 or not config.raceToTopFinal:
+                    rdm.desc = config.finaleTemplate1.format(pnum)
+                    pnum -= 1
+                else:
+                    rdm.desc = config.finaleTemplate2.format(rname)
+                rdm.save()
+
+            rname = race.name
+
+def getDataForRaceEdit(race_name):
+    race = Race.objects.get(name=race_name)
+
+    # Try to get teams with the correct race category
+    assignments = RaceAssign.objects.filter(race_id=race.id)
+    if len(assignments) > 0:
+        team = Team.objects.get(id=assignments[0].team_id)
+        teams = Team.objects.filter(active=True, wait=False, category_id=team.category_id)
+    else:
+        teams = Team.objects.filter(active=True, wait=False)
+
+    race_data = {
+        'race_id': race.id,
+        'race_name': race.name,
+        'race_time': race.time,
+        'data': [],
+        'options': [
+            {
+                'id': t.id,
+                'name': t.name,
+                'company': t.company
+            } for t in teams
+        ] + [
+            {
+                'id': '',
+                'name': '-',
+                'company': '-'
+            }
+        ]
+    }
+    for lane in range(1, config.lanesPerRace + 1):
+        assignment = None
+        team = None
+        try:
+            assignment = RaceAssign.objects.get(race_id=race.id, lane=lane)
+            team = Team.objects.get(id=assignment.team_id)
+        except:
+            pass
+
+        dataset = {
+            'lane': lane,
+            'team': {
+                'id': team.id if team is not None else '',
+                'name': team.name if team is not None else '-',
+                'company': team.company if team is not None else '-'
+            }
+        }
+        race_data['data'].append(dataset)
+
+    return race_data
+
+def saveEditedRaceData(race_name, data):
+    race = Race.objects.get(name=race_name)
+
+    # All races in current block
+    race_ids = [r.id for r in Race.objects.filter(name__startswith=race_name.split('-')[0])]
+    teams = [ra.team_id for ra in RaceAssign.objects.filter(race_id=race.id)]
+
+    # Loop over all new assignments and adjust data in DB
+    for d in data:
+        assignments = RaceAssign.objects.filter(race_id__in=race_ids, team_id=d['team'])
+        if len(assignments) > 0:
+            assignments[0].race_id = race.id
+            assignments[0].lane = d['lane']
+            assignments[0].save()
+
+            # If there is more than 1 assignement for the current team, delete them
+            for i in range(1, len(assignments)):
+                assignments[i].delete()
+        else:
+            assignment = RaceAssign()
+            assignment.race_id = race.id
+            assignment.team_id = d['team']
+            assignment.lane = d['lane']
+            assignment.save()
+
+        try:
+            teams.remove(d['team'])
+        except:
+            pass
+
+    # Re-generate all finale race draw modes if heat is modified
+    if race_name.startswith(config.heatPrefix):
+        RaceDrawMode.objects.all().delete()
+        generateFinaleDrawModes()
+
+    # Remove race assignments that are manually requested to be deleted
+    remove_assignments = RaceAssign.objects.filter(race_id__in=race_ids, team_id__in=teams)
+    for ra in remove_assignments:
+        ra.delete()
+
+        # Also remove race draw mode if the edited race is a final race
+        if race_name.startswith(config.finalPrefix):
+            rd = RaceDrawMode.objects.filter(race_id=ra.race_id, lane=ra.lane)
+            rd.delete()
+
     updateTimeTable()
 
 def getCurrentTimeTable():
@@ -1030,11 +1153,15 @@ def getCurrentTimeTable():
 def getRankings(category: Category):
     # get race times
     times = {}
+    index = {}
     for race in Race.objects.filter(name__startswith = '{}{}'.format(config.heatPrefix, category.tag)):
         for attendee in RaceAssign.objects.filter(race_id=race.id):
             if attendee.team_id not in times:
-                times[attendee.team_id] = []
-            times[attendee.team_id].append(attendee.time)
+                times[attendee.team_id] = [0.0] * config.heatCount
+            if attendee.team_id not in index:
+                index[attendee.team_id] = 0
+            times[attendee.team_id][index[attendee.team_id]] = attendee.time
+            index[attendee.team_id] += 1
 
     # sort teams into brackets according to how many races they have finished
     brackets = {}
@@ -1094,32 +1221,6 @@ def getHeatRankings(category: Category):
 
     return rankingTable
 
-# get started/finished status of all heats in the DB
-def getHeatsStatus():
-    heats_started = {}
-    heats_finished = {}
-
-    for category in Category.objects.all():
-        heats_started[category.name] = []
-        heats_finished[category.name] = []
-
-        # deduce heat count from DB
-        heats = Race.objects.filter(name__startswith = '{}{}'.format(config.heatPrefix, category.tag))
-        heatcount = len(set(sum([re.findall(r'{}{}(\d+)-\d+'.format(config.heatPrefix, category.tag), heat.name) for heat in heats], [])))
-
-        # get status on all heat races
-        for i in range(heatcount):
-            heats_started[category.name].append([])
-            heats_finished[category.name].append([])
-
-            heat_races = Race.objects.filter(name__startswith = '{}{}{}-'.format(config.heatPrefix, category.tag, i + 1)).order_by('time')
-            for race in heat_races:
-                assignments = RaceAssign.objects.filter(race_id = race.id)
-                heats_started[category.name][-1].append(any(assign.time > 0.0 for assign in assignments) and assignments.count() > 0)
-                heats_finished[category.name][-1].append(all(assign.time > 0.0 for assign in assignments) and assignments.count() > 0)
-
-    return heats_started, heats_finished
-
 # get race names for notifications
 #   last    - the last race that has been finished
 #   next    - the first occurence of a race that has not been started
@@ -1144,31 +1245,16 @@ def getNextRaceName():
 
 # get current race block (Heat# or Final) for notifications
 def getCurrentRaceBlock():
-    current_race_block = None
+    last, next, started = getNextRaceName()
 
-    heats_started, heats_finished = getHeatsStatus()
-
-    for category in Category.objects.all():
-        if current_race_block is not None:
-            break
-
-        # eventually return None if no heat is started at all
-        if not any(sum(heats_started[category.name], [])):
-            continue
-
-        # return finale prefix if all heats are finished
-        if all(sum(heats_started[category.name], [])) and all(sum(heats_finished[category.name], [])):
-            current_race_block = '{}{}'.format(config.finalPrefix, category.tag)
-            break
-
-        # figure out which heat is started, but not finished
-        for i, (_, finished) in enumerate(zip(heats_started[category.name], heats_finished[category.name])):
-            if all(finished):
-                continue
-            current_race_block = '{}{}{}'.format(config.heatPrefix, category.tag, i + 1)
-            break
-
-    return current_race_block
+    if started is not None:
+        return started.split('-')[0]
+    elif next is not None:
+        return next.split('-')[0]
+    elif last is not None:
+        return last.split('-')[0]
+    else:
+        return None
 
 # define default site data
 def getSiteData(id: str = None, user = None):
@@ -1310,20 +1396,20 @@ def getSiteData(id: str = None, user = None):
         'notifications': []
     }
     last, next, started = getNextRaceName()
+    if last is not None:
+        menu_times['notifications'].append(
+            {
+                'level': 'success',
+                'count': last,
+                'tooltip': '{title}: {status}'.format(title=config.raceLastTitle, status=last)
+            }
+        )
     if started is not None:
         menu_times['notifications'].append(
             {
                 'level': 'warning',
                 'count': started,
                 'tooltip': '{title}: {status}'.format(title=config.raceCurrentTitle, status=started)
-            }
-        )
-    elif last is not None:
-        menu_times['notifications'].append(
-            {
-                'level': 'success',
-                'count': last,
-                'tooltip': '{title}: {status}'.format(title=config.raceLastTitle, status=last)
             }
         )
     if next is not None:
@@ -1356,7 +1442,7 @@ def getSiteData(id: str = None, user = None):
     if current_race_block:
         menu_display['notifications'] = [
             {
-                'level': 'danger',
+                'level': 'info',
                 'count': current_race_block,
                 'tooltip': '{title}: {status}'.format(title=config.currentRaceBlockTitle, status=current_race_block)
             }
@@ -1431,7 +1517,7 @@ def getRaceTimes(raceType: str, category: Category, heatNum: int = 0):
 
     races = []
     if raceType == config.finalPrefix:
-        rank_finale = getActiveTeams(category)
+        rank_finale = getActiveTeams(category, True)
 
     for race in races_sorted:
         entry = {
@@ -1533,7 +1619,7 @@ def getFinalRankings(category: Category):
     races_sorted = [race for race in races_sorted]
     races_sorted.sort(key=lambda x:[int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.name)])
 
-    rank_finale = getActiveTeams(category)
+    rank_finale = getActiveTeams(category, True)
 
     for race in races_sorted:
         entry = {
@@ -2617,6 +2703,12 @@ def clearFinals():
 
     # delete all finale assignments
     RaceAssign.objects.filter(race_id__in=race_ids).delete()
+
+    # delete all finale draw modes
+    RaceDrawMode.objects.all().delete()
+
+    # also delete all finale races
+    races.delete()
 
 # Remove all heats including racing times from the DB including finals and race assignments
 def clearRaces():

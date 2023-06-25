@@ -12,50 +12,50 @@
 {% endblock %}
 
 {% block content %}
-    {% if controls %}
-        <div class="modal fade" id="createTimetableModal" tabindex="-1" data-bs-backdrop="static">
-            <div class="modal-dialog text-dark">
-                <div class="modal-content">
-                    <div class="modal-header bg-danger text-light">
-                        <h5 class="modal-title" id="createTimetableLabel">{{ config.createTimetableText }}</h5>
-                        <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body d-flex flex-nowrap text-start align-items-center">
-                        <img src="{% static 'images/' %}{{ config.questionIcon }}">
-                        <div class="container">{{ config.warningCreateTimetable }}</div>
-                    </div>
-                    <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
-                        <button type="button" name="createTimetableSubmit" id="createTimetableSubmit" value="Create" class="btn btn-primary btn_icon shadow" onclick="trigger('createTimetable')">
-                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                <div class="pe-2">
-                                    <img src="{% static 'images/' %}{{ config.createTimetableIcon }}" alt="createTimetable">
+    {% if user.is_staff %}
+        {% if controls %}
+            <div class="modal fade" id="createTimetableModal" tabindex="-1" data-bs-backdrop="static">
+                <div class="modal-dialog text-dark">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-light">
+                            <h5 class="modal-title" id="createTimetableLabel">{{ config.createTimetableText }}</h5>
+                            <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                            <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                            <div class="container">{{ config.warningCreateTimetable }}</div>
+                        </div>
+                        <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                            <button type="button" name="createTimetableSubmit" id="createTimetableSubmit" value="Create" class="btn btn-primary btn_icon shadow" onclick="trigger('createTimetable')">
+                                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                    <div class="pe-2">
+                                        <img src="{% static 'images/' %}{{ config.createTimetableIcon }}" alt="createTimetable">
+                                    </div>
+                                    <p class="m-0 ps-2 lead">{{ config.createTimetableText }}</p>
                                 </div>
-                                <p class="m-0 ps-2 lead">{{ config.createTimetableText }}</p>
-                            </div>
-                        </button>
-                        <button type="button" name="createTimetableCancel" id="createTimetableCancel" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
-                            <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
-                                <div>
-                                    <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelCreateTimetable">
+                            </button>
+                            <button type="button" name="createTimetableCancel" id="createTimetableCancel" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
+                                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                    <div>
+                                        <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelCreateTimetable">
+                                    </div>
+                                    <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
                                 </div>
-                                <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
-                            </div>
-                        </button>
-                        <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_createTimetable"></div>
+                            </button>
+                            <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_createTimetable"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="modal fade" id="editPostModal" tabindex="-1" data-bs-backdrop="static">
-            <div class="modal-dialog modal-xl text-dark">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-light">
-                        <h5 class="modal-title" id="editPostLabel">{{ config.timetablePostDesc }}</h5>
-                        <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body d-flex flex-nowrap text-start align-items-center">
-                        {% if controls %}
+            <div class="modal fade" id="editPostModal" tabindex="-1" data-bs-backdrop="static">
+                <div class="modal-dialog modal-xl text-dark">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-light">
+                            <h5 class="modal-title" id="editPostLabel">{{ config.timetablePostDesc }}</h5>
+                            <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body d-flex flex-nowrap text-start align-items-center">
                             <div class="row mx-0 px-0 w-100" id="{{ controls.id }}">
                                 <div class="col m-0 p-0">
                                     <div class="input-group rounded shadow-sm">
@@ -69,39 +69,105 @@
                                     </div>
                                 </div>
                             </div>
-                        {% endif %}
+                        </div>
+                        <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                            <button type="button" name="editPost" id="editPost" value="Edit" class="btn btn-primary btn_icon shadow" onclick="button_save_post({{ controls.id }})">
+                                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                    <div class="pe-2">
+                                        <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="editPost">
+                                    </div>
+                                    <p class="m-0 ps-2 lead">{{ config.submitEdit }}</p>
+                                </div>
+                            </button>
+                            <button type="button" name="cancelEditPost" id="cancelEditPost" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
+                                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                    <div>
+                                        <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelEditPost">
+                                    </div>
+                                    <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                                </div>
+                            </button>
+                            <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_post"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="modal fade" id="editRaceModal" tabindex="-1" data-bs-backdrop="static">
+            <div class="modal-dialog modal-xl text-dark">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-light">
+                        <h5 class="modal-title" id="editRaceLabel">{{ config.placeholderEditRaceDesc }}</h5>
+                        <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body d-flex text-start align-items-center">
+                        <div class="col">
+                            <div class="row lead ps-3">
+                                <div class="col-1 text-nowrap fw-bold">{{ config.timetableHeaderName }}: </div>
+                                <div class="col">{{ editRace.race_name }}</div>
+                            </div>
+                            <div class="row lead ps-3">
+                                <div class="col-1 text-nowrap fw-bold">{{ config.timetableHeaderTime }}: </div>
+                                <div class="col">{{ editRace.race_time|time:'H:i' }}</div>
+                            </div>
+                            <div class="row small border m-0 mt-3 rounded-top">
+                                <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
+                                <div class="col-6">{{ config.timetableHeaderTeam }}</div>
+                                <div class="col-5">{{ config.timetableHeaderCompany }}</div>
+                            </div>
+                            {% for entry in editRace.data %}
+                                <div class="row timetable_race border-start border-end border-bottom m-0 py-2{% if forloop.last %} rounded-bottom{% endif %}">
+                                    <div class="col-1 fw-bold text-center align-self-center" id="lane_{{ entry.lane }}">{{ entry.lane }}</div>
+                                    <div class="col-6">
+                                        <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-tag"></i>
+                                            </span>
+                                            <select name="team" class="form-select fw-bold text-primary" id="team_{{ entry.lane }}" placeholder="{{ config.timetableHeaderTeam }}" data-bs-tooltip title="{{ config.timetableHeaderTeam }}" onchange="team_changed(this, {{ editRace.options }}, 'company_{{ entry.lane }}');">
+                                                {% for team in editRace.options %}
+                                                    <option value="{{ team.id }}"{% if team.id == entry.team.id %} selected{% endif %}>{{ team.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-5 align-self-center" id="company_{{ entry.lane }}">{{ entry.team.company }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
                     <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
-                        <button type="button" name="editPost" id="editPost" value="Edit" class="btn btn-primary btn_icon shadow" onclick="button_save_post({{ controls.id }})">
+                        <button type="button" name="editRace" id="editRace" value="Edit" class="btn btn-primary btn_icon shadow" onclick="button_save_race('{{ editRace.race_name }}', {{ config.lanesPerRace }})">
                             <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                 <div class="pe-2">
-                                    <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="editPost">
+                                    <img src="{% static 'images/' %}{{ config.submitTeamIcon }}" alt="editRace">
                                 </div>
-                                <p class="m-0 ps-2 lead">{{ config.submitEditPost }}</p>
+                                <p class="m-0 ps-2 lead">{{ config.submitEdit }}</p>
                             </div>
                         </button>
-                        <button type="button" name="cancelEditPost" id="cancelEditPost" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
+                        <button type="button" name="cancelEditRace" id="cancelEditRace" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
                             <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                                 <div>
-                                    <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelEditPost">
+                                    <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelEditRace">
                                 </div>
                                 <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
                             </div>
                         </button>
-                        <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_post"></div>
+                        <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_race"></div>
                     </div>
                 </div>
             </div>
         </div>
     {% endif %}
-    <div class="container-fluid">
+
+    <div class="container-fluid" id="timetable_content">
         <h2 class="mt-2 mb-3 display-6" id="site_title">{{ config.timetableHeader }}</h2>
         {% if post or user.is_staff %}
             <div class="container mx-0 px-0 mb-4 position-relative" id="timetable_post">
                 <div class="container m-0 p-0{% if post_disabled %} text-muted{% endif %}">
                     {{ post|markdownify|safe }}
                 </div>
-                {% if controls %}
+                {% if user.is_staff %}
                     <div class="position-absolute bottom-0 end-0 edit_icon"{% if controls %} data-bs-toggle="modal" data-bs-target="#editPostModal"{% endif %} data-bs-tooltip title="{{ config.placeholderTimetablePostDesc }}">
                         <img src="{% static 'images/' %}{{ config.editTeamIcon }}" alt="edit_team">
                     </div>
@@ -140,7 +206,7 @@
                             </div>
                         </div>
                         {% for race in entry.races %}
-                            <div class="row user-select-none timetable_race mx-0{% if forloop.last %} rounded-bottom{% else %} border-bottom{% endif %}">
+                            <div class="row user-select-none timetable_race mx-0 position-relative{% if forloop.last %} rounded-bottom{% else %} border-bottom{% endif %}">
                                 {% if config.boardingTime.seconds > 0 %}
                                     <div class="col-1 text-center align-self-center text-nowrap">{{ race.boarding|time:'H:i' }}</div>
                                 {% endif %}
@@ -156,6 +222,11 @@
                                         </div>
                                     {% endfor %}
                                 </div>
+                                {% if user.is_staff %}
+                                    <div class="d-flex align-items-center position-absolute edit_race_icon bottom-0 end-0 top-0 ms-auto w-auto" onclick="button_edit_race('{{ race.desc }}')" data-bs-tooltip title="{{ config.placeholderEditRaceDesc }}: {{ race.desc }}">
+                                        <img src="{% static 'images/' %}{{ config.editRaceIcon }}" alt="edit_race">
+                                    </div>
+                                {% endif %}
                             </div>
                         {% endfor %}
                     </div>
@@ -164,7 +235,7 @@
         {% endfor %}
     </div>
     <div class="container-fluid mb-3 pt-3 float-start">
-        {% if controls %}
+        {% if user.is_staff %}
             <button type="button" id="createTimetableButton" class="btn btn-warning btn_icon shadow" data-bs-toggle="modal" data-bs-target="#createTimetableModal">
                 <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                     <div>
