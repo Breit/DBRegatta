@@ -69,6 +69,16 @@ def teams(request):
                 modTeam.active = not modTeam.active
                 modTeam.wait = modTeam.active
                 modTeam.save()
+                if not modTeam.active:
+                    # also delete all race assignements with the team as well
+                    assignments = RaceAssign.objects.filter(team_id=modTeam.id)
+                    for assignment in assignments:
+                        assignment.delete()
+
+                    # re-generate race assignments for finals
+                    if len(assignments) > 0:
+                        generateFinaleDrawModes()
+                        updateTimeTable()
             return redirect('/teams')
 
         # toggle team waitlist
@@ -85,6 +95,16 @@ def teams(request):
                     if modTeam.wait:
                         modTeam.active = True
                 modTeam.save()
+                if modTeam.wait:
+                    # also delete all race assignements with the team as well
+                    assignments = RaceAssign.objects.filter(team_id=modTeam.id)
+                    for assignment in assignments:
+                        assignment.delete()
+
+                    # re-generate race assignments for finals
+                    if len(assignments) > 0:
+                        generateFinaleDrawModes()
+                        updateTimeTable()
             return redirect('/teams')
 
         # delete team from database
@@ -156,6 +176,17 @@ def teams(request):
                 )
                 if modTeamForm.is_valid():
                     modTeamForm.save()
+
+                    if not modTeam.active or modTeam.wait:
+                        # also delete all race assignements with the team as well
+                        assignments = RaceAssign.objects.filter(team_id=modTeam.id)
+                        for assignment in assignments:
+                            assignment.delete()
+
+                        # re-generate race assignments for finals
+                        if len(assignments) > 0:
+                            generateFinaleDrawModes()
+                            updateTimeTable()
                     return redirect('/teams')
                 else:
                     siteData['content']['formTeam'] = modTeamForm

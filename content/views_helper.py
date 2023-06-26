@@ -940,6 +940,7 @@ def createTimeTable():
 
 def generateFinaleDrawModes():
     # create race tables for finals
+    RaceDrawMode.objects.all().delete()
     for category in Category.objects.all():
         team_count = getActiveTeams(category, False)
 
@@ -1088,7 +1089,6 @@ def saveEditedRaceData(race_name, data):
 
     # Re-generate all finale race draw modes if heat is modified
     if race_name.startswith(config.heatPrefix):
-        RaceDrawMode.objects.all().delete()
         generateFinaleDrawModes()
 
     # Remove race assignments that are manually requested to be deleted
