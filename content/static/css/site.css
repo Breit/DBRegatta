@@ -66,6 +66,10 @@
     background-color: var(--bs-purple-300) !important;
 }
 
+.text-purple {
+    color: var(--bs-purple-300) !important;
+}
+
 .border-primary-100 {
     border: var(--bs-border-width) var(--bs-border-style) var(--bs-primary-100)!important;
 }

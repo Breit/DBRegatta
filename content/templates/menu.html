@@ -12,7 +12,7 @@
                     <div class="p-2">
                         <img src="{% static 'images/' %}{{ m.thumb }}" alt="{{ m.title }}_icon">
                     </div>
-                    <span class="item_title ps-2 pe-3 my-auto lead text-light w-100{% if request.session.fold_menu %} d-none{% endif %}">{{ m.title }}</span>
+                    <span class="item_title ps-2 pe-3 my-auto lead {% if 'color' in m %}text-{{ m.color }}{% else %}text-light{% endif %} w-100{% if request.session.fold_menu %} d-none{% endif %}">{{ m.title }}</span>
                     {% if m.notifications %}
                         <div class="item_badges d-flex flex-column pe-1 align-self-center{% if request.session.fold_menu %} d-none{% endif %}">
                             {% for n in m.notifications %}

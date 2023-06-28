@@ -1262,247 +1262,279 @@ def getCurrentRaceBlock():
 
 # define default site data
 def getSiteData(id: str = None, user = None):
-    menu_toggle = {
-        'id': 'toggle'
-    }
-    menu_teams = {
-        'id': 'teams',
-        'title': config.teamsTitle,
-        'url': 'teams',
-        'thumb': config.teamsIcon,
-        'active': True if id == 'teams' else False,
-        'notifications': []
-    }
-    teams_active = Team.objects.filter(active=True, wait=False).count()
-    if teams_active:
-        menu_teams['notifications'].append(
-            {
-                'level': 'success',
-                'count': teams_active,
-                'tooltip': '{title} {status}: {count}'.format(title=config.teamTableHeaderTeams, status=config.activeTeams, count=teams_active)
-            }
-        )
-    teams_wait = Team.objects.filter(active=True, wait=True).count()
-    if teams_wait:
-        menu_teams['notifications'].append(
-            {
-                'level': 'warning',
-                'count': teams_wait,
-                'tooltip': '{title} {status}: {count}'.format(title=config.teamTableHeaderTeams, status=config.waitlistTeams, count=teams_wait)
-            }
-        )
-    teams_inactive = Team.objects.filter(active=False).count()
-    if teams_inactive:
-        menu_teams['notifications'].append(
-            {
-                'level': 'secondary',
-                'count': teams_inactive,
-                'tooltip': '{title} {status}: {count}'.format(title=config.teamTableHeaderTeams, status=config.inactiveTeams, count=teams_inactive)
-            }
-        )
-
-    menu_trainings = {
-        'id': 'trainings',
-        'title': config.trainingsTitle,
-        'url': 'trainings',
-        'thumb': config.trainingsIcon,
-        'active': True if id == 'trainings' else False,
-        'notifications': []
-    }
-    trainings_upcoming = len(getTrainingsList(upcomingOnly=True))
-    if trainings_upcoming:
-        menu_trainings['notifications'].append(
-            {
-                'level': 'warning',
-                'count': trainings_upcoming,
-                'tooltip': '{title}: {count}'.format(title=config.trainingsTitleUpcoming, count=trainings_upcoming)
-            }
-        )
-    trainings_past = len(getTrainingsList(pastOnly=True))
-    if trainings_past:
-        menu_trainings['notifications'].append(
-            {
-                'level': 'success',
-                'count': trainings_past,
-                'tooltip': '{title}: {count}'.format(title=config.trainingsTitlePast, count=trainings_past)
-            }
-        )
-    trainings_inactive = len(getTrainingsList(active=False))
-    if trainings_inactive:
-        menu_trainings['notifications'].append(
-            {
-                'level': 'secondary',
-                'count': trainings_inactive,
-                'tooltip': '{title}: {count}'.format(title=config.trainingsTitleInactive, count=trainings_inactive)
-            }
-        )
-
-    menu_billing = {
-        'id': 'billing',
-        'title': config.billingTitle,
-        'url': 'billing',
-        'thumb': config.billingIcon,
-        'active': True if id == 'billing' else False,
-        'notifications': []
-    }
-
-    menu_calendar = {
-        'id': 'calendar',
-        'title': config.calendarTitle,
-        'url': 'calendar',
-        'thumb': config.calendarIcon,
-        'active': True if id == 'calendar' else False,
-        'notifications': []
-    }
-
-    menu_skippers = {
-        'id': 'skippers',
-        'title': config.skippersTitle,
-        'url': 'skippers',
-        'thumb': config.skippersIcon,
-        'active': True if id == 'skippers' else False,
-        'notifications': []
-    }
-    skippers_active = Skipper.objects.filter(active=True).count()
-    if skippers_active:
-        menu_skippers['notifications'].append(
-            {
-                'level': 'success',
-                'count': skippers_active,
-                'tooltip': '{title} {status}: {count}'.format(title=config.skippersTitle, status=config.activeSkipperTitle, count=skippers_active)
-            }
-        )
-    skippers_inactive = Skipper.objects.filter(active=False).count()
-    if skippers_inactive:
-        menu_skippers['notifications'].append(
-            {
-                'level': 'secondary',
-                'count': skippers_inactive,
-                'tooltip': '{title} {status}: {count}'.format(title=config.skippersTitle, status=config.inactiveSkipperTitle, count=skippers_inactive)
-            }
-        )
-
-    menu_timetable = {
-        'id': 'timetable',
-        'title': config.timetableTitle,
-        'url': 'timetable',
-        'thumb': config.timetableIcon,
-        'active': True if id == 'timetable' else False,
-        'notifications': []
-    }
-
-    menu_times = {
-        'id': 'times',
-        'title': config.timeTitle,
-        'url': 'times',
-        'thumb': config.timeIcon,
-        'active': True if id == 'times' else False,
-        'notifications': []
-    }
-    last, next, started = getNextRaceName()
-    if last is not None:
-        menu_times['notifications'].append(
-            {
-                'level': 'success',
-                'count': last,
-                'tooltip': '{title}: {status}'.format(title=config.raceLastTitle, status=last)
-            }
-        )
-    if started is not None:
-        menu_times['notifications'].append(
-            {
-                'level': 'warning',
-                'count': started,
-                'tooltip': '{title}: {status}'.format(title=config.raceCurrentTitle, status=started)
-            }
-        )
-    if next is not None:
-        menu_times['notifications'].append(
-            {
-                'level': 'danger',
-                'count': next,
-                'tooltip': '{title}: {status}'.format(title=config.raceNextTitle, status=next)
-            }
-        )
-
-    menu_results = {
-        'id': 'results',
-        'title': config.resultsTitle,
-        'url': 'results',
-        'thumb': config.resultsIcon,
-        'active': True if id == 'results' else False,
-        'notifications': []
-    }
-
-    menu_display = {
-        'id': 'display',
-        'title': config.displayTitle,
-        'url': 'display',
-        'thumb': config.displayIcon,
-        'active': True if id == 'display' else False,
-        'notifications': []
-    }
-    current_race_block = getCurrentRaceBlock()
-    if current_race_block:
-        menu_display['notifications'] = [
-            {
-                'level': 'info',
-                'count': current_race_block,
-                'tooltip': '{title}: {status}'.format(title=config.currentRaceBlockTitle, status=current_race_block)
-            }
-        ]
-
-    menu_settings = {
-        'id': 'settings',
-        'title': config.settingsTitle,
-        'url': 'settings',
-        'thumb': config.settingsIcon,
-        'active': True if id == 'settings' else False,
-        'notifications': []
-    }
-
-    menu_admin = {
-        'id': 'djadmin',
-        'title': config.adminTitle,
-        'url': 'djadmin',
-        'thumb': config.adminIcon,
-        'active': True if id == 'djadmin' else False,
-        'notifications': []
-    }
-
     siteData = {
         'menu': [],
         'impressum': '/impressum'
     }
-
+    
+    # Menu entry: Teams
     if user and user.is_authenticated:
+        menu_teams = {
+            'id': 'teams',
+            'title': config.teamsTitle,
+            'url': 'teams',
+            'thumb': config.teamsIcon,
+            'active': True if id == 'teams' else False,
+            'color': 'warning',
+            'notifications': []
+        }
+        teams_active = Team.objects.filter(active=True, wait=False).count()
+        if teams_active:
+            menu_teams['notifications'].append(
+                {
+                    'level': 'success',
+                    'count': teams_active,
+                    'tooltip': '{title} {status}: {count}'.format(title=config.teamTableHeaderTeams, status=config.activeTeams, count=teams_active)
+                }
+            )
+        teams_wait = Team.objects.filter(active=True, wait=True).count()
+        if teams_wait:
+            menu_teams['notifications'].append(
+                {
+                    'level': 'warning',
+                    'count': teams_wait,
+                    'tooltip': '{title} {status}: {count}'.format(title=config.teamTableHeaderTeams, status=config.waitlistTeams, count=teams_wait)
+                }
+            )
+        teams_inactive = Team.objects.filter(active=False).count()
+        if teams_inactive:
+            menu_teams['notifications'].append(
+                {
+                    'level': 'secondary',
+                    'count': teams_inactive,
+                    'tooltip': '{title} {status}: {count}'.format(title=config.teamTableHeaderTeams, status=config.inactiveTeams, count=teams_inactive)
+                }
+            )
+            
         siteData['menu'].append(menu_teams)
+        
+    # Menu entry: Skippers
+    if user and user.is_authenticated:
+        menu_skippers = {
+            'id': 'skippers',
+            'title': config.skippersTitle,
+            'url': 'skippers',
+            'thumb': config.skippersIcon,
+            'active': True if id == 'skippers' else False,
+            'color': 'warning',
+            'notifications': []
+        }
+        skippers_active = Skipper.objects.filter(active=True).count()
+        if skippers_active:
+            menu_skippers['notifications'].append(
+                {
+                    'level': 'success',
+                    'count': skippers_active,
+                    'tooltip': '{title} {status}: {count}'.format(title=config.skippersTitle, status=config.activeSkipperTitle, count=skippers_active)
+                }
+            )
+        skippers_inactive = Skipper.objects.filter(active=False).count()
+        if skippers_inactive:
+            menu_skippers['notifications'].append(
+                {
+                    'level': 'secondary',
+                    'count': skippers_inactive,
+                    'tooltip': '{title} {status}: {count}'.format(title=config.skippersTitle, status=config.inactiveSkipperTitle, count=skippers_inactive)
+                }
+            )
+        
         siteData['menu'].append(menu_skippers)
+
+    # Menu entry: Trainings
+    if user and user.is_authenticated:
+        menu_trainings = {
+            'id': 'trainings',
+            'title': config.trainingsTitle,
+            'url': 'trainings',
+            'thumb': config.trainingsIcon,
+            'active': True if id == 'trainings' else False,
+            'color': 'warning',
+            'notifications': []
+        }
+        trainings_upcoming = len(getTrainingsList(upcomingOnly=True))
+        if trainings_upcoming:
+            menu_trainings['notifications'].append(
+                {
+                    'level': 'warning',
+                    'count': trainings_upcoming,
+                    'tooltip': '{title}: {count}'.format(title=config.trainingsTitleUpcoming, count=trainings_upcoming)
+                }
+            )
+        trainings_past = len(getTrainingsList(pastOnly=True))
+        if trainings_past:
+            menu_trainings['notifications'].append(
+                {
+                    'level': 'success',
+                    'count': trainings_past,
+                    'tooltip': '{title}: {count}'.format(title=config.trainingsTitlePast, count=trainings_past)
+                }
+            )
+        trainings_inactive = len(getTrainingsList(active=False))
+        if trainings_inactive:
+            menu_trainings['notifications'].append(
+                {
+                    'level': 'secondary',
+                    'count': trainings_inactive,
+                    'tooltip': '{title}: {count}'.format(title=config.trainingsTitleInactive, count=trainings_inactive)
+                }
+            )
+        
         siteData['menu'].append(menu_trainings)
+
+    # Menu entry: Billing
+    if user and user.is_authenticated:
+        menu_billing = {
+            'id': 'billing',
+            'title': config.billingTitle,
+            'url': 'billing',
+            'thumb': config.billingIcon,
+            'active': True if id == 'billing' else False,
+            'color': 'warning',
+            'notifications': []
+        }
+        
         siteData['menu'].append(menu_billing)
 
-    siteData['menu'].append(menu_timetable)
+    # Menu entry: Timetable
+    if True:
+        menu_timetable = {
+            'id': 'timetable',
+            'title': config.timetableTitle,
+            'url': 'timetable',
+            'thumb': config.timetableIcon,
+            'active': True if id == 'timetable' else False,
+            'color': 'light',
+            'notifications': []
+        }
+        
+        siteData['menu'].append(menu_timetable)
 
+    # Menu entry: Calendar
     if config.activateCalendar or user.is_authenticated:
+        menu_calendar = {
+            'id': 'calendar',
+            'title': config.calendarTitle,
+            'url': 'calendar',
+            'thumb': config.calendarIcon,
+            'active': True if id == 'calendar' else False,
+            'color': 'light' if config.activateCalendar else 'warning',
+            'notifications': []
+        }
+        
         siteData['menu'].append(menu_calendar)
 
+    # Menu entry: Times
     if user and user.is_authenticated and user.is_staff:
+        menu_times = {
+            'id': 'times',
+            'title': config.timeTitle,
+            'url': 'times',
+            'thumb': config.timeIcon,
+            'active': True if id == 'times' else False,
+            'color': 'warning',
+            'notifications': []
+        }
+        last, next, started = getNextRaceName()
+        if last is not None:
+            menu_times['notifications'].append(
+                {
+                    'level': 'success',
+                    'count': last,
+                    'tooltip': '{title}: {status}'.format(title=config.raceLastTitle, status=last)
+                }
+            )
+        if started is not None:
+            menu_times['notifications'].append(
+                {
+                    'level': 'warning',
+                    'count': started,
+                    'tooltip': '{title}: {status}'.format(title=config.raceCurrentTitle, status=started)
+                }
+            )
+        if next is not None:
+            menu_times['notifications'].append(
+                {
+                    'level': 'danger',
+                    'count': next,
+                    'tooltip': '{title}: {status}'.format(title=config.raceNextTitle, status=next)
+                }
+            )
+        
         siteData['menu'].append(menu_times)
 
+    # Menu entry: Results
     if config.activateResults or user.is_authenticated:
+        menu_results = {
+            'id': 'results',
+            'title': config.resultsTitle,
+            'url': 'results',
+            'thumb': config.resultsIcon,
+            'active': True if id == 'results' else False,
+            'color': 'light' if config.activateResults else 'warning',
+            'notifications': []
+        }
+
         siteData['menu'].append(menu_results)
 
+    # Menu entry: Display
     if user and user.is_authenticated:
+        menu_display = {
+            'id': 'display',
+            'title': config.displayTitle,
+            'url': 'display',
+            'thumb': config.displayIcon,
+            'active': True if id == 'display' else False,
+            'color': 'info',
+            'notifications': []
+        }
+        current_race_block = getCurrentRaceBlock()
+        if current_race_block:
+            menu_display['notifications'] = [
+                {
+                    'level': 'info',
+                    'count': current_race_block,
+                    'tooltip': '{title}: {status}'.format(title=config.currentRaceBlockTitle, status=current_race_block)
+                }
+            ]
+
         siteData['menu'].append(menu_display)
 
-    siteData['menu'].append(menu_toggle)
+    # Menu entry: Invisible folding toggle
+    if True:
+        menu_toggle = {
+            'id': 'toggle'
+        }
+        siteData['menu'].append(menu_toggle)
 
+    # Menu entry: Settings
     if user and user.is_authenticated and user.is_staff:
+        menu_settings = {
+            'id': 'settings',
+            'title': config.settingsTitle,
+            'url': 'settings',
+            'thumb': config.settingsIcon,
+            'active': True if id == 'settings' else False,
+            'color': 'danger',
+            'notifications': []
+        }
+
         siteData['menu'].append(menu_settings)
 
+    # Menu entry: Admin panel
     if user and user.is_authenticated and user.is_superuser:
+        menu_admin = {
+            'id': 'djadmin',
+            'title': config.adminTitle,
+            'url': 'djadmin',
+            'thumb': config.adminIcon,
+            'active': True if id == 'djadmin' else False,
+            'color': 'purple',
+            'notifications': []
+        }
+
         siteData['menu'].append(menu_admin)
 
+    # Include user info in site data
     if user and user.is_authenticated:
         siteData['user_name'] = user.username
         siteData['user_fname'] = user.first_name
