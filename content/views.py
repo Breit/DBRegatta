@@ -583,7 +583,7 @@ def display(request):
     for category in Category.objects.all():
         if raceBlockStarted('{}{}'.format(config.heatPrefix, category.tag)) and not raceBlockFinished('{}{}'.format(config.finalPrefix, category.tag)):
             siteData['display'].append(getHeatRankings(category))       # show heats rankings only if finale is not finished
-        else:
+        elif raceBlockFinished('{}{}'.format(config.finalPrefix, category.tag)):
             siteData['display'].append(getFinalRankings(category))      # show finale rankings if finale has finished
 
     return render(request, 'display.html', siteData)

@@ -1127,7 +1127,6 @@ def getCurrentTimeTable():
                             'type': 'heat'
                         }
                     )
-                    break
 
     # get final if heats are finished
     for category in Category.objects.all():
