@@ -5,9 +5,7 @@ TODO: DBRegatta
 - Code refactoring (especially reusable template code)
 - Check/Reload tooltips on dynamic site changes
 - Impressum editor
-- Race mode switch and linear race mode for finale
-- intermission between heats
 - add free agenda topics
-- race classes
 - add individual fees for teams
 - simplify/refactor form handling code; remove doubled functions and unify
+- proper DB backup/restore feature
