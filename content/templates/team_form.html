@@ -71,10 +71,10 @@
             {% elif f.html_name == 'category_id' %}
                 <div class="col-12 mb-3">
                     <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
-                        <span class="input-group-text text-primary">
+                        <span class="input-group-text">
                             <i class="bi bi-{{ f.field.widget.attrs.icon }}"></i>
                         </span>
-                        <select name="category_id" class="form-select" placeholder="{{ f.field.widget.attrs.placeholder }}" id="id_category_id" data-bs-tooltip title="{{ f.field.widget.attrs.placeholder }}">
+                        <select name="category_id" class="form-select" placeholder="{{ f.field.widget.attrs.placeholder }}" id="id_category_id" data-bs-tooltip title="{{ f.field.widget.attrs.placeholder }}"{% if not content.availableCategories %} disabled{% endif %}>
                             {% for category in content.availableCategories %}
                                 <option value="{{ category.id }}"{% if f.value == category.id %} selected{% endif %}>{{ category.name }}</option>
                             {% endfor %}

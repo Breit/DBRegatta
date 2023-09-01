@@ -577,7 +577,11 @@ def display(request):
             }
         )
 
-    for category in Category.objects.all():
+    categories = Category.objects.all()
+    if len(categories) == 0:
+        categories = [Category()]
+
+    for category in categories:
         if raceBlockStarted('{}{}'.format(config.heatPrefix, category.tag)) and not raceBlockFinished('{}{}'.format(config.finalPrefix, category.tag)):
             siteData['display'].append(getHeatRankings(category))       # show heats rankings only if finale is not finished
         elif raceBlockFinished('{}{}'.format(config.finalPrefix, category.tag)):
