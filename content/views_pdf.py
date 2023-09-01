@@ -224,7 +224,9 @@ def teams(request):
                 ]
             )
             teamRow.append(
-                Paragraph('{address}'.format(address=team.address if team.address is not None else ''), styles['Normal'])
+                [
+                    Paragraph('{address}'.format(address=addr_line if addr_line is not None else ''), styles['Secondary']) for addr_line in team.address.splitlines()
+                ]
             )
             teamRow.append(
                 Paragraph('{position}'.format(position=team.position if team.position is not None else ''), styles['NormalC'])
