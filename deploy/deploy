@@ -4,21 +4,25 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 TARGET_DIR=src
 USER=www
 GROUP=www
+PORT=1080
 SITE_URL=127.0.0.1
 VENV=dbregatta
+BRANCH=main
 
 # stop server
-pkill -f runserver
+pkill -f "runserver 127.0.0.1:$PORT"
 
 # if nothing is checked out yet, check the sources out from GitHub
 [ ! -d "$SCRIPT_DIR/$TARGET_DIR" ] && git clone https://github.com/Breit/DBRegatta.git --no-checkout --origin github "$SCRIPT_DIR/$TARGET_DIR"
 
-# update to latest branch: main
+# update to latest branch: $BRANCH
 # TODO: check for a specific release tag and pull that
 cd "$SCRIPT_DIR/$TARGET_DIR"
 git fetch
 git pull
-git reset --hard main
+git reset --hard
+git clean --force
+git checkout $BRANCH
 
 # fix ownership
 chown -R $USER:$GROUP "$SCRIPT_DIR/$TARGET_DIR"
