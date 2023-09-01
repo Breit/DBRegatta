@@ -38,13 +38,26 @@ def teams(request):
         if 'add_team' in request.POST:
             newTeamForm = TeamForm(request.POST)
             if Team.objects.filter(name=request.POST['name']).exists():
-                siteData['content']['form'] = newTeamForm
+                siteData['content']['formTeam'] = newTeamForm
             if newTeamForm['date'].data == '':
-                siteData['content']['form'] = newTeamForm
+                siteData['content']['formTeam'] = newTeamForm
                 newTeamForm.add_error('date', 'Date missing')
             elif newTeamForm.is_valid():
                 newTeamForm.save()
                 return redirect('/teams')
+            else:
+                siteData['content']['formTeam'] = newTeamForm
+
+        # submit a new race category
+        if 'add_category' in request.POST:
+            newCategoryForm = CategoryForm(request.POST)
+            if Category.objects.filter(name=request.POST['name']).exists():
+                siteData['content']['formCategory'] = newCategoryForm
+            elif newCategoryForm.is_valid():
+                newCategoryForm.save()
+                return redirect('/teams')
+            else:
+                siteData['content']['formCategory'] = newCategoryForm
 
         # toggle team activation
         elif 'activate_team' in request.POST:
@@ -52,10 +65,20 @@ def teams(request):
                 modTeam = Team.objects.get(id = request.POST['activate_team'])
             except:
                 modTeam = None
-            if modTeam:
+            if modTeam and modTeam.category_id is not None:
                 modTeam.active = not modTeam.active
                 modTeam.wait = modTeam.active
                 modTeam.save()
+                if not modTeam.active:
+                    # also delete all race assignements with the team as well
+                    assignments = RaceAssign.objects.filter(team_id=modTeam.id)
+                    for assignment in assignments:
+                        assignment.delete()
+
+                    # re-generate race assignments for finals
+                    if len(assignments) > 0:
+                        generateFinaleDrawModes()
+                        updateTimeTable()
             return redirect('/teams')
 
         # toggle team waitlist
@@ -65,10 +88,23 @@ def teams(request):
             except:
                 modTeam = None
             if modTeam:
-                modTeam.wait = not modTeam.wait
-                if modTeam.wait:
-                    modTeam.active = True
+                if modTeam.category_id is None:
+                    modTeam.wait = False
+                else:
+                    modTeam.wait = not modTeam.wait
+                    if modTeam.wait:
+                        modTeam.active = True
                 modTeam.save()
+                if modTeam.wait:
+                    # also delete all race assignements with the team as well
+                    assignments = RaceAssign.objects.filter(team_id=modTeam.id)
+                    for assignment in assignments:
+                        assignment.delete()
+
+                    # re-generate race assignments for finals
+                    if len(assignments) > 0:
+                        generateFinaleDrawModes()
+                        updateTimeTable()
             return redirect('/teams')
 
         # delete team from database
@@ -84,6 +120,31 @@ def teams(request):
                 delTeam.delete()
             return redirect('/teams')
 
+        # delete race category from database
+        elif 'delete_category' in request.POST:
+            try:
+                delCategory = Category.objects.get(id = request.POST['delete_category'])
+            except:
+                delCategory = None
+            if delCategory:
+                # If a race category is deleted, a few things happen:
+                # - All teams in that category are set 'inactive'
+                # - All race assignements with these teams are deleted (includes results)
+                try:
+                    teamsInCategory = Team.objects.filter(category_id=delCategory.id)
+                except:
+                    teamsInCategory = []
+                for team in teamsInCategory:
+                    assignments = RaceAssign.objects.filter(team_id=team.id)
+                    for assignment in assignments:
+                        assignment.delete()
+                    team.active = False
+                    team.wait = False
+                    team.category_id = None
+                    team.save()
+                delCategory.delete()
+            return redirect('/teams')
+
         # show edit team form
         elif 'edit_team' in request.POST:
             try:
@@ -91,7 +152,16 @@ def teams(request):
             except:
                 modTeam = None
             if modTeam:
-                siteData['content']['form'] = TeamForm(instance = modTeam)
+                siteData['content']['formTeam'] = TeamForm(instance = modTeam)
+
+        # show edit category form
+        elif 'edit_category' in request.POST:
+            try:
+                modCategory = Category.objects.get(id = request.POST['edit_category'])
+            except:
+                modCategory = None
+            if modCategory:
+                siteData['content']['formCategory'] = CategoryForm(instance = modCategory)
 
         # submit mod_team
         elif 'mod_team' in request.POST:
@@ -106,9 +176,37 @@ def teams(request):
                 )
                 if modTeamForm.is_valid():
                     modTeamForm.save()
+
+                    if not modTeam.active or modTeam.wait:
+                        # also delete all race assignements with the team as well
+                        assignments = RaceAssign.objects.filter(team_id=modTeam.id)
+                        for assignment in assignments:
+                            assignment.delete()
+
+                        # re-generate race assignments for finals
+                        if len(assignments) > 0:
+                            generateFinaleDrawModes()
+                            updateTimeTable()
                     return redirect('/teams')
                 else:
-                    siteData['content']['form'] = modTeamForm
+                    siteData['content']['formTeam'] = modTeamForm
+
+        # submit mod_category
+        elif 'mod_category' in request.POST:
+            try:
+                modCategory = Category.objects.get(id = request.POST['mod_category'])
+            except:
+                modCategory = None
+            if modCategory:
+                modCategoryForm = CategoryForm(
+                    request.POST,
+                    instance = modCategory
+                )
+                if modCategoryForm.is_valid():
+                    modCategoryForm.save()
+                    return redirect('/teams')
+                else:
+                    siteData['content']['formCategory'] = modCategoryForm
 
     return render(request, 'teams.html', siteData)
 
@@ -150,6 +248,8 @@ def trainings(request):
                     newTrainingForm.data['duration'] = validate_duration(newTrainingForm.data['duration'])
                 newTrainingForm.save()
                 return redirect('/trainings')
+            else:
+                siteData['content']['form'] = newTrainingForm
 
         # show edit training form
         elif 'edit_training' in request.POST:
@@ -335,6 +435,20 @@ def timetable(request):
                 post.save()
             elif 'createTimetable' in request.POST:
                 createTimeTable()
+            elif 'editRace' in request.POST:
+                try:
+                    siteData['editRace'] = getDataForRaceEdit(request.POST['editRace'])
+                    return render(request, 'timetable.html', siteData)
+                except:
+                    pass
+            elif 'saveRace' in request.POST and 'assignments' in request.POST:
+                try:
+                    saveEditedRaceData(
+                        request.POST['saveRace'],
+                        json.loads(request.POST['assignments'])
+                    )
+                except:
+                    pass
             return redirect('/timetable')
 
     try:
@@ -457,21 +571,20 @@ def display(request):
     siteData = getSiteData('display', request.user)
     siteData['display'] = []
 
-    if not raceBlockFinished(config.finalPrefix):
-        timetables = getCurrentTimeTable()
-        for timetable in timetables:
-            siteData['display'].append(
-                {
-                    'type': 'timetable',
-                    'data': timetable
-                }
-            )
+    timetables = getCurrentTimeTable()
+    for timetable in timetables:
+        siteData['display'].append(
+            {
+                'type': 'timetable',
+                'data': timetable
+            }
+        )
 
-    if raceBlockFinished(config.finalPrefix):
-        siteData['display'].append(getFinalRankings())          # show finale rankings if finale has finished
-    else:
-        if raceBlockStarted(config.heatPrefix):
-            siteData['display'].append(getHeatRankings())       # show heats rankings only if finale is not finished
+    for category in Category.objects.all():
+        if raceBlockStarted('{}{}'.format(config.heatPrefix, category.tag)) and not raceBlockFinished('{}{}'.format(config.finalPrefix, category.tag)):
+            siteData['display'].append(getHeatRankings(category))       # show heats rankings only if finale is not finished
+        elif raceBlockFinished('{}{}'.format(config.finalPrefix, category.tag)):
+            siteData['display'].append(getFinalRankings(category))      # show finale rankings if finale has finished
 
     return render(request, 'display.html', siteData)
 
@@ -512,6 +625,8 @@ def settings(request):
             config.anonymousMonitor = request.POST['anonymousMonitor'] == 'on'
         elif 'activateCalendar' in request.POST:
             config.activateCalendar = request.POST['activateCalendar'] == 'on'
+        elif 'raceToTopFinal' in request.POST:
+            config.raceToTopFinal = request.POST['raceToTopFinal'] == 'on'
         elif 'ownerName' in request.POST:
             config.ownerName = request.POST['ownerName']
         elif 'sponsorName' in request.POST:
@@ -552,6 +667,8 @@ def settings(request):
             config.timeBegin = time.fromisoformat(request.POST['timeBegin'])
         elif 'offsetHeat' in request.POST:
             config.offsetHeat = timedelta(minutes=int(request.POST['offsetHeat']))
+        elif 'intermissionHeat' in request.POST:
+            config.intermissionHeat = timedelta(minutes=int(request.POST['intermissionHeat']))
         elif 'offsetFinale' in request.POST:
             config.offsetFinale = timedelta(minutes=int(request.POST['offsetFinale']))
         elif 'offsetCeremony' in request.POST:
@@ -560,6 +677,8 @@ def settings(request):
             config.heatCount = int(request.POST['heatCount'])
         elif 'lanesPerRace' in request.POST:
             config.lanesPerRace = int(request.POST['lanesPerRace'])
+        elif 'boardingTime' in request.POST:
+            config.boardingTime = timedelta(minutes=int(request.POST['boardingTime']))
         elif 'intervalHeat' in request.POST:
             config.intervalHeat = timedelta(minutes=int(request.POST['intervalHeat']))
         elif 'intervalFinal' in request.POST:
@@ -584,6 +703,7 @@ def settings(request):
             updateTimeTable()
         elif 'resetFinals' in request.POST:
             clearFinals()
+            generateFinaleDrawModes()
             populateFinals()
         elif 'resetHeats' in request.POST:
             clearHeatTimes()

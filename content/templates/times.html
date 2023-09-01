@@ -12,7 +12,7 @@
 
 {% block content %}
     <div class="container-fluid">
-        <h2 class="mt-2 mb-3 display-6">{{ config.timesTableHeader }}</h2>
+        <h2 class="mt-2 mb-3 display-6">{{ config.timesHeader }}</h2>
         {% for entry in times %}
             <div class="card mb-3 shadow">
                 <div class="card-header fs-4 py-0{% if not entry.races %} card-header-collapsed{% endif %}">

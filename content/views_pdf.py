@@ -47,23 +47,71 @@ def teams(request):
     ])
 
     # Gather data
-    teamTableData = [
-        {
-            # Active Teams
-            'header': Paragraph('{teamListHeader} {teamStatus}'.format(teamListHeader=config.teamTableHeaderTeams, teamStatus=config.activeTeams), styles['TableHeader']),
-            'data': Team.objects.filter(active=True, wait=False).order_by(F('position').asc(nulls_last=True))
-        },
-        {
-            # Waitlist Teams
-            'header': Paragraph('{teamListHeader} {teamStatus}'.format(teamListHeader=config.teamTableHeaderTeams, teamStatus=config.waitlistTeams), styles['TableHeader']),
-            'data': Team.objects.filter(active=True, wait=True).order_by(F('position').asc(nulls_last=True))
-        },
-        {
-            # Inactive Teams
-            'header': Paragraph('{teamListHeader} {teamStatus}'.format(teamListHeader=config.teamTableHeaderTeams, teamStatus=config.inactiveTeams), styles['TableHeader']),
-            'data': Team.objects.filter(active=False).order_by(F('position').asc(nulls_last=True))
-        }
-    ]
+    teamTableData = []
+    categories = Category.objects.all()
+    if len(categories) == 0:
+        # Workaround for no categories
+        categories = [Category()]
+        categories[-1].name = ''
+        categories[-1].tag = ''
+    for category in categories:
+        teamTableData.append(
+            {
+                # Active Teams
+                'header': Paragraph(
+                    '{header} {status}{cat}'.format(
+                        header=config.teamTableHeaderTeams,
+                        status=config.activeTeams,
+                        cat=' - {}'.format(category.name) if len(categories) > 1 else ''
+                    ),
+                    styles['TableHeader']
+                ),
+                'data': Team.objects.filter(
+                    active=True,
+                    wait=False,
+                    category_id=category.id
+                ).order_by(
+                    F('position').asc(nulls_last=True)
+                )
+            }
+        )
+        teamTableData.append(
+            {
+                # Waitlist Teams
+                'header': Paragraph(
+                    '{header} {status}{cat}'.format(
+                        header=config.teamTableHeaderTeams,
+                        status=config.waitlistTeams,
+                        cat=' - {}'.format(category.name) if len(categories) > 1 else ''
+                    ), styles['TableHeader']
+                ),
+                'data': Team.objects.filter(
+                    active=True,
+                    wait=True,
+                    category_id=category.id
+                ).order_by(
+                    F('position').asc(nulls_last=True)
+                )
+            }
+        )
+        teamTableData.append(
+            {
+                # Inactive Teams
+                'header': Paragraph(
+                    '{header} {status}{cat}'.format(
+                        header=config.teamTableHeaderTeams,
+                        status=config.inactiveTeams,
+                        cat=' - {}'.format(category.name) if len(categories) > 1 else ''
+                    ), styles['TableHeader']
+                ),
+                'data': Team.objects.filter(
+                    active=False,
+                    category_id=category.id
+                ).order_by(
+                    F('position').asc(nulls_last=True)
+                )
+            }
+        )
 
     # Table column header is the same for all tables
     tableColumnHeader = [
@@ -86,18 +134,58 @@ def teams(request):
 
     # Statistics section
     statTableData = []
-    for teamTable in teamTableData:
+
+    if len(categories) > 1:
+        # Statistics for all race categories/classes
+        statTableCols = (90*mm, 30*mm, 30*mm, 30*mm)
         statTableData.append(
             [
-            teamTable['header'],
-            Paragraph('{count}'.format(count=len(teamTable['data'])), styles['TableHeaderBC']),
-        ]
-    )
+                None,
+                Paragraph('{type}'.format(type=config.activeTeams), styles['TableHeaderC']),
+                Paragraph('{type}'.format(type=config.waitlistTeams), styles['TableHeaderC']),
+                Paragraph('{type}'.format(type=config.inactiveTeams), styles['TableHeaderC'])
+            ]
+        )
+        cat_data = []
+        c = 0
+        for i in range(len(teamTableData)):
+            if len(cat_data) == 0:
+                cat_data.append(
+                    Paragraph(
+                        '{header}: {cat}'.format(
+                            header=config.placeholderCategoryName,
+                            cat=categories[c].name
+                        ),
+                        styles['TableHeader']
+                    )
+                )
+                c += 1
+            cat_data.append(
+                Paragraph(
+                    '{data}'.format(
+                        data=teamTableData[i]['data'].count()
+                    ),
+                    styles['TableHeaderBC']
+                )
+            )
+            if i > 0 and (i + 1) % 3 == 0:
+                statTableData.append(cat_data)
+                cat_data = []
+    else:
+        # Only global statistics, no categories/classes
+        statTableCols = (130*mm, 50*mm)
+        for teamTable in teamTableData:
+            statTableData.append(
+                [
+                    teamTable['header'],
+                    Paragraph('{count}'.format(count=len(teamTable['data'])), styles['TableHeaderBC']),
+                ]
+            )
 
     statTable = Table(
         statTableData,
         style=statTableStyle,
-        colWidths=(130*mm, 50*mm)
+        colWidths=statTableCols
     )
     story.append(
         TopPadder(
@@ -201,8 +289,8 @@ def timetable(request):
     # Define styling
     styles = pdfStyleSheet()
     mainTableStyle = TableStyle([
+        ('SPAN',            (1,  0), (-1,  0)),                                             # span header row for each table
         ('BOX',             (0,  0), (-1, -1), 0.25, colors.lightgrey),                     # border for whole table
-        ('SPAN',            (1,  0), (-1,  0)),                                             # span table headers
         ('LINEABOVE',       (0,  0), (-1, -1), 0.25, colors.lightgrey),                     # top border for each row
         ('LINEBELOW',       (0,  0), (-1, -1), 0.25, colors.lightgrey),                     # bottom border for each row
         ('VALIGN',          (0,  0), (-1, -1), 'MIDDLE'),                                   # all cells middle-aligned
@@ -222,24 +310,30 @@ def timetable(request):
         ('TOPPADDING',      (0,  0), (-1, -1), 3 if finaleRunning else 0),
         ('VALIGN',          (0,  0), (-1, -1), 'MIDDLE')
     ])
-    subTableColumns = (12*mm, 50*mm, 62*mm, 23*mm)
-    mainTableColumns = (18*mm, 15*mm, sum(subTableColumns))
+    if (config.boardingTime.seconds > 0):
+        subTableColumns = (12*mm, 52*mm, 65*mm)
+        mainTableColumns = (18*mm, 18*mm, 15*mm, sum(subTableColumns))
+    else:
+        subTableColumns = (12*mm, 50*mm, 62*mm, 23*mm)
+        mainTableColumns = (18*mm, 15*mm, sum(subTableColumns))
 
     # Gather data
     timetableData = getTimeTableContent()
 
     # Table column header is the same for all tables
-    subTableColumnHeader = [
-        Paragraph('{lane}'.format(lane=config.timetableHeaderLane), styles['ColumnHeaderC']),
-        Paragraph('{team}'.format(team=config.timetableHeaderTeam), styles['ColumnHeader']),
-        Paragraph('{company}'.format(company=config.timetableHeaderCompany), styles['ColumnHeader']),
-        Paragraph('{skipper}'.format(skipper=config.timetableHeaderSkipper), styles['ColumnHeader'])
-    ]
-    tableColumnHeader = [
-        Paragraph('{time}'.format(time=config.timetableHeaderTime), styles['ColumnHeaderC']),
-        Paragraph('{race}'.format(race=config.timetableHeaderName), styles['ColumnHeaderC']),
-        Table([subTableColumnHeader], colWidths=subTableColumns, style=subTableHeaderStyle)
-    ]
+    subTableColumnHeader = []
+    subTableColumnHeader.append(Paragraph('{lane}'.format(lane=config.timetableHeaderLane), styles['ColumnHeaderC']))
+    subTableColumnHeader.append(Paragraph('{team}'.format(team=config.timetableHeaderTeam), styles['ColumnHeader']))
+    subTableColumnHeader.append(Paragraph('{company}'.format(company=config.timetableHeaderCompany), styles['ColumnHeader']))
+    if (config.boardingTime.seconds <= 0):          # Hide skipper if boarding time is displayed
+        subTableColumnHeader.append(Paragraph('{skipper}'.format(skipper=config.timetableHeaderSkipper), styles['ColumnHeader']))
+
+    tableColumnHeader = []
+    if (config.boardingTime.seconds > 0):
+        tableColumnHeader.append(Paragraph('{btime}'.format(btime=config.boardingTimeHeader), styles['ColumnHeaderC']))
+    tableColumnHeader.append(Paragraph('{time}'.format(time=config.timetableHeaderTime), styles['ColumnHeaderC']))
+    tableColumnHeader.append(Paragraph('{race}'.format(race=config.timetableHeaderName), styles['ColumnHeaderC']))
+    tableColumnHeader.append(Table([subTableColumnHeader], colWidths=subTableColumns, style=subTableHeaderStyle))
 
     # Start story with front page
     story = [
@@ -272,20 +366,26 @@ def timetable(request):
         )
     story.append(PageBreak())
 
+
     # Get team content: active teams
+    finaleOnNewPage = True
     for event in timetableData:
         tableData = []
-        tableData.append(
-            [
-                Paragraph('{time}'.format(time=event['time'].strftime('%H:%M')), styles['TableHeaderBC']),
-                Paragraph('{agendum}'.format(agendum=event['desc']), styles['TableHeader']),
-                None          # Dummies to fill the columns
-            ]
-        )
+        tableData.append([])
+        tableData[-1].append(Paragraph('{time}'.format(time=event['time'].strftime('%H:%M')), styles['TableHeaderBC']))
+        tableData[-1].append(Paragraph('{agendum}'.format(agendum=event['desc']), styles['TableHeader']))
+        tableData[-1].append(None)
+        if (config.boardingTime.seconds > 0):
+            tableData[-1].append(None)
+
         if 'races' in event and len(event['races']) > 0:
             tableData.append(tableColumnHeader)
             for race in event['races']:
                 raceRow = []
+                if (config.boardingTime.seconds > 0):
+                    raceRow.append(
+                        Paragraph('{btime}'.format(btime=race['boarding'].strftime('%H:%M')), styles['NormalC'])
+                    )
                 raceRow.append(
                     Paragraph('{time}'.format(time=race['time'].strftime('%H:%M')), styles['NormalBC'])
                 )
@@ -311,13 +411,19 @@ def timetable(request):
                     laneRow.append(
                         Paragraph('{company}'.format(company=lane['company']), styles['Secondary'])
                     )
-                    laneRow.append(
-                        Paragraph('{skipper}'.format(skipper=lane['skipper']['name'] if 'name' in lane['skipper'] else '-'), styles['Normal'])
-                    )
+                    if (config.boardingTime.seconds <= 0):
+                        laneRow.append(
+                            Paragraph('{skipper}'.format(skipper=lane['skipper']['name'] if 'name' in lane['skipper'] else '-'), styles['Normal'])
+                        )
                     laneTable.append(laneRow)
                 raceRow.append(Table(laneTable, colWidths=subTableColumns, style=subTableStyleFinale if event['type'] == 'finale' else subTableStyle))
 
                 tableData.append(raceRow)
+
+        # Insert a page break before the first finale table
+        if finaleOnNewPage and 'type' in event and event['type'] == 'finale':
+            story.append(PageBreak())
+            finaleOnNewPage = False
 
         story.append(
             LongTable(
@@ -328,10 +434,6 @@ def timetable(request):
                 colWidths=mainTableColumns
             )
         )
-
-        # Insert a page break after each heat
-        if 'type' in event and event['type'] == 'heat':
-            story.append(PageBreak())
 
     # Create a file-like buffer to receive PDF data
     pdf_buffer = io.BytesIO()
@@ -468,8 +570,11 @@ def results(request):
                 Table([subTableColumnHeader], colWidths=subTableColumns, style=subTableHeaderStyle)
             ]
         elif result['type'] == 'rankingFinals':
-            bestTimeTableColumns=(16*mm, 16*mm)
-            mainTableColumns = (12*mm, 50*mm, 44*mm, sum(bestTimeTableColumns), 20*mm, 22*mm)
+            if config.raceToTopFinal:
+                bestTimeTableColumns=(16*mm, 16*mm)
+                mainTableColumns = (12*mm, 50*mm, 44*mm, sum(bestTimeTableColumns), 20*mm, 22*mm)
+            else:
+                mainTableColumns = (12*mm, 50*mm, 54*mm, 42*mm, 22*mm)
 
             # Add dummy cells to header based on column count
             headerRow += [None] * (len(mainTableColumns) - len(headerRow))
@@ -478,29 +583,32 @@ def results(request):
             tableColumnHeader.append(Paragraph('{rank}'.format(rank=config.timesHeaderRank), styles['ColumnHeaderC']))
             tableColumnHeader.append(Paragraph('{team}'.format(team=config.timetableHeaderTeam), styles['ColumnHeader']))
             tableColumnHeader.append(Paragraph('{company}'.format(company=config.timetableHeaderCompany), styles['ColumnHeader']))
-            tableColumnHeader.append(
-                Table(
-                    [
+            if config.raceToTopFinal:
+                tableColumnHeader.append(
+                    Table(
                         [
-                            Paragraph('{bt}'.format(bt=config.displayBestTime), styles['ColumnHeaderC']),
-                            None
+                            [
+                                Paragraph('{bt}'.format(bt=config.displayBestTime), styles['ColumnHeaderC']),
+                                None
+                            ],
+                            [
+                                Paragraph('{btheats}'.format(btheats=config.heatsTitle), styles['ColumnHeaderC']),
+                                Paragraph('{btfinals}'.format(btfinals=config.finaleTitle), styles['ColumnHeaderC'])
+                            ]
                         ],
-                        [
-                            Paragraph('{btheats}'.format(btheats=config.heatsTitle), styles['ColumnHeaderC']),
-                            Paragraph('{btfinals}'.format(btfinals=config.finaleTitle), styles['ColumnHeaderC'])
-                        ]
-                    ],
-                    spaceBefore=0,
-                    spaceAfter=0,
-                    style=TableStyle([
-                        ('BOTTOMPADDING',   (0, 0), (-1, -1), 0),
-                        ('TOPPADDING',      (0, 0), (-1, -1), 0),
-                        ('SPAN',            (0, 0), (-1,  0))
-                    ]),
-                    colWidths=bestTimeTableColumns
+                        spaceBefore=0,
+                        spaceAfter=0,
+                        style=TableStyle([
+                            ('BOTTOMPADDING',   (0, 0), (-1, -1), 0),
+                            ('TOPPADDING',      (0, 0), (-1, -1), 0),
+                            ('SPAN',            (0, 0), (-1,  0))
+                        ]),
+                        colWidths=bestTimeTableColumns
+                    )
                 )
-            )
-            tableColumnHeader.append(Paragraph('{races}'.format(races=config.displayRaces), styles['ColumnHeaderC']))
+                tableColumnHeader.append(Paragraph('{races}'.format(races=config.displayRaces), styles['ColumnHeaderC']))
+            else:
+                tableColumnHeader.append(Paragraph('{bt} {btheats}'.format(bt=config.displayBestTime, btheats=config.heatsTitle), styles['ColumnHeaderC']))
             tableColumnHeader.append(Paragraph('{time}'.format(time=config.displayFinalTime), styles['ColumnHeaderC']))
         else:
             skipResults = True
@@ -594,21 +702,24 @@ def results(request):
                     rankRow.append(Paragraph('{rank}'.format(rank=team['rank']), styles['NormalBCLink']))
                     rankRow.append(Paragraph('{team}'.format(team=team['team']), styles['NormalB']))
                     rankRow.append(Paragraph('{company}'.format(company=team['company']), styles['Secondary']))
-                    rankRow.append(
-                        Table(
-                            [
+                    if config.raceToTopFinal:
+                        rankRow.append(
+                            Table(
                                 [
-                                    Paragraph('{bthtime}'.format(bthtime=asTime(team['bt_heats'])), styles['SecondaryC']),
-                                    Paragraph('{btftime}'.format(btftime=asTime(team['bt_finale'])), styles['SecondaryC'])
-                                ]
-                            ],
-                            spaceBefore=0,
-                            spaceAfter=0,
-                            style=subTableHeaderStyle,
-                            colWidths=bestTimeTableColumns
+                                    [
+                                        Paragraph('{bthtime}'.format(bthtime=asTime(team['bt_heats'])), styles['SecondaryC']),
+                                        Paragraph('{btftime}'.format(btftime=asTime(team['bt_finale'])), styles['SecondaryC'])
+                                    ]
+                                ],
+                                spaceBefore=0,
+                                spaceAfter=0,
+                                style=subTableHeaderStyle,
+                                colWidths=bestTimeTableColumns
+                            )
                         )
-                    )
-                    rankRow.append(Paragraph('{races}'.format(races=team['races']), styles['NormalC']))
+                        rankRow.append(Paragraph('{races}'.format(races=team['races']), styles['NormalC']))
+                    else:
+                        rankRow.append(Paragraph('{bthtime}'.format(bthtime=asTime(team['bt_heats'])), styles['NormalBC']))
                     rankRow.append(Paragraph('{ftime}'.format(ftime=asTime(team['finale_time'])), styles['NormalBC']))
                     tableData.append(rankRow)
 
