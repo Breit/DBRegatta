@@ -48,12 +48,10 @@ def teams(request):
 
     # Gather data
     teamTableData = []
-    categories = Category.objects.all()
-    if len(categories) == 0:
-        # Workaround for no categories
-        categories = [Category()]
-        categories[-1].name = ''
-        categories[-1].tag = ''
+    categories = list(Category.objects.all())
+    if len(Team.objects.filter(category_id=None)) > 0:
+        categories.append(Category())
+
     for category in categories:
         teamTableData.append(
             {
@@ -62,7 +60,7 @@ def teams(request):
                     '{header} {status}{cat}'.format(
                         header=config.teamTableHeaderTeams,
                         status=config.activeTeams,
-                        cat=' - {}'.format(category.name) if len(categories) > 1 else ''
+                        cat=' - {}'.format(category.name) if len(categories) > 1 and category.id is not None else ''
                     ),
                     styles['TableHeader']
                 ),
@@ -82,7 +80,7 @@ def teams(request):
                     '{header} {status}{cat}'.format(
                         header=config.teamTableHeaderTeams,
                         status=config.waitlistTeams,
-                        cat=' - {}'.format(category.name) if len(categories) > 1 else ''
+                        cat=' - {}'.format(category.name) if len(categories) > 1 and category.id is not None else ''
                     ), styles['TableHeader']
                 ),
                 'data': Team.objects.filter(
@@ -101,7 +99,7 @@ def teams(request):
                     '{header} {status}{cat}'.format(
                         header=config.teamTableHeaderTeams,
                         status=config.inactiveTeams,
-                        cat=' - {}'.format(category.name) if len(categories) > 1 else ''
+                        cat=' - {}'.format(category.name) if len(categories) > 1 and category.id is not None else ''
                     ), styles['TableHeader']
                 ),
                 'data': Team.objects.filter(
@@ -154,7 +152,7 @@ def teams(request):
                     Paragraph(
                         '{header}: {cat}'.format(
                             header=config.placeholderCategoryName,
-                            cat=categories[c].name
+                            cat=categories[c].name if categories[c].id is not None else config.raceCategoryEmptyName
                         ),
                         styles['TableHeader']
                     )
@@ -226,7 +224,9 @@ def teams(request):
                 ]
             )
             teamRow.append(
-                Paragraph('{address}'.format(address=team.address if team.address is not None else ''), styles['Normal'])
+                [
+                    Paragraph('{address}'.format(address=addr_line if addr_line is not None else ''), styles['Secondary']) for addr_line in team.address.splitlines()
+                ]
             )
             teamRow.append(
                 Paragraph('{position}'.format(position=team.position if team.position is not None else ''), styles['NormalC'])

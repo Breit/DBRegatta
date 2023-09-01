@@ -796,6 +796,10 @@ def getTimeTableContent():
     timetable = []
     categories = Category.objects.all()
 
+    # create empty category if no category are assigned
+    if len(categories) == 0:
+        categories = [Category()]
+
     timetable.append(
         {
             # deduce starting time from first race (minus the appropriate offset)
@@ -816,7 +820,7 @@ def getTimeTableContent():
                             config.timeBegin,
                             config.offsetHeat
                         ),
-                        'desc': '{} {}: {}'.format(config.heatsTitle, i + 1, category.name),
+                        'desc': '{} {}{}'.format(config.heatsTitle, i + 1, '' if category.id is None else ': {}'.format(category.name)),
                         'races': races,
                         'type': 'heat'
                     }
@@ -825,7 +829,7 @@ def getTimeTableContent():
     # get finals
     has_finals = False
     for category in categories:
-        finale_races = getRaces('{}{}-'.format(config.finalPrefix, category.tag))
+        finale_races = getRaces('{}{}'.format(config.finalPrefix, '' if category.id is None else '{}-'.format(category.tag)))
         if (len(finale_races) > 0):
             timetable.append(
                 {
@@ -833,7 +837,7 @@ def getTimeTableContent():
                             timetable[-1]['time'],
                             config.offsetFinale
                         ),
-                    'desc': '{}: {}'.format(config.finaleTitle, category.name),
+                    'desc': '{}{}'.format(config.finaleTitle, '' if category.id is None else ': {}'.format(category.name)),
                     'races': finale_races,
                     'type': 'finale',
                     'fold': not raceBlockFinished('{}{}'.format(config.heatPrefix, category.tag))
@@ -860,6 +864,10 @@ def getTimeTableContent():
 def updateTimeTable():
     categories = Category.objects.all()
 
+    # create empty category if no category are assigned
+    if len(categories) == 0:
+        categories = [Category()]
+
     # update all heats at once
     start = config.timeBegin
     for hnum in range(config.heatCount):
@@ -882,6 +890,10 @@ def createTimeTable():
 
     # create race tables for heats
     categories = Category.objects.all()
+
+    # create empty category if no category are assigned
+    if len(categories) == 0:
+        categories = [Category()]
 
     lastHeat = []
     for hnum in range(config.heatCount):
@@ -941,7 +953,13 @@ def createTimeTable():
 def generateFinaleDrawModes():
     # create race tables for finals
     RaceDrawMode.objects.all().delete()
-    for category in Category.objects.all():
+
+    categories = Category.objects.all()
+    # create empty category if no category are assigned
+    if len(categories) == 0:
+        categories = [Category()]
+
+    for category in categories:
         team_count = getActiveTeams(category, False)
 
         pnum = team_count
@@ -1106,9 +1124,15 @@ def saveEditedRaceData(race_name, data):
 def getCurrentTimeTable():
     timetable = []
 
+    categories = Category.objects.all()
+
+    # create empty category if no category are assigned
+    if len(categories) == 0:
+        categories = [Category()]
+
     # get current heats
     for i in range(config.heatCount):
-        for category in Category.objects.all():
+        for category in categories:
             if not raceBlockFinished('{}{}'.format(config.heatPrefix, category.tag)):
                 races = getRaceTimes(config.heatPrefix, category, i + 1)
                 if len(races) > 0 and all(['lanes' in race for race in races]):
@@ -1122,14 +1146,14 @@ def getCurrentTimeTable():
                                 config.timeBegin,
                                 config.offsetHeat
                             ),
-                            'desc': '{} {}: {}'.format(config.heatsTitle, i + 1, category.name),
+                            'desc': '{} {}{}'.format(config.heatsTitle, i + 1, '' if category.id is None else ': {}'.format(category.name)),
                             'races': races,
                             'type': 'heat'
                         }
                     )
 
     # get final if heats are finished
-    for category in Category.objects.all():
+    for category in categories:
         if raceBlockFinished('{}{}'.format(config.heatPrefix, category.tag)) and not raceBlockFinished('{}{}'.format(config.finalPrefix, category.tag)):
             races = getRaceTimes(config.finalPrefix, category)
 
@@ -1146,7 +1170,11 @@ def getCurrentTimeTable():
                             config.timeBegin,
                             config.offsetFinale
                         ),
-                        'desc': '{}: {}{}'.format(config.finaleTitle, category.name, ' - {} {}'.format(config.racesPerPageDesc, i + 1) if pages > 1 else ''),
+                        'desc': '{}{}{}'.format(
+                            config.finaleTitle,
+                            '' if category.id is None else ': {}'.format(category.name),
+                            ' - {} {}'.format(config.racesPerPageDesc, i + 1) if pages > 1 else ''
+                        ),
                         'races': races[(i * racesPerPage):min((i + 1) * racesPerPage, len(races))],
                         'type': 'finale'
                     }
@@ -1198,7 +1226,7 @@ def getRankings(category: Category):
 
 def getHeatRankings(category: Category):
     rankingTable = {
-        'desc': '{} {}: {}'.format(config.displayRankings, config.heatsTitle, category.name),
+        'desc': '{} {}{}'.format(config.displayRankings, config.heatsTitle, '' if category.id is None else ': {}'.format(category.name)),
         'type':'rankingHeats',
         'heats': ['{}{}{}'.format(config.heatPrefix, category.tag, i + 1) for i in range(config.heatCount)],
         'ranks': [],
@@ -1266,7 +1294,7 @@ def getSiteData(id: str = None, user = None):
         'menu': [],
         'impressum': '/impressum'
     }
-    
+
     # Menu entry: Teams
     if user and user.is_authenticated:
         menu_teams = {
@@ -1305,9 +1333,9 @@ def getSiteData(id: str = None, user = None):
                     'tooltip': '{title} {status}: {count}'.format(title=config.teamTableHeaderTeams, status=config.inactiveTeams, count=teams_inactive)
                 }
             )
-            
+
         siteData['menu'].append(menu_teams)
-        
+
     # Menu entry: Skippers
     if user and user.is_authenticated:
         menu_skippers = {
@@ -1337,7 +1365,7 @@ def getSiteData(id: str = None, user = None):
                     'tooltip': '{title} {status}: {count}'.format(title=config.skippersTitle, status=config.inactiveSkipperTitle, count=skippers_inactive)
                 }
             )
-        
+
         siteData['menu'].append(menu_skippers)
 
     # Menu entry: Trainings
@@ -1378,7 +1406,7 @@ def getSiteData(id: str = None, user = None):
                     'tooltip': '{title}: {count}'.format(title=config.trainingsTitleInactive, count=trainings_inactive)
                 }
             )
-        
+
         siteData['menu'].append(menu_trainings)
 
     # Menu entry: Billing
@@ -1392,7 +1420,7 @@ def getSiteData(id: str = None, user = None):
             'color': 'warning',
             'notifications': []
         }
-        
+
         siteData['menu'].append(menu_billing)
 
     # Menu entry: Timetable
@@ -1406,7 +1434,7 @@ def getSiteData(id: str = None, user = None):
             'color': 'light',
             'notifications': []
         }
-        
+
         siteData['menu'].append(menu_timetable)
 
     # Menu entry: Calendar
@@ -1420,7 +1448,7 @@ def getSiteData(id: str = None, user = None):
             'color': 'light' if config.activateCalendar else 'warning',
             'notifications': []
         }
-        
+
         siteData['menu'].append(menu_calendar)
 
     # Menu entry: Times
@@ -1459,7 +1487,7 @@ def getSiteData(id: str = None, user = None):
                     'tooltip': '{title}: {status}'.format(title=config.raceNextTitle, status=next)
                 }
             )
-        
+
         siteData['menu'].append(menu_times)
 
     # Menu entry: Results
@@ -1642,7 +1670,7 @@ def getRaceTimes(raceType: str, category: Category, heatNum: int = 0):
 
 def getFinalRankings(category: Category):
     rankingTable = {
-        'desc': '{} {}: {}'.format(config.displayRankings, config.finaleTitle, category.name),
+        'desc': '{} {}{}'.format(config.displayRankings, config.finaleTitle, '' if category.id is None else ': {}'.format(category.name)),
         'ranks': [],
         'type': 'rankingFinals'
     }
@@ -1754,6 +1782,10 @@ def getRaceResultsTableContent(heats: bool = True, heatsRankings: bool = True, f
     timetable = []
     categories = Category.objects.all()
 
+    # create empty category if no category are assigned
+    if len(categories) == 0:
+        categories = [Category()]
+
     # heats results
     if heats:
         # get heats
@@ -1767,7 +1799,11 @@ def getRaceResultsTableContent(heats: bool = True, heatsRankings: bool = True, f
                                 config.timeBegin,
                                 config.offsetHeat
                             ),
-                            'desc': '{} {}: {}'.format(config.heatsTitle, i + 1, category.name),
+                            'desc': '{} {}{}'.format(
+                                config.heatsTitle,
+                                i + 1,
+                                '' if category.id is None else ': {}'.format(category.name)
+                            ),
                             'races': races,
                             'type': 'heat'
                         }
@@ -1791,7 +1827,7 @@ def getRaceResultsTableContent(heats: bool = True, heatsRankings: bool = True, f
                         timetable[-1]['time'],
                         config.offsetFinale
                     ),
-                    'desc': '{}: {}'.format(config.finaleTitle, category.name),
+                    'desc': '{}{}'.format(config.finaleTitle, '' if category.id is None else ': {}'.format(category.name)),
                     'races': races,
                     'type': 'finale'
                 }
@@ -2658,7 +2694,13 @@ def getAdvancedSettings():
 # TODO: Does not change race count for finals. This means switching race mode does
 # result in an invalid finale timetable (teams/races missing from finale).
 def populateFinals(race_assignment: RaceAssign = None):
-    for category in Category.objects.all():
+    categories = Category.objects.all()
+
+    # create empty category if no category are assigned
+    if len(categories) == 0:
+        categories = [Category()]
+
+    for category in categories:
         if raceBlockFinished('{}{}'.format(config.heatPrefix, category.tag)):
             # get all final races and sort after race names in reverse order, but obey number ordering
             races = Race.objects.filter(name__startswith = '{}{}-'.format(config.finalPrefix, category.tag))

@@ -138,6 +138,7 @@ CONSTANCE_CONFIG = {
     # Race Category
     'raceCategoryHeader':           ('Rennkategorien',                              'Header Text for Race Category List'),
     'raceCategoryTableHeader':      ('Kategorie',                                   'Table Column Header for Race Category'),
+    'raceCategoryEmptyName':        ('Keine',                                       'No Race Category Description'),
     'addRaceCategory':              ('Rennkategorie anlegen',                       'Text for New Race Category Button'),
     'deleteRaceCategory':           ('Rennkategorie löschen',                       'Text for Delete Race Category Button/Modal'),
     'editRaceCategory':             ('Rennkategorie bearbeiten',                    'Text for Edit Race Category Button/Modal'),
@@ -551,6 +552,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
         'fields': (
             'raceCategoryHeader',
             'raceCategoryTableHeader',
+            'raceCategoryEmptyName',
             'addRaceCategory',
             'deleteRaceCategory',
             'editRaceCategory',

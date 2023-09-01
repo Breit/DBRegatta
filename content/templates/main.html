@@ -24,7 +24,8 @@
                         <a href="{{ config.homeUrl }}" class="d-flex align-items-center mb-3 mb-md-0 text-decoration-none">
                             <img class="bi me-2" src="{% static 'images/' %}{{ config.homeIcon }}" alt="Home">
                         </a>
-                        <h1 class="mb-3 mb-md-0 me-md-auto text-decoration-none fw-lighter text-nowrap">{{ config.siteName }} {{ config.eventDate|date:'d.m.Y' }}</h1>
+                        <h1 class="mb-3 mb-md-0 me-md-auto text-decoration-none fw-lighter text-nowrap">{{ config.siteName }}</h1>
+                        <h1 class="mb-3 ms-4 mb-md-0 me-md-auto text-decoration-none text-secondary fw-lighter text-nowrap">{{ config.eventDate|date:'d.m.Y' }}</h1>
                     </div>
                     <div class="d-flex flex-nowrap align-items-center justify-content-center justify-content-lg-end">
                         {% if display %}

@@ -127,9 +127,8 @@ def teams(request):
             except:
                 delCategory = None
             if delCategory:
-                # If a race category is deleted, a few things happen:
-                # - All teams in that category are set 'inactive'
-                # - All race assignements with these teams are deleted (includes results)
+                # If a race category is deleted, all race assignements with these teams
+                # are also deleted (includes results)
                 try:
                     teamsInCategory = Team.objects.filter(category_id=delCategory.id)
                 except:
@@ -138,8 +137,6 @@ def teams(request):
                     assignments = RaceAssign.objects.filter(team_id=team.id)
                     for assignment in assignments:
                         assignment.delete()
-                    team.active = False
-                    team.wait = False
                     team.category_id = None
                     team.save()
                 delCategory.delete()
@@ -580,7 +577,11 @@ def display(request):
             }
         )
 
-    for category in Category.objects.all():
+    categories = Category.objects.all()
+    if len(categories) == 0:
+        categories = [Category()]
+
+    for category in categories:
         if raceBlockStarted('{}{}'.format(config.heatPrefix, category.tag)) and not raceBlockFinished('{}{}'.format(config.finalPrefix, category.tag)):
             siteData['display'].append(getHeatRankings(category))       # show heats rankings only if finale is not finished
         elif raceBlockFinished('{}{}'.format(config.finalPrefix, category.tag)):
