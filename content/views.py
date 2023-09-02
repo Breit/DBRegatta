@@ -706,10 +706,12 @@ def settings(request):
             clearFinals()
             generateFinaleDrawModes()
             populateFinals()
+            updateTimeTable()
         elif 'resetHeats' in request.POST:
             clearHeatTimes()
             generateFinaleDrawModes()
             populateFinals()
+            updateTimeTable()
         elif 'resetTimetable' in request.POST:
             clearRaces()
         elif 'backupDatabase' in request.POST:

@@ -829,7 +829,7 @@ def getTimeTableContent():
     # get finals
     has_finals = False
     for category in categories:
-        finale_races = getRaces('{}{}'.format(config.finalPrefix, '' if category.id is None else '{}-'.format(category.tag)))
+        finale_races = getRaces('{}{}-'.format(config.finalPrefix, category.tag))
         if (len(finale_races) > 0):
             timetable.append(
                 {
@@ -977,7 +977,11 @@ def generateFinaleDrawModes():
                 races = math.ceil(team_count / max(1, config.lanesPerRace))
         for rnum in range(races):
             race = None
-            race_name = '{}{}-{}'.format(config.finalPrefix, category.tag, rnum + 1)
+            race_name = '{}{}-{}'.format(
+                config.finalPrefix,
+                category.tag,
+                rnum + 1
+            )
             try:
                 race = Race.objects.get(name__startswith=race_name)
             except:
@@ -2703,7 +2707,7 @@ def populateFinals(race_assignment: RaceAssign = None):
     for category in categories:
         if raceBlockFinished('{}{}'.format(config.heatPrefix, category.tag)):
             # get all final races and sort after race names in reverse order, but obey number ordering
-            races = Race.objects.filter(name__startswith = '{}{}'.format(config.finalPrefix, category.tag))
+            races = Race.objects.filter(name__startswith = '{}{}-'.format(config.finalPrefix, category.tag))
             races_sorted = [(race.id, race.name) for race in races]
             races_sorted.sort(key=lambda x:[int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x[1])], reverse=True)
             race_ids = [race[0] for race in races_sorted]
