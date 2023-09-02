@@ -2703,7 +2703,7 @@ def populateFinals(race_assignment: RaceAssign = None):
     for category in categories:
         if raceBlockFinished('{}{}'.format(config.heatPrefix, category.tag)):
             # get all final races and sort after race names in reverse order, but obey number ordering
-            races = Race.objects.filter(name__startswith = '{}{}-'.format(config.finalPrefix, category.tag))
+            races = Race.objects.filter(name__startswith = '{}{}'.format(config.finalPrefix, category.tag))
             races_sorted = [(race.id, race.name) for race in races]
             races_sorted.sort(key=lambda x:[int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x[1])], reverse=True)
             race_ids = [race[0] for race in races_sorted]
@@ -2762,7 +2762,7 @@ def populateFinals(race_assignment: RaceAssign = None):
                                 break
 
                             # leave lane free for winner from previous race if race-to-top race mode is active
-                            if config.raceToTopFinal and (race_id != race_ids[-1] and draw.lane == 1 or draw.lane > len(rankings) - rank_id):
+                            if config.raceToTopFinal and (race_id != race_ids[-1] and int(draw.lane) == 1 or int(draw.lane) > len(rankings) - rank_id):
                                 continue
 
                             ra = RaceAssign()
