@@ -1109,10 +1109,6 @@ def saveEditedRaceData(race_name, data):
         except:
             pass
 
-    # Re-generate all finale race draw modes if heat is modified
-    if race_name.startswith(config.heatPrefix):
-        generateFinaleDrawModes()
-
     # Remove race assignments that are manually requested to be deleted
     remove_assignments = RaceAssign.objects.filter(race_id__in=race_ids, team_id__in=teams)
     for ra in remove_assignments:
@@ -1122,6 +1118,10 @@ def saveEditedRaceData(race_name, data):
         if race_name.startswith(config.finalPrefix):
             rd = RaceDrawMode.objects.filter(race_id=ra.race_id, lane=ra.lane)
             rd.delete()
+
+    # Re-generate all finale race draw modes if heat is modified
+    if race_name.startswith(config.heatPrefix):
+        generateFinaleDrawModes()
 
     updateTimeTable()
 
