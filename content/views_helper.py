@@ -959,6 +959,8 @@ def generateFinaleDrawModes():
     if len(categories) == 0:
         categories = [Category()]
 
+    finals_orphaned = [r.name for r in Race.objects.filter(name__startswith=config.finalPrefix)]
+
     for category in categories:
         team_count = getActiveTeams(category, False)
 
@@ -976,52 +978,66 @@ def generateFinaleDrawModes():
                 # fully populate all races
                 races = math.ceil(team_count / max(1, config.lanesPerRace))
         for rnum in range(races):
-            race = None
-            race_name = '{}{}-{}'.format(
-                config.finalPrefix,
-                category.tag,
-                rnum + 1
-            )
             try:
-                race = Race.objects.get(name__startswith=race_name)
+                race = None
+                race_name = '{}{}-{}'.format(
+                    config.finalPrefix,
+                    category.tag,
+                    rnum + 1
+                )
+                try:
+                    race = Race.objects.get(name=race_name)
+                except:
+                    pass
+                if race is None:
+                    race = Race()
+                    race.name = race_name
+                race.time = config.timeBegin        # update time later
+                race.save()
+
+                if race_name in finals_orphaned:
+                    finals_orphaned.remove(race_name)
+
+                # create finale draw assignments
+                if rnum == 0:
+                    borrow = False
+                    # lane count for first race might not match number of available lanes
+                    if config.raceToTopFinal:
+                        # if race-to-top race mode is active, leave lane free for victor from previous race
+                        lanes = team_count - (races - 1) * (config.lanesPerRace - 1)
+                    else:
+                        # populate all races
+                        lanes = team_count - (races - 1) * config.lanesPerRace
+                        if lanes == 1:
+                            borrow = True   # don't create the first race with only one participent, borrow one from the next race
+                            lanes = 2
+                else:
+                    lanes = config.lanesPerRace                                         # last race is always full if possible
+                    if borrow:
+                        lanes -= 1
+                        borrow = False
+                for lnum in range(lanes):
+                    rdm = RaceDrawMode()
+                    rdm.race_id = race.id
+                    rdm.lane = lnum + 1                                                 # start lane number at 1
+                    if rnum == 0 or lnum != 0 or not config.raceToTopFinal:
+                        rdm.desc = config.finaleTemplate1.format(pnum)
+                        pnum -= 1
+                    else:
+                        rdm.desc = config.finaleTemplate2.format(rname)
+                    rdm.save()
+
+                rname = race.name
             except:
                 pass
-            if race is None:
-                race = Race()
-                race.name = race_name
-            race.time = config.timeBegin        # update time later
-            race.save()
 
-            # create finale draw assignments
-            if rnum == 0:
-                borrow = False
-                # lane count for first race might not match number of available lanes
-                if config.raceToTopFinal:
-                    # if race-to-top race mode is active, leave lane free for victor from previous race
-                    lanes = team_count - (races - 1) * (config.lanesPerRace - 1)
-                else:
-                    # populate all races
-                    lanes = team_count - (races - 1) * config.lanesPerRace
-                    if lanes == 1:
-                        borrow = True   # don't create the first race with only one participent, borrow one from the next race
-                        lanes = 2
-            else:
-                lanes = config.lanesPerRace                                         # last race is always full if possible
-                if borrow:
-                    lanes -= 1
-                    borrow = False
-            for lnum in range(lanes):
-                rdm = RaceDrawMode()
-                rdm.race_id = race.id
-                rdm.lane = lnum + 1                                                 # start lane number at 1
-                if rnum == 0 or lnum != 0 or not config.raceToTopFinal:
-                    rdm.desc = config.finaleTemplate1.format(pnum)
-                    pnum -= 1
-                else:
-                    rdm.desc = config.finaleTemplate2.format(rname)
-                rdm.save()
-
-            rname = race.name
+        # Delete orphaned races
+        for race_name in finals_orphaned:
+            try:
+                race = Race.objects.get(name=race_name)
+                race.delete()
+            except:
+                pass
 
 def getDataForRaceEdit(race_name):
     race = Race.objects.get(name=race_name)
@@ -1579,7 +1595,7 @@ def getRaceTimes(raceType: str, category: Category, heatNum: int = 0):
     lanesPerRace = len(set([attendee.lane for attendee in RaceAssign.objects.all()]))
 
     # get all final races and sort after race names, but obey number ordering
-    races_sorted = Race.objects.filter(name__startswith = '{}{}{}'.format(raceType, category.tag, heatNum if heatNum > 0 else ''))
+    races_sorted = Race.objects.filter(name__startswith='{}{}{}'.format(raceType, category.tag, heatNum if heatNum > 0 else ''))
     races_sorted = [race for race in races_sorted]
     races_sorted.sort(key=lambda x:[int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.name)])
 
