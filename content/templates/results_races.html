@@ -17,7 +17,10 @@
         <div class="card-body p-0 collapse show" id="{{ entry.desc|uid }}">
             <div class="row border-bottom small text-muted mt-2 mx-0">
                 <div class="col-1 text-center text-nowrap">{{ config.timetableHeaderName }}</div>
-                <div class="col-11">
+                {% if display %}
+                    <div class="col-1 text-center text-nowrap">{{ config.timetableHeaderTime }}</div>
+                {% endif %}
+                <div class="{% if display %}col-10{% else %}col-11{% endif %}">
                     <div class="row">
                         <div class="col-1 text-center text-nowrap">{{ config.timetableHeaderLane }}</div>
                         <div class="col text-nowrap">{{ config.timetableHeaderTeam }}</div>
@@ -32,8 +35,11 @@
             </div>
             {% for race in entry.races %}
                 <div class="row border-bottom mx-0 user-select-none timetable_race{% if race.status == 'finished' %} race_finished{% elif race.status == 'started' %} race_started{% endif %}{% if forloop.last %} rounded-bottom{% endif %}">
-                    <div class="col-1 text-center align-self-center fw-bold text-nowrap">{{ race.desc }}</div>
-                    <div class="col-11">
+                    <div class="col-1 text-center align-self-center text-nowrap{% if not display %} fw-bold{% endif %}">{{ race.desc }}</div>
+                    {% if display %}
+                        <div class="col-1 text-center align-self-center fw-bold text-nowrap">{{ race.time|time:'H:i' }}</div>
+                    {% endif %}
+                    <div class="{% if display %}col-10{% else %}col-11{% endif %}">
                         {% for lane in race.lanes %}
                             <div class="row timetable_lane{% if forloop.last and forloop.parentloop.last %} rounded-bottom-right{% endif %}">
                                 <div class="col-1 text-center">{{ lane.lane }}</div>
