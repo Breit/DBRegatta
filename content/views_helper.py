@@ -1251,7 +1251,7 @@ def getHeatRankings(category: Category):
         'heats': ['{}{}{}'.format(config.heatPrefix, category.tag, i + 1) for i in range(config.heatCount)],
         'ranks': [],
         'brackets': [],
-        'fold': raceBlockFinished(config.finalPrefix)
+        'fold': raceBlockFinished('{}{}'.format(config.finalPrefix, category.tag))
     }
 
     for r in getRankings(category):
@@ -1828,7 +1828,7 @@ def getRaceResultsTableContent(heats: bool = True, heatsRankings: bool = True, f
                             ),
                             'races': races,
                             'type': 'heat',
-                            'fold': raceBlockFinished(config.heatPrefix)
+                            'fold': raceBlockFinished('{}{}'.format(config.heatPrefix, category.tag))
                         }
                     )
 
@@ -1853,7 +1853,7 @@ def getRaceResultsTableContent(heats: bool = True, heatsRankings: bool = True, f
                     'desc': '{}{}'.format(config.finaleTitle, '' if category.id is None else ': {}'.format(category.name)),
                     'races': races,
                     'type': 'finale',
-                    'fold': raceBlockFinished(config.finalPrefix)
+                    'fold': raceBlockFinished('{}{}'.format(config.finalPrefix, category.tag))
                 }
             )
 
