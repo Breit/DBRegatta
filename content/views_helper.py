@@ -1250,7 +1250,8 @@ def getHeatRankings(category: Category):
         'type':'rankingHeats',
         'heats': ['{}{}{}'.format(config.heatPrefix, category.tag, i + 1) for i in range(config.heatCount)],
         'ranks': [],
-        'brackets': []
+        'brackets': [],
+        'fold': raceBlockFinished(config.finalPrefix)
     }
 
     for r in getRankings(category):
@@ -1692,7 +1693,8 @@ def getFinalRankings(category: Category):
     rankingTable = {
         'desc': '{} {}{}'.format(config.displayRankings, config.finaleTitle, '' if category.id is None else ': {}'.format(category.name)),
         'ranks': [],
-        'type': 'rankingFinals'
+        'type': 'rankingFinals',
+        'fold': False
     }
 
     # deduce lane count from database
@@ -1825,7 +1827,8 @@ def getRaceResultsTableContent(heats: bool = True, heatsRankings: bool = True, f
                                 '' if category.id is None else ': {}'.format(category.name)
                             ),
                             'races': races,
-                            'type': 'heat'
+                            'type': 'heat',
+                            'fold': raceBlockFinished(config.heatPrefix)
                         }
                     )
 
@@ -1849,7 +1852,8 @@ def getRaceResultsTableContent(heats: bool = True, heatsRankings: bool = True, f
                     ),
                     'desc': '{}{}'.format(config.finaleTitle, '' if category.id is None else ': {}'.format(category.name)),
                     'races': races,
-                    'type': 'finale'
+                    'type': 'finale',
+                    'fold': raceBlockFinished(config.finalPrefix)
                 }
             )
 

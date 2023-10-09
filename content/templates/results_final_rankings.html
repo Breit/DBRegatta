@@ -2,8 +2,8 @@
 
 {% block rankings_finale %}
     <div class="card mb-3 shadow">
-        <div class="card-header bg-purple-300 text-light{% if display %} display-6 py-1{% else %} fs-4 py-0{% endif %}">
-            <div class="row flex-nowrap user-select-none hdr_collapse" data-bs-toggle="collapse" data-bs-target="#{{ entry.desc|uid }}" aria-expanded="true">
+        <div class="card-header bg-purple-300 text-light{% if display %} display-6 py-1{% else %} fs-4 py-0{% endif %}{% if entry.fold and not display %} card-header-collapsed{% endif %}">
+            <div class="row flex-nowrap user-select-none hdr_collapse{% if entry.fold and not display %} collapsed{% endif %}" data-bs-toggle="collapse" data-bs-target="#{{ entry.desc|uid }}" aria-expanded="{% if entry.fold and not display %}false{% else %}true{% endif %}">
                 <div class="col">{{ entry.desc }}</div>
                 {% if not display %}
                     <div class="col-auto my-auto px-2 text-light fs-6">
@@ -13,7 +13,7 @@
                 {% endif %}
             </div>
         </div>
-        <div class="card-body p-0 collapse show" id="{{ entry.desc|uid }}">
+        <div class="card-body p-0 collapse{% if not entry.fold or display %} show{% endif %}" id="{{ entry.desc|uid }}">
             <div class="row flex-nowrap user-select-none border-bottom small text-muted mt-2 mx-0 px-0 align-items-end">
                 <div class="col-1 text-center rank_column">{{ config.displayRank }}</div>
                 <div class="col">{{ config.timetableHeaderTeam }}</div>
