@@ -638,7 +638,7 @@ def getCalendarData(authenticated: bool = False):
         skipper = None
         company = None
         note = None
-        if authenticated:
+        if authenticated or config.activateCalendarDetails:
             team_obj = Team.objects.get(id=training.team_id)
             if team_obj:
                 name = team_obj.name
@@ -1310,7 +1310,7 @@ def getCurrentRaceBlock():
         return None
 
 # define default site data
-def getSiteData(id: str = None, user = None):
+def getSiteData(id: str = "", user = None):
     siteData = {
         'menu': [],
         'impressum': '/impressum'
@@ -1962,6 +1962,16 @@ def getMainSettings():
                     'name': config.activateCalendarDesc,
                     'type': 'checkbox',
                     'value': config.activateCalendar,
+                    'icon': 'calendar-check',
+                    'classes': 'col-auto',
+                    'active': config.activeResultsDesc,
+                    'inactive': config.inactiveResultsDesc
+                },
+                {
+                    'id': 'activateCalendarDetails',
+                    'name': config.activateCalendarDetailsDesc,
+                    'type': 'checkbox',
+                    'value': config.activateCalendarDetails,
                     'icon': 'calendar-check',
                     'classes': 'col-auto',
                     'active': config.activeResultsDesc,
