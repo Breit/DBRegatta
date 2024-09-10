@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block content %}
-    <div id="resultsCarousel" class="carousel slide carousel-fade h-100 w-100" data-bs-ride="carousel">
+    <div id="resultsCarousel" class="carousel slide carousel-fade h-100 w-100 pe-none" data-bs-ride="carousel">
         <div class="carousel-indicators float-bottom">
             {% for entry in display %}
                 <button type="button" data-bs-target="#resultsCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.counter == 1 %}active{% endif %}"></button>
