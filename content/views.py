@@ -626,6 +626,8 @@ def settings(request):
             config.anonymousMonitor = request.POST['anonymousMonitor'] == 'on'
         elif 'activateCalendar' in request.POST:
             config.activateCalendar = request.POST['activateCalendar'] == 'on'
+        elif 'activateCalendarDetails' in request.POST:
+            config.activateCalendarDetails = request.POST['activateCalendarDetails'] == 'on'
         elif 'raceToTopFinal' in request.POST:
             config.raceToTopFinal = request.POST['raceToTopFinal'] == 'on'
         elif 'ownerName' in request.POST:

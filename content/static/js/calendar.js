@@ -39,41 +39,44 @@ document.addEventListener(
           endTime: calendarData.meta.trainingEnd
         },
         eventDidMount: function(info) {
-          let tooltip_text = '<p>';
-          tooltip_text += '<span class="lead">' + info.event.title + '</span>';
-          tooltip_text += '<br>';
-          if ('extendedProps' in info.event) {
-            if ('company' in info.event.extendedProps && info.event.extendedProps.company) {
-              tooltip_text += info.event.extendedProps.company;
+          if ('title' in info.event && info.event.title)
+          {
+            let tooltip_text = '<p>';
+            tooltip_text += '<span class="lead">' + info.event.title + '</span>';
+            tooltip_text += '<br>';
+            if ('extendedProps' in info.event) {
+              if ('company' in info.event.extendedProps && info.event.extendedProps.company) {
+                tooltip_text += info.event.extendedProps.company;
+              }
+              tooltip_text += '</p><p>';
+              if ('timeslot' in info.event.extendedProps && info.event.extendedProps.timeslot) {
+                tooltip_text += info.event.start.toLocaleDateString();
+                tooltip_text += '<br>';
+                tooltip_text += '<i>' + info.event.extendedProps.timeslot + '</i>';
+              }
+              if ('skipper' in info.event.extendedProps && info.event.extendedProps.skipper) {
+                tooltip_text += '</p><p><b>' + info.event.extendedProps.skipper + '</b>';
+              }
+              if ('note' in info.event.extendedProps && info.event.extendedProps.note) {
+                tooltip_text += '</p><p>' + info.event.extendedProps.note;
+              }
             }
-            tooltip_text += '</p><p>';
-            if ('timeslot' in info.event.extendedProps && info.event.extendedProps.timeslot) {
+            else {
               tooltip_text += info.event.start.toLocaleDateString();
               tooltip_text += '<br>';
-              tooltip_text += '<i>' + info.event.extendedProps.timeslot + '</i>';
+              tooltip_text += '<i>' + info.event.start.toLocaleTimeString() + '</i>';
             }
-            if ('skipper' in info.event.extendedProps && info.event.extendedProps.skipper) {
-              tooltip_text += '</p><p><b>' + info.event.extendedProps.skipper + '</b>';
-            }
-            if ('note' in info.event.extendedProps && info.event.extendedProps.note) {
-              tooltip_text += '</p><p>' + info.event.extendedProps.note;
-            }
-          }
-          else {
-            tooltip_text += info.event.start.toLocaleDateString();
-            tooltip_text += '<br>';
-            tooltip_text += '<i>' + info.event.start.toLocaleTimeString() + '</i>';
-          }
-          tooltip_text += '</p>';
+            tooltip_text += '</p>';
 
-          var tooltip = new bootstrap.Tooltip(info.el, {
-            title: tooltip_text,
-            placement: 'top',
-            trigger: 'hover',
-            container: 'body',
-            html: true,
-            customClass: 'tooltip-text-left'
-          });
+            var tooltip = new bootstrap.Tooltip(info.el, {
+              title: tooltip_text,
+              placement: 'top',
+              trigger: 'hover',
+              container: 'body',
+              html: true,
+              customClass: 'tooltip-text-left'
+            });
+          }
         }
       }
     );
