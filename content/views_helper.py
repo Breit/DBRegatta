@@ -1676,8 +1676,9 @@ def getRaceTimes(raceType: str, category: Category, heatNum: int = 0):
                 last_race = race.name == races_sorted[-1].name
                 for lane in entry['lanes']:
                     if not last_race and config.raceToTopFinal and lane['place'] == 1:
-                        continue
-                    lane['rank'] = rank_finale - (lanesInRace - lane['place'])
+                        lane['rank'] = "&#10149;"
+                    else:
+                        lane['rank'] = rank_finale - (lanesInRace - lane['place'])
                 rank_finale -= lanesInRace if last_race or not config.raceToTopFinal else lanesInRace - 1
 
         if all(item['finished'] for item in entry['lanes']):
