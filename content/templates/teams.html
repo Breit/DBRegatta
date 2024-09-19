@@ -193,7 +193,7 @@
         {% if content.teams %}
             <div class="progress mb-4 bg-light">
                 {% if content.activeTeams %}
-                    <div class="progress-bar px-2 me-2 team_progress bg-light border-bottom border-success border-5 text-success" role="progressbar" style="width: calc(100% * {{ content.activeTeams }} / {{ content.totalTeams }})">
+                    <div class="progress-bar px-2{% if content.waitlistTeams or content.inactiveTeams %} me-2{% endif %} team_progress bg-light border-bottom border-success border-5 text-success" role="progressbar" style="width: calc(100% * {{ content.activeTeams }} / {{ content.totalTeams }})">
                         <div class="flex-row text-start">
                             <span class="display-3 fw-bold">{{ content.activeTeams }}</span>
                             <span class="lead">{{ config.activeTeams }}</span>
@@ -201,7 +201,7 @@
                     </div>
                 {% endif %}
                 {% if content.waitlistTeams %}
-                    <div class="progress-bar px-2 me-2 team_progress bg-light border-bottom border-warning border-5 text-warning" role="progressbar" style="width: calc(100% * {{ content.waitlistTeams }} / {{ content.totalTeams }})">
+                    <div class="progress-bar px-2{% if content.inactiveTeams %} me-2{% endif %} team_progress bg-light border-bottom border-warning border-5 text-warning" role="progressbar" style="width: calc(100% * {{ content.waitlistTeams }} / {{ content.totalTeams }})">
                         <div class="flex-row text-start">
                             <span class="display-3 fw-bold">{{ content.waitlistTeams }}</span>
                             <span class="lead">{{ config.waitlistTeams }}</span>

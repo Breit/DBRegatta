@@ -15,7 +15,7 @@
         <h2 class="mt-2 mb-3 display-6">{{ config.billingTitle }}</h2>
         <div class="progress mb-4 bg-light">
             {% if content.sumCompensations %}
-                <div class="progress-bar px-2 me-2 billing_progress bg-light border-bottom border-warning border-5 text-warning" role="progressbar" style="width: calc(100% * {{ content.sumCompensations }} / {{ content.sumFees|add:content.sumCompensations }})">
+                <div class="progress-bar px-2{% if content.sumFees %} me-2{% endif %} billing_progress bg-light border-bottom border-warning border-5 text-warning" role="progressbar" style="width: calc(100% * {{ content.sumCompensations }} / {{ content.sumFees|add:content.sumCompensations }})">
                     <div class="flex-row text-end">
                         <span class="lead">{{ config.headerCompensationSum }}</span>
                         <span class="display-3 fw-bold">{{ content.sumCompensations }}{{ config.currency }}</span>

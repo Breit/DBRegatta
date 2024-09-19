@@ -106,7 +106,7 @@
         {% if content.skipperList %}
             <div class="progress mb-4 bg-light">
                 {% if content.activeSkippers %}
-                    <div class="progress-bar px-2 me-2 skipper_progress bg-light border-bottom border-success border-5 text-success" role="progressbar" style="width: calc(100% * {{ content.activeSkippers }} / {{ content.skipperList|length  }})">
+                    <div class="progress-bar px-2{% if content.inactiveSkippers %} me-2{% endif %} skipper_progress bg-light border-bottom border-success border-5 text-success" role="progressbar" style="width: calc(100% * {{ content.activeSkippers }} / {{ content.skipperList|length  }})">
                         <div class="flex-row text-start">
                             <span class="display-3 fw-bold">{{ content.activeSkippers }}</span>
                             <span class="lead">{{ config.activeSkipperTitle }}</span>
