@@ -288,6 +288,8 @@ CONSTANCE_CONFIG = {
     'calendarWeekNumbers':          (True,                                          'Show Week Numbers on Calendar'),
     'calendarWeekNumbersPrefix':    ('KW',                                          'Week Numbers Prefix on Calendar'),
     'appointmentPlaceholder':       ('Training gebucht',                            'Placeholder Text for an Trainings Appointment for Unauthorized Calendar Viewer'),
+    'calendarSelectAllTeamsText':   ('Alle Teams',                                  'Select Teams Dropdown Item for Selecting All Teams'),
+    'calendarSelectAllSkippersText':('Alle Steuerleute',                            'Select Skippers Dropdown Item for Selecting All Skippers'),
 
     # Skippers Settings
     'skippersPageCSS':              ('skippers.css',                                'CSS File for Site-specific Styling'),
@@ -719,6 +721,8 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'calendarWeekNumbers',
             'calendarWeekNumbersPrefix',
             'appointmentPlaceholder',
+            'calendarSelectAllTeamsText',
+            'calendarSelectAllSkippersText',
         ),
         'collapse': True
     },

@@ -15,3 +15,11 @@
     font-style: normal !important;
     font-weight: bold;
 }
+
+.fc .fc-popover {
+    z-index: 500 !important;
+}
+
+#filter-selector .dropdown-toggle-split::after {
+    margin-left: 0.255em !important;
+}

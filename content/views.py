@@ -325,8 +325,41 @@ def calendar(request):
         return redirect('/calendar')
 
     siteData = getSiteData('calendar', request.user)
+    siteData['teams'] = getTeamsWithTrainings(active=True)
+    siteData['selectedTeam'] = None
+    siteData['skippers'] = getSkippersWithTrainings(active=True)
+    siteData['selectedSkipper'] = None
+
+    # handle POST requests
+    selectedTeam = None
+    selectedSkipper = None
+    if request.method == 'POST':
+        if 'selectedTeamId' in request.POST:
+            try:
+                selectedTeam = Team.objects.get(id=request.POST['selectedTeamId'])
+            except ObjectDoesNotExist:
+                pass
+            except:
+                pass
+            siteData['selectedTeam'] = {
+                'id': selectedTeam.id,
+                'name': selectedTeam.name
+            } if selectedTeam else None
+        if 'selectedSkipperId' in request.POST:
+            try:
+                selectedSkipper = Skipper.objects.get(id=request.POST['selectedSkipperId'])
+            except ObjectDoesNotExist:
+                pass
+            except:
+                pass
+            siteData['selectedSkipper'] = {
+                'id': selectedSkipper.id,
+                'name': selectedSkipper.name
+            } if selectedSkipper else None
+
+    # construct site data
     siteData['content'] = {
-        'events': getCalendarData(request.user.is_authenticated),
+        'events': getCalendarData(request.user.is_authenticated, selectedTeam, selectedSkipper),
         'meta': {
             'buttonText': {
                 'year': config.calendarButtonYear,
