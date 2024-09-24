@@ -710,7 +710,7 @@ def getCalendarData(
     }
     ordinaryTrainingEvents = {
         'events': [],
-        'className' : 'text-primary'
+        'className' : 'bg-primary-100 text-primary'
     }
     trainings = Training.objects.all()
     for training in trainings:

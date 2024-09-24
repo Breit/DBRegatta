@@ -1,3 +1,8 @@
+:root {
+    --fc-event-bg-color: var(--bs-primary-100);
+    --fc-event-border-color: var(--bs-primary-300);
+}
+
 #calendar_page {
     /* height: calc(100%); */
     height: calc(100% - 5.25rem);
@@ -22,4 +27,8 @@
 
 #filter-selector .dropdown-toggle-split::after {
     margin-left: 0.255em !important;
+}
+
+.text-primary .fc-event-main {
+    color: var(--bs-primary);
 }
