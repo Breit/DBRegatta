@@ -40,22 +40,18 @@ class TeamForm(ModelForm):
         widgets = {
             'active': forms.CheckboxInput(
                 attrs = {
-                    'class': 'form-check-input',
-                    'placeholder': config.placeholderTeamActive
+                    'class': 'form-check-input'
                 }
             ),
             'wait': forms.CheckboxInput(
                 attrs = {
-                    'class': 'form-check-input',
-                    'placeholder': config.placeholderTeamWaitlist
+                    'class': 'form-check-input'
                 }
             ),
             'position': forms.NumberInput(
                 attrs = {
                     'class': 'form-control text-end pe-4',
-                    'placeholder': config.placeholderTeamPosition,
                     'data-bs-tooltip': '',
-                    'title': config.placeholderTeamPosition,
                     'inc': 1,
                     'type': 'number'
                 }
@@ -63,63 +59,49 @@ class TeamForm(ModelForm):
             'date': forms.DateInput(
                 attrs = {
                     'class': 'form-control text-end px-1',
-                    'placeholder': config.placeholderTeamSignupDate,
                     'data-bs-tooltip': '',
-                    'title': config.placeholderTeamSignupDate,
                     'type': 'date'
                 }
             ),
             'name': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderTeamName,
-                    'data-bs-tooltip': '',
-                    'title': config.placeholderTeamName
+                    'data-bs-tooltip': ''
                 }
             ),
             'nofee': forms.CheckboxInput(
                 attrs = {
-                    'class': 'form-check-input',
-                    'placeholder': config.placeholderTeamNoFee
+                    'class': 'form-check-input'
                 }
             ),
             'company': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderTeamCompany,
-                    'data-bs-tooltip': '',
-                    'title': config.placeholderTeamCompany
+                    'data-bs-tooltip': ''
                 }
             ),
             'category_id': forms.NumberInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderCategoryName,
                     'icon': 'grid'
                 }
             ),
             'contact': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderTeamCaptain,
                     'data-bs-tooltip': '',
-                    'title': config.placeholderTeamCaptain
                 }
             ),
             'email': forms.EmailInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderTeamEmail,
-                    'data-bs-tooltip': '',
-                    'title': config.placeholderTeamEmail
+                    'data-bs-tooltip': ''
                 }
             ),
             'phone': forms.TextInput(
                 attrs={
                     'class': 'form-control',
-                    'placeholder': config.placeholderTeamPhone,
-                    'data-bs-tooltip': '',
-                    'title': config.placeholderTeamPhone
+                    'data-bs-tooltip': ''
                 }
             )
             ,
@@ -127,12 +109,33 @@ class TeamForm(ModelForm):
                 attrs={
                     'class': 'form-control',
                     'rows': 4,
-                    'placeholder': config.placeholderTeamAddress,
-                    'data-bs-tooltip': '',
-                    'title': config.placeholderTeamAddress
+                    'data-bs-tooltip': ''
                 }
             )
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['active'].widget.attrs['placeholder'] = config.placeholderTeamActive
+        self.fields['wait'].widget.attrs['placeholder'] = config.placeholderTeamWaitlist
+        self.fields['position'].widget.attrs['placeholder'] = config.placeholderTeamPosition
+        self.fields['position'].widget.attrs['title'] = config.placeholderTeamPosition
+        self.fields['date'].widget.attrs['placeholder'] = config.placeholderTeamSignupDate
+        self.fields['date'].widget.attrs['title'] = config.placeholderTeamSignupDate
+        self.fields['name'].widget.attrs['placeholder'] = config.placeholderTeamName
+        self.fields['name'].widget.attrs['title'] = config.placeholderTeamName
+        self.fields['nofee'].widget.attrs['placeholder'] = config.placeholderTeamNoFee
+        self.fields['company'].widget.attrs['placeholder'] = config.placeholderTeamCompany
+        self.fields['company'].widget.attrs['title'] = config.placeholderTeamCompany
+        self.fields['category_id'].widget.attrs['placeholder'] = config.placeholderCategoryName
+        self.fields['contact'].widget.attrs['placeholder'] = config.placeholderTeamCaptain
+        self.fields['contact'].widget.attrs['title'] = config.placeholderTeamCaptain
+        self.fields['email'].widget.attrs['placeholder'] = config.placeholderTeamEmail
+        self.fields['email'].widget.attrs['title'] = config.placeholderTeamEmail
+        self.fields['phone'].widget.attrs['placeholder'] = config.placeholderTeamPhone
+        self.fields['phone'].widget.attrs['title'] = config.placeholderTeamPhone
+        self.fields['address'].widget.attrs['placeholder'] = config.placeholderTeamAddress
+        self.fields['address'].widget.attrs['title'] = config.placeholderTeamAddress
 
 class CategoryForm(ModelForm):
     class Meta:
@@ -149,21 +152,24 @@ class CategoryForm(ModelForm):
             'name': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderCategoryName,
-                    'data-bs-tooltip': '',
-                    'title': config.placeholderCategoryName,
+                    'data-bs-tooltip': ''
                 },
             ),
             'tag': forms.Select(
                 attrs = {
                     'class': 'form-select',
-                    'placeholder': config.placeholderCategoryTag,
                     'data-bs-tooltip': '',
-                    'title': config.placeholderCategoryTag,
                     'choices': list(string.ascii_uppercase),
                 },
             )
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs['placeholder'] = config.placeholderCategoryName
+        self.fields['name'].widget.attrs['title'] = config.placeholderCategoryName
+        self.fields['tag'].widget.attrs['placeholder'] = config.placeholderCategoryTag
+        self.fields['tag'].widget.attrs['title'] = config.placeholderCategoryTag
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -197,12 +203,15 @@ class PostForm(forms.ModelForm):
                 attrs={
                     'class': 'form-control',
                     'rows': 12,
-                    'placeholder': config.placeholderPostContent,
-                    'data-bs-tooltip': '',
-                    'title': config.placeholderPostContent
+                    'data-bs-tooltip': ''
                 }
             )
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['content'].widget.attrs['placeholder'] = config.placeholderPostContent
+        self.fields['content'].widget.attrs['title'] = config.placeholderPostContent
 
 class SkipperForm(forms.ModelForm):
     class Meta:
@@ -228,44 +237,47 @@ class SkipperForm(forms.ModelForm):
             'name': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderSkipperName,
-                    'data-bs-tooltip': '',
-                    'title': config.placeholderSkipperName
+                    'data-bs-tooltip': ''
                 }
             ),
             'active': forms.CheckboxInput(
                 attrs = {
                     'class': 'form-check-input m-0',
-                    'placeholder': config.placeholderSkipperActive,
-                    'data-bs-tooltip': '',
-                    'title': config.placeholderSkipperActive
+                    'data-bs-tooltip': ''
                 }
             ),
             'fname': forms.TextInput(
                 attrs={
                     'class': 'form-control',
-                    'placeholder': config.placeholderSkipperFName,
-                    'data-bs-tooltip': '',
-                    'title': config.placeholderSkipperFName
+                    'data-bs-tooltip': ''
                 }
             ),
             'lname': forms.TextInput(
                 attrs={
                     'class': 'form-control',
-                    'placeholder': config.placeholderSkipperLName,
-                    'data-bs-tooltip': '',
-                    'title': config.placeholderSkipperLName
+                    'data-bs-tooltip': ''
                 }
             ),
             'email': forms.EmailInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.placeholderSkipperEmail,
-                    'data-bs-tooltip': '',
-                    'title': config.placeholderSkipperEmail
+                    'data-bs-tooltip': ''
                 }
             )
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs['placeholder'] = config.placeholderSkipperName
+        self.fields['name'].widget.attrs['title'] = config.placeholderSkipperName
+        self.fields['active'].widget.attrs['placeholder'] = config.placeholderSkipperActive
+        self.fields['active'].widget.attrs['title'] = config.placeholderSkipperActive
+        self.fields['fname'].widget.attrs['placeholder'] = config.placeholderSkipperFName
+        self.fields['fname'].widget.attrs['title'] = config.placeholderSkipperFName
+        self.fields['lname'].widget.attrs['placeholder'] = config.placeholderSkipperLName
+        self.fields['lname'].widget.attrs['title'] = config.placeholderSkipperLName
+        self.fields['email'].widget.attrs['placeholder'] = config.placeholderSkipperEmail
+        self.fields['email'].widget.attrs['title'] = config.placeholderSkipperEmail
 
 class TrainingForm(forms.ModelForm):
     class Meta:
@@ -294,16 +306,13 @@ class TrainingForm(forms.ModelForm):
         widgets = {
             'active': forms.CheckboxInput(
                 attrs = {
-                    'class': 'form-check-input',
-                    'placeholder': config.placeholderTrainingActive
+                    'class': 'form-check-input'
                 }
             ),
             'date': forms.DateInput(
                 attrs = {
                     'class': 'form-control text-end px-1',
-                    'placeholder': config.placeholderTrainingDateTime,
                     'data-bs-tooltip': '',
-                    'title': config.placeholderTrainingDateTime,
                     'type': 'date',
                     'icon': 'calendar-event'
                 }
@@ -312,9 +321,7 @@ class TrainingForm(forms.ModelForm):
                 format=('%H:%M'),
                 attrs = {
                     'class': 'form-control text-end rounded-end px-1',
-                    'placeholder': config.placeholderTrainingDateTime,
                     'data-bs-tooltip': '',
-                    'title': config.placeholderTrainingDateTime,
                     'type': 'time',
                     'list': 'training_time_select',
                     'icon': 'clock'
@@ -324,9 +331,7 @@ class TrainingForm(forms.ModelForm):
                 format=('%H:%M'),
                 attrs={
                     'class': 'form-control',
-                    'placeholder': config.intervalTrainingLengthLabel,
                     'data-bs-tooltip': '',
-                    'title': config.intervalTrainingLengthLabel,
                     'icon': 'clock-history',
                     'class': 'form-control text-end px-1',
                     'type': 'time'
@@ -335,14 +340,12 @@ class TrainingForm(forms.ModelForm):
             'skipper_id': forms.NumberInput(
                 attrs = {
                     'class': 'form-control',
-                    'placeholder': config.skipper,
                     'icon': 'person'
                 }
             ),
             'team_id': forms.NumberInput(
                 attrs={
                     'class': 'form-control',
-                    'placeholder': config.placeholderTeamName,
                     'icon': 'tag'
                 }
             ),
@@ -350,10 +353,22 @@ class TrainingForm(forms.ModelForm):
                 attrs={
                     'class': 'form-control',
                     'rows': 8,
-                    'placeholder': config.placeholderTrainingNotes,
                     'data-bs-tooltip': '',
-                    'title': config.placeholderTrainingNotes,
                     'icon': 'house'
                 }
             )
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['active'].widget.attrs['placeholder'] = config.placeholderTrainingActive
+        self.fields['date'].widget.attrs['placeholder'] = config.placeholderTrainingDateTime
+        self.fields['date'].widget.attrs['title'] = config.placeholderTrainingDateTime
+        self.fields['time'].widget.attrs['placeholder'] = config.placeholderTrainingDateTime
+        self.fields['time'].widget.attrs['title'] = config.placeholderTrainingDateTime
+        self.fields['duration'].widget.attrs['placeholder'] = config.intervalTrainingLengthLabel
+        self.fields['duration'].widget.attrs['title'] = config.intervalTrainingLengthLabel
+        self.fields['skipper_id'].widget.attrs['placeholder'] = config.skipper
+        self.fields['team_id'].widget.attrs['placeholder'] = config.placeholderTeamName
+        self.fields['notes'].widget.attrs['placeholder'] = config.placeholderTrainingNotes
+        self.fields['notes'].widget.attrs['title'] = config.placeholderTrainingNotes
