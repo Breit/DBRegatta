@@ -9,6 +9,7 @@ from glob import glob
 from itertools import chain
 from collections import Counter
 from datetime import datetime, date, time, timedelta
+from typing import Union
 
 from constance import config
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
@@ -159,6 +160,69 @@ def getTrainingsList(active=True, upcomingOnly=False, pastOnly=False):
             entry['skipper']['fname'] = None
             entry['skipper']['lname'] = None
             entry['skipper']['email'] = None
+
+        content.append(entry)
+
+    return content
+
+# Get a list of teams which have trainings scheduled
+# This is used in the calendar view for teams selection for instance
+#
+# active: 'True' -> only return active teams
+def getTeamsWithTrainings(active=True):
+    content = []
+    trainings = Training.objects.filter(active=active).order_by().values('team_id').distinct()
+
+    for training in trainings:
+        entry = {}
+
+        try:
+            team = Team.objects.get(id=training['team_id'])
+        except ObjectDoesNotExist:
+            # There is a training for a team that does not exist
+            # Do a little housekeeping and remove training
+            training.delete()
+            continue
+        except:
+            # Unknown error, just continue
+            continue
+        entry['id'] = team.id
+        entry['name'] = team.name
+        entry['company'] = team.company
+        entry['contact'] = team.contact
+        entry['email'] = team.email
+        entry['phone'] = team.phone
+
+        content.append(entry)
+
+    return content
+
+# Get a list of skippers which have trainings scheduled
+# This is used in the calendar view for skippers selection for instance
+#
+# active: 'True' -> only return active skippers
+def getSkippersWithTrainings(active=True):
+    content = []
+    trainings = Training.objects.filter(active=active).order_by().values('skipper_id').distinct()
+
+    for training in trainings:
+        entry = {}
+
+        try:
+            skipper = Skipper.objects.get(id=training['skipper_id'])
+        except ObjectDoesNotExist:
+            # There is a training for a skipper that does not exist
+            # Do a little housekeeping and remove training
+            training.delete()
+            continue
+        except:
+            # Unknown error, just continue
+            continue
+        entry['id'] = skipper.id
+        entry['name'] = skipper.name
+        entry['fname'] = skipper.fname
+        entry['jname'] = skipper.lname
+        entry['email'] = skipper.email
 
         content.append(entry)
 
@@ -590,7 +654,19 @@ def getBillingContent():
 
     return content
 
-def getCalendarData(authenticated: bool = False):
+# Get actual calendar data as a dictionary
+# If a filter is set on teams or skippers, visually distinguish filtered events
+#
+# authenticated:   'True' -> all filters are active
+#                  'False' -> depending on settings, only a subset of the filters are available
+# selectedTeam:    'None' -> no team filter is set
+#                  Dictionary with at least 'id' as key -> filter for this team
+# selectedSkipper: 'None' -> no skipper filter is set
+#                  Dictionary with at least 'id' as key -> filter for this skipper
+def getCalendarData(
+        authenticated: bool = False,
+        selectedTeam: Union[Team, None] = None,
+        selectedSkipper: Union[Team, None] = None):
     content = []
 
     noEvents = {
@@ -628,9 +704,13 @@ def getCalendarData(authenticated: bool = False):
     }
     content.append(raceday)
 
-    trainingEvents = {
+    highlightedTrainingEvents = {
         'events': [],
         'className' : 'bg-primary text-light'
+    }
+    ordinaryTrainingEvents = {
+        'events': [],
+        'className' : 'bg-primary-100 text-primary'
     }
     trainings = Training.objects.all()
     for training in trainings:
@@ -668,8 +748,19 @@ def getCalendarData(authenticated: bool = False):
                     config.timeSuffix
             }
         }
-        trainingEvents['events'].append(event)
-    content.append(trainingEvents)
+        if selectedTeam is None and selectedSkipper is None:
+            highlightedTrainingEvents['events'].append(event)
+        else:
+            if selectedTeam is not None and selectedSkipper is None and training.team_id == selectedTeam.id:
+                highlightedTrainingEvents['events'].append(event)
+            elif selectedTeam is None and selectedSkipper is not None and training.skipper_id == selectedSkipper.id:
+                highlightedTrainingEvents['events'].append(event)
+            elif selectedTeam is not None and selectedSkipper is not None and training.team_id == selectedTeam.id and training.skipper_id == selectedSkipper.id:
+                highlightedTrainingEvents['events'].append(event)
+            else:
+                ordinaryTrainingEvents['events'].append(event)
+    content.append(highlightedTrainingEvents)
+    content.append(ordinaryTrainingEvents)
 
     return content
 
@@ -1160,17 +1251,29 @@ def getCurrentTimeTable():
                         # current heat already complete
                         continue
 
-                    timetable.append(
-                        {
-                            'time': races[0]['time'] if len(races) > 0 else combineTimeOffset(
-                                config.timeBegin,
-                                config.offsetHeat
-                            ),
-                            'desc': '{} {}{}'.format(config.heatsTitle, i + 1, '' if category.id is None else ': {}'.format(category.name)),
-                            'races': races,
-                            'type': 'heat'
-                        }
-                    )
+                    # paginate heats if there are too many
+                    racesPerPage = len(races)
+                    pages = 1
+                    while (racesPerPage > config.maxRacesPerPage):
+                        racesPerPage = int(math.ceil(float(racesPerPage / 2.0)))
+                        pages += 1
+                    for j in range(pages):
+                        timetable.append(
+                            {
+                                'time': races[0]['time'] if len(races) > 0 else combineTimeOffset(
+                                    config.timeBegin,
+                                    config.offsetHeat
+                                ),
+                                'desc': '{} {}{}{}'.format(
+                                    config.heatsTitle,
+                                    i + 1,
+                                    '' if category.id is None else ': {}'.format(category.name),
+                                    ' - {} {}'.format(config.racesPerPageDesc, j + 1) if pages > 1 else ''
+                                ),
+                                'races': races[(j * racesPerPage):min((j + 1) * racesPerPage, len(races))],
+                                'type': 'heat'
+                            }
+                        )
 
     # get final if heats are finished
     for category in categories:
@@ -1273,6 +1376,50 @@ def getHeatRankings(category: Category):
     rankingTable['brackets'] = sorted(rankingTable['brackets'], reverse=True)
 
     return rankingTable
+
+# paginate the ranking table for display over multiple pages (if too long)
+# mainly used for the race monitor display page
+def paginateRankingTable(rankingTable):
+    paginated = []
+
+    n = len(rankingTable['ranks'])
+    if n == 0:
+        return paginated
+
+    # calculate number of pages needed
+    maxRanksPerPage = config.maxRanksPerPage
+    pages = (n + maxRanksPerPage - 1) // maxRanksPerPage
+    base_size = n // pages
+    remainder = n % pages
+
+    start = 0
+    for i in range(pages):
+        # distribute the remainder: first 'remainder' pages get one extra item
+        size = base_size + (1 if i < remainder else 0)
+
+        # get only ranks for this page
+        ranks = rankingTable['ranks'][start : start + size]
+
+        # recalculate brackets for this page
+        brackets = sorted(set(r['races'] for r in ranks), reverse=True)
+
+        # create a new table entry for this page
+        table = {
+            'desc': '{}{}'.format(
+                rankingTable['desc'],
+                ' - {} {}'.format(config.racesPerPageDesc, i + 1) if pages > 1 else ''
+            ),
+            'type': rankingTable.get('type', ''),
+            'heats': rankingTable.get('heats', []),
+            'ranks': ranks,
+            'brackets': brackets,
+            'fold': rankingTable.get('fold', False),
+        }
+
+        paginated.append(table)
+        start += size
+
+    return paginated
 
 # get race names for notifications
 #   last    - the last race that has been finished
@@ -1676,8 +1823,9 @@ def getRaceTimes(raceType: str, category: Category, heatNum: int = 0):
                 last_race = race.name == races_sorted[-1].name
                 for lane in entry['lanes']:
                     if not last_race and config.raceToTopFinal and lane['place'] == 1:
-                        continue
-                    lane['rank'] = rank_finale - (lanesInRace - lane['place'])
+                        lane['rank'] = "&#10149;"
+                    else:
+                        lane['rank'] = rank_finale - (lanesInRace - lane['place'])
                 rank_finale -= lanesInRace if last_race or not config.raceToTopFinal else lanesInRace - 1
 
         if all(item['finished'] for item in entry['lanes']):
@@ -2183,18 +2331,18 @@ def getMainSettings():
                     'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
-                    'id': 'displayDataRefresh',
-                    'name': config.displayDataRefreshDesc,
-                    'type': 'number',
-                    'value': int(config.displayDataRefresh / 1e3),
-                    'icon': 'clock-history',
-                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
-                },
-                {
                     'id': 'maxRacesPerPage',
                     'name': config.maxRacesPerPageDesc,
                     'type': 'number',
                     'value': config.maxRacesPerPage,
+                    'icon': 'file-ruled',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
+                },
+                {
+                    'id': 'maxRanksPerPage',
+                    'name': config.maxRanksPerPageDesc,
+                    'type': 'number',
+                    'value': config.maxRanksPerPage,
                     'icon': 'file-ruled',
                     'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },

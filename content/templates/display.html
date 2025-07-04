@@ -7,7 +7,9 @@
 {% endblock %}
 
 {% block additionalPreJS %}
-    <script type="text/javascript">var displayDataRefresh = "{{ config.displayDataRefresh }}";</script>
+    <script type="text/javascript">
+        var displayDataRefresh = {{ display|length|default:1 }} * {{ config.displayInterval }};
+    </script>
 {% endblock %}
 
 {% block additionalJS %}

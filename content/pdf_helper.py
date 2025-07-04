@@ -116,7 +116,7 @@ class PageNumCanvas(canvas.Canvas):
 def markdownStory(mdown):
     def match_heading(line, story, style):
         for i in range(0, 6):
-            m = re.search(r'^\#{' + str(i + 1) + '}\s(.*)', line)
+            m = re.search(rf'^#{{{i + 1}}}\s(.*)', line)
             if m is not None and len(m.groups()):
                 story.append(Paragraph(m.group(1), style['Heading' + str(i + 1)]))
                 return True
@@ -131,7 +131,7 @@ def markdownStory(mdown):
             u'\u2605',      # star
         ]
         for i in range(len(bullets)):
-            m = re.search(r'^\s{' + str(max(0, 4 * (i - 1) - 1)) + ',' + str(4 * (i + 1) - 1) + '}\*\s(.*)', line)
+            m = re.search(rf'^\s{{{max(0, 4 * (i - 1) - 1)},{4 * (i + 1) - 1}}}\*\s(.*)', line)
             if m is not None and len(m.groups()):
                 story.append(Paragraph(m.group(1), style['Bullet' + (str(i + 1) if i > 0 else '')], bulletText=bullets[i]))
                 return True

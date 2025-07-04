@@ -54,6 +54,11 @@ body {
     max-width: 8rem;
 }
 
+.times_double_column {
+    min-width: 16rem;
+    max-width: 16rem;
+}
+
 .rank_column {
     min-width: 5rem;
     max-width: 5rem;

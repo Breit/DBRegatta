@@ -325,8 +325,41 @@ def calendar(request):
         return redirect('/calendar')
 
     siteData = getSiteData('calendar', request.user)
+    siteData['teams'] = getTeamsWithTrainings(active=True)
+    siteData['selectedTeam'] = None
+    siteData['skippers'] = getSkippersWithTrainings(active=True)
+    siteData['selectedSkipper'] = None
+
+    # handle POST requests
+    selectedTeam = None
+    selectedSkipper = None
+    if request.method == 'POST':
+        if 'selectedTeamId' in request.POST:
+            try:
+                selectedTeam = Team.objects.get(id=request.POST['selectedTeamId'])
+            except ObjectDoesNotExist:
+                pass
+            except:
+                pass
+            siteData['selectedTeam'] = {
+                'id': selectedTeam.id,
+                'name': selectedTeam.name
+            } if selectedTeam else None
+        if 'selectedSkipperId' in request.POST:
+            try:
+                selectedSkipper = Skipper.objects.get(id=request.POST['selectedSkipperId'])
+            except ObjectDoesNotExist:
+                pass
+            except:
+                pass
+            siteData['selectedSkipper'] = {
+                'id': selectedSkipper.id,
+                'name': selectedSkipper.name
+            } if selectedSkipper else None
+
+    # construct site data
     siteData['content'] = {
-        'events': getCalendarData(request.user.is_authenticated),
+        'events': getCalendarData(request.user.is_authenticated, selectedTeam, selectedSkipper),
         'meta': {
             'buttonText': {
                 'year': config.calendarButtonYear,
@@ -583,9 +616,11 @@ def display(request):
 
     for category in categories:
         if raceBlockStarted('{}{}'.format(config.heatPrefix, category.tag)) and not raceBlockFinished('{}{}'.format(config.finalPrefix, category.tag)):
-            siteData['display'].append(getHeatRankings(category))       # show heats rankings only if finale is not finished
+            # show heats rankings only if finale is not finished
+            siteData['display'].extend(paginateRankingTable(getHeatRankings(category)))
         elif raceBlockFinished('{}{}'.format(config.finalPrefix, category.tag)):
-            siteData['display'].append(getFinalRankings(category))      # show finale rankings if finale has finished
+            # show finale rankings if finale has finished
+            siteData['display'].extend(paginateRankingTable(getFinalRankings(category)))
 
     return render(request, 'display.html', siteData)
 
@@ -616,10 +651,10 @@ def settings(request):
             config.registrationDate = date.fromisoformat(request.POST['registrationDate'])
         elif 'durationMonitorSlide' in request.POST:
             config.displayInterval = int(float(request.POST['durationMonitorSlide']) * 1e3)
-        elif 'displayDataRefresh' in request.POST:
-            config.displayDataRefresh = int(float(request.POST['displayDataRefresh']) * 1e3)
         elif 'maxRacesPerPage' in request.POST:
             config.maxRacesPerPage = int(request.POST['maxRacesPerPage'])
+        elif 'maxRanksPerPage' in request.POST:
+            config.maxRanksPerPage = int(request.POST['maxRanksPerPage'])
         elif 'activateResults' in request.POST:
             config.activateResults = request.POST['activateResults'] == 'on'
         elif 'anonymousMonitor' in request.POST:

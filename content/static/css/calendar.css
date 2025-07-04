@@ -1,3 +1,8 @@
+:root {
+    --fc-event-bg-color: var(--bs-primary-100);
+    --fc-event-border-color: var(--bs-primary-300);
+}
+
 #calendar_page {
     /* height: calc(100%); */
     height: calc(100% - 5.25rem);
@@ -14,4 +19,16 @@
 .raceday > .fc-event-title {
     font-style: normal !important;
     font-weight: bold;
+}
+
+.fc .fc-popover {
+    z-index: 500 !important;
+}
+
+#filter-selector .dropdown-toggle-split::after {
+    margin-left: 0.255em !important;
+}
+
+.text-primary .fc-event-main {
+    color: var(--bs-primary);
 }
