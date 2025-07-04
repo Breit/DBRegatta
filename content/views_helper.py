@@ -1251,17 +1251,29 @@ def getCurrentTimeTable():
                         # current heat already complete
                         continue
 
-                    timetable.append(
-                        {
-                            'time': races[0]['time'] if len(races) > 0 else combineTimeOffset(
-                                config.timeBegin,
-                                config.offsetHeat
-                            ),
-                            'desc': '{} {}{}'.format(config.heatsTitle, i + 1, '' if category.id is None else ': {}'.format(category.name)),
-                            'races': races,
-                            'type': 'heat'
-                        }
-                    )
+                    # paginate heats if there are too many
+                    racesPerPage = len(races)
+                    pages = 1
+                    while (racesPerPage > config.maxRacesPerPage):
+                        racesPerPage = int(math.ceil(float(racesPerPage / 2.0)))
+                        pages += 1
+                    for j in range(pages):
+                        timetable.append(
+                            {
+                                'time': races[0]['time'] if len(races) > 0 else combineTimeOffset(
+                                    config.timeBegin,
+                                    config.offsetHeat
+                                ),
+                                'desc': '{} {}{}{}'.format(
+                                    config.heatsTitle,
+                                    i + 1,
+                                    '' if category.id is None else ': {}'.format(category.name),
+                                    ' - {} {}'.format(config.racesPerPageDesc, j + 1) if pages > 1 else ''
+                                ),
+                                'races': races[(j * racesPerPage):min((j + 1) * racesPerPage, len(races))],
+                                'type': 'heat'
+                            }
+                        )
 
     # get final if heats are finished
     for category in categories:
