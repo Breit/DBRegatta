@@ -1377,6 +1377,50 @@ def getHeatRankings(category: Category):
 
     return rankingTable
 
+# paginate the ranking table for display over multiple pages (if too long)
+# mainly used for the race monitor display page
+def paginateRankingTable(rankingTable):
+    paginated = []
+
+    n = len(rankingTable['ranks'])
+    if n == 0:
+        return paginated
+
+    # calculate number of pages needed
+    maxRanksPerPage = config.maxRanksPerPage
+    pages = (n + maxRanksPerPage - 1) // maxRanksPerPage
+    base_size = n // pages
+    remainder = n % pages
+
+    start = 0
+    for i in range(pages):
+        # distribute the remainder: first 'remainder' pages get one extra item
+        size = base_size + (1 if i < remainder else 0)
+
+        # get only ranks for this page
+        ranks = rankingTable['ranks'][start : start + size]
+
+        # recalculate brackets for this page
+        brackets = sorted(set(r['races'] for r in ranks), reverse=True)
+
+        # create a new table entry for this page
+        table = {
+            'desc': '{}{}'.format(
+                rankingTable['desc'],
+                ' - {} {}'.format(config.racesPerPageDesc, i + 1) if pages > 1 else ''
+            ),
+            'type': rankingTable.get('type', ''),
+            'heats': rankingTable.get('heats', []),
+            'ranks': ranks,
+            'brackets': brackets,
+            'fold': rankingTable.get('fold', False),
+        }
+
+        paginated.append(table)
+        start += size
+
+    return paginated
+
 # get race names for notifications
 #   last    - the last race that has been finished
 #   next    - the first occurence of a race that has not been started
@@ -2287,18 +2331,18 @@ def getMainSettings():
                     'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
                 {
-                    'id': 'displayDataRefresh',
-                    'name': config.displayDataRefreshDesc,
-                    'type': 'number',
-                    'value': int(config.displayDataRefresh / 1e3),
-                    'icon': 'clock-history',
-                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
-                },
-                {
                     'id': 'maxRacesPerPage',
                     'name': config.maxRacesPerPageDesc,
                     'type': 'number',
                     'value': config.maxRacesPerPage,
+                    'icon': 'file-ruled',
+                    'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
+                },
+                {
+                    'id': 'maxRanksPerPage',
+                    'name': config.maxRanksPerPageDesc,
+                    'type': 'number',
+                    'value': config.maxRanksPerPage,
                     'icon': 'file-ruled',
                     'classes': 'col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2'
                 },
