@@ -12,7 +12,7 @@ def main(request):
     loginUser(request)
 
     if not request.user.is_authenticated:
-        if raceBlockFinished(config.finalPrefix):
+        if raceBlockFinished(config.finalPrefix) and config.activateResults:
             return redirect('/results')
         else:
             return redirect('/timetable')
