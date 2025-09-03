@@ -488,7 +488,6 @@ def timetable(request):
             siteData['post_disabled'] = not post.enable
         elif post.enable:
             siteData['post'] = post.content
-
     except:
         pass
 

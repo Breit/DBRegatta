@@ -48,6 +48,40 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="addRaceModal" tabindex="-1" data-bs-backdrop="static">
+                <div class="modal-dialog text-dark">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-light">
+                            <h5 class="modal-title" id="addRaceLabel">{{ config.addRaceText }}</h5>
+                            <button type="button" class="btn-close text-light" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body d-flex flex-nowrap text-start align-items-center">
+                            <img src="{% static 'images/' %}{{ config.questionIcon }}">
+                            <div class="container">TODO: Add form with race for leftover teams</div>
+                        </div>
+                        <div class="modal-footer flex-row-reverse justify-content-start bg-gray-200">
+                            <button type="button" name="addRaceSubmit" id="addRaceSubmit" value="Add" class="btn btn-primary btn_icon shadow" onclick="trigger('addRace')">
+                                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                    <div class="pe-2">
+                                        <img src="{% static 'images/' %}{{ config.addRaceIcon }}" alt="addRace">
+                                    </div>
+                                    <p class="m-0 ps-2 lead">{{ config.addRaceText }}</p>
+                                </div>
+                            </button>
+                            <button type="button" name="addRaceCancel" id="addRaceCancel" class="btn btn-secondary btn_icon shadow" data-bs-dismiss="modal">
+                                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                                    <div>
+                                        <img src="{% static 'images/' %}{{ config.cancelTeamIcon }}" alt="cancelAddRace">
+                                    </div>
+                                    <p class="m-0 ps-2 lead">{{ config.submitAbort }}</p>
+                                </div>
+                            </button>
+                            <div class="spinner-border text-primary d-none me-auto" role="status" id="wait_addRace"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal fade" id="editPostModal" tabindex="-1" data-bs-backdrop="static">
                 <div class="modal-dialog modal-xl text-dark">
                     <div class="modal-content">
@@ -236,7 +270,15 @@
     </div>
     <div class="container-fluid mb-3 pt-3 float-start">
         {% if user.is_staff %}
-            <button type="button" id="createTimetableButton" class="btn btn-warning btn_icon shadow" data-bs-toggle="modal" data-bs-target="#createTimetableModal">
+            <button type="button" id="addTimetableButton" class="btn btn-primary btn_icon btn_lg shadow me-3" data-bs-toggle="modal" data-bs-target="#addRaceModal">
+                <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
+                    <div>
+                        <img src="{% static 'images/' %}{{ config.addRaceIcon }}" alt="addRace">
+                    </div>
+                    <p class="m-0 ps-2 lead">{{ config.addRaceText }}</p>
+                </div>
+            </button>
+            <button type="button" id="createTimetableButton" class="btn btn-warning btn_icon btn_lg shadow" data-bs-toggle="modal" data-bs-target="#createTimetableModal">
                 <div class="container-fluid d-flex flex-row align-items-center justify-content-md-start mw-100 p-0">
                     <div>
                         <img src="{% static 'images/' %}{{ config.createTimetableIcon }}" alt="createTimetable">

@@ -3,6 +3,6 @@
 __pycache__
 Backup
 *.zip
-DBRegatta.sqlite3
+DBRegatta.sqlite3*
 /content/static/data/impressum.json
 Thumbs.db
