@@ -420,4 +420,9 @@ $(document).ready(function()
     {
         window.open(window.location.href + '/pdf');
     });
+
+    $('#teams_csv').click(function()
+    {
+        window.open(window.location.href + '/csv');
+    });
 });
