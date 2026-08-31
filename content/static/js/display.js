@@ -26,11 +26,18 @@ function armFallbackRefreshIfNeeded()
     var slideCount = document.querySelectorAll("#resultsCarousel .carousel-item").length;
     if (slideCount <= 1)
     {
-        fallbackRefreshTimer = window.setTimeout(refreshResultsCarousel, displayInterval);
+        fallbackRefreshTimer = window.setTimeout(
+            function()
+            {
+                refreshResultsCarousel(0);
+            },
+            displayInterval
+        );
     }
 }
 
-function refreshResultsCarousel()
+// targetIndex is where the carousel just landed with the (still stale) current content
+function refreshResultsCarousel(targetIndex)
 {
     // skip instead of stacking a new request if the previous one is still pending
     if (carouselRefreshInFlight)
@@ -39,6 +46,9 @@ function refreshResultsCarousel()
         return;
     }
     carouselRefreshInFlight = true;
+
+    var oldCarousel = document.getElementById("resultsCarousel");
+    var oldSlideCount = oldCarousel.querySelectorAll(".carousel-item").length;
 
     $.ajax(
         {
@@ -53,9 +63,27 @@ function refreshResultsCarousel()
             var scratch = document.createElement("div");
             scratch.innerHTML = html;
             var newCarousel = scratch.querySelector("#resultsCarousel");
-            var oldCarousel = document.getElementById("resultsCarousel");
             if (newCarousel && oldCarousel)
             {
+                var newItems = newCarousel.querySelectorAll(".carousel-item");
+                var newIndicators = newCarousel.querySelectorAll(".carousel-indicators button");
+                // keep advancing normally unless the page count changed, then restart the loop
+                var activeIndex = (newItems.length === oldSlideCount) ? targetIndex : 0;
+                activeIndex = Math.min(Math.max(activeIndex, 0), Math.max(newItems.length - 1, 0));
+
+                newItems.forEach(
+                    function(item, idx)
+                    {
+                        item.classList.toggle("active", idx === activeIndex);
+                    }
+                );
+                newIndicators.forEach(
+                    function(button, idx)
+                    {
+                        button.classList.toggle("active", idx === activeIndex);
+                    }
+                );
+
                 // Bootstrap's Carousel instance caches references to the slide/indicator
                 // nodes it was initialized with; swapping in fresh nodes without disposing
                 // and recreating it leaves it cycling over detached elements, freezing the display
@@ -93,16 +121,13 @@ $(document).ready(
             1000
         );
 
-        // refresh data right when the carousel completes a lap and lands back on the first slide
+        // refresh data on every page switch, continuing at the same position unless the page count changed
         $("#resultsCarousel").on(
             "slid.bs.carousel",
             function(event)
             {
-                if (event.to === 0)
-                {
-                    clearFallbackRefreshTimer();
-                    refreshResultsCarousel();
-                }
+                clearFallbackRefreshTimer();
+                refreshResultsCarousel(event.to);
             }
         );
         armFallbackRefreshIfNeeded();
