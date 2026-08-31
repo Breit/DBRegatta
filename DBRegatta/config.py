@@ -57,6 +57,7 @@ CONSTANCE_CONFIG = {
     'domain':                       ('',                                            'Domain Name of the Site'),
     'timeSuffix':                   ('Uhr',                                         'Suffix for Time of Day Strings'),
     'pdfIcon':                      ('pdf.svg',                                     'Icon for the PDF Button'),
+    'csvIcon':                      ('csv.svg',                                     'Icon for the CSV Export Button'),
     'active':                       ('aktiv',                                       'Text for active toggle state'),
     'inactive':                     ('nicht aktiv',                                 'Text for inactive toggle state'),
 
@@ -463,6 +464,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
             'domain',
             'timeSuffix',
             'pdfIcon',
+            'csvIcon',
             'currency',
             'sumFees',
             'active',
