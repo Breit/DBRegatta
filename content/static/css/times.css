@@ -33,7 +33,11 @@
     border-left: 0.5rem solid var(--bs-warning-200) !important;
 }
 
-.current_race {
+.has_pending_times {
+    border-left: 0.5rem solid var(--bs-danger-200) !important;
+}
+
+.editing_race {
     border-left: 0.5rem solid var(--bs-primary-200) !important;
     outline: 1px solid var(--bs-primary) !important;
     position: relative;
@@ -44,6 +48,10 @@
 }
 
 .race_edit .btn-secondary {
+    width: auto;
+}
+
+.race_edit .btn-danger {
     width: auto;
 }
 
@@ -90,6 +98,10 @@ input[type=number] {
     max-width: 8rem !important;
 }
 
-.timetable_race .race_display .timetable_lane .col_time {
+.timetable_race .race_display {
     cursor: pointer;
+}
+
+.pending_time {
+    color: var(--bs-orange);
 }
