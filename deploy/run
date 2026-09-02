@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-PORT=1080
-USER=www
-VENV=dbregatta
+. "$SCRIPT_DIR/config"
+. "$SCRIPT_DIR/helpers"
 
-# check if server is running and start it if not
-pgrep -f "runserver 127.0.0.1:$PORT" > /dev/null || su -m $USER -c "$SCRIPT_DIR/venv/$VENV/bin/python $SCRIPT_DIR/src/manage.py runserver 127.0.0.1:$PORT &"
+# Server is managed by systemd (Linux) or rc.d (FreeBSD). This script is kept
+# as a convenience shortcut for manual restarts, e.g. from a cron job.
+service_restart

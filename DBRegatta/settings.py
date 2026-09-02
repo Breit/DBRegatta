@@ -21,16 +21,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '-j+lyjr#4%*lta_+&#xwm3dd^-d^%2ja$j6s29&a^&c=+%f9!k'
+# This placeholder is only for local development - deploy/deploy generates and
+# substitutes a real random key for each deployed instance.
+SECRET_KEY = 'CHANGE-ME-this-is-not-a-secret-do-not-use-in-production'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
-CSRF_TRUSTED_ORIGINS = ['https://dbsprint.de']
+CSRF_TRUSTED_ORIGINS = ['https://localhost']
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+# Trust the X-Forwarded-Proto header set by the Apache reverse proxy so
+# request.is_secure() reflects the original HTTPS request, not the plain
+# HTTP connection Apache makes to Gunicorn on localhost.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 
