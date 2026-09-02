@@ -9,3 +9,4 @@ TODO: DBRegatta
 - add individual fees for teams
 - simplify/refactor form handling code; remove doubled functions and unify
 - proper DB backup/restore feature
+- fix static files folder structure so that collectstatic works correctly

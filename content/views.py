@@ -796,7 +796,7 @@ def djadmin(request):
         return redirect('/djadmin')
 
     siteData = getSiteData('djadmin', request.user)
-    siteData['url'] = "/admin"
+    siteData['url'] = "/admin/"
     response = render(request, 'djadmin.html', siteData)
     response['Content-Security-Policy'] = "frame-ancestors 'self' http://127.0.0.1:1080"
     return response
