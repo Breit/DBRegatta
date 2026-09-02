@@ -82,10 +82,13 @@ function button_save_race(race_name, lanes)
         let team = $('#team_' + i.toString()).val();
         if (team)
         {
+            let skipper = $('#skipper_' + i.toString()).val();
+            console.log('lane ' + i.toString() + ': team ' + team + ', skipper ' + skipper);
             assignments.push(
                 {
                     lane: i,
-                    team: +team
+                    team: +team,
+                    skipper: skipper ? +skipper : null
                 }
             );
         }

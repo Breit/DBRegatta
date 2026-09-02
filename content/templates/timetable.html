@@ -113,17 +113,16 @@
                             </div>
                             <div class="row small border m-0 mt-3 rounded-top">
                                 <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
-                                <div class="col-6">{{ config.timetableHeaderTeam }}</div>
-                                <div class="col-5">{{ config.timetableHeaderCompany }}</div>
+                                <div class="col-4">{{ config.timetableHeaderTeam }}</div>
+                                <div class="col-4">{{ config.timetableHeaderCompany }}</div>
+                                <div class="col-3">{{ config.timetableHeaderSkipper }}</div>
                             </div>
                             {% for entry in editRace.data %}
                                 <div class="row timetable_race border-start border-end border-bottom m-0 py-2{% if forloop.last %} rounded-bottom{% endif %}">
                                     <div class="col-1 fw-bold text-center align-self-center" id="lane_{{ entry.lane }}">{{ entry.lane }}</div>
-                                    <div class="col-6 align-self-center">
+                                    <div class="col-4 align-self-center">
                                         <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
-                                            <span class="input-group-text">
-                                                <i class="bi bi-tag"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="bi bi-tag"></i></span>
                                             <select name="team" class="form-select fw-bold text-primary" id="team_{{ entry.lane }}" placeholder="{{ config.timetableHeaderTeam }}" data-bs-tooltip title="{{ config.timetableHeaderTeam }}" onchange="team_changed(this, {{ editRace.options }}, 'company_{{ entry.lane }}');">
                                                 {% for team in editRace.options %}
                                                     <option value="{{ team.id }}"{% if team.id == entry.team.id %} selected{% endif %}>{{ team.name }}</option>
@@ -131,7 +130,18 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-5 align-self-center" id="company_{{ entry.lane }}">{{ entry.team.company }}</div>
+                                    <div class="col-4 align-self-center" id="company_{{ entry.lane }}">{{ entry.team.company }}</div>
+                                    <div class="col-3 align-self-center">
+                                        <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
+                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                            <select name="skipper" class="form-select" id="skipper_{{ entry.lane }}" placeholder="{{ config.timetableHeaderSkipper }}" data-bs-tooltip title="{{ config.timetableHeaderSkipper }}">
+                                                <option value="">-</option>
+                                                {% for skipper in editRace.skipperOptions %}
+                                                    <option value="{{ skipper.id }}"{% if skipper.id == entry.skipper.id %} selected{% endif %}>{{ skipper.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>
@@ -163,7 +173,7 @@
     <div class="container-fluid" id="timetable_content">
         <h2 class="mt-2 mb-3 display-6" id="site_title">{{ config.timetableHeader }}</h2>
         {% if post or user.is_staff %}
-            <div class="container mx-0 px-0 mb-4 position-relative" id="timetable_post">
+            <div class="container-fluid mx-0 px-0 mb-4 position-relative" id="timetable_post">
                 <div class="container m-0 p-0{% if post_disabled %} text-muted{% endif %}">
                     {{ post|markdownify|safe }}
                 </div>
@@ -223,7 +233,7 @@
                                     {% endfor %}
                                 </div>
                                 {% if user.is_staff %}
-                                    <div class="d-flex align-items-center position-absolute edit_race_icon bottom-0 end-0 top-0 ms-auto w-auto" onclick="button_edit_race('{{ race.desc }}')" data-bs-tooltip title="{{ config.placeholderEditRaceDesc }}: {{ race.desc }}">
+                                    <div class="d-flex align-items-center position-absolute edit_race_icon bottom-0 start-0 top-0 ms-auto w-auto" onclick="button_edit_race('{{ race.desc }}')" data-bs-tooltip title="{{ config.placeholderEditRaceDesc }}: {{ race.desc }}">
                                         <img src="{% static 'images/' %}{{ config.editRaceIcon }}" alt="edit_race">
                                     </div>
                                 {% endif %}
