@@ -160,6 +160,12 @@
     max-height: 7rem;
 }
 
+.footer-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
 .footer img {
     height: 5rem;
 }
