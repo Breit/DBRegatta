@@ -1158,6 +1158,12 @@ def getDataForRaceEdit(race_name):
                 'name': '-',
                 'company': '-'
             }
+        ],
+        'skipperOptions': [
+            {
+                'id': skipper.id,
+                'name': skipper.name
+            } for skipper in Skipper.objects.filter(active=True).order_by('name')
         ]
     }
     for lane in range(1, config.lanesPerRace + 1):
@@ -1169,12 +1175,23 @@ def getDataForRaceEdit(race_name):
         except:
             pass
 
+        skipper = None
+        if assignment is not None and assignment.skipper_id is not None:
+            try:
+                skipper = Skipper.objects.get(id=assignment.skipper_id)
+            except Skipper.DoesNotExist:
+                pass
+
         dataset = {
             'lane': lane,
             'team': {
                 'id': team.id if team is not None else '',
                 'name': team.name if team is not None else '-',
                 'company': team.company if team is not None else '-'
+            },
+            'skipper': {
+                'id': skipper.id if skipper is not None else '',
+                'name': skipper.name if skipper is not None else '-'
             }
         }
         race_data['data'].append(dataset)
@@ -1199,6 +1216,7 @@ def saveEditedRaceData(race_name, data):
 
             assignments[0].race_id = race.id
             assignments[0].lane = d['lane']
+            assignments[0].skipper_id = d['skipper'] or None
             assignments[0].save()
 
             # If there is more than 1 assignement for the current team, delete them
@@ -1209,6 +1227,7 @@ def saveEditedRaceData(race_name, data):
             assignment.race_id = race.id
             assignment.team_id = d['team']
             assignment.lane = d['lane']
+            assignment.skipper_id = d['skipper'] or None
             assignment.save()
 
         try:

@@ -1,0 +1,21 @@
+[Unit]
+Description=DBRegatta Django app (Gunicorn) - {{SERVICE_NAME}}
+After=network.target
+
+[Service]
+# Filled in by deploy/deploy from SERVICE_NAME/PORT/USER/GROUP/paths - do not edit the installed copy by hand
+WorkingDirectory={{WORKDIR}}
+User={{USER}}
+Group={{GROUP}}
+ExecStart={{VENV_BIN}}/gunicorn \
+    --bind 127.0.0.1:{{PORT}} \
+    --workers 3 \
+    --access-logfile - \
+    --error-logfile - \
+    DBRegatta.wsgi:application
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+

@@ -569,6 +569,23 @@ def times(request):
 
             return redirect('/times')
 
+        elif 'delete_race_times' in request.POST:
+            attendees = None
+            try:
+                race = Race.objects.get(name=request.POST['delete_race_times'])
+                attendees = RaceAssign.objects.filter(race_id=race.id)
+            except:
+                pass
+            for attendee in attendees:
+                if attendee.time != 0.0:
+                    attendee.time = 0.0
+                    attendee.save()
+
+                # re-evaluate finals now that this race no longer has recorded times
+                populateFinals(attendee)
+
+            return redirect('/times')
+
     return render(request, 'times.html', siteData)
 
 def results(request):
@@ -779,7 +796,7 @@ def djadmin(request):
         return redirect('/djadmin')
 
     siteData = getSiteData('djadmin', request.user)
-    siteData['url'] = "/admin"
+    siteData['url'] = "/admin/"
     response = render(request, 'djadmin.html', siteData)
     response['Content-Security-Policy'] = "frame-ancestors 'self' http://127.0.0.1:1080"
     return response

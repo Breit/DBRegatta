@@ -1,0 +1,63 @@
+# Shared helper functions for deploy/deploy and deploy/run.
+# Meant to be sourced (after deploy/config), not executed directly.
+
+# GNU sed's -i takes no separate argument; BSD/macOS sed requires one (even if empty)
+if sed --version > /dev/null 2>&1; then
+	sed_inplace() { sed -i "$@"; }
+else
+	sed_inplace() { sed -i "" "$@"; }
+fi
+
+# Linux uses systemd; FreeBSD uses rc.d + sysrc instead
+if command -v systemctl > /dev/null 2>&1; then
+	INIT_SYSTEM=systemd
+else
+	INIT_SYSTEM=rcd
+fi
+
+service_stop() {
+	if [ "$INIT_SYSTEM" = systemd ]; then
+		systemctl stop "$SERVICE_NAME.service" 2>/dev/null || true
+	else
+		service "$SERVICE_NAME" stop 2>/dev/null || true
+	fi
+}
+
+service_restart() {
+	if [ "$INIT_SYSTEM" = systemd ]; then
+		systemctl restart "$SERVICE_NAME.service"
+	else
+		service "$SERVICE_NAME" restart
+	fi
+}
+
+# (re)generate and install this instance's service definition from the matching template,
+# so it always reflects the current SERVICE_NAME/PORT/paths, then (re)start it
+service_install_and_start() {
+	if [ "$INIT_SYSTEM" = systemd ]; then
+		sed -e "s#{{WORKDIR}}#$SCRIPT_DIR/$TARGET_DIR#g" \
+		    -e "s#{{VENV_BIN}}#$SCRIPT_DIR/venv/$VENV/bin#g" \
+		    -e "s#{{USER}}#$USER#g" \
+		    -e "s#{{GROUP}}#$GROUP#g" \
+		    -e "s#{{PORT}}#$PORT#g" \
+		    -e "s#{{SERVICE_NAME}}#$SERVICE_NAME#g" \
+		    "$SCRIPT_DIR/$TARGET_DIR/deploy/dbregatta.service" > "/etc/systemd/system/$SERVICE_NAME.service"
+		systemctl daemon-reload
+		systemctl enable --now "$SERVICE_NAME.service"
+	else
+		# rc.subr derives a shell variable name from {{RC_NAME}} (as "${name}_enable"),
+		# so it can't contain '.' or '-' like SERVICE_NAME/the filename may
+		RC_NAME=$(printf '%s' "$SERVICE_NAME" | tr -c 'A-Za-z0-9_' '_')
+		sed -e "s#{{WORKDIR}}#$SCRIPT_DIR/$TARGET_DIR#g" \
+		    -e "s#{{VENV_BIN}}#$SCRIPT_DIR/venv/$VENV/bin#g" \
+		    -e "s#{{USER}}#$USER#g" \
+		    -e "s#{{GROUP}}#$GROUP#g" \
+		    -e "s#{{PORT}}#$PORT#g" \
+		    -e "s#{{SERVICE_NAME}}#$SERVICE_NAME#g" \
+		    -e "s#{{RC_NAME}}#$RC_NAME#g" \
+		    "$SCRIPT_DIR/$TARGET_DIR/deploy/dbregatta.rc" > "/usr/local/etc/rc.d/$SERVICE_NAME"
+		chmod +x "/usr/local/etc/rc.d/$SERVICE_NAME"
+		sysrc "${RC_NAME}_enable=YES" > /dev/null
+		service "$SERVICE_NAME" restart
+	fi
+}

@@ -1,31 +1,32 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-TARGET_DIR=src
-USER=www
-GROUP=www
-PORT=1080
-SITE_URL=127.0.0.1
-VENV=dbregatta
-BRANCH=main
+. "$SCRIPT_DIR/config"
+. "$SCRIPT_DIR/helpers"
 
-# stop server
-pkill -f "runserver 127.0.0.1:$PORT"
+# stop server (ignore failure on first run, before the unit exists)
+service_stop
 
 # if nothing is checked out yet, check the sources out from GitHub
 [ ! -d "$SCRIPT_DIR/$TARGET_DIR" ] && git clone https://github.com/Breit/DBRegatta.git --no-checkout --origin github "$SCRIPT_DIR/$TARGET_DIR"
 
-# update to latest branch: $BRANCH
+# update to latest branch: $BRANCH, discarding any local divergence
 # TODO: check for a specific release tag and pull that
 cd "$SCRIPT_DIR/$TARGET_DIR"
-git fetch
-git pull
-git reset --hard
-git clean --force
+git fetch github
 git checkout $BRANCH
+git reset --hard github/$BRANCH
+git clean --force
 
-# fix ownership
+# create the venv if it doesn't exist yet
+[ ! -d "$SCRIPT_DIR/venv/$VENV" ] && python3 -m venv "$SCRIPT_DIR/venv/$VENV"
+
+# fix ownership so $USER can write into both the checkout and the venv (e.g. for pip installs)
 chown -R $USER:$GROUP "$SCRIPT_DIR/$TARGET_DIR"
+chown -R $USER:$GROUP "$SCRIPT_DIR/venv/$VENV"
+
+# install/update dependencies (e.g. gunicorn) into the venv
+su -m $USER -c "$SCRIPT_DIR/venv/$VENV/bin/pip install -r $SCRIPT_DIR/$TARGET_DIR/requirements.txt"
 
 # migrate DB to latest version
 su -m $USER -c "$SCRIPT_DIR/venv/$VENV/bin/python $SCRIPT_DIR/$TARGET_DIR/manage.py makemigrations"
@@ -34,10 +35,26 @@ su -m $USER -c "$SCRIPT_DIR/venv/$VENV/bin/python $SCRIPT_DIR/$TARGET_DIR/manage
 # generate new secret key
 KEY=$(su -m $USER -c "$SCRIPT_DIR/venv/$VENV/bin/python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'")
 ESCAPED_KEY=$(printf '%s\n' "$KEY" | sed -e 's/[\/&]/\\&/g')
-sed -i "" "s/\(SECRET_KEY = '\).*\('\)/\1$ESCAPED_KEY\2/" $SCRIPT_DIR/$TARGET_DIR/DBRegatta/settings.py
+sed_inplace "s/\(SECRET_KEY = '\).*\('\)/\1$ESCAPED_KEY\2/" $SCRIPT_DIR/$TARGET_DIR/DBRegatta/settings.py
 
 # disable debug mode
-sed -i "" "s/\(DEBUG = \).*/\1False/" $SCRIPT_DIR/$TARGET_DIR/DBRegatta/settings.py
+sed_inplace "s/\(DEBUG = \).*/\1False/" $SCRIPT_DIR/$TARGET_DIR/DBRegatta/settings.py
 
 # add CSRF trusted origin
-sed -i "" "s#\(CSRF_TRUSTED_ORIGINS = \['\).*\('\]\)#\1$SITE_URL\2#" $SCRIPT_DIR/$TARGET_DIR/DBRegatta/settings.py
+IFS=',' read -r -a SITE_URLS <<< "$SITE_URL"
+CSRF_ORIGINS="["
+for SITE_URL_ENTRY in "${SITE_URLS[@]}"; do
+	SITE_URL_ENTRY=$(printf '%s' "$SITE_URL_ENTRY" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+	[ -n "$SITE_URL_ENTRY" ] || continue
+	ESCAPED_SITE_URL_ENTRY=$(printf '%s\n' "$SITE_URL_ENTRY" | sed -e "s/[\\\/&]/\\\\&/g" -e "s/'/\\\\'/g")
+	[ "$CSRF_ORIGINS" = "[" ] || CSRF_ORIGINS+=", "
+	CSRF_ORIGINS+="'$ESCAPED_SITE_URL_ENTRY'"
+done
+CSRF_ORIGINS+="]"
+sed_inplace "s#^CSRF_TRUSTED_ORIGINS = .*#CSRF_TRUSTED_ORIGINS = $CSRF_ORIGINS#" $SCRIPT_DIR/$TARGET_DIR/DBRegatta/settings.py
+
+# collect static files into STATIC_ROOT for Apache to serve directly
+su -m $USER -c "$SCRIPT_DIR/venv/$VENV/bin/python $SCRIPT_DIR/$TARGET_DIR/manage.py collectstatic --noinput"
+
+# start server again
+service_install_and_start

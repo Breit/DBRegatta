@@ -1,0 +1,11 @@
+# Shared instance configuration for deploy/deploy and deploy/run.
+# Meant to be sourced (after SCRIPT_DIR is set), not executed directly.
+
+TARGET_DIR=src
+USER=www
+GROUP=www
+PORT=1080
+SITE_URL="http://127.0.0.1, https://localhost"
+VENV=dbregatta
+BRANCH=main
+SERVICE_NAME=dbregatta
