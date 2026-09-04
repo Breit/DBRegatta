@@ -18,10 +18,10 @@
         <div class="container-fluid flex-nowrap mt-2 mb-3 p-0">
             <div class="row m-0">
                 <div class="col p-0">
-                    <h2 class="d-flex flex-nowrap align-items-center justify-content-lg-start display-6 m-0">{{ config.calendarTitle }}</h2>
+                    <h2 class="d-flex flex-nowrap align-items-center justify-content-start display-6 m-0">{{ config.calendarTitle }}</h2>
                 </div>
                 {% if user.is_staff or config.activateCalendarDetails %}
-                    <div id="filter-selector" class="col p-0 d-flex flex-nowrap align-items-center justify-content-lg-end">
+                    <div id="filter-selector" class="col p-0 d-flex flex-nowrap align-items-center justify-content-end">
                         <div class="btn-group dropdown h-100">
                             {% if user.is_staff %}
                                 <button class="btn {% if selectedSkipper %}btn-primary{% else %}btn-outline-primary{% endif %} d-flex dropdown-toggle align-items-center dropdown-toggle-split" type="button" data-bs-toggle="dropdown" aria-expanded="false">

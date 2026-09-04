@@ -115,7 +115,8 @@
 }
 
 .menu {
-    height: calc(100vh - 4.27rem - 7rem - 0.125rem);
+    height: calc(100vh - 4.27rem - 7rem);
+    height: calc(100dvh - 4.27rem - 7rem);
     border-color: var(--bs-gray-800) !important;
     background-color: var(--bs-gray-950) !important;
 }
@@ -150,7 +151,8 @@
 
 .content_panel {
     position: relative;
-    height: calc(100vh - 4.27rem - 7rem - 0.125rem);
+    height: calc(100vh - 4.27rem - 7rem);
+    height: calc(100dvh - 4.27rem - 7rem);
     overflow: auto;
 }
 
@@ -247,6 +249,46 @@
     cursor: auto;
 }
 
+@media (max-width: 1199.98px) {
+    .modal-full-width-xl-down {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .modal-full-width-lg-down {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+.modal_meta_grid {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    column-gap: 0.5rem;
+    row-gap: 0.25rem;
+}
+
+.col-1-fixed {
+    flex: 0 0 3rem;
+    max-width: 3rem;
+}
+
+.col-4-grow {
+    flex: 4 1 12rem;
+    min-width: 0;
+}
+
+.col-3-grow {
+    flex: 3 1 9rem;
+    min-width: 0;
+}
+
 .modal-footer .btn-primary {
     width: auto;
 }
@@ -294,12 +336,6 @@
 .card-header-collapsed {
     border-radius: var(--bs-card-inner-border-radius) var(--bs-card-inner-border-radius) !important;
     border-bottom: 0;
-}
-
-@media only screen and (max-device-width: 480px) {
-    .overscroll {
-        height: 15rem;
-    }
 }
 
 .tooltip-text-left > .tooltip-inner {
