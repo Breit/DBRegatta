@@ -69,9 +69,36 @@ function registerTooltips() {
     });
 }
 
+function updateFooterCenterVisibility()
+{
+    var footerCenter = document.querySelector('.footer .footer-center');
+    if (!footerCenter)
+    {
+        return;
+    }
+
+    var left = document.querySelector('.footer .footer_left');
+    var right = document.querySelector('.footer .footer_right');
+
+    footerCenter.classList.remove('d-none');
+    var footerCenterRect = footerCenter.getBoundingClientRect();
+    var leftRect = left ? left.getBoundingClientRect() : null;
+    var rightRect = right ? right.getBoundingClientRect() : null;
+
+    var overlapsLeft = leftRect && footerCenterRect.left < leftRect.right;
+    var overlapsRight = rightRect && footerCenterRect.right > rightRect.left;
+
+    if (overlapsLeft || overlapsRight)
+    {
+        footerCenter.classList.add('d-none');
+    }
+}
+
 $(document).ready(function()
 {
     registerTooltips();
+    updateFooterCenterVisibility();
+    $(window).on('resize load', updateFooterCenterVisibility);
 
     $('.card-body.collapse').on('show.bs.collapse', function () {
         $(this).siblings('.card-header').removeClass('card-header-collapsed');

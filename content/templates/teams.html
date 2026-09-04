@@ -14,7 +14,7 @@
 {% block content %}
     {% if user.is_staff %}
         <div class="modal fade" id="formTeamModal" data-bs-backdrop="static" tabindex="-1">
-            <div class="modal-dialog text-dark modal-lg">
+            <div class="modal-dialog text-dark modal-lg modal-full-width-lg-down">
                 <div class="modal-content">
                     <div class="modal-header bg-primary text-light">
                         <h5 class="modal-title d-block" id="formAddTeamLabel">{{ config.addTeamHeader }}</h5>
@@ -61,7 +61,7 @@
         </div>
 
         <div class="modal fade" id="formCategoryModal" data-bs-backdrop="static" tabindex="-1">
-            <div class="modal-dialog text-dark modal-lg">
+            <div class="modal-dialog text-dark modal-lg modal-full-width-lg-down">
                 <div class="modal-content">
                     <div class="modal-header bg-primary text-light">
                         <h5 class="modal-title d-block" id="formAddCategoryLabel">{{ config.addRaceCategory }}</h5>

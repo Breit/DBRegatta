@@ -115,7 +115,7 @@
                 {% block content %}{% endblock %}
             </div>
             <footer class="footer py-3 px-4 navbar fixed-bottom navbar-dark text-bg-dark border-top flex-nowrap overflow-hidden m-{% if display and config.overscan %}{{ config.overscan }}{% else %}0{% endif %} mt-0">
-                <div class="d-flex align-items-start">
+                <div class="footer_left d-flex align-items-start">
                     {% if config.sponsorLogo %}
                         {% if config.sponsorUrl %}
                             <a href="{{ config.sponsorUrl }}">
@@ -135,7 +135,7 @@
                         {% endif %}
                     {% endif %}
                 </div>
-                <div class="footer-center d-flex flex-column align-items-center mt-auto lead">
+                <div class="footer-center d-none d-flex flex-column align-items-center mt-auto lead">
                     {% if display and config.domain %}
                     <div Class="d-flex flex-row">
                         <div class="fs-3">{{ config.liveResultsHint }}</div>
@@ -148,7 +148,7 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="d-flex align-items-end">
+                <div class="footer_right d-flex align-items-end">
                     {% if config.ownerLogo2 %}
                         {% if config.ownerUrl2 %}
                             <a href="{{ config.ownerUrl2 }}">

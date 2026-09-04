@@ -49,7 +49,7 @@
             </div>
 
             <div class="modal fade" id="editPostModal" tabindex="-1" data-bs-backdrop="static">
-                <div class="modal-dialog modal-xl text-dark">
+                <div class="modal-dialog modal-xl modal-full-width-xl-down text-dark">
                     <div class="modal-content">
                         <div class="modal-header bg-primary text-light">
                             <h5 class="modal-title" id="editPostLabel">{{ config.timetablePostDesc }}</h5>
@@ -95,7 +95,7 @@
         {% endif %}
 
         <div class="modal fade" id="editRaceModal" tabindex="-1" data-bs-backdrop="static">
-            <div class="modal-dialog modal-xl text-dark">
+            <div class="modal-dialog modal-lg modal-full-width-lg-down text-dark">
                 <div class="modal-content">
                     <div class="modal-header bg-primary text-light">
                         <h5 class="modal-title" id="editRaceLabel">{{ config.placeholderEditRaceDesc }}</h5>
@@ -103,24 +103,22 @@
                     </div>
                     <div class="modal-body d-flex text-start align-items-center">
                         <div class="col">
-                            <div class="row lead ps-3">
-                                <div class="col-1 text-nowrap fw-bold">{{ config.timetableHeaderName }}: </div>
-                                <div class="col">{{ editRace.race_name }}</div>
-                            </div>
-                            <div class="row lead ps-3">
-                                <div class="col-1 text-nowrap fw-bold">{{ config.timetableHeaderTime }}: </div>
-                                <div class="col">{{ editRace.race_time|time:'H:i' }}</div>
+                            <div class="modal_meta_grid lead ps-3">
+                                <div class="text-nowrap fw-bold">{{ config.timetableHeaderName }}: </div>
+                                <div>{{ editRace.race_name }}</div>
+                                <div class="text-nowrap fw-bold">{{ config.timetableHeaderTime }}: </div>
+                                <div>{{ editRace.race_time|time:'H:i' }}</div>
                             </div>
                             <div class="row small border m-0 mt-3 rounded-top">
-                                <div class="col-1 text-center">{{ config.timetableHeaderLane }}</div>
-                                <div class="col-4">{{ config.timetableHeaderTeam }}</div>
-                                <div class="col-4">{{ config.timetableHeaderCompany }}</div>
-                                <div class="col-3">{{ config.timetableHeaderSkipper }}</div>
+                                <div class="col-1-fixed text-center">{{ config.timetableHeaderLane }}</div>
+                                <div class="col-4-grow">{{ config.timetableHeaderTeam }}</div>
+                                <div class="col-4-grow">{{ config.timetableHeaderCompany }}</div>
+                                <div class="col-3-grow">{{ config.timetableHeaderSkipper }}</div>
                             </div>
                             {% for entry in editRace.data %}
                                 <div class="row timetable_race border-start border-end border-bottom m-0 py-2{% if forloop.last %} rounded-bottom{% endif %}">
-                                    <div class="col-1 fw-bold text-center align-self-center" id="lane_{{ entry.lane }}">{{ entry.lane }}</div>
-                                    <div class="col-4 align-self-center">
+                                    <div class="col-1-fixed fw-bold text-center align-self-center" id="lane_{{ entry.lane }}">{{ entry.lane }}</div>
+                                    <div class="col-4-grow align-self-center">
                                         <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
                                             <span class="input-group-text"><i class="bi bi-tag"></i></span>
                                             <select name="team" class="form-select fw-bold text-primary" id="team_{{ entry.lane }}" placeholder="{{ config.timetableHeaderTeam }}" data-bs-tooltip title="{{ config.timetableHeaderTeam }}" onchange="team_changed(this, {{ editRace.options }}, 'company_{{ entry.lane }}');">
@@ -130,8 +128,8 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-4 align-self-center" id="company_{{ entry.lane }}">{{ entry.team.company }}</div>
-                                    <div class="col-3 align-self-center">
+                                    <div class="col-4-grow align-self-center" id="company_{{ entry.lane }}">{{ entry.team.company }}</div>
+                                    <div class="col-3-grow align-self-center">
                                         <div class="input-group shadow-sm rounded{% if f.errors %} input-error{% endif %}">
                                             <span class="input-group-text"><i class="bi bi-person"></i></span>
                                             <select name="skipper" class="form-select" id="skipper_{{ entry.lane }}" placeholder="{{ config.timetableHeaderSkipper }}" data-bs-tooltip title="{{ config.timetableHeaderSkipper }}">

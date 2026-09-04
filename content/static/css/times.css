@@ -74,8 +74,20 @@ input[type=number] {
     max-width: 15rem !important;
 }
 
+.col_team_edit {
+    min-width: 10rem !important;
+}
+
 .col_skipper_control {
+    min-width: 12rem !important;
     max-width: 15rem !important;
+}
+
+.col_times,
+.col_skipper_control {
+    .input-group {
+        flex-wrap: nowrap;
+    }
 }
 
 .col_times {
