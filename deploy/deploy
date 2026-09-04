@@ -16,7 +16,9 @@ cd "$SCRIPT_DIR/$TARGET_DIR"
 git fetch github
 git checkout $BRANCH
 git reset --hard github/$BRANCH
-git clean --force
+# exclude content/media: holds user-uploaded files (post images, team logos, ...),
+# which are untracked and would otherwise be wiped by git clean
+git clean --force -e content/media
 
 # create the venv if it doesn't exist yet
 [ ! -d "$SCRIPT_DIR/venv/$VENV" ] && python3 -m venv "$SCRIPT_DIR/venv/$VENV"
